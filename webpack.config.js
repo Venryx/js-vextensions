@@ -1,6 +1,5 @@
 /* global __dirname */
 var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	entry: [
@@ -38,14 +37,6 @@ module.exports = {
 				}
 			},
 			{test: /\.tsx?$/, loader: "ts-loader"},
-			{
-				test: /\.less$/,
-				loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer!less-loader")
-			},
-			{
-				test: /\.(css)$/,
-				loader: ExtractTextPlugin.extract("style", "css-loader!autoprefixer")
-			},
 			{
 				test: /\.(png|jpg|jpeg|svg)$/,
 				loader: "file"
