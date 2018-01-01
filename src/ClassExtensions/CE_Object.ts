@@ -1,6 +1,6 @@
 // (ClassExtensions.ts)
 
-var g = window as any;
+//let g = window as any;
 
 // Object: base
 // ==================
@@ -83,14 +83,14 @@ Function.prototype._AddFunction_Inline = function SetName(name: string) { this.n
 };*/
 
 // must also do it on window/global, for some reason
-g.Extend = function(x) {
+/*g.Extend = function(x) {
 	for (var name in x) {
 		var value = x[name];
 		//if (value !== undefined)
         this[name] = value;
     }
 	return this;
-};
+};*/
 
 interface Object { Extend: (obj)=>void; }
 Object.prototype._AddFunction_Inline = function Extend(x) {
@@ -224,7 +224,7 @@ Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps = fa
 
 interface Object { FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[]; }
 Object.prototype._AddFunction_Inline = function FA_Select(selectFunc = a=>a) {
-	g.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+	Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 	/*var result = this instanceof List ? new List(this.itemType) : [];
 	for (let [index, item] of this.entries())
 		result.Add(selectFunc.call(item, item, index));
@@ -233,7 +233,7 @@ Object.prototype._AddFunction_Inline = function FA_Select(selectFunc = a=>a) {
 };
 interface Object { FA_RemoveAt(index: number); }
 Object.prototype._AddFunction_Inline = function FA_RemoveAt(index: number) {
-	g.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+	Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 	if (!(index in this)) return;
 	// remove target entry
 	delete this[index];
@@ -244,7 +244,7 @@ Object.prototype._AddFunction_Inline = function FA_RemoveAt(index: number) {
 };
 interface Object { FA_Add<T>(this: {[key: number]: T} | {[key: string]: T}, item: T); }
 Object.prototype._AddFunction_Inline = function FA_Add(item) {
-	g.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+	Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 	for (var openIndex = 0; openIndex in this; openIndex++);
 	this[openIndex] = item;
 };

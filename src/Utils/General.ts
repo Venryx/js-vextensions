@@ -6,10 +6,10 @@ if (Number.MIN_SAFE_INTEGER == null)
 if (Number.MAX_SAFE_INTEGER == null)
 	(Number as any).MAX_SAFE_INTEGER = 9007199254740991;
 
-declare global { function G(...globalHolders); } g.G = G;
+declare global { function G(...globalHolders); } window["G"] = G;
 function G(...globalHolders) {
 	for (let globalHolder of globalHolders) {
-		g.Extend(globalHolder);
+		Object.assign(window, globalHolder);
 	}
 }
 
@@ -25,8 +25,9 @@ G({QuickIncrement});
 G({E}); declare global {	function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8; }
 export							function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8 {
 	var result = {} as any;
-	for (var extend of arguments)
+	for (var extend of arguments) {
 		result.Extend(extend);
+	}
 	return result;
 	//return StyleSheet.create(result);
 }
@@ -63,7 +64,7 @@ export function CopyText(text) {
 // ==========
 
 // object-Json
-declare global { function FromJSON(json: string); } g.Extend({FromJSON});
+declare global { function FromJSON(json: string); } G({FromJSON});
 export function FromJSON(json: string) { return JSON.parse(json); }
 
 /*declare global { function ToJSON(obj, ...excludePropNames): string; } g.Extend({ToJSON});
@@ -84,7 +85,7 @@ export function ToJSON(obj, ...excludePropNames): string {
 		throw ex;
 	}
 }*/
-g.Extend({ToJSON}); declare global { function ToJSON(obj, replacerFunc?, spacing?: number): string; }
+G({ToJSON}); declare global { function ToJSON(obj, replacerFunc?, spacing?: number): string; }
 export function ToJSON(obj, replacerFunc?, spacing?: number): string {
 	try {
 		return JSON.stringify(obj, replacerFunc, spacing);
@@ -95,7 +96,7 @@ export function ToJSON(obj, replacerFunc?, spacing?: number): string {
 	}
 }
 
-declare global { function ToJSON_Safe(obj, ...excludePropNames): string; } g.Extend({ToJSON_Safe});
+declare global { function ToJSON_Safe(obj, ...excludePropNames): string; } G({ToJSON_Safe});
 export function ToJSON_Safe(obj, ...excludePropNames) {
 	var cache = [];
 	var foundDuplicates = false;
@@ -118,7 +119,7 @@ export function ToJSON_Safe(obj, ...excludePropNames) {
 	return result;
 }
 
-declare global { function ToJSON_Try(obj, ...excludePropNames): string; } g.Extend({ToJSON_Try});
+declare global { function ToJSON_Try(obj, ...excludePropNames): string; } G({ToJSON_Try});
 export function ToJSON_Try(...args) {
 	try {
 		return ToJSON.apply(this, args);
@@ -126,15 +127,33 @@ export function ToJSON_Try(...args) {
 	return "[converting to JSON failed]";
 }
 
-declare global { function Clone(obj): any; } g.Extend({Clone});
+declare global { function Clone(obj): any; } G({Clone});
 function Clone(obj) {
 	return FromJSON(ToJSON(obj));
+}
+
+/*export function Range(min, max, step = 1, includeMax = true) {
+	var result: number[] = [];
+	for (let i = min; includeMax ? i <= max : i < max; i += step)
+		result.push(i);
+	return result;
+}*/
+export function Range(min: number, max: number, step = 1, includeMax = true, roundToStep = true) {
+	var result: number[] = [];
+	for (
+		let i = min;
+		includeMax ? i <= max : i < max;
+		i = roundToStep ? (i + step).RoundTo(step) : i + step
+	) {
+		result.push(i);
+	}
+	return result;
 }
 
 export function Global(target: Function) {
 	var name = (target as any).GetName();
 	//console.log("Globalizing: " + name);
-	g[name] = target;
+	window[name] = target;
 }
 
 export class IDProvider {
@@ -145,7 +164,7 @@ export class IDProvider {
 }
 
 const nl = "\n";
-g.Extend({nl}); declare global { const nl: string; }
+G({nl}); declare global { const nl: string; }
 
 export function AsArray(args) { return Slice(args, 0); };
 //s.ToArray = function(args) { return s.Slice(args, 0); };

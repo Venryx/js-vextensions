@@ -69,10 +69,3 @@ Date.prototype.Clone = function() {
 // ==========
 
 interface Error { readonly Stack: string; }
-
-// Node
-// ==========
-
-//(()=> {
-HTMLElement.prototype._AddGetter_Inline = function R() { return g.FindReact(this); };
-//})();

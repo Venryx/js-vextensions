@@ -56,4 +56,4 @@ export class A_OfType_Wrapper {
 	type;
     set a(val) { Assert(val != null && val.GetType().IsDerivedFrom(this.type)); }
 }
-g.Extend({A, A_NotEqualTo_Wrapper, A_OfType_Wrapper});
+G({A, A_NotEqualTo_Wrapper, A_OfType_Wrapper});

@@ -3,13 +3,13 @@ export declare function JumpToHash(hashStr: string): void;
 /** Returns [domainStr, pathStr, varsStr, hashStr], without the separator-chars. */
 export declare function GetCurrentURLString(): string;
 export declare function GetUrlParts(url?: string): [string, string, string, string];
-export declare class URL {
-    static Parse(urlStr: string, useCurrentDomainIfMissing?: boolean): URL;
+export declare class VURL {
+    static Parse(urlStr: string, useCurrentDomainIfMissing?: boolean): VURL;
     static FromState(state: {
         pathname?: string;
         search?: string;
         hash?: string;
-    }): URL;
+    }): VURL;
     ToState(): {
         pathname: string;
         search: string;
@@ -29,7 +29,7 @@ export declare class URL {
     SetQueryVar(name: string, value: any): void;
     hash: string;
     readonly HashStr: string;
-    Clone(): URL;
+    Clone(): VURL;
     toString(options?: {
         domain?: boolean;
         domain_protocol?: boolean;

@@ -76,7 +76,7 @@ function GetUrlVars(url?: string) {
 	return fromAddressBar ? URL.Parse(GetCurrentURLString()) : URL.FromState(State("router"));
 }*/
 
-export class URL {
+export class VURL {
 	static Parse(urlStr: string, useCurrentDomainIfMissing = true) {
 		if (useCurrentDomainIfMissing && !urlStr.startsWith("http"))
 			urlStr = window.location.origin + (urlStr.startsWith("/") ? "" : "/") + urlStr;
@@ -84,7 +84,7 @@ export class URL {
 		let [domainStr, pathStr, varsStr, hashStr] = GetUrlParts(urlStr);
 		let queryVarsMap = GetUrlVars(urlStr);
 		
-		let result = new URL();
+		let result = new VURL();
 		result.domain = domainStr;
 		result.pathNodes = pathStr.length ? pathStr.split("/") : [];
 		for (let key in queryVarsMap)
@@ -93,7 +93,7 @@ export class URL {
 		return result;
 	}
 	static FromState(state: {pathname?: string, search?: string, hash?: string}) {
-		let result = URL.Parse(state ? (state.pathname||"") + (state.search||"") + (state.hash||"") : "");
+		let result = VURL.Parse(state ? (state.pathname||"") + (state.search||"") + (state.hash||"") : "");
 		//if (normalize) result = result.Normalized();
 		return result;
 	}
@@ -160,7 +160,7 @@ export class URL {
 	}
 
 	Clone() {
-		return new URL(this.domain, this.pathNodes.slice(), this.queryVars.map(a=>a.Clone()), this.hash);
+		return new VURL(this.domain, this.pathNodes.slice(), this.queryVars.map(a=>a.Clone()), this.hash);
 	}
 	/*Normalized() {
 		let result = this.Clone();
