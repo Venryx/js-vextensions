@@ -1,6 +1,3 @@
-declare function require(name: string): any;
-var {StableSort, Compare} = require("../Utils/General");
-
 interface Array<T> { Contains(item: T): boolean; }
 Array.prototype._AddFunction_Inline = function Contains(items) { return this.indexOf(items) != -1; };
 Array.prototype._AddFunction_Inline = function ContainsAny(...items) {
@@ -332,3 +329,9 @@ interface NodeList { ToArray(): any[]; }
 NodeList.prototype._AddFunction_Inline = function ToArray() {
     return Array.from(this);
 };
+
+// late imports
+// ==========
+
+declare function require(name: string): any;
+var {StableSort, Compare} = require("../Utils/General");

@@ -67,6 +67,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _JSVE = __webpack_require__(4);
+
+	Object.keys(_JSVE).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _JSVE[key];
+	    }
+	  });
+	});
+
 	var _General = __webpack_require__(2);
 
 	Object.keys(_General).forEach(function (key) {
@@ -392,7 +404,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return result;
 	}
 	function Global(target) {
-	    var name = target.GetName();
+	    //var name = (target as any).GetName();
+	    var name = target["name_fake"] || target.name || (target.toString().match(/^function\s*([^\s(]+)/) || [])[1];
 	    //console.log("Globalizing: " + name);
 	    window[name] = target;
 	}
@@ -3038,10 +3051,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var _require = __webpack_require__(2),
-	    StableSort = _require.StableSort,
-	    Compare = _require.Compare;
-
 	Array.prototype._AddFunction_Inline = function Contains(items) {
 	    return this.indexOf(items) != -1;
 	};
@@ -3661,6 +3670,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	NodeList.prototype._AddFunction_Inline = function ToArray() {
 	    return Array.from(this);
 	};
+
+	var _require = __webpack_require__(2),
+	    StableSort = _require.StableSort,
+	    Compare = _require.Compare;
 
 /***/ }),
 /* 16 */

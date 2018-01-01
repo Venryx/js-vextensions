@@ -151,7 +151,9 @@ export function Range(min: number, max: number, step = 1, includeMax = true, rou
 }
 
 export function Global(target: Function) {
-	var name = (target as any).GetName();
+	//var name = (target as any).GetName();
+	var name = target["name_fake"] || target.name || (target.toString().match(/^function\s*([^\s(]+)/) || [])[1];
+	
 	//console.log("Globalizing: " + name);
 	window[name] = target;
 }
