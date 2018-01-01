@@ -163,8 +163,8 @@ export class IDProvider {
 	}
 }
 
-const nl = "\n";
-G({nl}); declare global { const nl: string; }
+//const nl = "\n";
+G({nl: "\n"}); declare global { var nl: string; }
 
 export function AsArray(args) { return Slice(args, 0); };
 //s.ToArray = function(args) { return s.Slice(args, 0); };

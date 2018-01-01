@@ -1,5 +1,5 @@
 declare function require(name: string): any;
-declare let StableSort: any, Compare: any;
+declare var StableSort: any, Compare: any;
 interface Array<T> {
     Contains(item: T): boolean;
 }
@@ -103,7 +103,7 @@ interface Array<T> {
 interface Array<T> {
     Median(): number;
 }
-declare let oldJoin: (separator?: string) => string;
+declare var oldJoin: (separator?: string) => string;
 interface NodeList {
     ToArray(): any[];
 }

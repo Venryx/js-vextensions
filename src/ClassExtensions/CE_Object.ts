@@ -105,7 +105,7 @@ Object.prototype._AddFunction_Inline = function Extend(x) {
 // as replacement for C#'s "new MyClass() {prop = true}"
 // seems this should work, to be consistent with in-class usage, but whatever; below it's an alternative that works for interfaces
 //interface Object { VSet(props: any): this; }
-type VSet_Options = {prop?: PropertyDescriptor, deleteEmpty?: boolean};
+interface VSet_Options {prop?: PropertyDescriptor, deleteEmpty?: boolean};
 interface Object {
 	VSet<T>(this: T, props: any, options?: VSet_Options): T;
 	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
@@ -183,7 +183,7 @@ Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
     return result;
 }
 
-let specialProps = ["_", "_key", "_id"];
+var specialProps = ["_", "_key", "_id"];
 
 interface Object { Props(excludeSpecialProps?: boolean): {index: number, name: string, value: any}[]; }
 Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = false) {
@@ -257,7 +257,5 @@ Object.prototype._AddFunction_Inline = function plus(offset) { return { left: th
 // late-require things from other modules, that are used in the methods
 // ==========
 
-// use "require" instead, so doesn't make TS see this as an external module (and thus disable interface extension)
-// use alternate names, so doesn't get used in other files
-//var V_ = require("../V/V").default;
-//var {IsNumberString_} = require("./Globals");
+// Use "require" instead, so doesn't make TS see this as an external module. (and thus disable interface extension)
+// And use alternate names, so they don't get used in other files.

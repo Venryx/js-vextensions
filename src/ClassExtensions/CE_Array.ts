@@ -1,5 +1,5 @@
 declare function require(name: string): any;
-let {StableSort, Compare} = require("../Utils/General");
+var {StableSort, Compare} = require("../Utils/General");
 
 interface Array<T> { Contains(item: T): boolean; }
 Array.prototype._AddFunction_Inline = function Contains(items) { return this.indexOf(items) != -1; };
@@ -300,7 +300,7 @@ Array.prototype._AddFunction_Inline = function Median() {
 	return ordered[this.length / 2]; // otherwise, return the exactly-middle one
 };
 
-let oldJoin = [].join;
+var oldJoin = [].join;
 Array.prototype._AddFunction_Inline = function join(separator = ",") {
 	if (this.length == 0) return "";
 	

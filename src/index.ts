@@ -1,3 +1,5 @@
+import "./ClassExtensions";
+
 export * from "./Utils/General";
 export * from "./Utils/Assert";
 export * from "./Utils/Timers";

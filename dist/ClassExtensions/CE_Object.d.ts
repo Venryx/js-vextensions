@@ -23,10 +23,10 @@ interface Object {
 interface Object {
     Extend: (obj) => void;
 }
-declare type VSet_Options = {
+interface VSet_Options {
     prop?: PropertyDescriptor;
     deleteEmpty?: boolean;
-};
+}
 interface Object {
     VSet<T>(this: T, props: any, options?: VSet_Options): T;
     VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): T;
@@ -46,7 +46,7 @@ interface Object {
 interface Object {
     Excluding(...propNames: string[]): Object;
 }
-declare let specialProps: string[];
+declare var specialProps: string[];
 interface Object {
     Props(excludeSpecialProps?: boolean): {
         index: number;

@@ -151,6 +151,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
+	__webpack_require__(13);
+
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
@@ -411,9 +413,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return IDProvider;
 	}();
+	//const nl = "\n";
 
-	var nl = "\n";
-	G({ nl: nl });
+
+	G({ nl: "\n" });
 	function AsArray(args) {
 	    return Slice(args, 0);
 	}
@@ -2742,6 +2745,1340 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return result;
 	}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	__webpack_require__(14);
+
+	__webpack_require__(15);
+
+	__webpack_require__(16);
+
+	__webpack_require__(17);
+
+	__webpack_require__(18);
+
+	__webpack_require__(19);
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	// (ClassExtensions.ts)
+	Object.defineProperty(Object.prototype, "_AddItem", {
+	    //configurable: true,
+	    enumerable: false,
+	    value: function value(name, _value, forceAdd) {
+	        if (name == null || name.length == 0) throw new Error("No prop-name was specified for _AddItem() call.");
+	        if (name in this) delete this[name];
+	        if (name in this && !forceAdd) return; // workaround for some properties not being deleted
+	        Object.defineProperty(this, name, {
+	            configurable: true,
+	            enumerable: false,
+	            value: _value
+	        });
+	        /*if (this[name] == null)
+	            throw new Error(`Failed to add property "${name}" to type "${this}".`);*/
+	    }
+	});
+	Object.prototype._AddItem("_AddFunction", function (name, func) {
+	    //this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
+	    this._AddItem(name, func);
+	});
+	Object.prototype._AddFunction("_AddGetterSetter", function (name, getter, setter) {
+	    //var name = (getter || setter).name || (getter || setter).toString().match(/^function\s*([^\s(]+)/)[1];
+	    if (name in this) delete this[name];
+	    if (name in this) return; // workaround for some properties not being deleted
+	    var info = { configurable: true, enumerable: false };
+	    if (getter) info.get = getter;
+	    if (setter) info.set = setter;
+	    Object.defineProperty(this, name, info);
+	});
+	Object.prototype._AddGetterSetter("_AddFunction_Inline", null, function (func) {
+	    this._AddFunction(func.GetName(), func);
+	});
+	Object.prototype._AddGetterSetter("_AddGetter_Inline", null, function (func) {
+	    this._AddGetterSetter(func.GetName(), func, null);
+	});
+	Object.prototype._AddGetterSetter("_AddSetter_Inline", null, function (func) {
+	    this._AddGetterSetter(func.GetName(), null, func);
+	});
+	//Function.prototype._AddFunction_Inline = function GetName() { return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1]; };
+	Function.prototype._AddFunction("GetName", function () {
+	    return this.name_fake || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
+	});
+	Function.prototype._AddFunction_Inline = function SetName(name) {
+	    this.name_fake = name;return this;
+	};
+	Object.prototype._AddFunction_Inline = function Extend(x) {
+	    for (var name in x) {
+	        var value = x[name];
+	        //if (value !== undefined)
+	        this[name] = value;
+	    }
+	    return this;
+	};
+	;
+	Object.prototype._AddFunction_Inline = function VSet() {
+	    var _this = this;
+
+	    var props = void 0,
+	        options = void 0,
+	        propName = void 0,
+	        propValue = void 0;
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	    }
+
+	    if (_typeof(args[0]) == "object") {
+	        ;
+	        props = args[0];
+	        options = args[1];
+	    } else {
+	        ;
+	        propName = args[0];
+	        propValue = args[1];
+	        options = args[2];
+	    }options = options || {};
+	    var SetProp = function SetProp(name, value) {
+	        if (value == "" && options.deleteEmpty) {
+	            delete _this[name];
+	            return;
+	        }
+	        if (options.prop) {
+	            Object.defineProperty(_this, name, Object.assign({ configurable: true }, options.prop, { value: value }));
+	        } else {
+	            _this[name] = value;
+	        }
+	    };
+	    if (props) {
+	        for (var name in props) {
+	            SetProp(name, props[name]);
+	        }
+	    } else {
+	        SetProp(propName, propValue);
+	    }
+	    return this;
+	};
+	Object.prototype._AddFunction_Inline = function Extended(x) {
+	    var result = {};
+	    for (var name in this) {
+	        result[name] = this[name];
+	    }if (x) {
+	        for (var name in x) {
+	            result[name] = x[name];
+	        }
+	    }
+	    return result;
+	};
+	Object.prototype._AddFunction_Inline = function VAct(action) {
+	    action.call(this, this);
+	    return this;
+	};
+	Object.prototype._AddFunction_Inline = function As(type) {
+	    Object.setPrototypeOf(this, type.prototype);
+	    return this;
+	};
+	Object.prototype._AddFunction_Inline = function Including() {
+	    var result = {};
+
+	    for (var _len2 = arguments.length, propNames = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	        propNames[_key2] = arguments[_key2];
+	    }
+
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = propNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var propName = _step.value;
+
+	            if (propName in this) {
+	                result[propName] = this[propName];
+	            }
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+
+	    return result;
+	};
+	Object.prototype._AddFunction_Inline = function Excluding() {
+	    var result = this.Extended();
+
+	    for (var _len3 = arguments.length, propNames = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	        propNames[_key3] = arguments[_key3];
+	    }
+
+	    var _iteratorNormalCompletion2 = true;
+	    var _didIteratorError2 = false;
+	    var _iteratorError2 = undefined;
+
+	    try {
+	        for (var _iterator2 = propNames[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var propName = _step2.value;
+
+	            delete result[propName];
+	        }
+	    } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	            }
+	        } finally {
+	            if (_didIteratorError2) {
+	                throw _iteratorError2;
+	            }
+	        }
+	    }
+
+	    return result;
+	};
+	var specialProps = ["_", "_key", "_id"];
+	Object.prototype._AddFunction_Inline = function Props() {
+	    var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    var result = [];
+	    var i = 0;
+	    for (var propName in this) {
+	        if (excludeSpecialProps && (propName == "_" || propName == "_key" || propName == "_id")) continue;
+	        //result.push({index: i++, key: propName, name: propName, value: this[propName]});
+	        result.push({ index: i++, name: propName, value: this[propName] });
+	    }
+	    return result;
+	};
+	Object.prototype._AddFunction_Inline = function VKeys() {
+	    var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    //if (excludeSpecialProps) return this.Props(true).map(a=>a.name);
+	    if (excludeSpecialProps) return Object.keys(this).Except(specialProps);
+	    return Object.keys(this);
+	};
+	Object.prototype._AddFunction_Inline = function VValues() {
+	    var _this2 = this;
+
+	    var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    //if (excludeSpecialProps) return this.Props(true).map(a=>a.value);
+	    if (excludeSpecialProps) return Object.keys(this).Except(specialProps).map(function (a) {
+	        return _this2[a];
+	    });
+	    return Object.keys(this).map(function (a) {
+	        return _this2[a];
+	    });
+	};
+	Object.prototype._AddFunction_Inline = function FA_Select() {
+	    var selectFunc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (a) {
+	        return a;
+	    };
+
+	    Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+	    /*var result = this instanceof List ? new List(this.itemType) : [];
+	    for (let [index, item] of this.entries())
+	        result.Add(selectFunc.call(item, item, index));
+	    return result;*/
+	    return this.VValues(true).map(selectFunc);
+	};
+	Object.prototype._AddFunction_Inline = function FA_RemoveAt(index) {
+	    Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+	    if (!(index in this)) return;
+	    // remove target entry
+	    delete this[index];
+	    // move all the later entries down one index
+	    for (var i = index + 1; i in this; i++) {
+	        this[i - 1] = this[i];
+	    }delete this[i - 1]; // remove the extra copy of the last-item 
+	};
+	Object.prototype._AddFunction_Inline = function FA_Add(item) {
+	    Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+	    for (var openIndex = 0; openIndex in this; openIndex++) {}
+	    this[openIndex] = item;
+	};
+	// [offset construct] (e.g. {left: 10, top: 10})
+	// ==========
+	Object.prototype._AddFunction_Inline = function plus(offset) {
+	    return { left: this.left + offset.left, top: this.top + offset.top };
+	};
+	// late-require things from other modules, that are used in the methods
+	// ==========
+	// Use "require" instead, so doesn't make TS see this as an external module. (and thus disable interface extension)
+	// And use alternate names, so they don't get used in other files.
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var _require = __webpack_require__(2),
+	    StableSort = _require.StableSort,
+	    Compare = _require.Compare;
+
+	Array.prototype._AddFunction_Inline = function Contains(items) {
+	    return this.indexOf(items) != -1;
+	};
+	Array.prototype._AddFunction_Inline = function ContainsAny() {
+	    for (var _len = arguments.length, items = Array(_len), _key = 0; _key < _len; _key++) {
+	        items[_key] = arguments[_key];
+	    }
+
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var item = _step.value;
+
+	            if (this.indexOf(item) != -1) return true;
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+
+	    return false;
+	};
+	// for some reason, this platform doesn't have entries() defined
+	Array.prototype._AddFunction_Inline = function entries() {
+	    var result = [];
+	    for (var i = 0; i < this.length; i++) {
+	        result.push([i, this[i]]);
+	    }return result;
+	};
+	Array.prototype._AddFunction_Inline = function Prepend() {
+	    for (var _len2 = arguments.length, newItems = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	        newItems[_key2] = arguments[_key2];
+	    }
+
+	    this.splice.apply(this, [0, 0].concat(newItems));
+	};
+	Array.prototype._AddFunction_Inline = function Add(item) {
+	    return this.push(item);
+	};
+	Array.prototype._AddFunction_Inline = function CAdd(item) {
+	    this.push(item);return this;
+	}; // CAdd = ChainAdd
+	Array.prototype._AddFunction_Inline = function TAdd(item) {
+	    this.push(item);return item;
+	}; // TAdd = TransparentAdd
+	Array.prototype._AddFunction_Inline = function AddRange(array) {
+	    //this.push(...array);
+	    // use loop, since sending them all as arguments fails when there are ~10000+ items
+	    var _iteratorNormalCompletion2 = true;
+	    var _didIteratorError2 = false;
+	    var _iteratorError2 = undefined;
+
+	    try {
+	        for (var _iterator2 = array[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var item = _step2.value;
+
+	            this.push(item);
+	        }
+	    } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	            }
+	        } finally {
+	            if (_didIteratorError2) {
+	                throw _iteratorError2;
+	            }
+	        }
+	    }
+
+	    return this;
+	};
+	Array.prototype._AddFunction_Inline = function Remove(item) {
+	    var itemIndex = this.indexOf(item);
+	    if (itemIndex == -1) return false;
+	    this.splice(itemIndex, 1);
+	    return true;
+	};
+	Array.prototype._AddFunction_Inline = function RemoveAll(items) {
+	    var _iteratorNormalCompletion3 = true;
+	    var _didIteratorError3 = false;
+	    var _iteratorError3 = undefined;
+
+	    try {
+	        for (var _iterator3 = items[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	            var item = _step3.value;
+
+	            this.Remove(item);
+	        }
+	    } catch (err) {
+	        _didIteratorError3 = true;
+	        _iteratorError3 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                _iterator3.return();
+	            }
+	        } finally {
+	            if (_didIteratorError3) {
+	                throw _iteratorError3;
+	            }
+	        }
+	    }
+	};
+	Array.prototype._AddFunction_Inline = function RemoveAt(index) {
+	    return this.splice(index, 1)[0];
+	};
+	Array.prototype._AddFunction_Inline = function Insert(index, obj) {
+	    this.splice(index, 0, obj);
+	};
+	Array.prototype._AddFunction_Inline = function SetItems(items) {
+	    this.splice.apply(this, [0, this.length].concat(_toConsumableArray(items)));
+	};
+	Array.prototype._AddFunction_Inline = function Reversed() {
+	    var clone = this.slice(0);
+	    clone.reverse();
+	    return clone;
+	};
+	Array.prototype._AddFunction_Inline = function Any(matchFunc) {
+	    var _iteratorNormalCompletion4 = true;
+	    var _didIteratorError4 = false;
+	    var _iteratorError4 = undefined;
+
+	    try {
+	        for (var _iterator4 = this.entries()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	            var _step4$value = _slicedToArray(_step4.value, 2),
+	                index = _step4$value[0],
+	                item = _step4$value[1];
+
+	            if (matchFunc == null || matchFunc.call(item, item, index)) return true;
+	        }
+	    } catch (err) {
+	        _didIteratorError4 = true;
+	        _iteratorError4 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                _iterator4.return();
+	            }
+	        } finally {
+	            if (_didIteratorError4) {
+	                throw _iteratorError4;
+	            }
+	        }
+	    }
+
+	    return false;
+	};
+	Array.prototype._AddFunction_Inline = function All(matchFunc) {
+	    var _iteratorNormalCompletion5 = true;
+	    var _didIteratorError5 = false;
+	    var _iteratorError5 = undefined;
+
+	    try {
+	        for (var _iterator5 = this.entries()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	            var _step5$value = _slicedToArray(_step5.value, 2),
+	                index = _step5$value[0],
+	                item = _step5$value[1];
+
+	            if (!matchFunc.call(item, item, index)) return false;
+	        }
+	    } catch (err) {
+	        _didIteratorError5 = true;
+	        _iteratorError5 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                _iterator5.return();
+	            }
+	        } finally {
+	            if (_didIteratorError5) {
+	                throw _iteratorError5;
+	            }
+	        }
+	    }
+
+	    return true;
+	};
+	Array.prototype._AddFunction_Inline = function Where(matchFunc) {
+	    var result = [];
+	    var _iteratorNormalCompletion6 = true;
+	    var _didIteratorError6 = false;
+	    var _iteratorError6 = undefined;
+
+	    try {
+	        for (var _iterator6 = this.entries()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	            var _step6$value = _slicedToArray(_step6.value, 2),
+	                index = _step6$value[0],
+	                item = _step6$value[1];
+
+	            if (matchFunc.call(item, item, index)) result.push(item);
+	        }
+	    } catch (err) {
+	        _didIteratorError6 = true;
+	        _iteratorError6 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                _iterator6.return();
+	            }
+	        } finally {
+	            if (_didIteratorError6) {
+	                throw _iteratorError6;
+	            }
+	        }
+	    }
+
+	    return result;
+	};
+	Array.prototype._AddFunction_Inline = function Select(selectFunc) {
+	    var result = [];
+	    var _iteratorNormalCompletion7 = true;
+	    var _didIteratorError7 = false;
+	    var _iteratorError7 = undefined;
+
+	    try {
+	        for (var _iterator7 = this.entries()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	            var _step7$value = _slicedToArray(_step7.value, 2),
+	                index = _step7$value[0],
+	                item = _step7$value[1];
+
+	            result.push(selectFunc.call(item, item, index));
+	        }
+	    } catch (err) {
+	        _didIteratorError7 = true;
+	        _iteratorError7 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                _iterator7.return();
+	            }
+	        } finally {
+	            if (_didIteratorError7) {
+	                throw _iteratorError7;
+	            }
+	        }
+	    }
+
+	    return result;
+	};
+	Array.prototype._AddFunction_Inline = function SelectMany(selectFunc) {
+	    var result = [];
+	    var _iteratorNormalCompletion8 = true;
+	    var _didIteratorError8 = false;
+	    var _iteratorError8 = undefined;
+
+	    try {
+	        for (var _iterator8 = this.entries()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	            var _step8$value = _slicedToArray(_step8.value, 2),
+	                index = _step8$value[0],
+	                item = _step8$value[1];
+
+	            result.AddRange(selectFunc.call(item, item, index));
+	        }
+	    } catch (err) {
+	        _didIteratorError8 = true;
+	        _iteratorError8 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                _iterator8.return();
+	            }
+	        } finally {
+	            if (_didIteratorError8) {
+	                throw _iteratorError8;
+	            }
+	        }
+	    }
+
+	    return result;
+	};
+	//Array.prototype._AddFunction_Inline = function Count(matchFunc) { return this.Where(matchFunc).length; };
+	//Array.prototype._AddFunction_Inline = function Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
+	Array.prototype._AddGetter_Inline = function Count() {
+	    return this.length;
+	}; // needed for items to be added properly to custom classes that extend Array
+	Array.prototype._AddFunction_Inline = function VCount(matchFunc) {
+	    return this.Where(matchFunc).length;
+	};
+	Array.prototype._AddFunction_Inline = function Clear() {
+	    /*while (this.length > 0)
+	        this.pop();*/
+	    this.splice(0, this.length);
+	};
+	Array.prototype._AddFunction_Inline = function First(matchFunc) {
+	    var result = this.FirstOrX(matchFunc);
+	    if (result == null) throw new Error("Matching item not found.");
+	    return result;
+	};
+	Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc) {
+	    var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+	    if (matchFunc) {
+	        var _iteratorNormalCompletion9 = true;
+	        var _didIteratorError9 = false;
+	        var _iteratorError9 = undefined;
+
+	        try {
+	            for (var _iterator9 = this.entries()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                var _step9$value = _slicedToArray(_step9.value, 2),
+	                    index = _step9$value[0],
+	                    item = _step9$value[1];
+
+	                if (matchFunc.call(item, item, index)) return item;
+	            }
+	        } catch (err) {
+	            _didIteratorError9 = true;
+	            _iteratorError9 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                    _iterator9.return();
+	                }
+	            } finally {
+	                if (_didIteratorError9) {
+	                    throw _iteratorError9;
+	                }
+	            }
+	        }
+	    } else if (this.length > 0) return this[0];
+	    return x;
+	};
+	//Array.prototype._AddFunction_Inline = function FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
+	Array.prototype._AddFunction_Inline = function FirstWith(propName, propValue) {
+	    return this.Where(function () {
+	        return this[propName] == propValue;
+	    })[0];
+	};
+	Array.prototype._AddFunction_Inline = function Last(matchFunc) {
+	    var result = this.LastOrX(matchFunc);
+	    if (result == null) throw new Error("Matching item not found.");
+	    return result;
+	};
+	Array.prototype._AddFunction_Inline = function LastOrX(matchFunc) {
+	    var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+	    if (matchFunc) {
+	        for (var i = this.length - 1; i >= 0; i--) {
+	            if (matchFunc.call(this[i], this[i], i)) return this[i];
+	        }
+	    } else if (this.length > 0) return this[this.length - 1];
+	    return x;
+	};
+	Array.prototype._AddFunction_Inline = function XFromLast(x) {
+	    return this[this.length - 1 - x];
+	};
+	// since JS doesn't have basic "foreach" system
+	Array.prototype._AddFunction_Inline = function ForEach(func) {
+	    for (var i in this) {
+	        func.call(this[i], this[i], i);
+	    } // call, having the item be "this", as well as the first argument
+	};
+	Array.prototype._AddFunction_Inline = function Move(item, newIndex) {
+	    var shiftInsertPointToPreserveFinalNeighbors = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+	    var oldIndex = this.indexOf(item);
+	    if (oldIndex != -1) {
+	        this.RemoveAt(oldIndex);
+	        // New-index is understood to be the position-in-list to move the item to, as seen before the item started being moved.
+	        // So compensate for remove-from-old-position list modification.
+	        if (shiftInsertPointToPreserveFinalNeighbors && oldIndex < newIndex) {
+	            newIndex--;
+	        }
+	    }
+	    this.Insert(newIndex, item);
+	    return oldIndex;
+	};
+	Array.prototype._AddFunction_Inline = function ToList() {
+	    var itemType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	    return [].concat(this);
+	};
+	Array.prototype._AddFunction_Inline = function ToMap(keyFunc, valFunc) {
+	    var result = {};
+	    var _iteratorNormalCompletion10 = true;
+	    var _didIteratorError10 = false;
+	    var _iteratorError10 = undefined;
+
+	    try {
+	        for (var _iterator10 = this.entries()[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	            var _step10$value = _slicedToArray(_step10.value, 2),
+	                index = _step10$value[0],
+	                item = _step10$value[1];
+
+	            result[keyFunc(item, index)] = valFunc(item, index);
+	        }
+	    } catch (err) {
+	        _didIteratorError10 = true;
+	        _iteratorError10 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion10 && _iterator10.return) {
+	                _iterator10.return();
+	            }
+	        } finally {
+	            if (_didIteratorError10) {
+	                throw _iteratorError10;
+	            }
+	        }
+	    }
+
+	    return result;
+	};
+	Array.prototype._AddFunction_Inline = function Skip(count) {
+	    var result = [];
+	    for (var i = count; i < this.length; i++) {
+	        result.push(this[i]);
+	    }return result;
+	};
+	Array.prototype._AddFunction_Inline = function Take(count) {
+	    var result = [];
+	    for (var i = 0; i < count && i < this.length; i++) {
+	        result.push(this[i]);
+	    }return result;
+	};
+	Array.prototype._AddFunction_Inline = function TakeLast(count) {
+	    var result = [];
+	    for (var i = 0; i < count && this.length - 1 - i >= 0; i++) {
+	        result.push(this[this.length - 1 - i]);
+	    }return result;
+	};
+	Array.prototype._AddFunction_Inline = function FindIndex(matchFunc) {
+	    var _iteratorNormalCompletion11 = true;
+	    var _didIteratorError11 = false;
+	    var _iteratorError11 = undefined;
+
+	    try {
+	        for (var _iterator11 = this.entries()[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	            var _step11$value = _slicedToArray(_step11.value, 2),
+	                index = _step11$value[0],
+	                item = _step11$value[1];
+
+	            if (matchFunc.call(item, item, index)) return index;
+	        }
+	    } catch (err) {
+	        _didIteratorError11 = true;
+	        _iteratorError11 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                _iterator11.return();
+	            }
+	        } finally {
+	            if (_didIteratorError11) {
+	                throw _iteratorError11;
+	            }
+	        }
+	    }
+
+	    return -1;
+	};
+	Array.prototype._AddFunction_Inline = function OrderBy() {
+	    var valFunc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (item, index) {
+	        return item;
+	    };
+
+	    /*var temp = this.ToList();
+	    temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
+	    return temp;*/
+	    return StableSort(this, function (a, b, aIndex, bIndex) {
+	        return Compare(valFunc(a, aIndex), valFunc(b, bIndex));
+	    });
+	};
+	Array.prototype._AddFunction_Inline = function OrderByDescending() {
+	    var valFunc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (item, index) {
+	        return item;
+	    };
+
+	    return this.OrderBy(function (item, index) {
+	        return -valFunc(item, index);
+	    });
+	};
+	Array.prototype._AddFunction_Inline = function Distinct() {
+	    var result = [];
+	    for (var i in this) {
+	        if (!result.Contains(this[i])) result.push(this[i]);
+	    }return result;
+	};
+	Array.prototype._AddFunction_Inline = function Except() {
+	    var excludeItems = void 0,
+	        excludeEachOnlyOnce = true;
+
+	    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	        args[_key3] = arguments[_key3];
+	    }
+
+	    if (args[0] instanceof Array) {
+	        ;
+	        excludeItems = args[0];
+	        excludeEachOnlyOnce = args[1];
+	    } else excludeItems = args;
+	    if (excludeEachOnlyOnce) {
+	        var result = this.slice();
+	        var _iteratorNormalCompletion12 = true;
+	        var _didIteratorError12 = false;
+	        var _iteratorError12 = undefined;
+
+	        try {
+	            for (var _iterator12 = excludeItems[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                var excludeItem = _step12.value;
+
+	                result.Remove(excludeItem);
+	            }
+	        } catch (err) {
+	            _didIteratorError12 = true;
+	            _iteratorError12 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                    _iterator12.return();
+	                }
+	            } finally {
+	                if (_didIteratorError12) {
+	                    throw _iteratorError12;
+	                }
+	            }
+	        }
+
+	        return result;
+	    }
+	    return this.Where(function (a) {
+	        return !excludeItems.Contains(a);
+	    });
+	};
+	Array.prototype._AddFunction_Inline = function Min(valFunc) {
+	    var asNumbers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	    if (asNumbers) {
+	        /*let values = valFunc ? this.map(valFunc) : this;
+	        return Math.min(...values);*/
+	        Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
+	        return Math.min.apply(Math, _toConsumableArray(this));
+	    }
+	    return this.OrderBy(valFunc).First();
+	};
+	Array.prototype._AddFunction_Inline = function Max(valFunc) {
+	    var asNumbers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	    if (asNumbers) {
+	        /*let values = valFunc ? this.map(valFunc) : this;
+	        return Math.max(...values);*/
+	        Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
+	        return Math.max.apply(Math, _toConsumableArray(this));
+	    }
+	    return this.OrderBy(valFunc).Last();
+	};
+	Array.prototype._AddFunction_Inline = function Sum() {
+	    var total = 0;
+	    var _iteratorNormalCompletion13 = true;
+	    var _didIteratorError13 = false;
+	    var _iteratorError13 = undefined;
+
+	    try {
+	        for (var _iterator13 = this[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+	            var item = _step13.value;
+
+	            total += item;
+	        }
+	    } catch (err) {
+	        _didIteratorError13 = true;
+	        _iteratorError13 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+	                _iterator13.return();
+	            }
+	        } finally {
+	            if (_didIteratorError13) {
+	                throw _iteratorError13;
+	            }
+	        }
+	    }
+
+	    return total;
+	};
+	Array.prototype._AddFunction_Inline = function Average() {
+	    var total = this.Sum();
+	    return total / this.length;
+	};
+	Array.prototype._AddFunction_Inline = function Median() {
+	    var ordered = this.OrderBy(function (a) {
+	        return a;
+	    });
+	    if (this.length % 2 == 0) return ordered[this.length / 2 - 1] + ordered[this.length / 2];
+	    return ordered[this.length / 2]; // otherwise, return the exactly-middle one
+	};
+	var oldJoin = [].join;
+	Array.prototype._AddFunction_Inline = function join() {
+	    var separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ",";
+
+	    if (this.length == 0) return "";
+	    //let result = "" + this[0];
+	    var result = this[0] != null ? this[0] : ""; // to match behavior of native join
+	    for (var i = 1, len = this.length; i < len; i++) {
+	        result += separator;
+	        result += this[i] != null ? this[i] : "";
+	    }
+	    /*let oldResult = oldJoin.apply(this, arguments);
+	    if (oldResult != result) debugger;*/
+	    return result;
+	};
+	NodeList.prototype._AddFunction_Inline = function ToArray() {
+	    return Array.from(this);
+	};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Element.prototype._AddItem("GetParents", function () {
+	    var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    var result = [];
+	    var currentParent = this.parentElement;
+	    while (currentParent) {
+	        result.push(currentParent);
+	        currentParent = currentParent.parentElement;
+	    }
+	    if (topDown) result.reverse();
+	    return result;
+	});
+	Element.prototype._AddItem("GetSelfAndParents", function () {
+	    var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    var result = this.GetParents(topDown);
+	    return topDown ? result.concat([this]) : [this].concat(result);
+	});
+	Element.prototype._AddItem("$", function (queryStr) {
+	    return this.querySelectorAll(queryStr).ToArray();
+	});
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Number.prototype._AddFunction_Inline = function IfN1Then(valIfSelfIsNeg1) {
+	    return this != -1 ? this : valIfSelfIsNeg1;
+	};
+	Number.prototype._AddFunction_Inline = function ToPercentStr(precision) {
+	    var number = this * 100;
+	    if (precision != null) return number.toFixed(precision) + "%";
+	    return number.toString() + "%";
+	};
+	Number.prototype._AddFunction_Inline = function RoundTo(multiple) {
+	    //return Math.round(this / multiple) * multiple;
+	    // Don't ask me why this works, but it does, and is faster. From: http://phrogz.net/round-to-nearest-via-modulus-division
+	    /*var half = multiple / 2;
+	    return (this + half) - ((this + half) % multiple);*/
+	    // This version handles fractions better. Ex: (.2 + .1).RoundTo(.1) == .3 (NOT 0.3000000000000004, as the simpler approach gives)
+	    var multiple_inverted = 1 / multiple;
+	    return Math.round(this * multiple_inverted) / multiple_inverted;
+	};
+	Number.prototype._AddFunction_Inline = function RoundTo_Str(multipleOf) {
+	    var removeEmptyFraction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+	    var resultValue = this.RoundTo(multipleOf);
+	    var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+	    if (removeEmptyFraction && result.Contains(".")) {
+	        result = result.TrimEnd("0").TrimEnd(".");
+	    }
+	    return result;
+	};
+	Number.prototype._AddFunction_Inline = function FloorTo(multipleOf) {
+	    return Math.floor(new Number(this) / multipleOf) * multipleOf;
+	};
+	Number.prototype._AddFunction_Inline = function FloorTo_Str(multipleOf) {
+	    var resultValue = this.FloorTo(multipleOf);
+	    var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+	    if (result.Contains(".")) result = result.TrimEnd("0").TrimEnd(".");
+	    return result;
+	};
+	Number.prototype._AddFunction_Inline = function CeilingTo(multipleOf) {
+	    return Math.ceil(new Number(this) / multipleOf) * multipleOf;
+	};
+	Number.prototype._AddFunction_Inline = function CeilingTo_Str(multipleOf) {
+	    var resultValue = this.CeilingTo(multipleOf);
+	    var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+	    if (result.Contains(".")) result = result.TrimEnd("0").TrimEnd(".");
+	    return result;
+	};
+	Number.prototype._AddFunction_Inline = function KeepAtLeast(min) {
+	    return Math.max(min, this);
+	};
+	Number.prototype._AddFunction_Inline = function KeepAtMost(max) {
+	    return Math.min(max, this);
+	};
+	Number.prototype._AddFunction_Inline = function KeepBetween(min, max) {
+	    if (this < min) return min;
+	    if (this > max) return max;
+	    return this;
+	};
+	Number.prototype._AddFunction_Inline = function WrapToRange(min, max) {
+	    var maxOut = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+	    var val = this;
+	    var size = max - min;
+	    while (val < min) {
+	        val += size;
+	    }while (maxOut ? val >= max : val > max) {
+	        val -= size;
+	    }return val;
+	};
+	Number.prototype._AddFunction_Inline = function Distance(other) {
+	    return Math.abs(this - other);
+	};
+	Number.prototype._AddFunction_Inline = function ToPower(power) {
+	    return Math.pow(this, power);
+	};
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	String.prototype._AddFunction_Inline = function TrimStart() {
+	    for (var _len = arguments.length, chars = Array(_len), _key = 0; _key < _len; _key++) {
+	        chars[_key] = arguments[_key];
+	    }
+
+	    // fix for if called by VDF (which has a different signature)
+	    //if (arguments[0] instanceof Array) chars = arguments[0];
+	    for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && chars.Contains(this[iOfFirstToKeep]); iOfFirstToKeep++) {}
+	    return this.slice(iOfFirstToKeep, this.length);
+	};
+	String.prototype._AddFunction_Inline = function TrimEnd() {
+	    for (var _len2 = arguments.length, chars = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	        chars[_key2] = arguments[_key2];
+	    }
+
+	    for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && chars.Contains(this[iOfLastToKeep]); iOfLastToKeep--) {}
+	    return this.substr(0, iOfLastToKeep + 1);
+	};
+	String.prototype._AddFunction_Inline = function Contains(str, /*;optional:*/startIndex) {
+	    return -1 !== String.prototype.indexOf.call(this, str, startIndex);
+	};
+	String.prototype._AddFunction_Inline = function hashCode() {
+	    var hash = 0;
+	    for (var i = 0; i < this.length; i++) {
+	        var char = this.charCodeAt(i);
+	        hash = (hash << 5) - hash + char;
+	        hash |= 0; // convert to 32-bit integer
+	    }
+	    return hash;
+	};
+	String.prototype._AddFunction_Inline = function Matches(strOrRegex) {
+	    if (typeof strOrRegex == "string") {
+	        var str = strOrRegex;
+	        var _result = [];
+	        var lastMatchIndex = -1;
+	        while (true) {
+	            var matchIndex = this.indexOf(str, lastMatchIndex + 1);
+	            if (matchIndex == -1) break;
+	            _result.push({ index: matchIndex });
+	            lastMatchIndex = matchIndex;
+	        }
+	        return _result;
+	    }
+	    var regex = strOrRegex;
+	    if (!regex.global) throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
+	    var result = [];
+	    var match = void 0;
+	    while (match = regex.exec(this)) {
+	        result.push(match);
+	    }return result;
+	};
+	/** indexX is 0-based */
+	String.prototype._AddFunction_Inline = function IndexOf_X(str, indexX) {
+	    var currentPos = -1;
+	    for (var i = 0; i <= indexX; i++) {
+	        var subIndex = this.indexOf(str, currentPos + 1);
+	        if (subIndex == -1) return -1; // no such xth index
+	        currentPos = subIndex;
+	    }
+	    return currentPos;
+	};
+	/** indexFromLastX is 0-based */
+	String.prototype._AddFunction_Inline = function IndexOf_XFromLast(str, indexFromLastX) {
+	    var currentPos = this.length - str.length + 1; // index just after the last-index-where-match-could-occur
+	    for (var i = 0; i <= indexFromLastX; i++) {
+	        var subIndex = this.lastIndexOf(str, currentPos - 1);
+	        if (subIndex == -1) return -1; // no such xth index
+	        currentPos = subIndex;
+	    }
+	    return currentPos;
+	};
+	String.prototype._AddFunction_Inline = function IndexOfAny() {
+	    var lowestIndex = -1;
+
+	    for (var _len3 = arguments.length, strings = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	        strings[_key3] = arguments[_key3];
+	    }
+
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = strings[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var str = _step.value;
+
+	            var indexOfChar = this.indexOf(str);
+	            if (indexOfChar != -1 && (indexOfChar < lowestIndex || lowestIndex == -1)) lowestIndex = indexOfChar;
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+
+	    return lowestIndex;
+	};
+	String.prototype._AddFunction_Inline = function LastIndexOfAny() {
+	    var highestIndex = -1;
+
+	    for (var _len4 = arguments.length, strings = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+	        strings[_key4] = arguments[_key4];
+	    }
+
+	    var _iteratorNormalCompletion2 = true;
+	    var _didIteratorError2 = false;
+	    var _iteratorError2 = undefined;
+
+	    try {
+	        for (var _iterator2 = strings[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var str = _step2.value;
+
+	            var indexOfChar = this.lastIndexOf(str);
+	            if (indexOfChar > highestIndex) highestIndex = indexOfChar;
+	        }
+	    } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	            }
+	        } finally {
+	            if (_didIteratorError2) {
+	                throw _iteratorError2;
+	            }
+	        }
+	    }
+
+	    return highestIndex;
+	};
+	String.prototype._AddFunction_Inline = function StartsWithAny() {
+	    var _this = this;
+
+	    for (var _len5 = arguments.length, strings = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	        strings[_key5] = arguments[_key5];
+	    }
+
+	    return strings.Any(function (str) {
+	        return _this.startsWith(str);
+	    });
+	};
+	String.prototype._AddFunction_Inline = function EndsWithAny() {
+	    var _this2 = this;
+
+	    for (var _len6 = arguments.length, strings = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+	        strings[_key6] = arguments[_key6];
+	    }
+
+	    return strings.Any(function (str) {
+	        return _this2.endsWith(str);
+	    });
+	};
+	String.prototype._AddFunction_Inline = function ContainsAny() {
+	    var _this3 = this;
+
+	    for (var _len7 = arguments.length, strings = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+	        strings[_key7] = arguments[_key7];
+	    }
+
+	    return strings.Any(function (str) {
+	        return _this3.Contains(str);
+	    });
+	};
+	String.prototype._AddFunction_Inline = function SplitByAny() {
+	    for (var _len8 = arguments.length, separators = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+	        separators[_key8] = arguments[_key8];
+	    }
+
+	    /*var splitStr = "/";
+	    for (let sep of separators)
+	        splitStr += (splitStr.length > 1 ? "|" : "") + sep;
+	    splitStr += "/";
+	    return this.split(splitStr);*/
+	    var regex = new RegExp(separators.join("|"));
+	    return this.split(regex);
+	};
+	String.prototype.SplitAt = function (index) {
+	    var includeCharAtIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	    if (index == -1) return ["", this];
+	    var part1 = this.substr(0, index);
+	    var part2 = includeCharAtIndex ? this.substr(index) : this.substr(index + 1);
+	    return [part1, part2];
+	};
+	String.prototype._AddFunction_Inline = function Splice(index, removeCount, insert) {
+	    return this.slice(0, index) + insert + this.slice(index + Math.abs(removeCount));
+	};
+	String.prototype._AddFunction_Inline = function Indent(indentCount) {
+	    var indentStr = "\t".repeat(indentCount);
+	    return this.replace(/^|(\n)/g, "$1" + indentStr);
+	};
+	String.prototype._AddFunction_Inline = function KeepAtMost(maxLength) {
+	    var moreMarkerStr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "...";
+
+	    if (this.length <= maxLength) return this;
+	    return this.substr(0, maxLength - moreMarkerStr.length) + moreMarkerStr;
+	};
+	String.prototype._AddFunction_Inline = function Func(func) {
+	    func.SetName(this);
+	    return func;
+	};
+	// special; creates a function with the given name, but also caches it per caller-line,
+	//   so every call from that line returns the same function instance
+	// REMOVED, because: we need to create new funcs to capture new closure values
+	/*var oneFuncCache = {};
+	String.prototype._AddFunction_Inline = function OneFunc(func) {
+	    var funcName = this;
+	    var callerLineStr = new Error().stack.split("\n")[3];
+	    var funcKey = `${funcName}@${callerLineStr}`;
+	    if (oneFuncCache[funcKey] == null) {
+	        func.SetName(this);
+	        //func.cached = true;
+	        oneFuncCache[funcKey] = func;
+	    }
+	    return oneFuncCache[funcKey];
+	};*/
+	String.prototype._AddFunction_Inline = function AsMultiline() {
+	    return this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
+	};
+	String.prototype._AddFunction_Inline = function Substring(start, end) {
+	    if (end < 0) end = this.length + end;
+	    return this.substring(start, end);
+	};
+	String.prototype._AddFunction_Inline = function ToInt() {
+	    return parseInt(this);
+	};
+	String.prototype._AddFunction_Inline = function ToFloat() {
+	    return parseFloat(this);
+	};
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	// Function
+	// ==========
+	Function.prototype._AddFunction_Inline = function AddTag(tag) {
+	    if (this.tags == null) this.tags = [];
+	    this.tags.push(tag);
+	    return this;
+	};
+	/*Function.prototype._AddFunction_Inline = function AddTags(/*o:*#/ tags___) { // (already implemented in VDF.js file)
+	    if (this.tags == null)
+	        this.tags = [];
+	    for (var i in arguments)
+	        this.tags.push(arguments[i]);
+	    return this;
+	};*/
+	/*function AddTags() {
+	    var tags = V.Slice(arguments, 0, arguments.length - 1);
+	    var func = V.Slice(arguments).Last();
+	    func.AddTags.apply(func, tags);
+	};*/
+	Function.prototype._AddFunction_Inline = function GetTags( /*o:*/type) {
+	    return (this.tags || []).Where(function (a) {
+	        return type == null || a instanceof type;
+	    });
+	};
+	//Function.prototype._AddFunction_Inline = function AsStr(...args) { return require("../../V/V").Multiline(this, ...args); };
+	//Function.prototype._AddFunction_Inline = function AsStr(useExtraPreprocessing) { return require("../../V/V").Multiline(this, useExtraPreprocessing); };
+	Function.prototype._AddFunction_Inline = function RunThenReturn(args___) {
+	    this.apply(null, arguments);return this;
+	};
+	Date.prototype._AddGetter_Inline = function MonthDate() {
+	    return new Date(this.getFullYear(), this.getMonth(), 1);
+	};
+	function isLeapYear(year) {
+	    return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
+	}
+	;
+	Date.prototype.isLeapYear = function () {
+	    return isLeapYear(this.getFullYear());
+	};
+	function getDaysInMonth(year, month) {
+	    return [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+	}
+	;
+	Date.prototype.getDaysInMonth = function () {
+	    return getDaysInMonth(this.getFullYear(), this.getMonth());
+	};
+	Date.prototype.AddMonths = function (value) {
+	    var n = this.getDate();
+	    this.setDate(1);
+	    this.setMonth(this.getMonth() + value);
+	    this.setDate(Math.min(n, this.getDaysInMonth()));
+	    return this;
+	};
+	Date.prototype.Clone = function () {
+	    return new Date(this.getTime());
+	};
 
 /***/ })
 /******/ ])

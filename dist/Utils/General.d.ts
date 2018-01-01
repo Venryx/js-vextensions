@@ -35,7 +35,7 @@ export declare class IDProvider {
     GetID(): number;
 }
 declare global  {
-    const nl: string;
+    var nl: string;
 }
 export declare function AsArray(args: any): any;
 export declare function Slice(args: any, start: any, end?: any): any;
