@@ -212,6 +212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.DeepGet = DeepGet;
 	exports.DeepSet = DeepSet;
 	exports.GetStackTraceStr = GetStackTraceStr;
+	exports.GetErrorMessagesUnderElement = GetErrorMessagesUnderElement;
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -806,6 +807,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //stackTrace = stackTrace || (sourceStackTrace ? StackTrace.get().then(stack=>stackTrace = stack.map(a=>a.toString()).join("\n")) : new Error().stack);
 	    stackTrace = stackTrace || new Error().stack;
 	    return stackTrace.substr(stackTrace.IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+	}
+	function GetErrorMessagesUnderElement(element) {
+	    //return element.querySelectorAll(":invalid").ToList().map(node=>node.validationMessage || `Invalid value.`);
+	    return Array.from(element.querySelectorAll(":invalid")).map(function (node) {
+	        return node.validationMessage || "Invalid value.";
+	    });
 	}
 
 /***/ }),

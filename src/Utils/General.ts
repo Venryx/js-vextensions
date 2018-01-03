@@ -153,7 +153,7 @@ export function Range(min: number, max: number, step = 1, includeMax = true, rou
 export function Global(target: Function) {
 	//var name = (target as any).GetName();
 	var name = target["name_fake"] || target.name || (target.toString().match(/^function\s*([^\s(]+)/) || [])[1];
-	
+
 	//console.log("Globalizing: " + name);
 	window[name] = target;
 }
@@ -454,4 +454,9 @@ export function GetStackTraceStr(...args) {
 	//stackTrace = stackTrace || (sourceStackTrace ? StackTrace.get().then(stack=>stackTrace = stack.map(a=>a.toString()).join("\n")) : new Error().stack);
 	stackTrace = stackTrace || new Error().stack;
 	return stackTrace.substr(stackTrace.IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+}
+
+export function GetErrorMessagesUnderElement(element) {
+	//return element.querySelectorAll(":invalid").ToList().map(node=>node.validationMessage || `Invalid value.`);
+	return Array.from(element.querySelectorAll(":invalid")).map(node=>(node as any).validationMessage || `Invalid value.`);
 }
