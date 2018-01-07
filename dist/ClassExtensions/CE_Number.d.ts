@@ -8,7 +8,7 @@ interface Number {
     RoundTo(multiple: number): number;
 }
 interface Number {
-    RoundTo_Str(multipleOf: number, removeEmptyFraction?: boolean): string;
+    RoundTo_Str(multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
 }
 interface Number {
     FloorTo(multipleOf: number): number;

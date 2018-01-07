@@ -67,7 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _JSVE = __webpack_require__(4);
+	var _JSVE = __webpack_require__(2);
 
 	Object.keys(_JSVE).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -79,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _General = __webpack_require__(2);
+	var _General = __webpack_require__(3);
 
 	Object.keys(_General).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _Assert = __webpack_require__(3);
+	var _Assert = __webpack_require__(4);
 
 	Object.keys(_Assert).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -167,6 +167,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var JSVE = exports.JSVE = function JSVE() {
+	  _classCallCheck(this, JSVE);
+	};
+
+	JSVE.logFunc = console.log;
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -816,7 +834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -831,9 +849,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Assert = Assert;
 	exports.AssertWarn = AssertWarn;
 
-	var _General = __webpack_require__(2);
+	var _General = __webpack_require__(3);
 
-	var _JSVE = __webpack_require__(4);
+	var _JSVE = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -920,24 +938,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	G({ A: A, A_NotEqualTo_Wrapper: A_NotEqualTo_Wrapper, A_OfType_Wrapper: A_OfType_Wrapper });
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var JSVE = exports.JSVE = function JSVE() {
-	  _classCallCheck(this, JSVE);
-	};
-
-	JSVE.logFunc = console.log;
 
 /***/ }),
 /* 5 */
@@ -1706,7 +1706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var _General = __webpack_require__(2);
+	var _General = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3678,7 +3678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Array.from(this);
 	};
 
-	var _require = __webpack_require__(2),
+	var _require = __webpack_require__(3),
 	    StableSort = _require.StableSort,
 	    Compare = _require.Compare;
 
@@ -3734,10 +3734,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Math.round(this * multiple_inverted) / multiple_inverted;
 	};
 	Number.prototype._AddFunction_Inline = function RoundTo_Str(multipleOf) {
-	    var removeEmptyFraction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+	    var fractionDigits = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	    var removeEmptyFraction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
 	    var resultValue = this.RoundTo(multipleOf);
-	    var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+	    var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
 	    if (removeEmptyFraction && result.Contains(".")) {
 	        result = result.TrimEnd("0").TrimEnd(".");
 	    }

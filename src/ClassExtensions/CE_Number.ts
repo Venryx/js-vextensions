@@ -23,10 +23,10 @@ Number.prototype._AddFunction_Inline = function RoundTo(this: number, multiple) 
 	let multiple_inverted = 1 / multiple;
 	return Math.round(this * multiple_inverted) / multiple_inverted;
 };
-interface Number { RoundTo_Str(multipleOf: number, removeEmptyFraction?: boolean): string; }
-Number.prototype._AddFunction_Inline = function RoundTo_Str(this: number, multipleOf, removeEmptyFraction = true) {
+interface Number { RoundTo_Str(multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string; }
+Number.prototype._AddFunction_Inline = function RoundTo_Str(this: number, multipleOf, fractionDigits = null, removeEmptyFraction = true) {
 	var resultValue = this.RoundTo(multipleOf);
-	var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+	var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
 	if (removeEmptyFraction && result.Contains(".")) {
 		result = result.TrimEnd("0").TrimEnd(".");
 	}
