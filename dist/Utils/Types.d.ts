@@ -59,6 +59,10 @@ declare global  {
 }
 export declare function ToString(val: any): string;
 declare global  {
+    function IsFunction(obj: any): obj is Function;
+}
+export declare function IsFunction(obj: any): obj is Function;
+declare global  {
     function IsConstructor(obj: any): obj is new (..._) => any;
 }
 export declare function IsConstructor(obj: any): obj is new (..._) => any;

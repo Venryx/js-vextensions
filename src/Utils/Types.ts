@@ -50,9 +50,16 @@ export function IsString(obj, allowStringObj = false): obj is string {
 G({ToString}); declare global { function ToString(val): string; }
 export function ToString(val) { return "" + val; }
 
+G({IsFunction}); declare global { function IsFunction(obj): obj is Function; }
+export function IsFunction(obj) : obj is Function {
+	//return obj instanceof Function;
+	return typeof obj == "function";
+}
+
 G({IsConstructor}); declare global { function IsConstructor(obj): obj is new(..._)=>any; }
 export function IsConstructor(obj) : obj is new(..._)=>any {
-	return obj instanceof Function && obj.name;
+	//return obj instanceof Function && obj.name;
+	return typeof obj == "function" && obj.name;
 }
 
 /*function TypeOrNameOrGetter_ToName<T>(typeOrNameOrGetter?: string | (new(..._)=>T) | ((_?)=>new(..._)=>T)): string {

@@ -1571,6 +1571,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.ToDouble = ToDouble;
 	exports.IsString = IsString;
 	exports.ToString = ToString;
+	exports.IsFunction = IsFunction;
 	exports.IsConstructor = IsConstructor;
 	// standard types
 	// ----------
@@ -1655,9 +1656,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	function ToString(val) {
 	    return "" + val;
 	}
+	G({ IsFunction: IsFunction });
+	function IsFunction(obj) {
+	    //return obj instanceof Function;
+	    return typeof obj == "function";
+	}
 	G({ IsConstructor: IsConstructor });
 	function IsConstructor(obj) {
-	    return obj instanceof Function && obj.name;
+	    //return obj instanceof Function && obj.name;
+	    return typeof obj == "function" && obj.name;
 	}
 	/*function TypeOrNameOrGetter_ToName<T>(typeOrNameOrGetter?: string | (new(..._)=>T) | ((_?)=>new(..._)=>T)): string {
 	    return typeOrNameOrGetter instanceof Function && typeOrNameOrGetter.name ? typeOrNameOrGetter.name :
