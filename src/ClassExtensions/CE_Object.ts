@@ -186,6 +186,7 @@ Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
 var specialProps = ["_", "_key", "_id"];
 
 interface Object { Props(excludeSpecialProps?: boolean): {index: number, name: string, value: any}[]; }
+interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
 Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = false) {
 	var result = [];
 	var i = 0;

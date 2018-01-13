@@ -55,6 +55,13 @@ interface Object {
     }[];
 }
 interface Object {
+    Props<ValueType>(excludeSpecialProps?: boolean): {
+        index: number;
+        name: string;
+        value: ValueType;
+    }[];
+}
+interface Object {
     VKeys(excludeSpecialProps?: boolean): string[];
 }
 interface Object {
