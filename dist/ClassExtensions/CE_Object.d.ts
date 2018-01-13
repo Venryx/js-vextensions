@@ -48,17 +48,14 @@ interface Object {
 }
 declare var specialProps: string[];
 interface Object {
-    Props(excludeSpecialProps?: boolean): {
+    Props<T>(this: {
+        [key: number]: T;
+    } | {
+        [key: string]: T;
+    }, excludeSpecialProps?: boolean): {
         index: number;
         name: string;
-        value: any;
-    }[];
-}
-interface Object {
-    Props<ValueType>(excludeSpecialProps?: boolean): {
-        index: number;
-        name: string;
-        value: ValueType;
+        value: T;
     }[];
 }
 interface Object {

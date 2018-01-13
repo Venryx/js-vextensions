@@ -2979,6 +2979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return result;
 	};
 	var specialProps = ["_", "_key", "_id"];
+	//interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
 	Object.prototype._AddFunction_Inline = function Props() {
 	    var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
