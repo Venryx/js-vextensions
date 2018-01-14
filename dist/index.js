@@ -2670,6 +2670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+	exports.GetStorageForCachedTransform = GetStorageForCachedTransform;
 	exports.CachedTransform = CachedTransform;
 	exports.CombineDynamicPropMaps = CombineDynamicPropMaps;
 
@@ -2693,29 +2694,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return true;
 	}
 
-	var Storage = function Storage() {
+	var Storage = exports.Storage = function Storage() {
 	    _classCallCheck(this, Storage);
 	};
 
-	var storages = {};
+	var storages = exports.storages = {};
+	function GetStorageForCachedTransform(transformType, staticProps) {
+	    //let storageKey = transformType + "|" + JSON.stringify(staticProps);
+	    var storageKey = transformType + "|" + staticProps.join("|");
+	    var storage = storages[storageKey] || (storages[storageKey] = new Storage());
+	    return storage;
+	}
 	/**
-	 * @param staticProps Can be either an object or array.
-	 * @param dynamicProps Can be either an object or array.
-	 * @param transformFunc The data-transformer. Whenever a dynamic-prop changes, this will be called, and the new result will be cached.
-	 */
-	/*export function CachedTransform<T, T2, T3>(staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3;
-	export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3;
-	export function CachedTransform<T, T2, T3>(...args) {
-	    let transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3;
-	    if (args.length == 3) {
-	        [staticProps, dynamicProps, transformFunc] = args;
-	        // if no transform-type specified, just use location of calling line of code
-	        transformType = new Error().stack.split("\n")[2];
-	        //transformType = (()=>{try {throw new Error();}catch(ex) {return ex.stack.split("\n")[3];}})(); // for ie
-	    } else {
-	        [transformType, staticProps, dynamicProps, transformFunc] = args;
-	    }*/
-	/**
+	 * Basically, by wrapping code in this function, you're saying:
+	 *		"Do not re-evaluate the code below unless the dynamic-props have changed since the last time we were here."
+	 *		(with the transformType and staticProps defining what "here" means)
 	 * @param transformType The name of the transformation; usually a function-name like "GetSomeThing", or "connectProp_processX". (used, along with static-props, to form a "storage key", where cache is checked for and stored)
 	 * @param staticProps An array.
 	 * @param dynamicProps Can be either an object or array.
@@ -2723,9 +2716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	//export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
 	function CachedTransform(transformType, staticProps, dynamicProps, transformFunc) {
-	    //let storageKey = transformType + "|" + JSON.stringify(staticProps);
-	    var storageKey = transformType + "|" + staticProps.join("|");
-	    var storage = storages[storageKey] || (storages[storageKey] = new Storage());
+	    var storage = GetStorageForCachedTransform(transformType, staticProps);
 	    if (!shallowEqual(dynamicProps, storage.lastDynamicProps)) {
 	        /*MaybeLog(a=>a.cacheUpdates,
 	            ()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/

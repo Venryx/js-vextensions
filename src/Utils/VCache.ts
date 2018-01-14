@@ -22,31 +22,23 @@ function shallowEqual(objA, objB) {
 	return true;
 }
 
-class Storage<T2, T3> {
+export class Storage<T2, T3> {
 	lastDynamicProps: T2;
 	lastResult: T3;
 }
-let storages = {} as {[storageKey: string]: Storage<any, any>};
+export let storages = {} as {[storageKey: string]: Storage<any, any>};
+
+export function GetStorageForCachedTransform<T2, T3>(transformType: string, staticProps: any[]) {
+	//let storageKey = transformType + "|" + JSON.stringify(staticProps);
+	let storageKey = transformType + "|" + staticProps.join("|");
+	let storage = storages[storageKey] as Storage<T2, T3> || (storages[storageKey] = new Storage<T2, T3>());
+	return storage;
+}
 
 /**
- * @param staticProps Can be either an object or array.
- * @param dynamicProps Can be either an object or array.
- * @param transformFunc The data-transformer. Whenever a dynamic-prop changes, this will be called, and the new result will be cached.
- */
-/*export function CachedTransform<T, T2, T3>(staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3;
-export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3;
-export function CachedTransform<T, T2, T3>(...args) {
-	let transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3;
-	if (args.length == 3) {
-		[staticProps, dynamicProps, transformFunc] = args;
-		// if no transform-type specified, just use location of calling line of code
-		transformType = new Error().stack.split("\n")[2];
-		//transformType = (()=>{try {throw new Error();}catch(ex) {return ex.stack.split("\n")[3];}})(); // for ie
-	} else {
-		[transformType, staticProps, dynamicProps, transformFunc] = args;
-	}*/
-
-/**
+ * Basically, by wrapping code in this function, you're saying:
+ *		"Do not re-evaluate the code below unless the dynamic-props have changed since the last time we were here."
+ *		(with the transformType and staticProps defining what "here" means)
  * @param transformType The name of the transformation; usually a function-name like "GetSomeThing", or "connectProp_processX". (used, along with static-props, to form a "storage key", where cache is checked for and stored)
  * @param staticProps An array.
  * @param dynamicProps Can be either an object or array.
@@ -54,9 +46,7 @@ export function CachedTransform<T, T2, T3>(...args) {
  */
 //export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
 export function CachedTransform<T, T2, T3>(transformType: string, staticProps: any[], dynamicProps: T2, transformFunc: (staticProps: any[], dynamicProps: T2)=>T3): T3 {
-	//let storageKey = transformType + "|" + JSON.stringify(staticProps);
-	let storageKey = transformType + "|" + staticProps.join("|");
-	let storage = storages[storageKey] as Storage<T2, T3> || (storages[storageKey] = new Storage<T2, T3>());
+	let storage = GetStorageForCachedTransform<T2, T3>(transformType, staticProps);
 	if (!shallowEqual(dynamicProps, storage.lastDynamicProps)) {
 		/*MaybeLog(a=>a.cacheUpdates,
 			()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
