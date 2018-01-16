@@ -832,6 +832,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return node.validationMessage || "Invalid value.";
 	    });
 	}
+	var DEL = exports.DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 
 /***/ }),
 /* 4 */
@@ -2867,8 +2868,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        propValue = args[1];
 	        options = args[2];
 	    }options = options || {};
+	    // also defined (and exported) from General.ts
+	    var DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 	    var SetProp = function SetProp(name, value) {
-	        if (value == "" && options.deleteEmpty) {
+	        if (value === DEL || value === undefined && options.deleteUndefined || value === null && options.deleteNull || value === "" && options.deleteEmpty) {
 	            delete _this[name];
 	            return;
 	        }

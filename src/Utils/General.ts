@@ -460,3 +460,5 @@ export function GetErrorMessagesUnderElement(element) {
 	//return element.querySelectorAll(":invalid").ToList().map(node=>node.validationMessage || `Invalid value.`);
 	return Array.from(element.querySelectorAll(":invalid")).map(node=>(node as any).validationMessage || `Invalid value.`);
 }
+
+export const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";

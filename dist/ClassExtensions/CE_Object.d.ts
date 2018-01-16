@@ -25,6 +25,8 @@ interface Object {
 }
 interface VSet_Options {
     prop?: PropertyDescriptor;
+    deleteUndefined?: boolean;
+    deleteNull?: boolean;
     deleteEmpty?: boolean;
 }
 interface Object {

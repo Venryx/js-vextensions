@@ -73,4 +73,5 @@ export declare function DeepGet<T>(obj: any, pathOrPathNodes: string | (string |
 export declare function DeepSet(obj: any, pathOrPathNodes: string | (string | number)[], newValue: any, sepChar?: string): void;
 export declare function GetStackTraceStr(sourceStackTrace?: boolean): any;
 export declare function GetErrorMessagesUnderElement(element: any): any[];
+export declare const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 export {};

@@ -104,8 +104,8 @@ Object.prototype._AddFunction_Inline = function Extend(x) {
 
 // as replacement for C#'s "new MyClass() {prop = true}"
 // seems this should work, to be consistent with in-class usage, but whatever; below it's an alternative that works for interfaces
-//interface Object { VSet(props: any): this; }
-interface VSet_Options {prop?: PropertyDescriptor, deleteEmpty?: boolean};
+//interface Object { etet(props: any): this; }
+interface VSet_Options {prop?: PropertyDescriptor, deleteUndefined?: boolean, deleteNull?: boolean, deleteEmpty?: boolean};
 interface Object {
 	VSet<T>(this: T, props: any, options?: VSet_Options): T;
 	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
@@ -116,8 +116,11 @@ Object.prototype._AddFunction_Inline = function VSet(...args) {
 	else [propName, propValue, options] = args;
 	options = options || {};
 
+	// also defined (and exported) from General.ts
+	var DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+
 	const SetProp = (name, value)=> {
-		if (value == "" && options.deleteEmpty) {
+		if (value === DEL || (value === undefined && options.deleteUndefined) || (value === null && options.deleteNull) || (value === "" && options.deleteEmpty)) {
 			delete this[name];
 			return;
 		}
