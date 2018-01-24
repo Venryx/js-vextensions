@@ -966,8 +966,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	var TimerContext = exports.TimerContext = function () {
+	    function TimerContext() {
+	        _classCallCheck(this, TimerContext);
+
+	        this.timers = [];
+	    }
+
+	    _createClass(TimerContext, [{
+	        key: "Reset",
+	        value: function Reset() {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = this.timers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var timer = _step.value;
+
+	                    timer.Stop();
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+
+	            this.timers = [];
+	        }
+	    }]);
+
+	    return TimerContext;
+	}();
 	// methods
 	// ==========
+
+
 	function TryCall(func) {
 	    //if (!(func instanceof Function)) return;
 	    if (typeof func != "function") return;
@@ -1034,6 +1077,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    _createClass(Timer, [{
+	        key: "SetContext",
+	        value: function SetContext(timerContext) {
+	            Assert(timerContext, "TimerContext cannot be null.");
+	            timerContext.timers.push(this);
+	            return this;
+	        }
+	    }, {
 	        key: "Start",
 	        value: function Start() {
 	            var _this = this;

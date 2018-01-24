@@ -1,3 +1,12 @@
+export class TimerContext {
+	timers = [] as Timer[];
+	Reset() {
+		for (let timer of this.timers)
+			timer.Stop();
+		this.timers = [];
+	}
+}
+
 // methods
 // ==========
 
@@ -66,6 +75,13 @@ export class Timer {
 	intervalInMS;
 	func;
 	maxCallCount;
+
+	SetContext(timerContext: TimerContext) {
+		Assert(timerContext, "TimerContext cannot be null.");
+		timerContext.timers.push(this);
+		return this;
+	}
+
 	timerID = -1;
 	get IsRunning() { return this.timerID != -1; }
 

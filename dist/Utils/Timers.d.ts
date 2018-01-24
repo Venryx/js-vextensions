@@ -1,3 +1,7 @@
+export declare class TimerContext {
+    timers: Timer[];
+    Reset(): void;
+}
 export declare function TryCall<T>(func: (..._) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
 declare global  {
@@ -12,6 +16,7 @@ export declare class Timer {
     intervalInMS: any;
     func: any;
     maxCallCount: any;
+    SetContext(timerContext: TimerContext): this;
     timerID: number;
     readonly IsRunning: boolean;
     callCount: number;
