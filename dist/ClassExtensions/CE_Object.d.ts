@@ -59,6 +59,11 @@ interface Object {
         name: string;
         value: T;
     }[];
+    Props<T>(excludeSpecialProps?: boolean): {
+        index: number;
+        name: string;
+        value: T;
+    }[];
 }
 interface Object {
     VKeys(excludeSpecialProps?: boolean): string[];
@@ -69,6 +74,7 @@ interface Object {
     } | {
         [key: string]: T;
     }, excludeSpecialProps?: boolean): T[];
+    VValues<T>(excludeSpecialProps?: boolean): T[];
 }
 interface Object {
     FA_Select<T, T2>(this: {
