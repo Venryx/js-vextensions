@@ -138,6 +138,14 @@ function Clone(obj) {
 		result.push(i);
 	return result;
 }*/
+/**
+ * Gets an array of the numbers between min and max.
+ * @param min 
+ * @param max
+ * @param step (default: 1)
+ * @param includeMax (default: true)
+ * @param roundToStep (default: true)
+ */
 export function Range(min: number, max: number, step = 1, includeMax = true, roundToStep = true) {
 	var result: number[] = [];
 	for (

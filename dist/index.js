@@ -411,6 +411,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        result.push(i);
 	    return result;
 	}*/
+	/**
+	 * Gets an array of the numbers between min and max.
+	 * @param min
+	 * @param max
+	 * @param step (default: 1)
+	 * @param includeMax (default: true)
+	 * @param roundToStep (default: true)
+	 */
 	function Range(min, max) {
 	    var step = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 	    var includeMax = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;

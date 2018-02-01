@@ -28,6 +28,14 @@ export declare function ToJSON_Try(...args: any[]): any;
 declare global  {
     function Clone(obj: any): any;
 }
+/**
+ * Gets an array of the numbers between min and max.
+ * @param min
+ * @param max
+ * @param step (default: 1)
+ * @param includeMax (default: true)
+ * @param roundToStep (default: true)
+ */
 export declare function Range(min: number, max: number, step?: number, includeMax?: boolean, roundToStep?: boolean): number[];
 export declare function Global(target: Function): void;
 export declare class IDProvider {
