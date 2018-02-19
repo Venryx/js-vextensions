@@ -1,6 +1,3 @@
-export function DoNothing(...args) {}
-export function DN(...args) {}
-
 if (Number.MIN_SAFE_INTEGER == null)
 	(Number as any).MIN_SAFE_INTEGER = -9007199254740991;
 if (Number.MAX_SAFE_INTEGER == null)
@@ -12,6 +9,11 @@ function G(...globalHolders) {
 		Object.assign(window, globalHolder);
 	}
 }
+
+declare global { function DoNothing(...args); } G({DoNothing});
+export function DoNothing(...args) {}
+declare global { function DN(...args); } G({DN});
+export function DN(...args) {}
 
 //var quickIncrementValues = {};
 //export function QuickIncrement(name = new Error().stack.split("\n")[2]) { // this doesn't always work, fsr
