@@ -1,12 +1,15 @@
+declare var global;
+let g = typeof window == "object" ? window : global;
+
 if (Number.MIN_SAFE_INTEGER == null)
 	(Number as any).MIN_SAFE_INTEGER = -9007199254740991;
 if (Number.MAX_SAFE_INTEGER == null)
 	(Number as any).MAX_SAFE_INTEGER = 9007199254740991;
 
-declare global { function G(...globalHolders); } window["G"] = G;
+declare global { function G(...globalHolders); } g["G"] = G;
 function G(...globalHolders) {
 	for (let globalHolder of globalHolders) {
-		Object.assign(window, globalHolder);
+		Object.assign(g, globalHolder);
 	}
 }
 
@@ -165,7 +168,7 @@ export function Global(target: Function) {
 	var name = target["name_fake"] || target.name || (target.toString().match(/^function\s*([^\s(]+)/) || [])[1];
 
 	//console.log("Globalizing: " + name);
-	window[name] = target;
+	g[name] = target;
 }
 
 export class IDProvider {

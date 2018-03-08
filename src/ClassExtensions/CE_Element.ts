@@ -1,4 +1,5 @@
 interface Element { GetParents(topDown?: boolean): HTMLElement[]; }
+if (typeof Element != "undefined")
 Element.prototype._AddItem("GetParents", function(this: HTMLElement, topDown = false) {
 	let result = [] as HTMLElement[];
 	let currentParent = this.parentElement;
@@ -10,12 +11,14 @@ Element.prototype._AddItem("GetParents", function(this: HTMLElement, topDown = f
 	return result;
 });
 interface Element { GetSelfAndParents(topDown?: boolean): HTMLElement[]; }
+if (typeof Element != "undefined")
 Element.prototype._AddItem("GetSelfAndParents", function(this: HTMLElement, topDown = false) {
 	let result = this.GetParents(topDown);
 	return topDown ? result.concat([this]) : [this].concat(result);
 });
 
 interface Element { $(queryStr: string): HTMLElement[]; }
+if (typeof Element != "undefined")
 Element.prototype._AddItem("$", function(this: Element, queryStr: string): HTMLElement[] {
 	return this.querySelectorAll(queryStr).ToArray();
 });

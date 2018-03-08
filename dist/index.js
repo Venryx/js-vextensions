@@ -187,7 +187,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ (function(module, exports) {
 
-	"use strict";
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -236,11 +236,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function DoNothing() {}
-	function DN() {}
+	var g = (typeof window === "undefined" ? "undefined" : _typeof(window)) == "object" ? window : global;
 	if (Number.MIN_SAFE_INTEGER == null) Number.MIN_SAFE_INTEGER = -9007199254740991;
 	if (Number.MAX_SAFE_INTEGER == null) Number.MAX_SAFE_INTEGER = 9007199254740991;
-	window["G"] = G;
+	g["G"] = G;
 	function G() {
 	    for (var _len = arguments.length, globalHolders = Array(_len), _key = 0; _key < _len; _key++) {
 	        globalHolders[_key] = arguments[_key];
@@ -254,7 +253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var _iterator = globalHolders[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	            var globalHolder = _step.value;
 
-	            Object.assign(window, globalHolder);
+	            Object.assign(g, globalHolder);
 	        }
 	    } catch (err) {
 	        _didIteratorError = true;
@@ -271,6 +270,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	}
+	G({ DoNothing: DoNothing });
+	function DoNothing() {}
+	G({ DN: DN });
+	function DN() {}
 	//var quickIncrementValues = {};
 	//export function QuickIncrement(name = new Error().stack.split("\n")[2]) { // this doesn't always work, fsr
 	function QuickIncrement() {
@@ -434,7 +437,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //var name = (target as any).GetName();
 	    var name = target["name_fake"] || target.name || (target.toString().match(/^function\s*([^\s(]+)/) || [])[1];
 	    //console.log("Globalizing: " + name);
-	    window[name] = target;
+	    g[name] = target;
 	}
 
 	var IDProvider = exports.IDProvider = function () {
@@ -841,6 +844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	}
 	var DEL = exports.DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ }),
 /* 4 */
@@ -3734,9 +3738,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (oldResult != result) debugger;*/
 	    return result;
 	};
-	NodeList.prototype._AddFunction_Inline = function ToArray() {
-	    return Array.from(this);
-	};
+	if (typeof NodeList != "undefined") {
+	    NodeList.prototype._AddFunction_Inline = function ToArray() {
+	        return Array.from(this);
+	    };
+	}
 
 	var _require = __webpack_require__(3),
 	    StableSort = _require.StableSort,
@@ -3748,7 +3754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	Element.prototype._AddItem("GetParents", function () {
+	if (typeof Element != "undefined") Element.prototype._AddItem("GetParents", function () {
 	    var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
 	    var result = [];
@@ -3760,13 +3766,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (topDown) result.reverse();
 	    return result;
 	});
-	Element.prototype._AddItem("GetSelfAndParents", function () {
+	if (typeof Element != "undefined") Element.prototype._AddItem("GetSelfAndParents", function () {
 	    var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
 	    var result = this.GetParents(topDown);
 	    return topDown ? result.concat([this]) : [this].concat(result);
 	});
-	Element.prototype._AddItem("$", function (queryStr) {
+	if (typeof Element != "undefined") Element.prototype._AddItem("$", function (queryStr) {
 	    return this.querySelectorAll(queryStr).ToArray();
 	});
 

@@ -1,8 +1,14 @@
-export declare function DoNothing(...args: any[]): void;
-export declare function DN(...args: any[]): void;
 declare global  {
     function G(...globalHolders: any[]): any;
 }
+declare global  {
+    function DoNothing(...args: any[]): any;
+}
+export declare function DoNothing(...args: any[]): void;
+declare global  {
+    function DN(...args: any[]): any;
+}
+export declare function DN(...args: any[]): void;
 export declare function QuickIncrement(name?: string): any;
 declare global  {
     function E<E1, E2, E3, E4, E5, E6, E7, E8>(e1?: E1, e2?: E2, e3?: E3, e4?: E4, e5?: E5, e6?: E6, e7?: E7, e8?: E8): E1 & E2 & E3 & E4 & E5 & E6 & E7 & E8;

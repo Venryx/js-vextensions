@@ -326,9 +326,11 @@ ArrayIterator.prototype._AddFunction_Inline = function ToArray() {
 // ==========
 
 interface NodeList { ToArray(): any[]; }
-NodeList.prototype._AddFunction_Inline = function ToArray() {
-    return Array.from(this);
-};
+if (typeof NodeList != "undefined") {
+	NodeList.prototype._AddFunction_Inline = function ToArray() {
+		return Array.from(this);
+	};
+}
 
 // late imports
 // ==========
