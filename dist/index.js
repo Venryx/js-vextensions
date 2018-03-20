@@ -2792,7 +2792,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /*MaybeLog(a=>a.cacheUpdates,
 	            ()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
 	        storage.lastDynamicProps = dynamicProps;
-	        storage.lastResult = transformFunc(staticProps, dynamicProps);
+	        storage.lastDebugInfo = {};
+	        storage.lastResult = transformFunc(storage.lastDebugInfo, staticProps, dynamicProps);
 	    }
 	    return storage.lastResult;
 	}

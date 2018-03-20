@@ -1,6 +1,7 @@
 export declare class Storage<T2, T3> {
     lastDynamicProps: T2;
     lastResult: T3;
+    lastDebugInfo: any;
 }
 export declare let storages: {
     [storageKey: string]: Storage<any, any>;
@@ -15,5 +16,5 @@ export declare function GetStorageForCachedTransform<T2, T3>(transformType: stri
  * @param dynamicProps Can be either an object or array.
  * @param transformFunc The data-transformer. Whenever a dynamic-prop changes, this will be called, and the new result will be cached.
  */
-export declare function CachedTransform<T, T2, T3>(transformType: string, staticProps: any[], dynamicProps: T2, transformFunc: (staticProps: any[], dynamicProps: T2) => T3): T3;
+export declare function CachedTransform<T, T2, T3>(transformType: string, staticProps: any[], dynamicProps: T2, transformFunc: (debugInfo: any, staticProps: any[], dynamicProps: T2) => T3): T3;
 export declare function CombineDynamicPropMaps(...maps: any[]): {};

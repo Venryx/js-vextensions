@@ -25,6 +25,7 @@ function shallowEqual(objA, objB) {
 export class Storage<T2, T3> {
 	lastDynamicProps: T2;
 	lastResult: T3;
+	lastDebugInfo: any;
 }
 export let storages = {} as {[storageKey: string]: Storage<any, any>};
 
@@ -45,14 +46,18 @@ export function GetStorageForCachedTransform<T2, T3>(transformType: string, stat
  * @param transformFunc The data-transformer. Whenever a dynamic-prop changes, this will be called, and the new result will be cached.
  */
 //export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
-export function CachedTransform<T, T2, T3>(transformType: string, staticProps: any[], dynamicProps: T2, transformFunc: (staticProps: any[], dynamicProps: T2)=>T3): T3 {
+export function CachedTransform<T, T2, T3>(
+	transformType: string, staticProps: any[], dynamicProps: T2,
+	transformFunc: (debugInfo: any, staticProps: any[], dynamicProps: T2)=>T3
+): T3 {
 	let storage = GetStorageForCachedTransform<T2, T3>(transformType, staticProps);
 	if (!shallowEqual(dynamicProps, storage.lastDynamicProps)) {
 		/*MaybeLog(a=>a.cacheUpdates,
 			()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
 
 		storage.lastDynamicProps = dynamicProps;
-		storage.lastResult = transformFunc(staticProps, dynamicProps);
+		storage.lastDebugInfo = {};
+		storage.lastResult = transformFunc(storage.lastDebugInfo, staticProps, dynamicProps);
 	}
 	return storage.lastResult;
 }
