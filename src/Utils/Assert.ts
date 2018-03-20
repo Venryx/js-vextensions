@@ -35,8 +35,14 @@ export function AssertSimple(condition, messageOrMessageFunc?: string | Function
 }*/
 
 export class A {
-    static set NonNull(value) {
-		Assert(value != null, `Value cannot be null. (provided value: ${value})`);
+	static get NonNull() {
+		return function<T>(value: T) {
+			Assert(value != null, ()=>`Value cannot be null. (provided value: ${value})`);
+			return value;
+		};
+	}
+	static set NonNull(value) {
+		A.NonNull(value);
 	}
 	static NotEqualTo(val1) {
 	    return new A_NotEqualTo_Wrapper(val1);

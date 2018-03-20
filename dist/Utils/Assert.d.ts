@@ -7,7 +7,7 @@ declare global  {
 }
 export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
 export declare class A {
-    static NonNull: any;
+    static NonNull: <T>(value: T) => T;
     static NotEqualTo(val1: any): A_NotEqualTo_Wrapper;
 }
 export declare class A_NotEqualTo_Wrapper {

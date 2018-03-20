@@ -908,8 +908,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: "NonNull",
+	        get: function get() {
+	            return function (value) {
+	                Assert(value != null, function () {
+	                    return "Value cannot be null. (provided value: " + value + ")";
+	                });
+	                return value;
+	            };
+	        },
 	        set: function set(value) {
-	            Assert(value != null, "Value cannot be null. (provided value: " + value + ")");
+	            A.NonNull(value);
 	        }
 	    }]);
 
