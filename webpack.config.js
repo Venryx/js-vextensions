@@ -1,5 +1,6 @@
 /* global __dirname */
 var webpack = require("webpack");
+var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 module.exports = {
 	entry: [
@@ -46,5 +47,6 @@ module.exports = {
 	plugins: [
 		new webpack.NoErrorsPlugin(),
 		//new webpack.IgnorePlugin(/react/),
+		new HardSourceWebpackPlugin(),
 	]
 };
