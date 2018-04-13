@@ -91,7 +91,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _Assert = __webpack_require__(4);
+	var _Changes = __webpack_require__(4);
+
+	Object.keys(_Changes).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _Changes[key];
+	    }
+	  });
+	});
+
+	var _Assert = __webpack_require__(5);
 
 	Object.keys(_Assert).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -103,7 +115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _Timers = __webpack_require__(5);
+	var _Timers = __webpack_require__(6);
 
 	Object.keys(_Timers).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -115,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _Types = __webpack_require__(9);
+	var _Types = __webpack_require__(10);
 
 	Object.keys(_Types).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -127,7 +139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _VectorStructs = __webpack_require__(10);
+	var _VectorStructs = __webpack_require__(11);
 
 	Object.keys(_VectorStructs).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -139,7 +151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _URLs = __webpack_require__(11);
+	var _URLs = __webpack_require__(12);
 
 	Object.keys(_URLs).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -151,7 +163,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _VCache = __webpack_require__(12);
+	var _VCache = __webpack_require__(13);
 
 	Object.keys(_VCache).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -163,7 +175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	__webpack_require__(13);
+	__webpack_require__(14);
 
 /***/ }),
 /* 2 */
@@ -284,6 +296,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	QuickIncrement["values"] = [];
 	G({ QuickIncrement: QuickIncrement });
+	var emptyEntities = exports.emptyEntities = { emptyObj: {}, emptyArray: [], emptyArray_forLoading: [] };
 	G({ E: E });
 	function E(e1, e2, e3, e4, e5, e6, e7, e8) {
 	    var result = {};
@@ -297,6 +310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            result.Extend(extend);
 	        }
+	        // if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
 	    } catch (err) {
 	        _didIteratorError2 = true;
 	        _iteratorError2 = err;
@@ -312,6 +326,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 
+	    if (emptyEntities.emptyObj && result.VKeys().length == 0) {
+	        return emptyEntities.emptyObj;
+	    }
 	    return result;
 	    //return StyleSheet.create(result);
 	}
@@ -848,6 +865,90 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.GetPropsChanged = GetPropsChanged;
+	exports.GetPropsChanged_WithValues = GetPropsChanged_WithValues;
+	function GetPropsChanged(obj1, obj2) {
+	    var returnNullIfSame = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+	    obj1 = obj1 || {}, obj2 = obj2 || {};
+	    var keys = obj1.VKeys().concat(obj2.VKeys()).Distinct();
+	    var result = [];
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var key = _step.value;
+
+	            if (obj1[key] !== obj2[key]) {
+	                result.push(key);
+	            }
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+
+	    if (result.length == 0 && returnNullIfSame) return null;
+	    return result;
+	}
+	function GetPropsChanged_WithValues(obj1, obj2) {
+	    var returnNullIfSame = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+	    obj1 = obj1 || {}, obj2 = obj2 || {};
+	    var keys = obj1.VKeys().concat(obj2.VKeys()).Distinct();
+	    var result = {};
+	    var _iteratorNormalCompletion2 = true;
+	    var _didIteratorError2 = false;
+	    var _iteratorError2 = undefined;
+
+	    try {
+	        for (var _iterator2 = keys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var key = _step2.value;
+
+	            if (obj1[key] !== obj2[key]) {
+	                result[key] = { 1: obj1[key], 2: obj2[key] };
+	            }
+	        }
+	    } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	            }
+	        } finally {
+	            if (_didIteratorError2) {
+	                throw _iteratorError2;
+	            }
+	        }
+	    }
+
+	    if (result.VKeys().length == 0 && returnNullIfSame) return null;
+	    return result;
+	}
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -961,7 +1062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	G({ A: A, A_NotEqualTo_Wrapper: A_NotEqualTo_Wrapper, A_OfType_Wrapper: A_OfType_Wrapper });
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate) {"use strict";
@@ -1172,10 +1273,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).setImmediate))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var apply = Function.prototype.apply;
@@ -1228,13 +1329,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	// setimmediate attaches itself to the global object
-	__webpack_require__(7);
+	__webpack_require__(8);
 	exports.setImmediate = setImmediate;
 	exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -1424,10 +1525,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    attachTo.clearImmediate = clearImmediate;
 	}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(8)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(9)))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 	// shim for using process in browser
@@ -1617,7 +1718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1768,7 +1869,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}*/
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2339,7 +2440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Vector2i_1, VVector2_1, Vector3i_1, VVector3_1, VRect_1;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -2728,7 +2829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}*/
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -2837,12 +2938,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
-
-	__webpack_require__(14);
 
 	__webpack_require__(15);
 
@@ -2854,8 +2953,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	__webpack_require__(19);
 
+	__webpack_require__(20);
+
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3122,7 +3223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// And use alternate names, so they don't get used in other files.
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3758,7 +3859,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Compare = _require.Compare;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3786,7 +3887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3867,7 +3968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -4114,7 +4215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 	"use strict";

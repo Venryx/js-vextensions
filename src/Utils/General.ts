@@ -27,12 +27,20 @@ export function QuickIncrement(name = "default") {
 QuickIncrement["values"] = [];
 G({QuickIncrement});
 
+export var emptyEntities = {emptyObj: {}, emptyArray: [], emptyArray_forLoading: []};
+
 G({E}); declare global {	function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8; }
 export							function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8 {
 	var result = {} as any;
 	for (var extend of arguments) {
 		result.Extend(extend);
 	}
+
+	// if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
+	if (emptyEntities.emptyObj && result.VKeys().length == 0) {
+		return emptyEntities.emptyObj as any;
+	}
+
 	return result;
 	//return StyleSheet.create(result);
 }
