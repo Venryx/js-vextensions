@@ -327,7 +327,9 @@ export function Bind<T extends Function>(func: T, newThis: any): T {
 	}
 }*/
 
-export function GetContentSize(content, includeMargin = false) {
+declare var $;
+let GetContentSize_cache = {};
+export function GetContentSize(content: string | Element, includeMargin = false, allowCache = true) {
 	/*var holder = $("#hiddenTempHolder");
 	var contentClone = content.clone();
 	holder.append(contentClone);
@@ -335,24 +337,32 @@ export function GetContentSize(content, includeMargin = false) {
 	var height = contentClone.outerHeight();
 	contentClone.remove();*/
 
-	var holder = document.querySelector("hiddenTempHolder2") as HTMLDivElement;
-	if (holder == null) {
-		holder = document.createElement("div");
-		holder.id = "hiddenTempHolder2";
-		holder.style.Extend({position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden"});
-		document.body.appendChild(holder);
-	}
-	
-	var contentClone = content.clone();
-	holder.appendChild(contentClone);
-	var width = contentClone.outerWidth(includeMargin) as number;
-	var height = contentClone.outerHeight(includeMargin) as number;
-	contentClone.remove();
+	let result = IsString(content) ? GetContentSize_cache[content] : null;
+	if (result == null) {
+		var holder = document.querySelector("hiddenTempHolder2") as HTMLDivElement;
+		if (holder == null) {
+			holder = document.createElement("div");
+			holder.id = "hiddenTempHolder2";
+			holder.style.Extend({position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden"});
+			document.body.appendChild(holder);
+		}
 
-	return {width, height};
+		let contentClone = IsString(content) ? $(content) : $(content).clone();
+		holder.appendChild(contentClone);
+		var width = contentClone.outerWidth(includeMargin) as number;
+		var height = contentClone.outerHeight(includeMargin) as number;
+		contentClone.remove();
+
+		result = {width, height};
+		if (IsString(content) && allowCache) {
+			GetContentSize_cache[content] = result;
+		}
+	}
+
+	return result;
 }
-export function GetContentWidth(content, includeMargin = false) { return GetContentSize(content, includeMargin).width; }
-export function GetContentHeight(content, includeMargin = false) { return GetContentSize(content, includeMargin).height; }
+export function GetContentWidth(content: string | Element, includeMargin = false, allowCache = true) { return GetContentSize(content, includeMargin, allowCache).width; }
+export function GetContentHeight(content: string | Element, includeMargin = false, allowCache = true) { return GetContentSize(content, includeMargin, allowCache).height; }
 
 export class TreeNode {
 	constructor(ancestorNodes: TreeNode[], obj, prop) {

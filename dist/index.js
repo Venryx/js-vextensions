@@ -664,16 +664,10 @@ function CloneArray(array) {
 function Bind(func, newThis) {
     return func.bind(newThis);
 }
-/*static ForEachChildInTreeXDoY(treeX: any, actionY: (value, key: string)=>void) {
-    for (let key in treeX) {
-        let value = treeX[key];
-        actionY(value, key);
-        if (typeof value == "object" || value instanceof Array)
-            V.ForEachChildInTreeXDoY(value, actionY);
-    }
-}*/
+var GetContentSize_cache = {};
 function GetContentSize(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
     /*var holder = $("#hiddenTempHolder");
     var contentClone = content.clone();
@@ -681,27 +675,36 @@ function GetContentSize(content) {
     var width = contentClone.outerWidth();
     var height = contentClone.outerHeight();
     contentClone.remove();*/
-    var holder = document.querySelector("hiddenTempHolder2");
-    if (holder == null) {
-        holder = document.createElement("div");
-        holder.id = "hiddenTempHolder2";
-        holder.style.Extend({ position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden" });
-        document.body.appendChild(holder);
+    var result = IsString(content) ? GetContentSize_cache[content] : null;
+    if (result == null) {
+        var holder = document.querySelector("hiddenTempHolder2");
+        if (holder == null) {
+            holder = document.createElement("div");
+            holder.id = "hiddenTempHolder2";
+            holder.style.Extend({ position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden" });
+            document.body.appendChild(holder);
+        }
+        var contentClone = IsString(content) ? $(content) : $(content).clone();
+        holder.appendChild(contentClone);
+        var width = contentClone.outerWidth(includeMargin);
+        var height = contentClone.outerHeight(includeMargin);
+        contentClone.remove();
+        result = { width: width, height: height };
+        if (IsString(content) && allowCache) {
+            GetContentSize_cache[content] = result;
+        }
     }
-    var contentClone = content.clone();
-    holder.appendChild(contentClone);
-    var width = contentClone.outerWidth(includeMargin);
-    var height = contentClone.outerHeight(includeMargin);
-    contentClone.remove();
-    return { width: width, height: height };
+    return result;
 }
 function GetContentWidth(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    return GetContentSize(content, includeMargin).width;
+    var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    return GetContentSize(content, includeMargin, allowCache).width;
 }
 function GetContentHeight(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    return GetContentSize(content, includeMargin).height;
+    var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    return GetContentSize(content, includeMargin, allowCache).height;
 }
 
 var TreeNode = exports.TreeNode = function () {

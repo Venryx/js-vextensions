@@ -69,12 +69,9 @@ export declare function GetXToYOut(minX: any, maxOutY: any, interval?: number): 
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;
 export declare function CloneArray(array: any): any;
 export declare function Bind<T extends Function>(func: T, newThis: any): T;
-export declare function GetContentSize(content: any, includeMargin?: boolean): {
-    width: number;
-    height: number;
-};
-export declare function GetContentWidth(content: any, includeMargin?: boolean): number;
-export declare function GetContentHeight(content: any, includeMargin?: boolean): number;
+export declare function GetContentSize(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
+export declare function GetContentWidth(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
+export declare function GetContentHeight(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
 export declare class TreeNode {
     constructor(ancestorNodes: TreeNode[], obj: any, prop: any);
     ancestorNodes: TreeNode[];
