@@ -66,4 +66,3 @@ declare global  {
     function IsConstructor(obj: any): obj is new (..._) => any;
 }
 export declare function IsConstructor(obj: any): obj is new (..._) => any;
-export {};

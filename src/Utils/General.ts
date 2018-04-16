@@ -327,7 +327,6 @@ export function Bind<T extends Function>(func: T, newThis: any): T {
 	}
 }*/
 
-declare var $;
 export function GetContentSize(content, includeMargin = false) {
 	/*var holder = $("#hiddenTempHolder");
 	var contentClone = content.clone();
@@ -336,12 +335,19 @@ export function GetContentSize(content, includeMargin = false) {
 	var height = contentClone.outerHeight();
 	contentClone.remove();*/
 
-	var holder = $("<div id='hiddenTempHolder2' style='position: absolute; left: -1000; top: -1000; width: 1000; height: 1000; overflow: hidden;'>").appendTo("body");
+	var holder = document.querySelector("hiddenTempHolder2") as HTMLDivElement;
+	if (holder == null) {
+		holder = document.createElement("div");
+		holder.id = "hiddenTempHolder2";
+		holder.style.Extend({position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden"});
+		document.body.appendChild(holder);
+	}
+	
 	var contentClone = content.clone();
-	holder.append(contentClone);
+	holder.appendChild(contentClone);
 	var width = contentClone.outerWidth(includeMargin) as number;
 	var height = contentClone.outerHeight(includeMargin) as number;
-	holder.remove();
+	contentClone.remove();
 
 	return {width, height};
 }

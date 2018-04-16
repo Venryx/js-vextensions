@@ -3,6 +3,7 @@ var webpack = require("webpack");
 var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 module.exports = {
+	mode: "none",
 	entry: [
 		"./src/index.ts"
 	],
@@ -15,8 +16,8 @@ module.exports = {
 	},
 	resolve: {
 		//root: paths.client(),
-		root: "src",
-		extensions: ["", ".js", ".jsx", ".ts", ".tsx", ".json"],
+		//root: "src",
+		extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
 	},
 	externals: {
 		// use external version of React (ie, don't bundle react, since any app using this library will already have it available)
@@ -28,10 +29,10 @@ module.exports = {
         noParse: ["react"]
     },*/
     module: {
-        loaders: [
+        rules: [
 			{
 				test: /\.(jsx?|tsx?)$/,
-				loader: "babel",
+				loader: "babel-loader",
 				exclude: /node_modules/,
 				query: {
 					presets: ["es2015", "react"]
@@ -45,7 +46,7 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new webpack.NoErrorsPlugin(),
+		new webpack.NoEmitOnErrorsPlugin(),
 		//new webpack.IgnorePlugin(/react/),
 		new HardSourceWebpackPlugin(),
 	]

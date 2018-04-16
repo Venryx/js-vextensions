@@ -20,4 +20,3 @@ export declare class A_OfType_Wrapper {
     type: any;
     a: any;
 }
-export {};
