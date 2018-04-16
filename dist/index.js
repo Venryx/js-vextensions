@@ -685,7 +685,7 @@ function GetContentSize(content) {
             document.body.appendChild(holder);
         }
         var contentClone = IsString(content) ? $(content) : $(content).clone();
-        holder.appendChild(contentClone);
+        holder.appendChild(contentClone[0]);
         var width = contentClone.outerWidth(includeMargin);
         var height = contentClone.outerHeight(includeMargin);
         contentClone.remove();

@@ -348,7 +348,7 @@ export function GetContentSize(content: string | Element, includeMargin = false,
 		}
 
 		let contentClone = IsString(content) ? $(content) : $(content).clone();
-		holder.appendChild(contentClone);
+		holder.appendChild(contentClone[0]);
 		var width = contentClone.outerWidth(includeMargin) as number;
 		var height = contentClone.outerHeight(includeMargin) as number;
 		contentClone.remove();
