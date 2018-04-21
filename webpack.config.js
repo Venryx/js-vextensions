@@ -12,7 +12,8 @@ module.exports = {
 		publicPath: "http://localhost:8080/",
 		filename: "index.js",
 		libraryTarget: "umd",
-    	//library: "react-vscrollview",
+		//library: "react-vscrollview",
+		globalObject: "typeof self !== \"undefined\" ? self : this",
 	},
 	resolve: {
 		//root: paths.client(),
