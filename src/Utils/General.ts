@@ -254,12 +254,15 @@ export function Compare(a, b, caseSensitive = true) {
 }
 
 // just use the word 'percent', even though value is represented as fraction (e.g. 0.5, rather than 50[%])
-export function Lerp(from, to, percentFromXToY) { return from + ((to - from) * percentFromXToY); }
-export function GetPercentFromXToY(start, end, val, clampResultTo0Through1 = true) {
+export function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange = true) {
+	let result = from + ((to - from) * percentFromXToY);
+	if (keepResultInRange) result = result.KeepBetween(from, to);
+	return result;
+}
+export function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange = true) {
 	// distance-from-x / distance-from-x-required-for-result-'1'
 	var result = (val - start) / (end - start);
-	if (clampResultTo0Through1)
-		result = result.KeepBetween(0, 1);
+	if (keepResultInRange) result = result.KeepBetween(0, 1);
 	return result;
 }
 

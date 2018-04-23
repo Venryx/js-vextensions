@@ -62,8 +62,8 @@ export declare function Multiline(functionWithInCommentMultiline: any, useExtraP
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort(array: any, compare: (aItem, bItem, aIndex: number, bIndex: number) => number): any;
 export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
-export declare function Lerp(from: any, to: any, percentFromXToY: any): any;
-export declare function GetPercentFromXToY(start: any, end: any, val: any, clampResultTo0Through1?: boolean): number;
+export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
+export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;
 export declare function GetXToY(minX: any, maxY: any, interval?: number): any[];
 export declare function GetXToYOut(minX: any, maxOutY: any, interval?: number): any[];
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;

@@ -29,7 +29,7 @@ interface Number {
     KeepAtMost(this: number, max: number): number;
 }
 interface Number {
-    KeepBetween(this: number, min: number, max: number): number;
+    KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number;
 }
 interface Number {
     WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number;

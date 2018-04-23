@@ -61,8 +61,11 @@ interface Number { KeepAtMost(this: number, max: number): number; }
 Number.prototype._AddFunction_Inline = function KeepAtMost(max) {
 	return Math.min(max, this);
 };
-interface Number { KeepBetween(this: number, min: number, max: number): number; }
-Number.prototype._AddFunction_Inline = function KeepBetween(min, max) {
+interface Number { KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number; }
+Number.prototype._AddFunction_Inline = function KeepBetween(min, max, allowFixMinMax = true) {
+	if (min > max && allowFixMinMax) {
+		[min, max] = [max, min];
+	}
 	if (this < min) return min;
 	if (this > max) return max;
 	return this;

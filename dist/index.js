@@ -580,14 +580,18 @@ function Compare(a, b) {
 }
 // just use the word 'percent', even though value is represented as fraction (e.g. 0.5, rather than 50[%])
 function Lerp(from, to, percentFromXToY) {
-    return from + (to - from) * percentFromXToY;
+    var keepResultInRange = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
+    var result = from + (to - from) * percentFromXToY;
+    if (keepResultInRange) result = result.KeepBetween(from, to);
+    return result;
 }
 function GetPercentFromXToY(start, end, val) {
-    var clampResultTo0Through1 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+    var keepResultInRange = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
 
     // distance-from-x / distance-from-x-required-for-result-'1'
     var result = (val - start) / (end - start);
-    if (clampResultTo0Through1) result = result.KeepBetween(0, 1);
+    if (keepResultInRange) result = result.KeepBetween(0, 1);
     return result;
 }
 function GetXToY(minX, maxY) {
@@ -4047,6 +4051,13 @@ Number.prototype._AddFunction_Inline = function KeepAtMost(max) {
     return Math.min(max, this);
 };
 Number.prototype._AddFunction_Inline = function KeepBetween(min, max) {
+    var allowFixMinMax = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+    if (min > max && allowFixMinMax) {
+        var _ref = [max, min];
+        min = _ref[0];
+        max = _ref[1];
+    }
     if (this < min) return min;
     if (this > max) return max;
     return this;
