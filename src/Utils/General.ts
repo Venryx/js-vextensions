@@ -330,7 +330,7 @@ export function Bind<T extends Function>(func: T, newThis: any): T {
 declare var $;
 let GetContentSize_cache = {};
 export function GetContentSize(content: string | Element, includeMargin = false, allowCache = true) {
-	/*var holder = $("#hiddenTempHolder");
+	/*var holder = $("#jsve_hiddenContainer");
 	var contentClone = content.clone();
 	holder.append(contentClone);
 	var width = contentClone.outerWidth();
@@ -339,10 +339,10 @@ export function GetContentSize(content: string | Element, includeMargin = false,
 
 	let result = IsString(content) ? GetContentSize_cache[content] : null;
 	if (result == null) {
-		var holder = document.querySelector("hiddenTempHolder2") as HTMLDivElement;
+		var holder = document.querySelector("#jsve_hiddenContainer") as HTMLDivElement;
 		if (holder == null) {
 			holder = document.createElement("div");
-			holder.id = "hiddenTempHolder2";
+			holder.id = "jsve_hiddenContainer";
 			holder.style.Extend({position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden"});
 			document.body.appendChild(holder);
 		}

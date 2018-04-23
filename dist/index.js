@@ -669,7 +669,7 @@ function GetContentSize(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-    /*var holder = $("#hiddenTempHolder");
+    /*var holder = $("#jsve_hiddenContainer");
     var contentClone = content.clone();
     holder.append(contentClone);
     var width = contentClone.outerWidth();
@@ -677,10 +677,10 @@ function GetContentSize(content) {
     contentClone.remove();*/
     var result = IsString(content) ? GetContentSize_cache[content] : null;
     if (result == null) {
-        var holder = document.querySelector("hiddenTempHolder2");
+        var holder = document.querySelector("#jsve_hiddenContainer");
         if (holder == null) {
             holder = document.createElement("div");
-            holder.id = "hiddenTempHolder2";
+            holder.id = "jsve_hiddenContainer";
             holder.style.Extend({ position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden" });
             document.body.appendChild(holder);
         }
