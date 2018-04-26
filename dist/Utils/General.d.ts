@@ -90,3 +90,9 @@ export declare function DeepSet(obj: any, pathOrPathNodes: string | (string | nu
 export declare function GetStackTraceStr(sourceStackTrace?: boolean): any;
 export declare function GetErrorMessagesUnderElement(element: any): any[];
 export declare const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+declare global  {
+    function FindDOM(selector: string): Element;
+}
+declare global  {
+    function FindDOMAll(selector: string): Element[];
+}

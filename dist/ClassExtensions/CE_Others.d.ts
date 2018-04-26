@@ -15,6 +15,3 @@ interface Date {
 interface Date {
     Clone: () => Date;
 }
-interface Error {
-    readonly Stack: string;
-}

@@ -924,6 +924,14 @@ function GetErrorMessagesUnderElement(element) {
     });
 }
 var DEL = exports.DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+G({ FindDOM: FindDOM });
+function FindDOM(selector) {
+    return document.querySelector(selector);
+}
+G({ FindDOMAll: FindDOMAll });
+function FindDOMAll(selector) {
+    return Array.from(document.querySelectorAll(selector));
+}
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),

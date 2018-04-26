@@ -514,3 +514,12 @@ export function GetErrorMessagesUnderElement(element) {
 }
 
 export const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+
+declare global { function FindDOM(selector: string): Element; } G({FindDOM});
+function FindDOM(selector: string) {
+	return document.querySelector(selector);
+}
+declare global { function FindDOMAll(selector: string): Element[]; } G({FindDOMAll});
+function FindDOMAll(selector: string) {
+	return Array.from(document.querySelectorAll(selector));
+}
