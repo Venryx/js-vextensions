@@ -906,7 +906,15 @@ function GetStackTraceStr() {
         sourceStackTrace = args[0];
     } //stackTrace = stackTrace || new Error()[sourceStackTrace ? "Stack" : "stack"];
     //stackTrace = stackTrace || (sourceStackTrace ? StackTrace.get().then(stack=>stackTrace = stack.map(a=>a.toString()).join("\n")) : new Error().stack);
-    stackTrace = stackTrace || new Error().stack;
+    //stackTrace = stackTrace || new Error().stack;
+    if (stackTrace == null) {
+        //let fakeError = {}.VAct(a=>Error.captureStackTrace(a));
+        var oldStackLimit = Error.stackTraceLimit;
+        Error.stackTraceLimit = Infinity;
+        var fakeError = new Error();
+        stackTrace = fakeError.stack;
+        Error.stackTraceLimit = oldStackLimit;
+    }
     return stackTrace.substr(stackTrace.IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 function GetErrorMessagesUnderElement(element) {
@@ -4393,6 +4401,17 @@ Date.prototype.AddMonths = function (value) {
 Date.prototype.Clone = function () {
     return new Date(this.getTime());
 };
+// Error
+// ==========
+/*interface Error { readonly Stack: string; }
+Error.prototype._AddGetter_Inline = function Stack() {
+    // this causes the full stack-trace to be attached to the Error object (in Chrome)
+    if ((Error as any).captureStackTrace) {
+        //(Error as any).captureStackTrace(instance, GetStackTraceStr);
+        (Error as any).captureStackTrace(this);
+    }
+    return this.stack;
+}*/
 
 /***/ })
 /******/ ]);

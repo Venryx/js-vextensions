@@ -68,4 +68,12 @@ Date.prototype.Clone = function() {
 // Error
 // ==========
 
-interface Error { readonly Stack: string; }
+/*interface Error { readonly Stack: string; }
+Error.prototype._AddGetter_Inline = function Stack() {
+	// this causes the full stack-trace to be attached to the Error object (in Chrome)
+	if ((Error as any).captureStackTrace) {
+		//(Error as any).captureStackTrace(instance, GetStackTraceStr);
+		(Error as any).captureStackTrace(this);
+	}
+	return this.stack;
+}*/

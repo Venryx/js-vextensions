@@ -492,7 +492,19 @@ export function GetStackTraceStr(...args) {
 
 	//stackTrace = stackTrace || new Error()[sourceStackTrace ? "Stack" : "stack"];
 	//stackTrace = stackTrace || (sourceStackTrace ? StackTrace.get().then(stack=>stackTrace = stack.map(a=>a.toString()).join("\n")) : new Error().stack);
-	stackTrace = stackTrace || new Error().stack;
+	//stackTrace = stackTrace || new Error().stack;
+
+	if (stackTrace == null) {
+		//let fakeError = {}.VAct(a=>Error.captureStackTrace(a));
+		let oldStackLimit = (Error as any).stackTraceLimit;
+		(Error as any).stackTraceLimit = Infinity;
+
+		let fakeError = new Error();
+		stackTrace = fakeError.stack;
+		
+		(Error as any).stackTraceLimit = oldStackLimit;
+	}
+
 	return stackTrace.substr(stackTrace.IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 
