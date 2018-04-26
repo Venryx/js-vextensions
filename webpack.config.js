@@ -40,10 +40,6 @@ module.exports = {
 				}
 			},
 			{test: /\.tsx?$/, loader: "ts-loader"},
-			{
-				test: /\.(png|jpg|jpeg|svg)$/,
-				loader: "file"
-			}
 		]
 	},
 	plugins: [
