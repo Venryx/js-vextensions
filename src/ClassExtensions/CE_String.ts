@@ -12,8 +12,10 @@ String.prototype._AddFunction_Inline = function TrimEnd(this: string, ...chars: 
 	return this.substr(0, iOfLastToKeep + 1);
 };
 
-interface String { Contains: (str)=>boolean; }
-String.prototype._AddFunction_Inline = function Contains(str, /*;optional:*/ startIndex) { return -1 !== String.prototype.indexOf.call(this, str, startIndex); };
+interface String { Contains(str: string, startIndex?: number): boolean; }
+String.prototype._AddFunction_Inline = function Contains(str: string, startIndex?: number) {
+	return this.indexOf(str, startIndex) !== -1;
+};
 String.prototype._AddFunction_Inline = function hashCode() {
 	var hash = 0;
 	for (var i = 0; i < this.length; i++) {

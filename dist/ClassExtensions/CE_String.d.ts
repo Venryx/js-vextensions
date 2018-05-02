@@ -5,7 +5,7 @@ interface String {
     TrimEnd(...chars: string[]): string;
 }
 interface String {
-    Contains: (str) => boolean;
+    Contains(str: string, startIndex?: number): boolean;
 }
 interface String {
     Matches(str: string): {

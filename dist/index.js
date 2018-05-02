@@ -268,6 +268,7 @@ exports.Bind = Bind;
 exports.GetContentSize = GetContentSize;
 exports.GetContentWidth = GetContentWidth;
 exports.GetContentHeight = GetContentHeight;
+exports.GetAutoElement = GetAutoElement;
 exports.GetTreeNodesInObjTree = GetTreeNodesInObjTree;
 exports.GetTreeNodesInPath = GetTreeNodesInPath;
 exports.VisitTreeNodesInPath = VisitTreeNodesInPath;
@@ -668,6 +669,24 @@ function CloneArray(array) {
 function Bind(func, newThis) {
     return func.bind(newThis);
 }
+/*static ForEachChildInTreeXDoY(treeX: any, actionY: (value, key: string)=>void) {
+    for (let key in treeX) {
+        let value = treeX[key];
+        actionY(value, key);
+        if (typeof value == "object" || value instanceof Array)
+            V.ForEachChildInTreeXDoY(value, actionY);
+    }
+}*/
+function GetHiddenHolder() {
+    var holder = document.querySelector("#jsve_hiddenContainer");
+    if (holder == null) {
+        holder = document.createElement("div");
+        holder.id = "jsve_hiddenContainer";
+        holder.style.Extend({ position: "absolute", left: "-1000px", top: "-1000px", width: "1000px", height: "1000px", overflow: "hidden" });
+        document.body.appendChild(holder);
+    }
+    return holder;
+}
 var GetContentSize_cache = {};
 function GetContentSize(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -681,13 +700,7 @@ function GetContentSize(content) {
     contentClone.remove();*/
     var result = IsString(content) ? GetContentSize_cache[content] : null;
     if (result == null) {
-        var holder = document.querySelector("#jsve_hiddenContainer");
-        if (holder == null) {
-            holder = document.createElement("div");
-            holder.id = "jsve_hiddenContainer";
-            holder.style.Extend({ position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden" });
-            document.body.appendChild(holder);
-        }
+        var holder = GetHiddenHolder();
         var contentClone = IsString(content) ? $(content) : $(content).clone();
         holder.appendChild(contentClone[0]);
         var width = contentClone.outerWidth(includeMargin);
@@ -709,6 +722,16 @@ function GetContentHeight(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
     return GetContentSize(content, includeMargin, allowCache).height;
+}
+var autoElements = exports.autoElements = {};
+function GetAutoElement(startHTML) {
+    if (autoElements[startHTML] == null) {
+        var holder = GetHiddenHolder();
+        var element = $(startHTML)[0];
+        holder.appendChild(element);
+        autoElements[startHTML] = element;
+    }
+    return autoElements[startHTML];
 }
 
 var TreeNode = exports.TreeNode = function () {
@@ -3349,8 +3372,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-Array.prototype._AddFunction_Inline = function Contains(items) {
-    return this.indexOf(items) != -1;
+Array.prototype._AddFunction_Inline = function Contains(item) {
+    return this.indexOf(item) != -1;
 };
 Array.prototype._AddFunction_Inline = function ContainsAny() {
     for (var _len = arguments.length, items = Array(_len), _key = 0; _key < _len; _key++) {
@@ -3365,7 +3388,9 @@ Array.prototype._AddFunction_Inline = function ContainsAny() {
         for (var _iterator = items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var item = _step.value;
 
-            if (this.indexOf(item) != -1) return true;
+            if (this.indexOf(item) != -1) {
+                return true;
+            }
         }
     } catch (err) {
         _didIteratorError = true;
@@ -4121,8 +4146,8 @@ String.prototype._AddFunction_Inline = function TrimEnd() {
     for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && chars.Contains(this[iOfLastToKeep]); iOfLastToKeep--) {}
     return this.substr(0, iOfLastToKeep + 1);
 };
-String.prototype._AddFunction_Inline = function Contains(str, /*;optional:*/startIndex) {
-    return -1 !== String.prototype.indexOf.call(this, str, startIndex);
+String.prototype._AddFunction_Inline = function Contains(str, startIndex) {
+    return this.indexOf(str, startIndex) !== -1;
 };
 String.prototype._AddFunction_Inline = function hashCode() {
     var hash = 0;

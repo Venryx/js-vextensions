@@ -2,6 +2,9 @@ interface Array<T> {
     Contains(item: T): boolean;
 }
 interface Array<T> {
+    ContainsAny(...items: T[]): boolean;
+}
+interface Array<T> {
     AddRange(items: T[]): this;
 }
 interface Array<T> {

@@ -72,6 +72,10 @@ export declare function Bind<T extends Function>(func: T, newThis: any): T;
 export declare function GetContentSize(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
 export declare function GetContentWidth(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
 export declare function GetContentHeight(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
+export declare let autoElements: {
+    [key: string]: Element;
+};
+export declare function GetAutoElement(startHTML: string): Element;
 export declare class TreeNode {
     constructor(ancestorNodes: TreeNode[], obj: any, prop: any);
     ancestorNodes: TreeNode[];

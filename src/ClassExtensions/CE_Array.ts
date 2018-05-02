@@ -1,9 +1,12 @@
 interface Array<T> { Contains(item: T): boolean; }
-Array.prototype._AddFunction_Inline = function Contains(items) { return this.indexOf(items) != -1; };
+Array.prototype._AddFunction_Inline = function Contains(item) { return this.indexOf(item) != -1; };
+interface Array<T> { ContainsAny(...items: T[]): boolean; }
 Array.prototype._AddFunction_Inline = function ContainsAny(...items) {
-    for (let item of items)
-        if (this.indexOf(item) != -1)
-            return true;
+    for (let item of items) {
+        if (this.indexOf(item) != -1) {
+				return true;
+		  }
+	 }
     return false;
 };
 

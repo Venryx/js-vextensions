@@ -330,6 +330,17 @@ export function Bind<T extends Function>(func: T, newThis: any): T {
 	}
 }*/
 
+function GetHiddenHolder() {
+	let holder = document.querySelector("#jsve_hiddenContainer") as HTMLDivElement;
+	if (holder == null) {
+		holder = document.createElement("div");
+		holder.id = "jsve_hiddenContainer";
+		holder.style.Extend({position: "absolute", left: `-1000px`, top: `-1000px`, width: `1000px`, height: `1000px`, overflow: "hidden"});
+		document.body.appendChild(holder);
+	}
+	return holder;
+}
+
 declare var $;
 let GetContentSize_cache = {};
 export function GetContentSize(content: string | Element, includeMargin = false, allowCache = true) {
@@ -342,13 +353,7 @@ export function GetContentSize(content: string | Element, includeMargin = false,
 
 	let result = IsString(content) ? GetContentSize_cache[content] : null;
 	if (result == null) {
-		var holder = document.querySelector("#jsve_hiddenContainer") as HTMLDivElement;
-		if (holder == null) {
-			holder = document.createElement("div");
-			holder.id = "jsve_hiddenContainer";
-			holder.style.Extend({position: "absolute", left: -1000, top: -1000, width: 1000, height: 1000, overflow: "hidden"});
-			document.body.appendChild(holder);
-		}
+		let holder = GetHiddenHolder();
 
 		let contentClone = IsString(content) ? $(content) : $(content).clone();
 		holder.appendChild(contentClone[0]);
@@ -366,6 +371,17 @@ export function GetContentSize(content: string | Element, includeMargin = false,
 }
 export function GetContentWidth(content: string | Element, includeMargin = false, allowCache = true) { return GetContentSize(content, includeMargin, allowCache).width; }
 export function GetContentHeight(content: string | Element, includeMargin = false, allowCache = true) { return GetContentSize(content, includeMargin, allowCache).height; }
+
+export let autoElements = {} as {[key: string]: Element};
+export function GetAutoElement(startHTML: string) {
+	if (autoElements[startHTML] == null) {
+		let holder = GetHiddenHolder();
+		let element = $(startHTML)[0];
+		holder.appendChild(element);
+		autoElements[startHTML] = element;
+	}
+	return autoElements[startHTML];
+}
 
 export class TreeNode {
 	constructor(ancestorNodes: TreeNode[], obj, prop) {
