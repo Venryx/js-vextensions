@@ -690,7 +690,8 @@ function GetHiddenHolder() {
 var GetContentSize_cache = {};
 function GetContentSize(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    var createClone = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var allowCache = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
 
     /*var holder = $("#jsve_hiddenContainer");
     var contentClone = content.clone();
@@ -698,30 +699,36 @@ function GetContentSize(content) {
     var width = contentClone.outerWidth();
     var height = contentClone.outerHeight();
     contentClone.remove();*/
-    var result = IsString(content) ? GetContentSize_cache[content] : null;
+    var cacheStore = IsString(content) ? GetContentSize_cache : content["GetContentSize_cache"] = content["GetContentSize_cache"] || {};
+    var currentHTML = IsString(content) ? content : content.outerHTML;
+    var result = cacheStore[currentHTML];
     if (result == null) {
         var holder = GetHiddenHolder();
-        var contentClone = IsString(content) ? $(content) : $(content).clone();
-        holder.appendChild(contentClone[0]);
-        var width = contentClone.outerWidth(includeMargin);
-        var height = contentClone.outerHeight(includeMargin);
-        contentClone.remove();
+        var testElement = IsString(content) ? $(content) : createClone ? $(content).clone() : $(content);
+        holder.appendChild(testElement[0]);
+        var width = testElement.outerWidth(includeMargin);
+        var height = testElement.outerHeight(includeMargin);
+        testElement.remove();
         result = { width: width, height: height };
-        if (IsString(content) && allowCache) {
-            GetContentSize_cache[content] = result;
+        if (allowCache) {
+            cacheStore[currentHTML] = result;
         }
     }
     return result;
 }
 function GetContentWidth(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-    return GetContentSize(content, includeMargin, allowCache).width;
+    var createClone = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var allowCache = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
+    return GetContentSize(content, includeMargin, createClone, allowCache).width;
 }
 function GetContentHeight(content) {
     var includeMargin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var allowCache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-    return GetContentSize(content, includeMargin, allowCache).height;
+    var createClone = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var allowCache = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
+    return GetContentSize(content, includeMargin, createClone, allowCache).height;
 }
 var autoElements = exports.autoElements = {};
 function GetAutoElement(startHTML) {

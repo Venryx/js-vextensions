@@ -343,7 +343,7 @@ function GetHiddenHolder() {
 
 declare var $;
 let GetContentSize_cache = {};
-export function GetContentSize(content: string | Element, includeMargin = false, allowCache = true) {
+export function GetContentSize(content: string | Element, includeMargin = false, createClone = false, allowCache = true) {
 	/*var holder = $("#jsve_hiddenContainer");
 	var contentClone = content.clone();
 	holder.append(contentClone);
@@ -351,26 +351,32 @@ export function GetContentSize(content: string | Element, includeMargin = false,
 	var height = contentClone.outerHeight();
 	contentClone.remove();*/
 
-	let result = IsString(content) ? GetContentSize_cache[content] : null;
+	let cacheStore = IsString(content) ? GetContentSize_cache : (content["GetContentSize_cache"] = content["GetContentSize_cache"] || {});
+	let currentHTML = IsString(content) ? content : content.outerHTML;
+
+	let result = cacheStore[currentHTML];
 	if (result == null) {
 		let holder = GetHiddenHolder();
 
-		let contentClone = IsString(content) ? $(content) : $(content).clone();
-		holder.appendChild(contentClone[0]);
-		var width = contentClone.outerWidth(includeMargin) as number;
-		var height = contentClone.outerHeight(includeMargin) as number;
-		contentClone.remove();
+		let testElement = IsString(content) ? $(content) : (createClone ? $(content).clone() : $(content));
+		holder.appendChild(testElement[0]);
+		var width = testElement.outerWidth(includeMargin) as number;
+		var height = testElement.outerHeight(includeMargin) as number;
+		testElement.remove();
 
 		result = {width, height};
-		if (IsString(content) && allowCache) {
-			GetContentSize_cache[content] = result;
+		if (allowCache) {
+			cacheStore[currentHTML] = result;
 		}
 	}
-
 	return result;
 }
-export function GetContentWidth(content: string | Element, includeMargin = false, allowCache = true) { return GetContentSize(content, includeMargin, allowCache).width; }
-export function GetContentHeight(content: string | Element, includeMargin = false, allowCache = true) { return GetContentSize(content, includeMargin, allowCache).height; }
+export function GetContentWidth(content: string | Element, includeMargin = false, createClone = false, allowCache = true) {
+	return GetContentSize(content, includeMargin, createClone, allowCache).width;
+}
+export function GetContentHeight(content: string | Element, includeMargin = false, createClone = false, allowCache = true) {
+	return GetContentSize(content, includeMargin, createClone, allowCache).height;
+}
 
 export let autoElements = {} as {[key: string]: Element};
 export function GetAutoElement(startHTML: string) {

@@ -61,7 +61,7 @@ export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort(array: any, compare: (aItem, bItem, aIndex: number, bIndex: number) => number): any;
-export declare function Compare(a: any, b: any, caseSensitive?: boolean): 1 | -1 | 0;
+export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
 export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
 export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;
 export declare function GetXToY(minX: any, maxY: any, interval?: number): any[];
@@ -69,9 +69,9 @@ export declare function GetXToYOut(minX: any, maxOutY: any, interval?: number): 
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;
 export declare function CloneArray(array: any): any;
 export declare function Bind<T extends Function>(func: T, newThis: any): T;
-export declare function GetContentSize(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
-export declare function GetContentWidth(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
-export declare function GetContentHeight(content: string | Element, includeMargin?: boolean, allowCache?: boolean): any;
+export declare function GetContentSize(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
+export declare function GetContentWidth(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
+export declare function GetContentHeight(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
 export declare let autoElements: {
     [key: string]: Element;
 };
