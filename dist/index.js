@@ -1097,8 +1097,9 @@ function Assert(condition, messageOrMessageFunc) {
     var message = messageOrMessageFunc instanceof Function ? messageOrMessageFunc() : messageOrMessageFunc;
     _JSVE.JSVE.logFunc("Assert failed) " + message + "\n\nStackTrace) " + (0, _General.GetStackTraceStr)());
     console.error("Assert failed) " + message);
+    var skipError = false; // add flag which you can use to skip the error, when paused in debugger
     debugger;
-    throw new Error("Assert failed) " + message);
+    if (!skipError) throw new Error("Assert failed) " + message);
 }
 G({ AssertWarn: AssertWarn });
 function AssertWarn(condition, messageOrMessageFunc) {

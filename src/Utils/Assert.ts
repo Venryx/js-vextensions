@@ -9,8 +9,10 @@ export function Assert(condition, messageOrMessageFunc?: string | Function) {
 
 	JSVE.logFunc(`Assert failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
 	console.error("Assert failed) " + message);
+
+	let skipError = false; // add flag which you can use to skip the error, when paused in debugger
 	debugger;
-	throw new Error("Assert failed) " + message);
+	if (!skipError) throw new Error("Assert failed) " + message);
 }
 G({AssertWarn}); declare global { function AssertWarn(condition, messageOrMessageFunc?: string | Function); }
 export function AssertWarn(condition, messageOrMessageFunc?: string | Function) {
