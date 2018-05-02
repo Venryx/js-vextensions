@@ -2,6 +2,9 @@ interface Number {
     IfN1Then<T>(valIfSelfIsNeg1: T): T;
 }
 interface Number {
+    NaNTo<T>(valIfSelfIsNaN: T): T;
+}
+interface Number {
     ToPercentStr(precision?: number): string;
 }
 interface Number {

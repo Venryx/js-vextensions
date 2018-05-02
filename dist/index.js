@@ -4041,7 +4041,10 @@ if (typeof Element != "undefined") Element.prototype._AddItem("$", function (que
 
 
 Number.prototype._AddFunction_Inline = function IfN1Then(valIfSelfIsNeg1) {
-    return this != -1 ? this : valIfSelfIsNeg1;
+    return this == -1 ? valIfSelfIsNeg1 : this;
+};
+Number.prototype._AddFunction_Inline = function NaNTo(valIfSelfIsNaN) {
+    return IsNaN(this) ? valIfSelfIsNaN : this;
 };
 Number.prototype._AddFunction_Inline = function ToPercentStr(precision) {
     var number = this * 100;

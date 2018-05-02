@@ -1,6 +1,11 @@
 interface Number { IfN1Then<T>(valIfSelfIsNeg1: T): T; }
 Number.prototype._AddFunction_Inline = function IfN1Then(this: number, valIfSelfIsNeg1) {
-	return this != -1 ? this : valIfSelfIsNeg1;
+	return this == -1 ? valIfSelfIsNeg1 : this;
+};
+
+interface Number { NaNTo<T>(valIfSelfIsNaN: T): T; }
+Number.prototype._AddFunction_Inline = function NaNTo(valIfSelfIsNaN) {
+	return IsNaN(this) ? valIfSelfIsNaN : this;
 };
 
 //Number.prototype._AddFunction_Inline = function RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
@@ -54,15 +59,15 @@ Number.prototype._AddFunction_Inline = function CeilingTo_Str(this: number, mult
 };
 
 interface Number { KeepAtLeast(this: number, min: number): number; }
-Number.prototype._AddFunction_Inline = function KeepAtLeast(min) {
+Number.prototype._AddFunction_Inline = function KeepAtLeast(min: number) {
 	return Math.max(min, this);
 };
 interface Number { KeepAtMost(this: number, max: number): number; }
-Number.prototype._AddFunction_Inline = function KeepAtMost(max) {
+Number.prototype._AddFunction_Inline = function KeepAtMost(max: number) {
 	return Math.min(max, this);
 };
 interface Number { KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number; }
-Number.prototype._AddFunction_Inline = function KeepBetween(min, max, allowFixMinMax = true) {
+Number.prototype._AddFunction_Inline = function KeepBetween(min: number, max: number, allowFixMinMax = true) {
 	if (min > max && allowFixMinMax) {
 		[min, max] = [max, min];
 	}
@@ -71,7 +76,7 @@ Number.prototype._AddFunction_Inline = function KeepBetween(min, max, allowFixMi
 	return this;
 };
 interface Number { WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number; }
-Number.prototype._AddFunction_Inline = function WrapToRange(min, max, maxOut = true) {
+Number.prototype._AddFunction_Inline = function WrapToRange(min: number, max: number, maxOut = true) {
 	let val = this;
 	let size = max - min;
 	while (val < min) val += size;
@@ -79,7 +84,7 @@ Number.prototype._AddFunction_Inline = function WrapToRange(min, max, maxOut = t
 	return val;
 };
 interface Number { Distance(this: number, other: number): number; }
-Number.prototype._AddFunction_Inline = function Distance(other) {
+Number.prototype._AddFunction_Inline = function Distance(other: number) {
 	return Math.abs(this - other);
 };
 interface Number { ToPower(this: number, power: number): number; }
