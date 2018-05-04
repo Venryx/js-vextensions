@@ -41,10 +41,12 @@ export function GetUrlParts(url?: string): [string, string, string, string] {
 	let [domainStr, pathStr, varsStr, hashStr] = Array(4).fill(0).map(a=>"");
 
 	let urlToProcess = url;
-	if (urlToProcess.Contains("#") && !varsStr.Contains("runJS="))
+	if (urlToProcess.Contains("#") && !varsStr.Contains("runJS=")) {
 		[urlToProcess, hashStr] = urlToProcess.SplitAt(urlToProcess.indexOf("#"));
-	if (urlToProcess.Contains("?"))
+	}
+	if (urlToProcess.Contains("?")) {
 		[urlToProcess, varsStr] = urlToProcess.SplitAt(urlToProcess.indexOf("?"));
+	}
 	//if (urlToProcess.Matches("/").length == )
 	[domainStr, pathStr] = urlToProcess.SplitAt(urlToProcess.IndexOf_X("/", 2).IfN1Then(urlToProcess.length));
 
@@ -61,10 +63,12 @@ function GetUrlPath(url?: string, fromDomain = true) {
 		pathStr = pathStr.slice(0, -1);
 	return pathStr;
 }
-function GetUrlVars(url?: string) {
+function GetUrlVars(url?: string, allowQuestionMarkAsVarSep = true) {
+	let varSeparators = allowQuestionMarkAsVarSep ? ["&", "?"] : ["&"];
+	
 	let [_, __, varsStr] = GetUrlParts(url);
 	var vars = {} as any; //{[key: string]: string};
-	var parts = varsStr.split("&").filter(a=>a);
+	var parts = varsStr.SplitByAny(...varSeparators).filter(a=>a);
 	for (let part of parts) {
 		let [key, value] = part.SplitAt(part.indexOf("="))
 		vars[key] = value;
@@ -77,18 +81,19 @@ function GetUrlVars(url?: string) {
 }*/
 
 export class VURL {
-	static Parse(urlStr: string, useCurrentDomainIfMissing = true) {
+	static Parse(urlStr: string, useCurrentDomainIfMissing = true, allowQuestionMarkAsVarSep = true) {
 		if (useCurrentDomainIfMissing && !urlStr.startsWith("http"))
 			urlStr = window.location.origin + (urlStr.startsWith("/") ? "" : "/") + urlStr;
 		
 		let [domainStr, pathStr, varsStr, hashStr] = GetUrlParts(urlStr);
-		let queryVarsMap = GetUrlVars(urlStr);
+		let queryVarsMap = GetUrlVars(urlStr, allowQuestionMarkAsVarSep);
 		
 		let result = new VURL();
 		result.domain = domainStr;
 		result.pathNodes = pathStr.length ? pathStr.split("/") : [];
-		for (let key in queryVarsMap)
+		for (let key in queryVarsMap) {
 			result.queryVars.push(new QueryVar(key, queryVarsMap[key]));
+		}
 		result.hash = hashStr;
 		return result;
 	}

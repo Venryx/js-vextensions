@@ -129,7 +129,7 @@ String.prototype._AddFunction_Inline = function SplitByAny(...separators) {
 		splitStr += (splitStr.length > 1 ? "|" : "") + sep;
 	splitStr += "/";
 	return this.split(splitStr);*/
-	let regex = new RegExp(separators.join("|"));
+	let regex = new RegExp(separators.map(a=>`\\${a}`).join("|"));
 	return this.split(regex);
 };
 interface String { SplitAt: (index: number, includeCharAtIndex?)=>[string, string]; }

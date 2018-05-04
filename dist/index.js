@@ -2649,24 +2649,22 @@ function GetUrlParts(url) {
 
     var urlToProcess = url;
     if (urlToProcess.Contains("#") && !varsStr.Contains("runJS=")) {
-        ;
-
         var _urlToProcess$SplitAt = urlToProcess.SplitAt(urlToProcess.indexOf("#"));
 
         var _urlToProcess$SplitAt2 = _slicedToArray(_urlToProcess$SplitAt, 2);
 
         urlToProcess = _urlToProcess$SplitAt2[0];
         hashStr = _urlToProcess$SplitAt2[1];
-    }if (urlToProcess.Contains("?")) {
-        ;
-
+    }
+    if (urlToProcess.Contains("?")) {
         var _urlToProcess$SplitAt3 = urlToProcess.SplitAt(urlToProcess.indexOf("?"));
 
         var _urlToProcess$SplitAt4 = _slicedToArray(_urlToProcess$SplitAt3, 2);
 
         urlToProcess = _urlToProcess$SplitAt4[0];
         varsStr = _urlToProcess$SplitAt4[1];
-    } //if (urlToProcess.Matches("/").length == )
+    }
+    //if (urlToProcess.Matches("/").length == )
 
     var _urlToProcess$SplitAt5 = urlToProcess.SplitAt(urlToProcess.IndexOf_X("/", 2).IfN1Then(urlToProcess.length));
 
@@ -2694,6 +2692,10 @@ function GetUrlPath(url) {
     return pathStr;
 }
 function GetUrlVars(url) {
+    var allowQuestionMarkAsVarSep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+    var varSeparators = allowQuestionMarkAsVarSep ? ["&", "?"] : ["&"];
+
     var _GetUrlParts3 = GetUrlParts(url),
         _GetUrlParts4 = _slicedToArray(_GetUrlParts3, 3),
         _ = _GetUrlParts4[0],
@@ -2701,7 +2703,7 @@ function GetUrlVars(url) {
         varsStr = _GetUrlParts4[2];
 
     var vars = {}; //{[key: string]: string};
-    var parts = varsStr.split("&").filter(function (a) {
+    var parts = varsStr.SplitByAny.apply(varsStr, varSeparators).filter(function (a) {
         return a;
     });
     var _iteratorNormalCompletion = true;
@@ -2755,6 +2757,7 @@ var VURL = exports.VURL = function () {
         key: "Parse",
         value: function Parse(urlStr) {
             var useCurrentDomainIfMissing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+            var allowQuestionMarkAsVarSep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
             if (useCurrentDomainIfMissing && !urlStr.startsWith("http")) urlStr = window.location.origin + (urlStr.startsWith("/") ? "" : "/") + urlStr;
 
@@ -2765,13 +2768,14 @@ var VURL = exports.VURL = function () {
                 varsStr = _GetUrlParts6[2],
                 hashStr = _GetUrlParts6[3];
 
-            var queryVarsMap = GetUrlVars(urlStr);
+            var queryVarsMap = GetUrlVars(urlStr, allowQuestionMarkAsVarSep);
             var result = new VURL();
             result.domain = domainStr;
             result.pathNodes = pathStr.length ? pathStr.split("/") : [];
             for (var key in queryVarsMap) {
                 result.queryVars.push(new QueryVar(key, queryVarsMap[key]));
-            }result.hash = hashStr;
+            }
+            result.hash = hashStr;
             return result;
         }
     }, {
@@ -4324,7 +4328,9 @@ String.prototype._AddFunction_Inline = function SplitByAny() {
         splitStr += (splitStr.length > 1 ? "|" : "") + sep;
     splitStr += "/";
     return this.split(splitStr);*/
-    var regex = new RegExp(separators.join("|"));
+    var regex = new RegExp(separators.map(function (a) {
+        return "\\" + a;
+    }).join("|"));
     return this.split(regex);
 };
 String.prototype.SplitAt = function (index) {
