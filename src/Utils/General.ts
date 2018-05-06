@@ -189,7 +189,6 @@ export class IDProvider {
 //const nl = "\n";
 G({nl: "\n"}); declare global { var nl: string; }
 
-
 declare global { function AsObj(obj: any): any; } G({AsObj});
 function AsObj(obj: any) { 
 	if (typeof obj == "object") return obj;
