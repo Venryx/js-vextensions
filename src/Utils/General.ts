@@ -189,6 +189,14 @@ export class IDProvider {
 //const nl = "\n";
 G({nl: "\n"}); declare global { var nl: string; }
 
+
+declare global { function AsObj(obj: any): any; } G({AsObj});
+function AsObj(obj: any) { 
+	if (typeof obj == "object") return obj;
+	if (obj != null) return obj.Props().ToMap(a=>a.name, a=>a.value);
+	return {};
+}
+
 export function AsArray(args) { return Slice(args, 0); };
 //s.ToArray = function(args) { return s.Slice(args, 0); };
 export function Slice(args, start, end?) { return Array.prototype.slice.call(args, start != null ? start : 0, end); };

@@ -510,6 +510,16 @@ var IDProvider = exports.IDProvider = function () {
 
 
 G({ nl: "\n" });
+G({ AsObj: AsObj });
+function AsObj(obj) {
+    if ((typeof obj === "undefined" ? "undefined" : _typeof(obj)) == "object") return obj;
+    if (obj != null) return obj.Props().ToMap(function (a) {
+        return a.name;
+    }, function (a) {
+        return a.value;
+    });
+    return {};
+}
 function AsArray(args) {
     return Slice(args, 0);
 }
