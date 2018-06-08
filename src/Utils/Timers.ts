@@ -1,8 +1,9 @@
 export class TimerContext {
 	timers = [] as Timer[];
 	Reset() {
-		for (let timer of this.timers)
+		for (let timer of this.timers) {
 			timer.Stop();
+		}
 		this.timers = [];
 	}
 }
@@ -39,14 +40,14 @@ G({WaitXThenRun});
 export function WaitXThenRun(delayInMS, func, ...args): number {
 	// setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
 	// on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
-	if (delayInMS == 0)
+	if (delayInMS == 0) {
 		return setImmediate(func, ...args);
+	}
 	return setTimeout(func, delayInMS, ...args);
 }
 export function Sleep(ms) {
 	var startTime = new Date().getTime();
-	while (new Date().getTime() - startTime < ms)
-	{}
+	while (new Date().getTime() - startTime < ms) {}
 }
 export function SleepAsync(timeMS) {
 	return new Promise((resolve, reject)=> {
@@ -56,11 +57,13 @@ export function SleepAsync(timeMS) {
 
 var DoNothingXTimesThenDoY_counters = {};
 export function DoNothingXTimesThenDoY(doNothingCount: number, func: Function, key = "default") {
-	if (DoNothingXTimesThenDoY_counters[key] == null)
+	if (DoNothingXTimesThenDoY_counters[key] == null) {
 		DoNothingXTimesThenDoY_counters[key] = 0;
+	}
 		
-	if (DoNothingXTimesThenDoY_counters[key] >= doNothingCount)
+	if (DoNothingXTimesThenDoY_counters[key] >= doNothingCount) {
 		func();
+	}
 	DoNothingXTimesThenDoY_counters[key]++;
 }
 
@@ -72,9 +75,9 @@ export class Timer {
 	    this.maxCallCount = maxCallCount;
 	}
 
-	intervalInMS;
-	func;
-	maxCallCount;
+	intervalInMS: number;
+	func: Function;
+	maxCallCount: number;
 
 	SetContext(timerContext: TimerContext) {
 		Assert(timerContext, "TimerContext cannot be null.");
@@ -95,8 +98,9 @@ export class Timer {
 		this.timerID = setInterval(()=> {
 			this.func();
 			this.callCount++;
-			if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount)
+			if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
 				this.Stop();
+			}
 		}, this.intervalInMS);
 		return this;
 	}

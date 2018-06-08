@@ -13,9 +13,9 @@ export declare function SleepAsync(timeMS: any): Promise<{}>;
 export declare function DoNothingXTimesThenDoY(doNothingCount: number, func: Function, key?: string): void;
 export declare class Timer {
     constructor(intervalInMS: any, func: any, maxCallCount?: number);
-    intervalInMS: any;
-    func: any;
-    maxCallCount: any;
+    intervalInMS: number;
+    func: Function;
+    maxCallCount: number;
     SetContext(timerContext: TimerContext): this;
     timerID: number;
     readonly IsRunning: boolean;

@@ -1303,7 +1303,9 @@ function WaitXThenRun(delayInMS, func) {
 
     // setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
     // on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
-    if (delayInMS == 0) return setImmediate.apply(undefined, [func].concat(args));
+    if (delayInMS == 0) {
+        return setImmediate.apply(undefined, [func].concat(args));
+    }
     return setTimeout.apply(undefined, [func, delayInMS].concat(args));
 }
 function Sleep(ms) {
@@ -1319,8 +1321,12 @@ var DoNothingXTimesThenDoY_counters = {};
 function DoNothingXTimesThenDoY(doNothingCount, func) {
     var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "default";
 
-    if (DoNothingXTimesThenDoY_counters[key] == null) DoNothingXTimesThenDoY_counters[key] = 0;
-    if (DoNothingXTimesThenDoY_counters[key] >= doNothingCount) func();
+    if (DoNothingXTimesThenDoY_counters[key] == null) {
+        DoNothingXTimesThenDoY_counters[key] = 0;
+    }
+    if (DoNothingXTimesThenDoY_counters[key] >= doNothingCount) {
+        func();
+    }
     DoNothingXTimesThenDoY_counters[key]++;
 }
 // interval is in seconds (can be decimal)
@@ -1357,7 +1363,9 @@ var Timer = exports.Timer = function () {
             this.timerID = setInterval(function () {
                 _this.func();
                 _this.callCount++;
-                if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) _this.Stop();
+                if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) {
+                    _this.Stop();
+                }
             }, this.intervalInMS);
             return this;
         }
