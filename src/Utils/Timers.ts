@@ -87,6 +87,11 @@ export class Timer {
 
 	callCount = 0;
 	Start() {
+		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing a second triggering)
+		if (this.IsRunning) {
+			this.Stop();
+		}
+		
 		this.timerID = setInterval(()=> {
 			this.func();
 			this.callCount++;

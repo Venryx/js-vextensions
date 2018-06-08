@@ -1350,6 +1350,10 @@ var Timer = exports.Timer = function () {
         value: function Start() {
             var _this = this;
 
+            // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing a second triggering)
+            if (this.IsRunning) {
+                this.Stop();
+            }
             this.timerID = setInterval(function () {
                 _this.func();
                 _this.callCount++;
