@@ -104,6 +104,9 @@ interface Array<T> {
 interface Array<T> {
     Median(): number;
 }
+interface Array<T> {
+    Random(): T;
+}
 declare var oldJoin: (separator?: string) => string;
 interface NodeList {
     ToArray(): any[];

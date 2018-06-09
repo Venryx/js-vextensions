@@ -3553,7 +3553,9 @@ Array.prototype._AddFunction_Inline = function Any(matchFunc) {
                 index = _step4$value[0],
                 item = _step4$value[1];
 
-            if (matchFunc == null || matchFunc.call(item, item, index)) return true;
+            if (matchFunc == null || matchFunc.call(item, item, index)) {
+                return true;
+            }
         }
     } catch (err) {
         _didIteratorError4 = true;
@@ -3583,7 +3585,9 @@ Array.prototype._AddFunction_Inline = function All(matchFunc) {
                 index = _step5$value[0],
                 item = _step5$value[1];
 
-            if (!matchFunc.call(item, item, index)) return false;
+            if (!matchFunc.call(item, item, index)) {
+                return false;
+            }
         }
     } catch (err) {
         _didIteratorError5 = true;
@@ -3614,8 +3618,10 @@ Array.prototype._AddFunction_Inline = function Where(matchFunc) {
                 index = _step6$value[0],
                 item = _step6$value[1];
 
-            if (matchFunc.call(item, item, index)) // call, having the item be "this", as well as the first argument
+            if (matchFunc.call(item, item, index)) {
+                // call, having the item be "this", as well as the first argument
                 result.push(item);
+            }
         }
     } catch (err) {
         _didIteratorError6 = true;
@@ -3711,7 +3717,9 @@ Array.prototype._AddFunction_Inline = function Clear() {
 };
 Array.prototype._AddFunction_Inline = function First(matchFunc) {
     var result = this.FirstOrX(matchFunc);
-    if (result == null) throw new Error("Matching item not found.");
+    if (result == null) {
+        throw new Error("Matching item not found.");
+    }
     return result;
 };
 Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc) {
@@ -3728,7 +3736,9 @@ Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc) {
                     index = _step9$value[0],
                     item = _step9$value[1];
 
-                if (matchFunc.call(item, item, index)) return item;
+                if (matchFunc.call(item, item, index)) {
+                    return item;
+                }
             }
         } catch (err) {
             _didIteratorError9 = true;
@@ -3744,7 +3754,9 @@ Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc) {
                 }
             }
         }
-    } else if (this.length > 0) return this[0];
+    } else if (this.length > 0) {
+        return this[0];
+    }
     return x;
 };
 //Array.prototype._AddFunction_Inline = function FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
@@ -3755,7 +3767,9 @@ Array.prototype._AddFunction_Inline = function FirstWith(propName, propValue) {
 };
 Array.prototype._AddFunction_Inline = function Last(matchFunc) {
     var result = this.LastOrX(matchFunc);
-    if (result == null) throw new Error("Matching item not found.");
+    if (result == null) {
+        throw new Error("Matching item not found.");
+    }
     return result;
 };
 Array.prototype._AddFunction_Inline = function LastOrX(matchFunc) {
@@ -3763,9 +3777,13 @@ Array.prototype._AddFunction_Inline = function LastOrX(matchFunc) {
 
     if (matchFunc) {
         for (var i = this.length - 1; i >= 0; i--) {
-            if (matchFunc.call(this[i], this[i], i)) return this[i];
+            if (matchFunc.call(this[i], this[i], i)) {
+                return this[i];
+            }
         }
-    } else if (this.length > 0) return this[this.length - 1];
+    } else if (this.length > 0) {
+        return this[this.length - 1];
+    }
     return x;
 };
 Array.prototype._AddFunction_Inline = function XFromLast(x) {
@@ -3774,8 +3792,8 @@ Array.prototype._AddFunction_Inline = function XFromLast(x) {
 // since JS doesn't have basic "foreach" system
 Array.prototype._AddFunction_Inline = function ForEach(func) {
     for (var i in this) {
-        func.call(this[i], this[i], i);
-    } // call, having the item be "this", as well as the first argument
+        func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
+    }
 };
 Array.prototype._AddFunction_Inline = function Move(item, newIndex) {
     var shiftInsertPointToPreserveFinalNeighbors = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -3831,19 +3849,22 @@ Array.prototype._AddFunction_Inline = function Skip(count) {
     var result = [];
     for (var i = count; i < this.length; i++) {
         result.push(this[i]);
-    }return result;
+    }
+    return result;
 };
 Array.prototype._AddFunction_Inline = function Take(count) {
     var result = [];
     for (var i = 0; i < count && i < this.length; i++) {
         result.push(this[i]);
-    }return result;
+    }
+    return result;
 };
 Array.prototype._AddFunction_Inline = function TakeLast(count) {
     var result = [];
     for (var i = 0; i < count && this.length - 1 - i >= 0; i++) {
         result.push(this[this.length - 1 - i]);
-    }return result;
+    }
+    return result;
 };
 Array.prototype._AddFunction_Inline = function FindIndex(matchFunc) {
     var _iteratorNormalCompletion11 = true;
@@ -3856,8 +3877,10 @@ Array.prototype._AddFunction_Inline = function FindIndex(matchFunc) {
                 index = _step11$value[0],
                 item = _step11$value[1];
 
-            if (matchFunc.call(item, item, index)) // call, having the item be "this", as well as the first argument
+            if (matchFunc.call(item, item, index)) {
+                // call, having the item be "this", as well as the first argument
                 return index;
+            }
         }
     } catch (err) {
         _didIteratorError11 = true;
@@ -3900,8 +3923,11 @@ Array.prototype._AddFunction_Inline = function OrderByDescending() {
 Array.prototype._AddFunction_Inline = function Distinct() {
     var result = [];
     for (var i in this) {
-        if (!result.Contains(this[i])) result.push(this[i]);
-    }return result;
+        if (!result.Contains(this[i])) {
+            result.push(this[i]);
+        }
+    }
+    return result;
 };
 Array.prototype._AddFunction_Inline = function Except() {
     var excludeItems = void 0,
@@ -4008,9 +4034,15 @@ Array.prototype._AddFunction_Inline = function Median() {
     var ordered = this.OrderBy(function (a) {
         return a;
     });
-    if (this.length % 2 == 0) // if even number of elements, average two middlest ones
+    if (this.length % 2 == 0) {
+        // if even number of elements, average two middlest ones
         return ordered[this.length / 2 - 1] + ordered[this.length / 2];
+    }
     return ordered[this.length / 2]; // otherwise, return the exactly-middle one
+};
+Array.prototype._AddFunction_Inline = function Random() {
+    var index = Math.floor(Math.random() * this.length);
+    return this[index];
 };
 var oldJoin = [].join;
 Array.prototype._AddFunction_Inline = function join() {
