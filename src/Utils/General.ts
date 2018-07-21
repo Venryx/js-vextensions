@@ -552,3 +552,26 @@ declare global { function FindDOMAll(selector: string): Element[]; } G({FindDOMA
 function FindDOMAll(selector: string) {
 	return Array.from(document.querySelectorAll(selector));
 }
+
+export function WaitTillDataPathIsSet(dataPath: string) {
+	return new Promise(async (resolve, reject)=> {
+		let dataPathParts = dataPath.split(".");
+		let currentParent = g;
+		for (let part of dataPathParts) {
+			while (currentParent[part] == null) {
+				await WaitTillPropertyIsSet(currentParent, part);
+			}
+			currentParent = currentParent[part];
+		}
+		resolve();
+	});
+}
+export function WaitTillPropertyIsSet(obj: Object, prop: string) {
+	return new Promise((resolve, reject)=> {
+		obj._AddGetterSetter(prop, ()=>{}, value=> {
+			delete obj[prop]; // remove this hook
+			obj[prop] = value; // set to provided value
+			resolve();
+		});
+	});
+}

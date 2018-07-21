@@ -276,11 +276,37 @@ exports.DeepGet = DeepGet;
 exports.DeepSet = DeepSet;
 exports.GetStackTraceStr = GetStackTraceStr;
 exports.GetErrorMessagesUnderElement = GetErrorMessagesUnderElement;
+exports.WaitTillDataPathIsSet = WaitTillDataPathIsSet;
+exports.WaitTillPropertyIsSet = WaitTillPropertyIsSet;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+            try {
+                step(generator.next(value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function rejected(value) {
+            try {
+                step(generator["throw"](value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value);
+            }).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var g = (typeof window === "undefined" ? "undefined" : _typeof(window)) == "object" ? window : global;
 if (Number.MIN_SAFE_INTEGER == null) Number.MIN_SAFE_INTEGER = -9007199254740991;
 if (Number.MAX_SAFE_INTEGER == null) Number.MAX_SAFE_INTEGER = 9007199254740991;
@@ -971,6 +997,109 @@ function FindDOM(selector) {
 G({ FindDOMAll: FindDOMAll });
 function FindDOMAll(selector) {
     return Array.from(document.querySelectorAll(selector));
+}
+function WaitTillDataPathIsSet(dataPath) {
+    var _this = this;
+
+    return new Promise(function (resolve, reject) {
+        return __awaiter(_this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+            var dataPathParts, currentParent, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, part;
+
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                            dataPathParts = dataPath.split(".");
+                            currentParent = g;
+                            _iteratorNormalCompletion6 = true;
+                            _didIteratorError6 = false;
+                            _iteratorError6 = undefined;
+                            _context.prev = 5;
+                            _iterator6 = dataPathParts[Symbol.iterator]();
+
+                        case 7:
+                            if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+                                _context.next = 18;
+                                break;
+                            }
+
+                            part = _step6.value;
+
+                        case 9:
+                            if (!(currentParent[part] == null)) {
+                                _context.next = 14;
+                                break;
+                            }
+
+                            _context.next = 12;
+                            return WaitTillPropertyIsSet(currentParent, part);
+
+                        case 12:
+                            _context.next = 9;
+                            break;
+
+                        case 14:
+                            currentParent = currentParent[part];
+
+                        case 15:
+                            _iteratorNormalCompletion6 = true;
+                            _context.next = 7;
+                            break;
+
+                        case 18:
+                            _context.next = 24;
+                            break;
+
+                        case 20:
+                            _context.prev = 20;
+                            _context.t0 = _context["catch"](5);
+                            _didIteratorError6 = true;
+                            _iteratorError6 = _context.t0;
+
+                        case 24:
+                            _context.prev = 24;
+                            _context.prev = 25;
+
+                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                                _iterator6.return();
+                            }
+
+                        case 27:
+                            _context.prev = 27;
+
+                            if (!_didIteratorError6) {
+                                _context.next = 30;
+                                break;
+                            }
+
+                            throw _iteratorError6;
+
+                        case 30:
+                            return _context.finish(27);
+
+                        case 31:
+                            return _context.finish(24);
+
+                        case 32:
+                            resolve();
+
+                        case 33:
+                        case "end":
+                            return _context.stop();
+                    }
+                }
+            }, _callee, this, [[5, 20, 24, 32], [25,, 27, 31]]);
+        }));
+    });
+}
+function WaitTillPropertyIsSet(obj, prop) {
+    return new Promise(function (resolve, reject) {
+        obj._AddGetterSetter(prop, function () {}, function (value) {
+            delete obj[prop]; // remove this hook
+            obj[prop] = value; // set to provided value
+            resolve();
+        });
+    });
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
