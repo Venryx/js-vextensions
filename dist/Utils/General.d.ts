@@ -37,7 +37,10 @@ declare global  {
 }
 export declare function ToJSON_Try(...args: any[]): any;
 declare global  {
-    function Clone(obj: any): any;
+    function Clone(obj: any, keepPrototype?: boolean): any;
+}
+declare global  {
+    function CloneWithPrototypes(obj: any, keepInternalLinks?: boolean): any;
 }
 /**
  * Gets an array of the numbers between min and max.
