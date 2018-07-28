@@ -40,7 +40,7 @@ declare global  {
     function Clone(obj: any, keepPrototype?: boolean): any;
 }
 declare global  {
-    function CloneWithPrototypes(obj: any, keepInternalLinks?: boolean): any;
+    function CloneWithPrototypes<T>(obj: T, keepInternalLinks?: boolean): T;
 }
 /**
  * Gets an array of the numbers between min and max.

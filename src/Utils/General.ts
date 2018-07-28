@@ -149,7 +149,7 @@ function Clone(obj, keepPrototype = false as boolean) {
 	return result;
 }
 
-declare global { function CloneWithPrototypes(obj, keepInternalLinks?: boolean): any; } G({CloneWithPrototypes});
+declare global { function CloneWithPrototypes<T>(obj: T, keepInternalLinks?: boolean): T; } G({CloneWithPrototypes});
 function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
 	let copies = [{
 		source: originalObject,
