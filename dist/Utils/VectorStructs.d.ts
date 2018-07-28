@@ -14,8 +14,8 @@ export declare class Vector2i {
     y: number;
     toString(): string;
     Equals(other: any): boolean;
-    NewX(xOrFunc: any): Vector2i;
-    NewY(yOrFunc: any): Vector2i;
+    NewX(xOrFunc: number | ((oldX: number) => number)): Vector2i;
+    NewY(yOrFunc: number | ((oldY: number) => number)): Vector2i;
     Minus(other: Vector2i): Vector2i;
     Minus(otherX: number, otherY: number): Vector2i;
     Plus(other: Vector2i): Vector2i;
@@ -25,18 +25,6 @@ export declare class Vector2i {
     Times(otherX: number, otherY: number): Vector2i;
     DistanceTo(other: Vector2i): number;
 }
-export declare class VVector2 {
-    static readonly zero: VVector2;
-    static readonly one: VVector2;
-    constructor(x?: any, y?: any);
-    x: number;
-    y: number;
-    toString(): string;
-    NewX(xOrFunc: any): VVector2;
-    NewY(yOrFunc: any): VVector2;
-    Minus(arg1: any, arg2: any): VVector2;
-    Plus(arg1: any, arg2: any): VVector2;
-}
 export declare class Vector3i {
     static readonly zero: Vector3i;
     static readonly one: Vector3i;
@@ -45,23 +33,16 @@ export declare class Vector3i {
     y: number;
     z: number;
     toString(): string;
-    NewX(xOrFunc: any): Vector3i;
-    NewY(yOrFunc: any): Vector3i;
-    NewZ(zOrFunc: any): Vector3i;
-}
-export declare class VVector3 {
-    static readonly zero: VVector3;
-    static readonly one: VVector3;
-    constructor(x?: any, y?: any, z?: any);
-    x: number;
-    y: number;
-    z: number;
-    toString: () => string;
-    NewX(xOrFunc: any): VVector3;
-    NewY(yOrFunc: any): VVector3;
-    NewZ(zOrFunc: any): VVector3;
-    Minus(arg1: any, arg2: any, arg3: any): VVector3;
-    Plus(arg1: any, arg2: any, arg3: any): VVector3;
+    NewX(xOrFunc: number | ((oldX: number) => number)): Vector3i;
+    NewY(yOrFunc: number | ((oldY: number) => number)): Vector3i;
+    NewZ(zOrFunc: number | ((oldZ: number) => number)): Vector3i;
+    Minus(other: Vector3i): Vector3i;
+    Minus(otherX: number, otherY: number, otherZ: number): Vector3i;
+    Plus(other: Vector3i): Vector3i;
+    Plus(otherX: number, otherY: number): Vector3i;
+    Times(other: Vector3i): Vector3i;
+    Times(other: number): Vector3i;
+    Times(otherX: number, otherY: number): Vector3i;
 }
 export declare class VRect {
     constructor(pos: Vector2i, size: Vector2i, y0IsBottom?: boolean);
@@ -80,23 +61,23 @@ export declare class VRect {
     readonly Center: Vector2i;
     toString(): string;
     Equals(other: any): boolean;
-    NewX(valOrFunc: any): VRect;
-    NewLeft(valOrFunc: any): VRect;
-    NewRight(valOrFunc: any): VRect;
-    NewY(valOrFunc: any): VRect;
-    NewBottom(valOrFunc: any): VRect;
-    NewTop(valOrFunc: any): VRect;
-    NewWidth(valOrFunc: any): VRect;
-    NewHeight(valOrFunc: any): VRect;
-    Grow(amountOnEachSide: any): VRect;
+    NewX(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewLeft(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewRight(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewY(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewBottom(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewTop(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewWidth(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewHeight(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    Grow(amountOnEachSide: number): VRect;
     Encapsulating(rect: VRect): VRect;
     Encapsulate(rect: VRect): void;
     Intersects(other: VRect): boolean;
     Clone(): VRect;
 }
 export declare class VBounds {
-    constructor(position: any, size: any);
-    position: any;
-    size: any;
+    constructor(position: Vector3i, size: Vector3i);
+    position: Vector3i;
+    size: Vector3i;
     toString(): string;
 }

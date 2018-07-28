@@ -2171,7 +2171,7 @@ export function CreateClass(baseClass, classMembers) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.VBounds = exports.VRect = exports.VVector3 = exports.Vector3i = exports.VVector2 = exports.Vector2i = undefined;
+exports.VBounds = exports.VRect = exports.Vector3i = exports.Vector2i = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -2192,13 +2192,12 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
     }return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-/*function _VDFSerialize(): any {}
-function _VDFDeserialize(): any {}*/
 var Vector2i = Vector2i_1 = function () {
     function Vector2i() {
         _classCallCheck(this, Vector2i);
 
-        var x, y;
+        var x = 0,
+            y = 0;
 
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
@@ -2208,12 +2207,12 @@ var Vector2i = Vector2i_1 = function () {
             ;
             x = args[0];
             y = args[1];
-        } else if (args[0].x != null) {
+        } else if (args[0] && args[0].x != null) {
             ;
             var _ref = [args[0].x, args[0].y];
             x = _ref[0];
             y = _ref[1];
-        } else if (args[0].left != null) {
+        } else if (args[0] && args[0].left != null) {
             ;
             var _ref2 = [args[0].left, args[0].top];
             x = _ref2[0];
@@ -2284,7 +2283,7 @@ var Vector2i = Vector2i_1 = function () {
                 args[_key4] = arguments[_key4];
             }
 
-            var _ref7 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
+            var _ref7 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0].x, args[0].y] : args,
                 _ref8 = _slicedToArray(_ref7, 2),
                 x = _ref8[0],
                 y = _ref8[1];
@@ -2312,68 +2311,6 @@ var Vector2i = Vector2i_1 = function () {
 }();
 exports.Vector2i = Vector2i = Vector2i_1 = __decorate([_General.Global], Vector2i);
 exports.Vector2i = Vector2i;
-
-var VVector2 = VVector2_1 = function () {
-    function VVector2() {
-        var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-        var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-        _classCallCheck(this, VVector2);
-
-        this.x = x != null ? x : 0;
-        this.y = y != null ? y : 0;
-    }
-
-    _createClass(VVector2, [{
-        key: "toString",
-
-        /*@_VDFDeserialize() Deserialize(node) {
-            var strParts = node.primitiveValue.split(" ");
-            this.x = parseInt(strParts[0]);
-            this.y = parseInt(strParts[1]);
-        }
-        @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-        value: function toString() {
-            return this.x + " " + this.y;
-        }
-    }, {
-        key: "NewX",
-        value: function NewX(xOrFunc) {
-            return new VVector2_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y);
-        }
-    }, {
-        key: "NewY",
-        value: function NewY(yOrFunc) {
-            return new VVector2_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc);
-        }
-    }, {
-        key: "Minus",
-        value: function Minus(arg1, arg2) {
-            if (arg1 instanceof VVector2_1) return new VVector2_1(this.x - arg1.x, this.y - arg1.y);
-            return new VVector2_1(this.x - arg1, this.y - arg2);
-        }
-    }, {
-        key: "Plus",
-        value: function Plus(arg1, arg2) {
-            if (arg1 instanceof VVector2_1) return new VVector2_1(this.x + arg1.x, this.y + arg1.y);
-            return new VVector2_1(this.x + arg1, this.y + arg2);
-        }
-    }], [{
-        key: "zero",
-        get: function get() {
-            return new VVector2_1(0, 0);
-        }
-    }, {
-        key: "one",
-        get: function get() {
-            return new VVector2_1(1, 1);
-        }
-    }]);
-
-    return VVector2;
-}();
-exports.VVector2 = VVector2 = VVector2_1 = __decorate([_General.Global], VVector2);
-exports.VVector2 = VVector2;
 
 var Vector3i = Vector3i_1 = function () {
     function Vector3i() {
@@ -2417,6 +2354,51 @@ var Vector3i = Vector3i_1 = function () {
         value: function NewZ(zOrFunc) {
             return new Vector3i_1(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc);
         }
+    }, {
+        key: "Minus",
+        value: function Minus() {
+            for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+                args[_key5] = arguments[_key5];
+            }
+
+            var _ref9 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args,
+                _ref10 = _slicedToArray(_ref9, 3),
+                x = _ref10[0],
+                y = _ref10[1],
+                z = _ref10[2];
+
+            return new Vector3i_1(this.x - x, this.y - y, this.z - z);
+        }
+    }, {
+        key: "Plus",
+        value: function Plus() {
+            for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+                args[_key6] = arguments[_key6];
+            }
+
+            var _ref11 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args,
+                _ref12 = _slicedToArray(_ref11, 3),
+                x = _ref12[0],
+                y = _ref12[1],
+                z = _ref12[2];
+
+            return new Vector3i_1(this.x + x, this.y + y, this.z + z);
+        }
+    }, {
+        key: "Times",
+        value: function Times() {
+            for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+                args[_key7] = arguments[_key7];
+            }
+
+            var _ref13 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args.length == 1 ? [args[0].x, args[0].y, args[0].z] : args,
+                _ref14 = _slicedToArray(_ref13, 3),
+                x = _ref14[0],
+                y = _ref14[1],
+                z = _ref14[2];
+
+            return new Vector3i_1(this.x * x, this.y * y, this.z * z);
+        }
     }], [{
         key: "zero",
         get: function get() {
@@ -2434,78 +2416,6 @@ var Vector3i = Vector3i_1 = function () {
 exports.Vector3i = Vector3i = Vector3i_1 = __decorate([_General.Global], Vector3i);
 exports.Vector3i = Vector3i;
 
-var VVector3 = VVector3_1 = function () {
-    function VVector3() {
-        var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-        var _this = this;
-
-        var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-        var z = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-        _classCallCheck(this, VVector3);
-
-        /*@_VDFDeserialize() Deserialize(node) {
-            var strParts = node.primitiveValue.split(" ");
-            this.x = parseInt(strParts[0]);
-            this.y = parseInt(strParts[1]);
-            this.z = parseInt(strParts[2]);
-            //this.Swap();
-        }
-        //VDFSerialize() { return this.toString(); }; //Swapped().toString(); };
-        @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-        this.toString = function () {
-            return _this.x + " " + _this.y + " " + _this.z;
-        };
-        this.x = x != null ? x : 0;
-        this.y = y != null ? y : 0;
-        this.z = z != null ? z : 0;
-    }
-
-    _createClass(VVector3, [{
-        key: "NewX",
-        value: function NewX(xOrFunc) {
-            return new VVector3_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z);
-        }
-    }, {
-        key: "NewY",
-        value: function NewY(yOrFunc) {
-            return new VVector3_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z);
-        }
-    }, {
-        key: "NewZ",
-        value: function NewZ(zOrFunc) {
-            return new VVector3_1(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc);
-        }
-    }, {
-        key: "Minus",
-        value: function Minus(arg1, arg2, arg3) {
-            if (arg1 instanceof VVector3_1) return new VVector3_1(this.x - arg1.x, this.y - arg1.y, this.z - arg1.z);
-            return new VVector3_1(this.x - arg1, this.y - arg2, this.z - arg3);
-        }
-    }, {
-        key: "Plus",
-        value: function Plus(arg1, arg2, arg3) {
-            if (arg1 instanceof VVector3_1) return new VVector3_1(this.x + arg1.x, this.y + arg1.y, this.z + arg1.z);
-            return new VVector3_1(this.x + arg1, this.y + arg2, this.z + arg3);
-        }
-    }], [{
-        key: "zero",
-        get: function get() {
-            return new VVector3_1(0, 0, 0);
-        }
-    }, {
-        key: "one",
-        get: function get() {
-            return new VVector3_1(1, 1, 1);
-        }
-    }]);
-
-    return VVector3;
-}();
-exports.VVector3 = VVector3 = VVector3_1 = __decorate([_General.Global], VVector3);
-exports.VVector3 = VVector3;
-
 var VRect = VRect_1 = function () {
     function VRect() {
         _classCallCheck(this, VRect);
@@ -2516,18 +2426,18 @@ var VRect = VRect_1 = function () {
             height = void 0,
             y0IsBottom = void 0;
 
-        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-            args[_key5] = arguments[_key5];
+        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+            args[_key8] = arguments[_key8];
         }
 
         if (args.length == 2 || args.length == 3) {
             ;
-            var _ref9 = [args[0].x, args[0].y, args[1].x, args[1].y, args[2]];
-            x = _ref9[0];
-            y = _ref9[1];
-            width = _ref9[2];
-            height = _ref9[3];
-            y0IsBottom = _ref9[4];
+            var _ref15 = [args[0].x, args[0].y, args[1].x, args[1].y, args[2]];
+            x = _ref15[0];
+            y = _ref15[1];
+            width = _ref15[2];
+            height = _ref15[3];
+            y0IsBottom = _ref15[4];
         } else {
             ;
             x = args[0];
@@ -2539,7 +2449,8 @@ var VRect = VRect_1 = function () {
         this.y = y;
         this.width = width != null ? width : 0;
         this.height = height != null ? height : 0;
-        this.y0IsBottom = y0IsBottom != null ? y0IsBottom : true;
+        //this.y0IsBottom = y0IsBottom != null ? y0IsBottom : false;
+        if (y0IsBottom) this.y0IsBottom = y0IsBottom;
     }
 
     _createClass(VRect, [{
@@ -2658,9 +2569,13 @@ var VRect = VRect_1 = function () {
             return this.y0IsBottom ? this.y : this.y + this.height;
         },
         set: function set(val) {
-            var oldTop = this.Top;
-            this.y = val;
-            this.Top = oldTop;
+            if (this.y0IsBottom) {
+                var oldTop = this.Top;
+                this.y = val;
+                this.Top = oldTop;
+            } else {
+                this.height = val - this.y;
+            }
         }
     }, {
         key: "Top",
@@ -2668,7 +2583,13 @@ var VRect = VRect_1 = function () {
             return this.y0IsBottom ? this.y + this.height : this.y;
         },
         set: function set(val) {
-            this.height = val - this.y;
+            if (this.y0IsBottom) {
+                this.height = val - this.y;
+            } else {
+                var oldBottom = this.Bottom;
+                this.y = val;
+                this.Bottom = oldBottom;
+            }
         }
     }, {
         key: "Position",
@@ -2704,8 +2625,6 @@ var VBounds = function () {
     function VBounds(position, size) {
         _classCallCheck(this, VBounds);
 
-        this.position = null;
-        this.size = null;
         this.position = position;
         this.size = size;
     }
@@ -2731,7 +2650,7 @@ var VBounds = function () {
 exports.VBounds = VBounds = __decorate([_General.Global], VBounds);
 exports.VBounds = VBounds;
 
-var Vector2i_1, VVector2_1, Vector3i_1, VVector3_1, VRect_1;
+var Vector2i_1, Vector3i_1, VRect_1;
 
 /***/ }),
 /* 13 */
