@@ -33,26 +33,36 @@ export class Vector2i {
 	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector2i(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
 	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector2i(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
 
-	Minus(other: Vector2i): Vector2i;
-	Minus(otherX: number, otherY: number): Vector2i;
-	Minus(...args) {
-		let [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] : args;
-		return new Vector2i(this.x - x, this.y - y);
-	}
 	Plus(other: Vector2i): Vector2i;
 	Plus(otherX: number, otherY: number): Vector2i;
 	Plus(...args) {
 		let [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] : args;
 		return new Vector2i(this.x + x, this.y + y);
 	}
+	Minus(other: Vector2i): Vector2i;
+	Minus(otherX: number, otherY: number): Vector2i;
+	Minus(...args) {
+		let [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] : args;
+		return new Vector2i(this.x - x, this.y - y);
+	}
+
 	Times(other: Vector2i): Vector2i;
 	Times(other: number): Vector2i;
 	Times(otherX: number, otherY: number): Vector2i;
 	Times(...args) {
 		var [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] :
-			args.length == 1 ? [args[0].x, args[0].y] :
+			args.length == 1 ? [args[0], args[0]] :
 			args;
 		return new Vector2i(this.x * x, this.y * y);
+	}
+	DividedBy(other: Vector2i): Vector2i;
+	DividedBy(other: number): Vector2i;
+	DividedBy(otherX: number, otherY: number): Vector2i;
+	DividedBy(...args) {
+		var [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] :
+			args.length == 1 ? [args[0], args[0]] :
+			args;
+		return new Vector2i(this.x / x, this.y / y);
 	}
 
 	DistanceTo(other: Vector2i) {

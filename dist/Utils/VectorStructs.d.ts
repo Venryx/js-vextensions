@@ -16,13 +16,16 @@ export declare class Vector2i {
     Equals(other: any): boolean;
     NewX(xOrFunc: number | ((oldX: number) => number)): Vector2i;
     NewY(yOrFunc: number | ((oldY: number) => number)): Vector2i;
-    Minus(other: Vector2i): Vector2i;
-    Minus(otherX: number, otherY: number): Vector2i;
     Plus(other: Vector2i): Vector2i;
     Plus(otherX: number, otherY: number): Vector2i;
+    Minus(other: Vector2i): Vector2i;
+    Minus(otherX: number, otherY: number): Vector2i;
     Times(other: Vector2i): Vector2i;
     Times(other: number): Vector2i;
     Times(otherX: number, otherY: number): Vector2i;
+    DividedBy(other: Vector2i): Vector2i;
+    DividedBy(other: number): Vector2i;
+    DividedBy(otherX: number, otherY: number): Vector2i;
     DistanceTo(other: Vector2i): number;
 }
 export declare class Vector3i {

@@ -2296,8 +2296,8 @@ var Vector2i = Vector2i_1 = function () {
             return new Vector2i_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc);
         }
     }, {
-        key: "Minus",
-        value: function Minus() {
+        key: "Plus",
+        value: function Plus() {
             for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
                 args[_key2] = arguments[_key2];
             }
@@ -2307,11 +2307,11 @@ var Vector2i = Vector2i_1 = function () {
                 x = _ref4[0],
                 y = _ref4[1];
 
-            return new Vector2i_1(this.x - x, this.y - y);
+            return new Vector2i_1(this.x + x, this.y + y);
         }
     }, {
-        key: "Plus",
-        value: function Plus() {
+        key: "Minus",
+        value: function Minus() {
             for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
                 args[_key3] = arguments[_key3];
             }
@@ -2321,7 +2321,7 @@ var Vector2i = Vector2i_1 = function () {
                 x = _ref6[0],
                 y = _ref6[1];
 
-            return new Vector2i_1(this.x + x, this.y + y);
+            return new Vector2i_1(this.x - x, this.y - y);
         }
     }, {
         key: "Times",
@@ -2330,12 +2330,26 @@ var Vector2i = Vector2i_1 = function () {
                 args[_key4] = arguments[_key4];
             }
 
-            var _ref7 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0].x, args[0].y] : args,
+            var _ref7 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
                 _ref8 = _slicedToArray(_ref7, 2),
                 x = _ref8[0],
                 y = _ref8[1];
 
             return new Vector2i_1(this.x * x, this.y * y);
+        }
+    }, {
+        key: "DividedBy",
+        value: function DividedBy() {
+            for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+                args[_key5] = arguments[_key5];
+            }
+
+            var _ref9 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
+                _ref10 = _slicedToArray(_ref9, 2),
+                x = _ref10[0],
+                y = _ref10[1];
+
+            return new Vector2i_1(this.x / x, this.y / y);
         }
     }, {
         key: "DistanceTo",
@@ -2404,21 +2418,6 @@ var Vector3i = Vector3i_1 = function () {
     }, {
         key: "Minus",
         value: function Minus() {
-            for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-                args[_key5] = arguments[_key5];
-            }
-
-            var _ref9 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args,
-                _ref10 = _slicedToArray(_ref9, 3),
-                x = _ref10[0],
-                y = _ref10[1],
-                z = _ref10[2];
-
-            return new Vector3i_1(this.x - x, this.y - y, this.z - z);
-        }
-    }, {
-        key: "Plus",
-        value: function Plus() {
             for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
                 args[_key6] = arguments[_key6];
             }
@@ -2429,20 +2428,35 @@ var Vector3i = Vector3i_1 = function () {
                 y = _ref12[1],
                 z = _ref12[2];
 
+            return new Vector3i_1(this.x - x, this.y - y, this.z - z);
+        }
+    }, {
+        key: "Plus",
+        value: function Plus() {
+            for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+                args[_key7] = arguments[_key7];
+            }
+
+            var _ref13 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args,
+                _ref14 = _slicedToArray(_ref13, 3),
+                x = _ref14[0],
+                y = _ref14[1],
+                z = _ref14[2];
+
             return new Vector3i_1(this.x + x, this.y + y, this.z + z);
         }
     }, {
         key: "Times",
         value: function Times() {
-            for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-                args[_key7] = arguments[_key7];
+            for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+                args[_key8] = arguments[_key8];
             }
 
-            var _ref13 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args.length == 1 ? [args[0].x, args[0].y, args[0].z] : args,
-                _ref14 = _slicedToArray(_ref13, 3),
-                x = _ref14[0],
-                y = _ref14[1],
-                z = _ref14[2];
+            var _ref15 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args.length == 1 ? [args[0].x, args[0].y, args[0].z] : args,
+                _ref16 = _slicedToArray(_ref15, 3),
+                x = _ref16[0],
+                y = _ref16[1],
+                z = _ref16[2];
 
             return new Vector3i_1(this.x * x, this.y * y, this.z * z);
         }
@@ -2473,18 +2487,18 @@ var VRect = VRect_1 = function () {
             height = void 0,
             y0IsBottom = void 0;
 
-        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-            args[_key8] = arguments[_key8];
+        for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+            args[_key9] = arguments[_key9];
         }
 
         if (args.length == 2 || args.length == 3) {
             ;
-            var _ref15 = [args[0].x, args[0].y, args[1].x, args[1].y, args[2]];
-            x = _ref15[0];
-            y = _ref15[1];
-            width = _ref15[2];
-            height = _ref15[3];
-            y0IsBottom = _ref15[4];
+            var _ref17 = [args[0].x, args[0].y, args[1].x, args[1].y, args[2]];
+            x = _ref17[0];
+            y = _ref17[1];
+            width = _ref17[2];
+            height = _ref17[3];
+            y0IsBottom = _ref17[4];
         } else {
             ;
             x = args[0];
