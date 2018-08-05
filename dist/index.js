@@ -2239,6 +2239,9 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
     }return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
+function IsNullOrNaN(value) {
+    return value === null || IsNaN(value);
+}
 var Vector2i = Vector2i_1 = function () {
     function Vector2i() {
         _classCallCheck(this, Vector2i);
@@ -2264,7 +2267,8 @@ var Vector2i = Vector2i_1 = function () {
             var _ref2 = [args[0].left, args[0].top];
             x = _ref2[0];
             y = _ref2[1];
-        }this.x = x;
+        }Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y), "Cannot initialize Vector2i's x/y to null/NaN. (if needed, initialize to undefined)");
+        this.x = x;
         this.y = y;
     }
 
@@ -2381,6 +2385,7 @@ var Vector3i = Vector3i_1 = function () {
 
         _classCallCheck(this, Vector3i);
 
+        Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
         this.x = x != null ? x : 0;
         this.y = y != null ? y : 0;
         this.z = z != null ? z : 0;
@@ -2506,7 +2511,8 @@ var VRect = VRect_1 = function () {
             width = args[2];
             height = args[3];
             y0IsBottom = args[4];
-        }this.x = x;
+        }Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(width) && !IsNullOrNaN(height), "Cannot initialize VRect's x/y/width/height to null/NaN. (if needed, initialize to undefined)");
+        this.x = x;
         this.y = y;
         this.width = width != null ? width : 0;
         this.height = height != null ? height : 0;

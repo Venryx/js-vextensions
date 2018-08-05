@@ -1,5 +1,9 @@
 import {Global} from "./General";
 
+function IsNullOrNaN(value: number) {
+	return value === null || IsNaN(value);
+}
+
 @Global
 export class Vector2i {
 	static get zero() { return new Vector2i(0, 0); }
@@ -13,6 +17,8 @@ export class Vector2i {
 		if (typeof args[0] == "number") [x, y] = args;
 		else if (args[0] && args[0].x != null) [x, y] = [args[0].x, args[0].y];
 		else if (args[0] && args[0].left != null) [x, y] = [args[0].left, args[0].top];
+
+		Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y), "Cannot initialize Vector2i's x/y to null/NaN. (if needed, initialize to undefined)");
 
 		this.x = x;
 		this.y = y;
@@ -76,6 +82,8 @@ export class Vector3i {
 	static get one() { return new Vector3i(1, 1, 1); }
 
 	constructor(x = null, y = null, z = null) {
+		Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
+		
 		this.x = x != null ? x : 0;
 		this.y = y != null ? y : 0;
 		this.z = z != null ? z : 0;
@@ -130,6 +138,9 @@ export class VRect {
 		let x: number, y: number, width: number, height: number, y0IsBottom: boolean;
 		if (args.length == 2 || args.length == 3) [x, y, width, height, y0IsBottom] = [args[0].x, args[0].y, args[1].x, args[1].y, args[2]];
 		else [x, y, width, height, y0IsBottom] = args;
+
+		Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(width) && !IsNullOrNaN(height),
+			"Cannot initialize VRect's x/y/width/height to null/NaN. (if needed, initialize to undefined)");
 
 		this.x = x;
 		this.y = y;
