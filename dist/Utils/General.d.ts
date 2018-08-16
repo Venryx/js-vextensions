@@ -108,3 +108,9 @@ declare global  {
 }
 export declare function WaitTillDataPathIsSet(dataPath: string): Promise<{}>;
 export declare function WaitTillPropertyIsSet(obj: Object, prop: string): Promise<{}>;
+export declare enum CapScheme {
+    /** examplePropNameWithDuoWord */ PropName = 0,
+    /** Example Title With Duo-Word */ Title = 1,
+    /** Example sentence with duo-word */ Sentence = 2,
+}
+export declare function ChangeCapitalization(text: string, fromScheme: CapScheme, toScheme: CapScheme): string;

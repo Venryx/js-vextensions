@@ -278,6 +278,7 @@ exports.GetStackTraceStr = GetStackTraceStr;
 exports.GetErrorMessagesUnderElement = GetErrorMessagesUnderElement;
 exports.WaitTillDataPathIsSet = WaitTillDataPathIsSet;
 exports.WaitTillPropertyIsSet = WaitTillPropertyIsSet;
+exports.ChangeCapitalization = ChangeCapitalization;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -1147,6 +1148,44 @@ function WaitTillPropertyIsSet(obj, prop) {
             resolve();
         });
     });
+}
+var CapScheme = exports.CapScheme = undefined;
+(function (CapScheme) {
+    /** examplePropNameWithDuoWord */CapScheme[CapScheme["PropName"] = 0] = "PropName";
+    /** Example Title With Duo-Word */CapScheme[CapScheme["Title"] = 1] = "Title";
+    /** Example sentence with duo-word */CapScheme[CapScheme["Sentence"] = 2] = "Sentence";
+})(CapScheme || (exports.CapScheme = CapScheme = {}));
+function ChangeCapitalization(text, fromScheme, toScheme) {
+    var inStandardScheme = ConvertFromSchemeXToStandardScheme(text, fromScheme);
+    return ConvertFromStandardSchemeToSchemeX(inStandardScheme, toScheme);
+}
+// "standard scheme" is currently CapitalizeScheme.Sentence
+function ConvertFromSchemeXToStandardScheme(text, fromScheme) {
+    if (fromScheme == CapScheme.PropName) {
+        // demo string: somePropName
+        return text
+        // somePropName -> some prop name
+        .replace(/[A-Z]/g, function (a) {
+            return " " + a.toLowerCase();
+        })
+        // some prop name -> Some prop name
+        .replace(/^./, function (a) {
+            return a.toUpperCase();
+        });
+    } else if (fromScheme == CapScheme.Title) {
+        Assert(false, "Not yet implemented.");
+    } else if (fromScheme == CapScheme.Sentence) {
+        return text;
+    }
+}
+function ConvertFromStandardSchemeToSchemeX(text, toScheme) {
+    if (toScheme == CapScheme.PropName) {
+        Assert(false, "Not yet implemented.");
+    } else if (toScheme == CapScheme.Title) {
+        Assert(false, "Not yet implemented.");
+    } else if (toScheme == CapScheme.Sentence) {
+        return text;
+    }
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 

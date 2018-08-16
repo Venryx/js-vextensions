@@ -629,3 +629,38 @@ export function WaitTillPropertyIsSet(obj: Object, prop: string) {
 		});
 	});
 }
+
+export enum CapScheme {
+	/** examplePropNameWithDuoWord */ PropName,
+	/** Example Title With Duo-Word */ Title,
+	/** Example sentence with duo-word */ Sentence,
+}
+export function ChangeCapitalization(text: string, fromScheme: CapScheme, toScheme: CapScheme) {
+	let inStandardScheme = ConvertFromSchemeXToStandardScheme(text, fromScheme);
+	return ConvertFromStandardSchemeToSchemeX(inStandardScheme, toScheme);
+}
+
+// "standard scheme" is currently CapitalizeScheme.Sentence
+function ConvertFromSchemeXToStandardScheme(text: string, fromScheme: CapScheme) {
+	if (fromScheme == CapScheme.PropName) {
+		// demo string: somePropName
+		return text
+			// somePropName -> some prop name
+			.replace(/[A-Z]/g, a=>" " + a.toLowerCase())
+			// some prop name -> Some prop name
+			.replace(/^./, a=>a.toUpperCase());
+	} else if (fromScheme == CapScheme.Title) {
+		Assert(false, "Not yet implemented.");
+	} else if (fromScheme == CapScheme.Sentence) {
+		return text;
+	}
+}
+function ConvertFromStandardSchemeToSchemeX(text: string, toScheme: CapScheme) {
+	if (toScheme == CapScheme.PropName) {
+		Assert(false, "Not yet implemented.");
+	} else if (toScheme == CapScheme.Title) {
+		Assert(false, "Not yet implemented.");
+	} else if (toScheme == CapScheme.Sentence) {
+		return text;
+	}
+}
