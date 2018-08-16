@@ -196,6 +196,10 @@ export class VRect {
 	}
 
 	get Center() { return new Vector2i(this.x + (this.width / 2), this.y + (this.height / 2)); }
+	set Center(val: Vector2i) {
+		let offset = val.Minus(this.Center);
+		this.Position = this.Position.Plus(offset);
+	}
 
 	/*@_VDFDeserialize() Deserialize(node) {
 		var strParts = node.primitiveValue.split(" ");

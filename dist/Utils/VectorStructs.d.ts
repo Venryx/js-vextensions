@@ -61,7 +61,7 @@ export declare class VRect {
     Top: number;
     Position: Vector2i;
     Size: Vector2i;
-    readonly Center: Vector2i;
+    Center: Vector2i;
     toString(): string;
     Equals(other: any): boolean;
     NewX(valOrFunc: number | ((oldVal: number) => number)): VRect;

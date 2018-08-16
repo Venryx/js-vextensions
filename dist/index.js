@@ -2680,6 +2680,10 @@ var VRect = VRect_1 = function () {
         key: "Center",
         get: function get() {
             return new Vector2i(this.x + this.width / 2, this.y + this.height / 2);
+        },
+        set: function set(val) {
+            var offset = val.Minus(this.Center);
+            this.Position = this.Position.Plus(offset);
         }
     }]);
 
