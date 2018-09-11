@@ -4,6 +4,11 @@ function IsNullOrNaN(value: number) {
 	return value === null || IsNaN(value);
 }
 
+export type Vector2iShape = {x: number, y: number};
+export function IsVector2iShape(obj: any): obj is {x: number, y: number} {
+	return obj.hasOwnProperty("x") && obj.hasOwnProperty("y");
+}
+
 @Global
 export class Vector2i {
 	static get zero() { return new Vector2i(0, 0); }
@@ -39,24 +44,24 @@ export class Vector2i {
 	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector2i(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
 	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector2i(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
 
-	Plus(other: Vector2i): Vector2i;
+	Plus(other: Vector2iShape): Vector2i;
 	Plus(otherX: number, otherY: number): Vector2i;
 	Plus(...args) {
-		let [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] : args;
+		let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
 		return new Vector2i(this.x + x, this.y + y);
 	}
-	Minus(other: Vector2i): Vector2i;
+	Minus(other: Vector2iShape): Vector2i;
 	Minus(otherX: number, otherY: number): Vector2i;
 	Minus(...args) {
-		let [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] : args;
+		let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
 		return new Vector2i(this.x - x, this.y - y);
 	}
 
-	Times(other: Vector2i): Vector2i;
+	Times(other: Vector2iShape): Vector2i;
 	Times(other: number): Vector2i;
 	Times(otherX: number, otherY: number): Vector2i;
 	Times(...args) {
-		var [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] :
+		var [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] :
 			args.length == 1 ? [args[0], args[0]] :
 			args;
 		return new Vector2i(this.x * x, this.y * y);
@@ -65,7 +70,7 @@ export class Vector2i {
 	DividedBy(other: number): Vector2i;
 	DividedBy(otherX: number, otherY: number): Vector2i;
 	DividedBy(...args) {
-		var [x, y] = args[0] instanceof Vector2i ? [args[0].x, args[0].y] :
+		var [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] :
 			args.length == 1 ? [args[0], args[0]] :
 			args;
 		return new Vector2i(this.x / x, this.y / y);
@@ -74,6 +79,11 @@ export class Vector2i {
 	DistanceTo(other: Vector2i) {
 		return Math.sqrt((other.x - this.x).ToPower(2) + (other.y - this.y).ToPower(2));
 	}
+}
+
+export type Vector3iShape = {x: number, y: number, z: number};
+export function IsVector3iShape(obj: any): obj is {x: number, y: number, z: number} {
+	return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("z");
 }
 
 @Global
@@ -107,27 +117,32 @@ export class Vector3i {
 	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector3i(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
 	NewZ(zOrFunc: number | ((oldZ: number)=>number)) { return new Vector3i(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc); }
 
-	Minus(other: Vector3i): Vector3i;
+	Minus(other: Vector3iShape): Vector3i;
 	Minus(otherX: number, otherY: number, otherZ: number): Vector3i;
 	Minus(...args) {
-		let [x, y, z] = args[0] instanceof Vector3i ? [args[0].x, args[0].y, args[0].z] : args;
+		let [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
 		return new Vector3i(this.x - x, this.y - y, this.z - z);
 	}
-	Plus(other: Vector3i): Vector3i;
+	Plus(other: Vector3iShape): Vector3i;
 	Plus(otherX: number, otherY: number): Vector3i;
 	Plus(...args) {
-		let [x, y, z] = args[0] instanceof Vector3i ? [args[0].x, args[0].y, args[0].z] : args;
+		let [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
 		return new Vector3i(this.x + x, this.y + y, this.z + z);
 	}
-	Times(other: Vector3i): Vector3i;
+	Times(other: Vector3iShape): Vector3i;
 	Times(other: number): Vector3i;
 	Times(otherX: number, otherY: number): Vector3i;
 	Times(...args) {
-		var [x, y, z] = args[0] instanceof Vector3i ? [args[0].x, args[0].y, args[0].z] :
-			args.length == 1 ? [args[0].x, args[0].y, args[0].z] :
+		var [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] :
+			args.length == 1 ? [args[0], args[0], args[0]] :
 			args;
 		return new Vector3i(this.x * x, this.y * y, this.z * z);
 	}
+}
+
+export type VRectShape = {x: number, y: number, width: number, height: number};
+export function IsVRectShape(obj: any): obj is {x: number, y: number, z: number} {
+	return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("width") && obj.hasOwnProperty("height");
 }
 
 @Global
@@ -245,12 +260,12 @@ export class VRect {
 	Grow(amountOnEachSide: number) {
 		return new VRect(this.x - amountOnEachSide, this.y - amountOnEachSide, this.width + (amountOnEachSide * 2), this.height + (amountOnEachSide * 2));
 	}
-	Encapsulating(rect: VRect) {
+	Encapsulating(rect: VRectShape) {
 		var posX = Math.min(this.x, rect.x);
 		var posY = Math.min(this.y, rect.y);
 		return new VRect(posX, posY, Math.max(this.x + this.width, rect.x + rect.width) - posX, Math.max(this.y + this.height, rect.y + rect.height) - posY);
 	}
-	Encapsulate(rect: VRect) {
+	Encapsulate(rect: VRectShape) {
 		var oldRight = this.x + this.width;
 		var oldBottom = this.y + this.height;
 		this.x = Math.min(this.x, rect.x);

@@ -2265,6 +2265,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+exports.IsVector2iShape = IsVector2iShape;
+exports.IsVector3iShape = IsVector3iShape;
+exports.IsVRectShape = IsVRectShape;
+
 var _General = __webpack_require__(3);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2280,6 +2284,9 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
 
 function IsNullOrNaN(value) {
     return value === null || IsNaN(value);
+}
+function IsVector2iShape(obj) {
+    return obj.hasOwnProperty("x") && obj.hasOwnProperty("y");
 }
 var Vector2i = Vector2i_1 = function () {
     function Vector2i() {
@@ -2345,7 +2352,7 @@ var Vector2i = Vector2i_1 = function () {
                 args[_key2] = arguments[_key2];
             }
 
-            var _ref3 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args,
+            var _ref3 = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args,
                 _ref4 = _slicedToArray(_ref3, 2),
                 x = _ref4[0],
                 y = _ref4[1];
@@ -2359,7 +2366,7 @@ var Vector2i = Vector2i_1 = function () {
                 args[_key3] = arguments[_key3];
             }
 
-            var _ref5 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args,
+            var _ref5 = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args,
                 _ref6 = _slicedToArray(_ref5, 2),
                 x = _ref6[0],
                 y = _ref6[1];
@@ -2373,7 +2380,7 @@ var Vector2i = Vector2i_1 = function () {
                 args[_key4] = arguments[_key4];
             }
 
-            var _ref7 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
+            var _ref7 = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
                 _ref8 = _slicedToArray(_ref7, 2),
                 x = _ref8[0],
                 y = _ref8[1];
@@ -2387,7 +2394,7 @@ var Vector2i = Vector2i_1 = function () {
                 args[_key5] = arguments[_key5];
             }
 
-            var _ref9 = args[0] instanceof Vector2i_1 ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
+            var _ref9 = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args.length == 1 ? [args[0], args[0]] : args,
                 _ref10 = _slicedToArray(_ref9, 2),
                 x = _ref10[0],
                 y = _ref10[1];
@@ -2415,7 +2422,9 @@ var Vector2i = Vector2i_1 = function () {
 }();
 exports.Vector2i = Vector2i = Vector2i_1 = __decorate([_General.Global], Vector2i);
 exports.Vector2i = Vector2i;
-
+function IsVector3iShape(obj) {
+    return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("z");
+}
 var Vector3i = Vector3i_1 = function () {
     function Vector3i() {
         var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -2466,7 +2475,7 @@ var Vector3i = Vector3i_1 = function () {
                 args[_key6] = arguments[_key6];
             }
 
-            var _ref11 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args,
+            var _ref11 = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args,
                 _ref12 = _slicedToArray(_ref11, 3),
                 x = _ref12[0],
                 y = _ref12[1],
@@ -2481,7 +2490,7 @@ var Vector3i = Vector3i_1 = function () {
                 args[_key7] = arguments[_key7];
             }
 
-            var _ref13 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args,
+            var _ref13 = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args,
                 _ref14 = _slicedToArray(_ref13, 3),
                 x = _ref14[0],
                 y = _ref14[1],
@@ -2496,7 +2505,7 @@ var Vector3i = Vector3i_1 = function () {
                 args[_key8] = arguments[_key8];
             }
 
-            var _ref15 = args[0] instanceof Vector3i_1 ? [args[0].x, args[0].y, args[0].z] : args.length == 1 ? [args[0].x, args[0].y, args[0].z] : args,
+            var _ref15 = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args.length == 1 ? [args[0], args[0], args[0]] : args,
                 _ref16 = _slicedToArray(_ref15, 3),
                 x = _ref16[0],
                 y = _ref16[1],
@@ -2520,7 +2529,9 @@ var Vector3i = Vector3i_1 = function () {
 }();
 exports.Vector3i = Vector3i = Vector3i_1 = __decorate([_General.Global], Vector3i);
 exports.Vector3i = Vector3i;
-
+function IsVRectShape(obj) {
+    return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("width") && obj.hasOwnProperty("height");
+}
 var VRect = VRect_1 = function () {
     function VRect() {
         _classCallCheck(this, VRect);
