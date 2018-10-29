@@ -142,6 +142,8 @@ export function ToJSON_Try(...args) {
 
 declare global { function Clone(obj, keepPrototype?: boolean): any; } G({Clone});
 function Clone(obj, keepPrototype = false as boolean) {
+	if (obj == null) return obj;
+	
 	let result = FromJSON(ToJSON(obj));
 	if (keepPrototype == true) {
 		Object.setPrototypeOf(result, Object.getPrototypeOf(obj));
@@ -151,6 +153,8 @@ function Clone(obj, keepPrototype = false as boolean) {
 
 declare global { function CloneWithPrototypes<T>(obj: T, keepInternalLinks?: boolean): T; } G({CloneWithPrototypes});
 function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
+	if (originalObject == null) return originalObject;
+
 	let copies = [{
 		source: originalObject,
 		target: Object.create(Object.getPrototypeOf(originalObject)),

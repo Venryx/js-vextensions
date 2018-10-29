@@ -485,6 +485,7 @@ G({ Clone: Clone });
 function Clone(obj) {
     var keepPrototype = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+    if (obj == null) return obj;
     var result = FromJSON(ToJSON(obj));
     if (keepPrototype == true) {
         Object.setPrototypeOf(result, Object.getPrototypeOf(obj));
@@ -495,6 +496,7 @@ G({ CloneWithPrototypes: CloneWithPrototypes });
 function CloneWithPrototypes(originalObject) {
     var keepCircularLinks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+    if (originalObject == null) return originalObject;
     var copies = [{
         source: originalObject,
         target: Object.create(Object.getPrototypeOf(originalObject))
