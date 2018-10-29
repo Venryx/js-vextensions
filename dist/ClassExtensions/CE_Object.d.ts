@@ -66,6 +66,24 @@ interface Object {
     }[];
 }
 interface Object {
+    Pairs<T>(this: {
+        [key: number]: T;
+    } | {
+        [key: string]: T;
+    }, excludeSpecialProps?: boolean): {
+        index: number;
+        key: string;
+        keyNum?: number;
+        value: T;
+    }[];
+    Pairs<T>(excludeSpecialProps?: boolean): {
+        index: number;
+        key: string;
+        keyNum?: number;
+        value: T;
+    }[];
+}
+interface Object {
     VKeys(excludeSpecialProps?: boolean): string[];
 }
 interface Object {

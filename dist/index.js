@@ -3507,6 +3507,19 @@ Object.prototype._AddFunction_Inline = function Props() {
     }
     return result;
 };
+Object.prototype._AddFunction_Inline = function Pairs() {
+    var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    var result = [];
+    var i = 0;
+    for (var key in this) {
+        if (excludeSpecialProps && (key == "_" || key == "_key" || key == "_id")) continue;
+        var entry = { index: i++, key: key, keyNum: Number(key), value: this[key] };
+        if (IsNaN(entry.keyNum)) delete entry.keyNum;
+        result.push(entry);
+    }
+    return result;
+};
 Object.prototype._AddFunction_Inline = function VKeys() {
     var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 

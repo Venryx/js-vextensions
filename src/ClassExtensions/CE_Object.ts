@@ -188,6 +188,7 @@ Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
 
 var specialProps = ["_", "_key", "_id"];
 
+// todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
 interface Object {
 	Props<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
 	Props<T>(excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
@@ -200,6 +201,21 @@ Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = fals
 		if (excludeSpecialProps && (propName == "_" || propName == "_key" || propName == "_id")) continue;
 		//result.push({index: i++, key: propName, name: propName, value: this[propName]});
 		result.push({index: i++, name: propName, value: this[propName]});
+	}
+	return result;
+};
+interface Object {
+	Pairs<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
+	Pairs<T>(excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
+}
+Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps = false) {
+	var result = [];
+	var i = 0;
+	for (var key in this) {
+		if (excludeSpecialProps && (key == "_" || key == "_key" || key == "_id")) continue;
+		let entry = {index: i++, key, keyNum: Number(key), value: this[key]};
+		if (IsNaN(entry.keyNum)) delete entry.keyNum;
+		result.push(entry);
 	}
 	return result;
 };
