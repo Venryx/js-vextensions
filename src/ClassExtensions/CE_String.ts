@@ -188,8 +188,19 @@ String.prototype._AddFunction_Inline = function OneFunc(func) {
     return oneFuncCache[funcKey];
 };*/
 
-String.prototype._AddFunction_Inline = function AsMultiline() {
-    return this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
+interface String { AsMultiline(desiredIndent: number): string; }
+String.prototype._AddFunction_Inline = function AsMultiline(this: string, desiredIndent: number = null) {
+	let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
+	if (desiredIndent != null) {
+		let firstLineIndent = (result.match(/^\t+/) || [""])[0].length;
+		if (firstLineIndent) {
+			let lines = result.split("\n");
+			// remove X tabs from start of each line (where X is firstLineIndent)
+			lines = lines.map(line=>line.replace(new RegExp(`^\t{0,${firstLineIndent}}`), ""));
+			result = lines.join("\n");
+		}
+	}
+	return result;
 };
 
 String.prototype._AddFunction_Inline = function Substring(start, end) {

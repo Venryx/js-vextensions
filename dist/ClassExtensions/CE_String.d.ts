@@ -49,6 +49,9 @@ interface String {
     Func(func: Function): Function;
 }
 interface String {
+    AsMultiline(desiredIndent: number): string;
+}
+interface String {
     ToInt(): number;
 }
 interface String {

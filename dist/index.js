@@ -4597,23 +4597,22 @@ String.prototype._AddFunction_Inline = function Func(func) {
     func.SetName(this);
     return func;
 };
-// special; creates a function with the given name, but also caches it per caller-line,
-//   so every call from that line returns the same function instance
-// REMOVED, because: we need to create new funcs to capture new closure values
-/*var oneFuncCache = {};
-String.prototype._AddFunction_Inline = function OneFunc(func) {
-    var funcName = this;
-    var callerLineStr = new Error().stack.split("\n")[3];
-    var funcKey = `${funcName}@${callerLineStr}`;
-    if (oneFuncCache[funcKey] == null) {
-        func.SetName(this);
-        //func.cached = true;
-        oneFuncCache[funcKey] = func;
-    }
-    return oneFuncCache[funcKey];
-};*/
 String.prototype._AddFunction_Inline = function AsMultiline() {
-    return this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
+    var desiredIndent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+    var result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
+    if (desiredIndent != null) {
+        var firstLineIndent = (result.match(/^\t+/) || [""])[0].length;
+        if (firstLineIndent) {
+            var lines = result.split("\n");
+            // remove X tabs from start of each line (where X is firstLineIndent)
+            lines = lines.map(function (line) {
+                return line.replace(new RegExp("^\t{0," + firstLineIndent + "}"), "");
+            });
+            result = lines.join("\n");
+        }
+    }
+    return result;
 };
 String.prototype._AddFunction_Inline = function Substring(start, end) {
     if (end < 0) end = this.length + end;
