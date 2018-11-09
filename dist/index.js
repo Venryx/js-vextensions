@@ -3425,6 +3425,10 @@ Object.prototype._AddFunction_Inline = function As(type) {
     Object.setPrototypeOf(this, type.prototype);
     return this;
 };
+Object.prototype._AddFunction_Inline = function Strip() {
+    Object.setPrototypeOf(this, Object.getPrototypeOf({}));
+    return this;
+};
 Object.prototype._AddFunction_Inline = function Including() {
     var result = {};
 

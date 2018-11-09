@@ -43,6 +43,9 @@ interface Object {
     As<T>(type: new (..._) => T): T;
 }
 interface Object {
+    Strip<T>(this: T): T;
+}
+interface Object {
     Including(...propNames: string[]): Object;
 }
 interface Object {

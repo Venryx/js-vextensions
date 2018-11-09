@@ -167,6 +167,11 @@ Object.prototype._AddFunction_Inline = function As<T>(type: new(..._)=>T) {
 	Object.setPrototypeOf(this, type.prototype);
 	return this as T;
 };
+interface Object { Strip<T>(this: T): T; }
+Object.prototype._AddFunction_Inline = function Strip() {
+	Object.setPrototypeOf(this, Object.getPrototypeOf({}));
+	return this;
+};
 
 interface Object { Including(...propNames: string[]): Object; }
 Object.prototype._AddFunction_Inline = function Including(...propNames) {
