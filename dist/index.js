@@ -2126,6 +2126,9 @@ exports.IsString = IsString;
 exports.ToString = ToString;
 exports.IsFunction = IsFunction;
 exports.IsConstructor = IsConstructor;
+exports.GetEntries = GetEntries;
+exports.GetValues = GetValues;
+exports.GetValues_ForSchema = GetValues_ForSchema;
 // standard types
 // ----------
 /*export class bool extends Boolean {}
@@ -2248,6 +2251,25 @@ export function CreateClass(baseClass, classMembers) {
 
     return result;
 }*/
+// enums
+// ==========
+function GetEntries(enumType, nameModifierFunc) {
+    return Object.keys(enumType).filter(function (a) {
+        return a.match(/^\D/) != null;
+    }).map(function (name) {
+        return { name: nameModifierFunc ? nameModifierFunc(name) : name, value: enumType[name] };
+    });
+}
+function GetValues(enumType) {
+    return GetEntries(enumType).map(function (a) {
+        return a.value;
+    });
+}
+function GetValues_ForSchema(enumType) {
+    return GetValues(enumType).map(function (value) {
+        return { const: value };
+    });
+}
 
 /***/ }),
 /* 12 */

@@ -66,3 +66,11 @@ declare global  {
     function IsConstructor(obj: any): obj is new (..._) => any;
 }
 export declare function IsConstructor(obj: any): obj is new (..._) => any;
+export declare function GetEntries(enumType: any, nameModifierFunc?: (name: string) => string): {
+    name: string;
+    value: number;
+}[];
+export declare function GetValues<T>(enumType: any): T[];
+export declare function GetValues_ForSchema<T>(enumType: any): {
+    const: {};
+}[];
