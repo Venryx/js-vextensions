@@ -3521,6 +3521,13 @@ Object.prototype._AddFunction_Inline = function Excluding() {
 
     return result;
 };
+Object.prototype._AddFunction_Inline = function IsOneOf() {
+    for (var _len4 = arguments.length, values = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        values[_key4] = arguments[_key4];
+    }
+
+    return values.Contains(this);
+};
 var specialProps = ["_", "_key", "_id"];
 //interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
 Object.prototype._AddFunction_Inline = function Props() {

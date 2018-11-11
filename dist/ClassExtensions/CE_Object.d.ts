@@ -51,6 +51,9 @@ interface Object {
 interface Object {
     Excluding(...propNames: string[]): Object;
 }
+interface Object {
+    IsOneOf(...values: any[]): boolean;
+}
 declare var specialProps: string[];
 interface Object {
     Props<T>(this: {

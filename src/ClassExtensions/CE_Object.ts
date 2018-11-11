@@ -191,6 +191,11 @@ Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
     return result;
 }
 
+interface Object { IsOneOf(...values: any[]): boolean; }
+Object.prototype._AddFunction_Inline = function IsOneOf(...values: any[]): boolean {
+	return values.Contains(this);
+};
+
 var specialProps = ["_", "_key", "_id"];
 
 // todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
