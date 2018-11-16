@@ -2192,7 +2192,7 @@ function IsInt(obj) {
 }
 G({ ToInt: ToInt });
 function ToInt(stringOrFloatVal) {
-    return parseInt(stringOrFloatVal);
+    return parseInt(Number(stringOrFloatVal) + "");
 }
 G({ IsDouble: IsDouble });
 function IsDouble(obj) {
@@ -4652,10 +4652,10 @@ String.prototype._AddFunction_Inline = function Substring(start, end) {
     return this.substring(start, end);
 };
 String.prototype._AddFunction_Inline = function ToInt() {
-    return parseInt(this);
+    return parseInt(Number(this) + "");
 };
 String.prototype._AddFunction_Inline = function ToFloat() {
-    return parseFloat(this);
+    return Number(this);
 };
 
 /***/ }),

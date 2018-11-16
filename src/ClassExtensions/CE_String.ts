@@ -210,6 +210,6 @@ String.prototype._AddFunction_Inline = function Substring(start, end) {
 };
 
 interface String { ToInt(): number; }
-String.prototype._AddFunction_Inline = function ToInt() { return parseInt(this); }
+String.prototype._AddFunction_Inline = function ToInt() { return parseInt(Number(this)+""); }
 interface String { ToFloat(): number; }
-String.prototype._AddFunction_Inline = function ToFloat() { return parseFloat(this); }
+String.prototype._AddFunction_Inline = function ToFloat() { return Number(this); }

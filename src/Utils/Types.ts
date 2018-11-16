@@ -37,7 +37,7 @@ export function IsNumberString(obj, allowNaN = false) {
 G({IsInt}); declare global { function IsInt(obj): obj is number; }
 export function IsInt(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) == parseInt(obj as any); }
 G({ToInt}); declare global { function ToInt(stringOrFloatVal): number; }
-export function ToInt(stringOrFloatVal) { return parseInt(stringOrFloatVal); }
+export function ToInt(stringOrFloatVal) { return parseInt(Number(stringOrFloatVal)+""); }
 G({IsDouble}); declare global { function IsDouble(obj): boolean; }
 export function IsDouble(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
 G({ToDouble}); declare global { function ToDouble(stringOrIntVal): number; }
