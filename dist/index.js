@@ -969,8 +969,12 @@ function DeepGet(obj, pathOrPathNodes) {
     if (result == null) return resultIfNull;
     return result;
 }
+/**
+ * @param sepChar Default: "/"
+ */
 function DeepSet(obj, pathOrPathNodes, newValue) {
     var sepChar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "/";
+    var createPathSegmentsIfMissing = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 
     //let pathNodes = path.SplitByAny("\\.", "\\/");
     var pathNodes = pathOrPathNodes instanceof Array ? pathOrPathNodes : pathOrPathNodes.split(sepChar);
@@ -984,7 +988,13 @@ function DeepSet(obj, pathOrPathNodes, newValue) {
         for (var _iterator5 = pathNodes.slice(0, -1)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
             var pathNode = _step5.value;
 
-            if (deepObj == null) break;
+            if (deepObj[pathNode] == null) {
+                if (createPathSegmentsIfMissing) {
+                    deepObj[pathNode] = {};
+                } else {
+                    Assert(false, "The given path (" + pathNodes.join("/") + ") had a missing segment (" + pathNode + "), so the deep-set failed.");
+                }
+            }
             deepObj = deepObj[pathNode];
         }
     } catch (err) {

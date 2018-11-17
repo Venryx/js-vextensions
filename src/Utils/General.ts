@@ -553,17 +553,25 @@ export function DeepGet<T>(obj, pathOrPathNodes: string | (string | number)[], r
 		return arguments.length == 4 ? resultIfUndefined_override : resultIfNullOrUndefined;
 	if (result == null)
 		return resultIfNullOrUndefined;*/
-	if (result == null)
-		return resultIfNull;
+	if (result == null) return resultIfNull;
 	return result;
 }
-export function DeepSet(obj, pathOrPathNodes: string | (string | number)[], newValue, sepChar = "/") {
+/**
+ * @param sepChar Default: "/"
+ */
+export function DeepSet(obj, pathOrPathNodes: string | (string | number)[], newValue, sepChar = "/", createPathSegmentsIfMissing = true) {
 	//let pathNodes = path.SplitByAny("\\.", "\\/");
 	let pathNodes = pathOrPathNodes instanceof Array ? pathOrPathNodes : pathOrPathNodes.split(sepChar);
 	let deepObj = obj;
 	// tunnel down to the object holding the path-specified prop
 	for (let pathNode of pathNodes.slice(0, -1)) {
-		if (deepObj == null) break;
+		if (deepObj[pathNode] == null) {
+			if (createPathSegmentsIfMissing) {
+				deepObj[pathNode] = {};
+			} else {
+				Assert(false, `The given path (${pathNodes.join("/")}) had a missing segment (${pathNode}), so the deep-set failed.`);
+			}
+		}
 		deepObj = deepObj[pathNode];
 	}
 	deepObj[pathNodes.Last()] = newValue;

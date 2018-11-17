@@ -96,7 +96,10 @@ export declare function GetTreeNodesInObjTree(obj: any, includeRootNode?: boolea
 export declare function GetTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, includeRootNode?: boolean, _ancestorNodes?: any[]): any[];
 export declare function VisitTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode) => any, visitRootNode?: boolean, _ancestorNodes?: any[]): any;
 export declare function DeepGet<T>(obj: any, pathOrPathNodes: string | (string | number)[], resultIfNull?: T, sepChar?: string): T;
-export declare function DeepSet(obj: any, pathOrPathNodes: string | (string | number)[], newValue: any, sepChar?: string): void;
+/**
+ * @param sepChar Default: "/"
+ */
+export declare function DeepSet(obj: any, pathOrPathNodes: string | (string | number)[], newValue: any, sepChar?: string, createPathSegmentsIfMissing?: boolean): void;
 export declare function GetStackTraceStr(sourceStackTrace?: boolean): any;
 export declare function GetErrorMessagesUnderElement(element: any): any[];
 export declare const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
