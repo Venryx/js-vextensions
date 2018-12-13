@@ -85,9 +85,11 @@ export class Timer {
 		return this;
 	}
 
+	startTime: number;
+	nextTickTime: number;
 	timerID = -1;
 	get IsRunning() { return this.timerID != -1; }
-
+	
 	callCount = 0;
 	Start() {
 		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing a second triggering)
@@ -95,17 +97,24 @@ export class Timer {
 			this.Stop();
 		}
 		
+		this.startTime = Date.now();
+		this.nextTickTime = this.startTime + this.intervalInMS;
 		this.timerID = setInterval(()=> {
 			this.func();
+			this.nextTickTime += this.intervalInMS;
+
 			this.callCount++;
 			if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
 				this.Stop();
 			}
 		}, this.intervalInMS);
+
 		return this;
 	}
 	Stop() {
 		clearInterval(this.timerID);
+		this.startTime = null;
+		this.nextTickTime = null;
 		this.timerID = -1;
 	}
 }

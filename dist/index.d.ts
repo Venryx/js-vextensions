@@ -8,3 +8,4 @@ export * from "./Utils/Types";
 export * from "./Utils/VectorStructs";
 export * from "./Utils/URLs";
 export * from "./Utils/VCache";
+export * from "./Utils/Bridge";

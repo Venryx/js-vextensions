@@ -17,6 +17,8 @@ export declare class Timer {
     func: Function;
     maxCallCount: number;
     SetContext(timerContext: TimerContext): this;
+    startTime: number;
+    nextTickTime: number;
     timerID: number;
     readonly IsRunning: boolean;
     callCount: number;

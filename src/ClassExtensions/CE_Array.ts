@@ -118,7 +118,11 @@ Array.prototype._AddFunction_Inline = function Clear() {
 		this.pop();*/
 	this.splice(0, this.length);
 };
-interface Array<T> { First(matchFunc?: (item: T, index: number)=>boolean): T; }
+
+/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
+Array.prototype._AddFunction_Inline = function forEach_break(...args) { return this.some(...args); } */
+
+interface Array<T> { /** Throws an error if no items match. */ First(matchFunc?: (item: T, index: number)=>boolean): T; }
 Array.prototype._AddFunction_Inline = function First(matchFunc?) {
 	var result = this.FirstOrX(matchFunc);
 	if (result == null) {
@@ -141,7 +145,7 @@ Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc?, x = null) {
 }
 //Array.prototype._AddFunction_Inline = function FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
 Array.prototype._AddFunction_Inline = function FirstWith(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-interface Array<T> { Last(matchFunc?: (item: T, index: number)=>boolean): T; }
+interface Array<T> { /** Throws an error if no items match. */ Last(matchFunc?: (item: T, index: number)=>boolean): T; }
 Array.prototype._AddFunction_Inline = function Last(matchFunc?) {
 	var result = this.LastOrX(matchFunc);
 	if (result == null) {
