@@ -291,6 +291,7 @@ exports.GetErrorMessagesUnderElement = GetErrorMessagesUnderElement;
 exports.WaitTillDataPathIsSet = WaitTillDataPathIsSet;
 exports.WaitTillPropertyIsSet = WaitTillPropertyIsSet;
 exports.ChangeCapitalization = ChangeCapitalization;
+exports.StartDownload = StartDownload;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -1211,6 +1212,19 @@ function ConvertFromStandardSchemeToSchemeX(text, toScheme) {
         return text;
     }
 }
+function StartDownload(content, filename) {
+    var dataTypeStr = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "data:application/octet-stream,";
+    var encodeContentAsURIComp = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
+    var link = document.createElement("a");
+    Object.assign(link.style, { display: "none" });
+    link.innerText = "Save to disk";
+    link.setAttribute("href", dataTypeStr + (encodeContentAsURIComp ? encodeURIComponent(content) : content));
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
@@ -1615,7 +1629,7 @@ var Timer = exports.Timer = function () {
         key: "Stop",
         value: function Stop() {
             clearInterval(this.timerID);
-            this.startTime = null;
+            //this.startTime = null;
             this.nextTickTime = null;
             this.timerID = -1;
         }

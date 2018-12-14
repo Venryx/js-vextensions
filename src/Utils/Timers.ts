@@ -113,7 +113,7 @@ export class Timer {
 	}
 	Stop() {
 		clearInterval(this.timerID);
-		this.startTime = null;
+		//this.startTime = null;
 		this.nextTickTime = null;
 		this.timerID = -1;
 	}

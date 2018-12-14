@@ -676,3 +676,14 @@ function ConvertFromStandardSchemeToSchemeX(text: string, toScheme: CapScheme) {
 		return text;
 	}
 }
+
+export function StartDownload(content: string, filename: string, dataTypeStr = "data:application/octet-stream,", encodeContentAsURIComp = true) {
+	var link = document.createElement("a");
+	Object.assign(link.style, {display: "none"});
+	link.innerText = "Save to disk";
+	link.setAttribute("href", dataTypeStr + (encodeContentAsURIComp ? encodeURIComponent(content) : content));
+	link.setAttribute("download", filename);
+	document.body.appendChild(link);
+	link.click();
+	link.remove();
+}
