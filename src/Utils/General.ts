@@ -687,3 +687,24 @@ export function StartDownload(content: string, filename: string, dataTypeStr = "
 	link.click();
 	link.remove();
 }
+
+export function StartUpload(): Promise<string> {
+	return new Promise(resolve=> {
+		let fileInput = document.createElement("input")
+		fileInput.type = "file";
+		fileInput.style.display = "none";
+		fileInput.onchange = e=> {
+			var file = e.target["files"][0];
+			if (!file) return;
+
+			var reader = new FileReader();
+			reader.onload = e=> {
+				var contents = e.target["result"];
+				resolve(contents);
+			};
+			reader.readAsText(file);
+		};
+		document.body.appendChild(fileInput);
+		fileInput.click();
+	});
+}

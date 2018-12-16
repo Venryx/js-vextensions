@@ -118,3 +118,4 @@ export declare enum CapScheme {
 }
 export declare function ChangeCapitalization(text: string, fromScheme: CapScheme, toScheme: CapScheme): string;
 export declare function StartDownload(content: string, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
+export declare function StartUpload(): Promise<string>;

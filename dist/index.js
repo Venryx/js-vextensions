@@ -205,7 +205,7 @@ Object.keys(_VCache).forEach(function (key) {
   });
 });
 
-var _Bridge = __webpack_require__(22);
+var _Bridge = __webpack_require__(15);
 
 Object.keys(_Bridge).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -217,7 +217,7 @@ Object.keys(_Bridge).forEach(function (key) {
   });
 });
 
-__webpack_require__(15);
+__webpack_require__(16);
 
 /***/ }),
 /* 2 */
@@ -292,6 +292,7 @@ exports.WaitTillDataPathIsSet = WaitTillDataPathIsSet;
 exports.WaitTillPropertyIsSet = WaitTillPropertyIsSet;
 exports.ChangeCapitalization = ChangeCapitalization;
 exports.StartDownload = StartDownload;
+exports.StartUpload = StartUpload;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -1224,6 +1225,25 @@ function StartDownload(content, filename) {
     document.body.appendChild(link);
     link.click();
     link.remove();
+}
+function StartUpload() {
+    return new Promise(function (resolve) {
+        var fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.style.display = "none";
+        fileInput.onchange = function (e) {
+            var file = e.target["files"][0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var contents = e.target["result"];
+                resolve(contents);
+            };
+            reader.readAsText(file);
+        };
+        document.body.appendChild(fileInput);
+        fileInput.click();
+    });
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
@@ -3349,7 +3369,220 @@ function CombineDynamicPropMaps() {
 "use strict";
 
 
-__webpack_require__(16);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Bridge = exports.Bridge_Options = exports.BridgeMessage = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Timers = __webpack_require__(7);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+            try {
+                step(generator.next(value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function rejected(value) {
+            try {
+                step(generator["throw"](value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value);
+            }).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+var BridgeMessage = exports.BridgeMessage = function BridgeMessage(initialData) {
+    _classCallCheck(this, BridgeMessage);
+
+    this.Extend(initialData);
+};
+
+var Bridge_Options = exports.Bridge_Options = function Bridge_Options() {
+    _classCallCheck(this, Bridge_Options);
+
+    this.sendDataFunc_supportsObject = false;
+};
+
+var Bridge = exports.Bridge = function () {
+    /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard text that fails to load as JSON, or which fails to contain the special key "JSVE_Bridge_message". */
+    function Bridge(options) {
+        _classCallCheck(this, Bridge);
+
+        this.sendDataFunc_supportsObject = false;
+        // for receiving function-calls (and callbacks) from external bridge
+        // ==========
+        this.functions = {};
+        // for sending function-calls to external bridge
+        // ==========
+        this.lastCallID = -1;
+        this.callCallbacks = {};
+        options = E(new Bridge_Options(), options);
+        this.receiveDataFunc_adder = options.receiveDataFunc_adder;
+        this.SetUpReceiver();
+        this.sendDataFunc = options.sendDataFunc;
+        this.sendDataFunc_supportsObject = options.sendDataFunc_supportsObject;
+    }
+    // low level data-transfer
+    // ==========
+
+
+    _createClass(Bridge, [{
+        key: "SetUpReceiver",
+        value: function SetUpReceiver() {
+            var _this = this;
+
+            // add our own receive-text-func right now
+            this.receiveDataFunc = function (data) {
+                return __awaiter(_this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                    var bridgeMessage_direct, bridgeMessage_inJSON, bridgeMessage;
+                    return regeneratorRuntime.wrap(function _callee$(_context) {
+                        while (1) {
+                            switch (_context.prev = _context.next) {
+                                case 0:
+                                    bridgeMessage_direct = IsObject(data) && data["JSVE_Bridge_message"];
+                                    bridgeMessage_inJSON = IsString(data) && ((0, _Timers.TryCall)(function () {
+                                        return FromJSON(data);
+                                    }) || {})["JSVE_Bridge_message"];
+                                    bridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;
+
+                                    if (IsObject(bridgeMessage)) {
+                                        _context.next = 5;
+                                        break;
+                                    }
+
+                                    return _context.abrupt("return");
+
+                                case 5:
+                                    if (bridgeMessage.functionCall_name) this.OnReceiveFunctionCall(bridgeMessage);
+                                    if (bridgeMessage.callback_callID != null) this.OnReceiveCallback(bridgeMessage);
+
+                                case 7:
+                                case "end":
+                                    return _context.stop();
+                            }
+                        }
+                    }, _callee, this);
+                }));
+            };
+            this.receiveDataFunc_adder(this.receiveDataFunc);
+        }
+    }, {
+        key: "SendBridgeMessage",
+        value: function SendBridgeMessage(bridgeMessage) {
+            var data = { JSVE_Bridge_message: bridgeMessage };
+            this.sendDataFunc(this.sendDataFunc_supportsObject ? data : ToJSON(data));
+        }
+    }, {
+        key: "RegisterFunction",
+        value: function RegisterFunction(name, func) {
+            this.functions[name] = func;
+        }
+    }, {
+        key: "OnReceiveFunctionCall",
+        value: function OnReceiveFunctionCall(bridgeMessage) {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+                var result, responseBridgeMessage;
+                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                    while (1) {
+                        switch (_context2.prev = _context2.next) {
+                            case 0:
+                                _context2.next = 2;
+                                return this.CallInternal.apply(this, [bridgeMessage.functionCall_name].concat(_toConsumableArray(bridgeMessage.functionCall_args)));
+
+                            case 2:
+                                result = _context2.sent;
+                                responseBridgeMessage = new BridgeMessage({ callback_callID: bridgeMessage.functionCall_callID, callback_result: result });
+
+                                this.SendBridgeMessage(responseBridgeMessage);
+
+                            case 5:
+                            case "end":
+                                return _context2.stop();
+                        }
+                    }
+                }, _callee2, this);
+            }));
+        }
+        // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
+
+    }, {
+        key: "CallInternal",
+        value: function CallInternal(funcName) {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
+
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+                var func;
+                return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                    while (1) {
+                        switch (_context3.prev = _context3.next) {
+                            case 0:
+                                func = this.functions[funcName];
+
+                                Assert(func, "Cannot find function \"" + funcName + "\".");
+                                _context3.next = 4;
+                                return func.apply(undefined, args);
+
+                            case 4:
+                                return _context3.abrupt("return", _context3.sent);
+
+                            case 5:
+                            case "end":
+                                return _context3.stop();
+                        }
+                    }
+                }, _callee3, this);
+            }));
+        }
+    }, {
+        key: "OnReceiveCallback",
+        value: function OnReceiveCallback(bridgeMessage) {
+            this.callCallbacks[bridgeMessage.callback_callID](bridgeMessage.callback_result);
+        }
+    }, {
+        key: "Call",
+        value: function Call(funcName) {
+            var _this2 = this;
+
+            for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                args[_key2 - 1] = arguments[_key2];
+            }
+
+            return new Promise(function (resolve, reject) {
+                var callID = ++_this2.lastCallID;
+                var bridgeMessage = new BridgeMessage({ functionCall_callID: callID, functionCall_name: funcName, functionCall_args: args });
+                _this2.SendBridgeMessage(bridgeMessage);
+                _this2.callCallbacks[callID] = resolve;
+            });
+        }
+    }]);
+
+    return Bridge;
+}();
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 __webpack_require__(17);
 
@@ -3361,8 +3594,10 @@ __webpack_require__(20);
 
 __webpack_require__(21);
 
+__webpack_require__(22);
+
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3654,7 +3889,7 @@ Object.prototype._AddFunction_Inline = function plus(offset) {
 // And use alternate names, so they don't get used in other files.
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4328,7 +4563,7 @@ var _require = __webpack_require__(3),
     Compare = _require.Compare;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4357,7 +4592,7 @@ if (typeof Element != "undefined") Element.prototype._AddItem("$", function (que
 });
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4449,7 +4684,7 @@ Number.prototype._AddFunction_Inline = function ToPower(power) {
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4700,7 +4935,7 @@ String.prototype._AddFunction_Inline = function ToFloat() {
 };
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4773,221 +5008,6 @@ Error.prototype._AddGetter_Inline = function Stack() {
     }
     return this.stack;
 }*/
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Bridge = exports.Bridge_Options = exports.BridgeMessage = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Timers = __webpack_require__(7);
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) {
-            try {
-                step(generator.next(value));
-            } catch (e) {
-                reject(e);
-            }
-        }
-        function rejected(value) {
-            try {
-                step(generator["throw"](value));
-            } catch (e) {
-                reject(e);
-            }
-        }
-        function step(result) {
-            result.done ? resolve(result.value) : new P(function (resolve) {
-                resolve(result.value);
-            }).then(fulfilled, rejected);
-        }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-var BridgeMessage = exports.BridgeMessage = function BridgeMessage(initialData) {
-    _classCallCheck(this, BridgeMessage);
-
-    this.Extend(initialData);
-};
-
-var Bridge_Options = exports.Bridge_Options = function Bridge_Options() {
-    _classCallCheck(this, Bridge_Options);
-
-    this.sendDataFunc_supportsObject = false;
-};
-
-var Bridge = exports.Bridge = function () {
-    /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard text that fails to load as JSON, or which fails to contain the special key "JSVE_Bridge_message". */
-    function Bridge(options) {
-        _classCallCheck(this, Bridge);
-
-        this.sendDataFunc_supportsObject = false;
-        // for receiving function-calls (and callbacks) from external bridge
-        // ==========
-        this.functions = {};
-        // for sending function-calls to external bridge
-        // ==========
-        this.lastCallID = -1;
-        this.callCallbacks = {};
-        options = E(new Bridge_Options(), options);
-        this.receiveDataFunc_adder = options.receiveDataFunc_adder;
-        this.SetUpReceiver();
-        this.sendDataFunc = options.sendDataFunc;
-        this.sendDataFunc_supportsObject = options.sendDataFunc_supportsObject;
-    }
-    // low level data-transfer
-    // ==========
-
-
-    _createClass(Bridge, [{
-        key: "SetUpReceiver",
-        value: function SetUpReceiver() {
-            var _this = this;
-
-            // add our own receive-text-func right now
-            this.receiveDataFunc = function (data) {
-                return __awaiter(_this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-                    var bridgeMessage_direct, bridgeMessage_inJSON, bridgeMessage;
-                    return regeneratorRuntime.wrap(function _callee$(_context) {
-                        while (1) {
-                            switch (_context.prev = _context.next) {
-                                case 0:
-                                    bridgeMessage_direct = IsObject(data) && data["JSVE_Bridge_message"];
-                                    bridgeMessage_inJSON = IsString(data) && ((0, _Timers.TryCall)(function () {
-                                        return FromJSON(data);
-                                    }) || {})["JSVE_Bridge_message"];
-                                    bridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;
-
-                                    if (IsObject(bridgeMessage)) {
-                                        _context.next = 5;
-                                        break;
-                                    }
-
-                                    return _context.abrupt("return");
-
-                                case 5:
-                                    if (bridgeMessage.functionCall_name) this.OnReceiveFunctionCall(bridgeMessage);
-                                    if (bridgeMessage.callback_callID != null) this.OnReceiveCallback(bridgeMessage);
-
-                                case 7:
-                                case "end":
-                                    return _context.stop();
-                            }
-                        }
-                    }, _callee, this);
-                }));
-            };
-            this.receiveDataFunc_adder(this.receiveDataFunc);
-        }
-    }, {
-        key: "SendBridgeMessage",
-        value: function SendBridgeMessage(bridgeMessage) {
-            var data = { JSVE_Bridge_message: bridgeMessage };
-            this.sendDataFunc(this.sendDataFunc_supportsObject ? data : ToJSON(data));
-        }
-    }, {
-        key: "RegisterFunction",
-        value: function RegisterFunction(name, func) {
-            this.functions[name] = func;
-        }
-    }, {
-        key: "OnReceiveFunctionCall",
-        value: function OnReceiveFunctionCall(bridgeMessage) {
-            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-                var result, responseBridgeMessage;
-                return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                    while (1) {
-                        switch (_context2.prev = _context2.next) {
-                            case 0:
-                                _context2.next = 2;
-                                return this.CallInternal.apply(this, [bridgeMessage.functionCall_name].concat(_toConsumableArray(bridgeMessage.functionCall_args)));
-
-                            case 2:
-                                result = _context2.sent;
-                                responseBridgeMessage = new BridgeMessage({ callback_callID: bridgeMessage.functionCall_callID, callback_result: result });
-
-                                this.SendBridgeMessage(responseBridgeMessage);
-
-                            case 5:
-                            case "end":
-                                return _context2.stop();
-                        }
-                    }
-                }, _callee2, this);
-            }));
-        }
-        // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
-
-    }, {
-        key: "CallInternal",
-        value: function CallInternal(funcName) {
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-
-            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-                var func;
-                return regeneratorRuntime.wrap(function _callee3$(_context3) {
-                    while (1) {
-                        switch (_context3.prev = _context3.next) {
-                            case 0:
-                                func = this.functions[funcName];
-
-                                Assert(func, "Cannot find function \"" + funcName + "\".");
-                                _context3.next = 4;
-                                return func.apply(undefined, args);
-
-                            case 4:
-                                return _context3.abrupt("return", _context3.sent);
-
-                            case 5:
-                            case "end":
-                                return _context3.stop();
-                        }
-                    }
-                }, _callee3, this);
-            }));
-        }
-    }, {
-        key: "OnReceiveCallback",
-        value: function OnReceiveCallback(bridgeMessage) {
-            this.callCallbacks[bridgeMessage.callback_callID](bridgeMessage.callback_result);
-        }
-    }, {
-        key: "Call",
-        value: function Call(funcName) {
-            var _this2 = this;
-
-            for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                args[_key2 - 1] = arguments[_key2];
-            }
-
-            return new Promise(function (resolve, reject) {
-                var callID = ++_this2.lastCallID;
-                var bridgeMessage = new BridgeMessage({ functionCall_callID: callID, functionCall_name: funcName, functionCall_args: args });
-                _this2.SendBridgeMessage(bridgeMessage);
-                _this2.callCallbacks[callID] = resolve;
-            });
-        }
-    }]);
-
-    return Bridge;
-}();
 
 /***/ })
 /******/ ]);
