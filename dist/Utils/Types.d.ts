@@ -43,13 +43,13 @@ declare global  {
 }
 export declare function ToInt(stringOrFloatVal: any): number;
 declare global  {
-    function IsDouble(obj: any): boolean;
+    function IsFloat(obj: any): boolean;
 }
-export declare function IsDouble(obj: any): obj is number;
+export declare function IsFloat(obj: any): obj is number;
 declare global  {
-    function ToDouble(stringOrIntVal: any): number;
+    function ToFloat(stringOrIntVal: any): number;
 }
-export declare function ToDouble(stringOrIntVal: any): number;
+export declare function ToFloat(stringOrIntVal: any): number;
 declare global  {
     function IsString(obj: any, allowStringObj?: boolean): obj is string;
 }

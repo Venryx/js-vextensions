@@ -2181,8 +2181,8 @@ exports.IsNumber = IsNumber;
 exports.IsNumberString = IsNumberString;
 exports.IsInt = IsInt;
 exports.ToInt = ToInt;
-exports.IsDouble = IsDouble;
-exports.ToDouble = ToDouble;
+exports.IsFloat = IsFloat;
+exports.ToFloat = ToFloat;
 exports.IsString = IsString;
 exports.ToString = ToString;
 exports.IsFunction = IsFunction;
@@ -2255,12 +2255,12 @@ G({ ToInt: ToInt });
 function ToInt(stringOrFloatVal) {
     return parseInt(Number(stringOrFloatVal) + "");
 }
-G({ IsDouble: IsDouble });
-function IsDouble(obj) {
+G({ IsFloat: IsFloat });
+function IsFloat(obj) {
     return typeof obj == "number" && parseFloat(obj) != parseInt(obj);
 }
-G({ ToDouble: ToDouble });
-function ToDouble(stringOrIntVal) {
+G({ ToFloat: ToFloat });
+function ToFloat(stringOrIntVal) {
     return parseFloat(stringOrIntVal);
 }
 G({ IsString: IsString });

@@ -38,10 +38,10 @@ G({IsInt}); declare global { function IsInt(obj): obj is number; }
 export function IsInt(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) == parseInt(obj as any); }
 G({ToInt}); declare global { function ToInt(stringOrFloatVal): number; }
 export function ToInt(stringOrFloatVal) { return parseInt(Number(stringOrFloatVal)+""); }
-G({IsDouble}); declare global { function IsDouble(obj): boolean; }
-export function IsDouble(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
-G({ToDouble}); declare global { function ToDouble(stringOrIntVal): number; }
-export function ToDouble(stringOrIntVal) { return parseFloat(stringOrIntVal); }
+G({IsFloat}); declare global { function IsFloat(obj): boolean; }
+export function IsFloat(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
+G({ToFloat}); declare global { function ToFloat(stringOrIntVal): number; }
+export function ToFloat(stringOrIntVal) { return parseFloat(stringOrIntVal); }
 
 G({IsString}); declare global { function IsString(obj, allowStringObj?: boolean): obj is string; }
 export function IsString(obj, allowStringObj = false): obj is string {
