@@ -39,7 +39,7 @@ interface String {
     SplitByAny: (...separators: string[]) => string[];
 }
 interface String {
-    SplitAt: (index: number, includeCharAtIndex?) => [string, string];
+    SplitAt: (index: number, includeCharAtIndex?: any) => [string, string];
 }
 interface String {
     KeepAtMost: (maxLength: number, moreMarkerStr?: string) => string;

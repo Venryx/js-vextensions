@@ -36,7 +36,7 @@ module.exports = {
 				loader: "babel-loader",
 				exclude: /node_modules/,
 				query: {
-					presets: ["es2015", "react"]
+					presets: ["@babel/env", "@babel/react"]
 				}
 			},
 			{test: /\.tsx?$/, loader: "ts-loader"},
@@ -45,6 +45,6 @@ module.exports = {
 	plugins: [
 		new webpack.NoEmitOnErrorsPlugin(),
 		//new webpack.IgnorePlugin(/react/),
-		new HardSourceWebpackPlugin(),
+		//new HardSourceWebpackPlugin(), // disabled for now, because it breaks the "npm run dev" output in vs-code
 	]
 };

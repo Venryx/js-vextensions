@@ -1,5 +1,5 @@
 interface Object {
-    _AddItem: (name: string, value) => void;
+    _AddItem: (name: string, value: any) => void;
 }
 interface Object {
     _AddFunction: (name: string, func: Function) => void;
@@ -21,7 +21,7 @@ interface Object {
     SetName(name: string): Function;
 }
 interface Object {
-    Extend: (obj) => void;
+    Extend: (obj: any) => void;
 }
 interface VSet_Options {
     prop?: PropertyDescriptor;
@@ -40,7 +40,7 @@ interface Object {
     VAct<T>(this: T, func: (self: T) => any): T;
 }
 interface Object {
-    As<T>(type: new (..._) => T): T;
+    As<T>(type: new (..._: any[]) => T): T;
 }
 interface Object {
     Strip<T>(this: T): T;

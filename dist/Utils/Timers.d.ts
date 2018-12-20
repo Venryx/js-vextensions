@@ -2,9 +2,9 @@ export declare class TimerContext {
     timers: Timer[];
     Reset(): void;
 }
-export declare function TryCall<T>(func: (..._) => T, ...args: any[]): T;
+export declare function TryCall<T>(func: (..._: any[]) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
-declare global  {
+declare global {
     function WaitXThenRun(delayInMS: any, func: any, ...args: any[]): number;
 }
 export declare function WaitXThenRun(delayInMS: any, func: any, ...args: any[]): number;
