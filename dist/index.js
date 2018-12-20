@@ -286,6 +286,7 @@ exports.GetTreeNodesInPath = GetTreeNodesInPath;
 exports.VisitTreeNodesInPath = VisitTreeNodesInPath;
 exports.DeepGet = DeepGet;
 exports.DeepSet = DeepSet;
+exports.WithDeepSet = WithDeepSet;
 exports.GetStackTraceStr = GetStackTraceStr;
 exports.GetErrorMessagesUnderElement = GetErrorMessagesUnderElement;
 exports.WaitTillDataPathIsSet = WaitTillDataPathIsSet;
@@ -293,6 +294,8 @@ exports.WaitTillPropertyIsSet = WaitTillPropertyIsSet;
 exports.ChangeCapitalization = ChangeCapitalization;
 exports.StartDownload = StartDownload;
 exports.StartUpload = StartUpload;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -942,29 +945,24 @@ function VisitTreeNodesInPath(treeRoot, pathNodesOrStr, visitFunc) {
     VisitTreeNodesInPath({root: treeRoot}, "root/" + path, visitFunc);
     return treeRoot;
 }*/
-//export function DeepGet(obj, path, resultIfNullOrUndefined = null, resultIfUndefined_override = undefined) {
-function DeepGet(obj, pathOrPathNodes) {
+/** @param sepChar Default: "/" */
+function DeepGet(obj, pathOrPathSegments) {
     var resultIfNull = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     var sepChar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "/";
 
-    //let pathNodes = path.SplitByAny("\\.", "\\/");
-    var pathNodes = pathOrPathNodes instanceof Array ? pathOrPathNodes : pathOrPathNodes.split(sepChar);
+    var pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
     var result = obj;
     var _iteratorNormalCompletion4 = true;
     var _didIteratorError4 = false;
     var _iteratorError4 = undefined;
 
     try {
-        for (var _iterator4 = pathNodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        for (var _iterator4 = pathSegments[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
             var pathNode = _step4.value;
 
             if (result == null) break;
             result = result[pathNode];
         }
-        /*if (result === undefined)
-            return arguments.length == 4 ? resultIfUndefined_override : resultIfNullOrUndefined;
-        if (result == null)
-            return resultIfNullOrUndefined;*/
     } catch (err) {
         _didIteratorError4 = true;
         _iteratorError4 = err;
@@ -983,50 +981,55 @@ function DeepGet(obj, pathOrPathNodes) {
     if (result == null) return resultIfNull;
     return result;
 }
-/**
- * @param sepChar Default: "/"
- */
-function DeepSet(obj, pathOrPathNodes, newValue) {
+/** @param sepChar Default: "/" */
+function DeepSet(obj, pathOrPathSegments, newValue) {
     var sepChar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "/";
     var createPathSegmentsIfMissing = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 
-    //let pathNodes = path.SplitByAny("\\.", "\\/");
-    var pathNodes = pathOrPathNodes instanceof Array ? pathOrPathNodes : pathOrPathNodes.split(sepChar);
+    var pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
     var deepObj = obj;
     // tunnel down to the object holding the path-specified prop
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
-
-    try {
-        for (var _iterator5 = pathNodes.slice(0, -1)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var pathNode = _step5.value;
-
-            if (deepObj[pathNode] == null) {
-                if (createPathSegmentsIfMissing) {
-                    deepObj[pathNode] = {};
-                } else {
-                    Assert(false, "The given path (" + pathNodes.join("/") + ") had a missing segment (" + pathNode + "), so the deep-set failed.");
-                }
-            }
-            deepObj = deepObj[pathNode];
-        }
-    } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
-            }
-        } finally {
-            if (_didIteratorError5) {
-                throw _iteratorError5;
+    pathSegments.slice(0, -1).forEach(function (segment) {
+        if (deepObj[segment] == null) {
+            if (createPathSegmentsIfMissing) {
+                deepObj[segment] = {};
+            } else {
+                Assert(false, "The given path (" + pathSegments.join("/") + ") had a missing segment (" + segment + "), so the deep-set failed.");
             }
         }
-    }
+        deepObj = deepObj[segment];
+    });
+    deepObj[pathSegments.Last()] = newValue;
+}
+/** @param sepChar Default: "/" */
+/*export function WithDeepSet(baseObj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/") {
+    let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
 
-    deepObj[pathNodes.Last()] = newValue;
+    let result;
+    let result_deep;
+    let baseObj_deep = baseObj;
+    // tunnel down to the given path, overwriting the result_deep and baseObj_deep variables along the way
+    pathSegments.forEach((segment, index)=> {
+        // initialize with correct constructor for special cases (there might be some others, but this is sufficient for now)
+        result_deep = baseObj_deep instanceof Array ? [...baseObj_deep] : {...baseObj_deep};
+        Object.setPrototypeOf(result_deep, Object.getPrototypeOf(baseObj_deep)); // set the prototype to match
+        result = result || result_deep;
+
+        if (index < pathSegments.length - 1) {
+            // tunnel down, for next iteration
+            result_deep = result_deep[segment];
+            baseObj_deep = baseObj_deep[segment];
+        } else {
+            result_deep[segment] = newValue;
+        }
+    });
+    return result;
+}*/
+function WithDeepSet(baseObj, pathOrPathSegments, newValue) {
+    var sepChar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "/";
+
+    var pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
+    return Object.assign({}, baseObj, _defineProperty({}, pathSegments[0], pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue));
 }
 //@((()=> { if (g.onclick == null) g.onclick = ()=>console.log(V.GetStackTraceStr()); }) as any)
 function GetStackTraceStr() {
@@ -1077,7 +1080,7 @@ function WaitTillDataPathIsSet(dataPath) {
 
     return new Promise(function (resolve, reject) {
         return __awaiter(_this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var dataPathParts, currentParent, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, part;
+            var dataPathParts, currentParent, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, part;
 
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
@@ -1085,19 +1088,19 @@ function WaitTillDataPathIsSet(dataPath) {
                         case 0:
                             dataPathParts = dataPath.split(".");
                             currentParent = g;
-                            _iteratorNormalCompletion6 = true;
-                            _didIteratorError6 = false;
-                            _iteratorError6 = undefined;
+                            _iteratorNormalCompletion5 = true;
+                            _didIteratorError5 = false;
+                            _iteratorError5 = undefined;
                             _context.prev = 5;
-                            _iterator6 = dataPathParts[Symbol.iterator]();
+                            _iterator5 = dataPathParts[Symbol.iterator]();
 
                         case 7:
-                            if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+                            if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
                                 _context.next = 18;
                                 break;
                             }
 
-                            part = _step6.value;
+                            part = _step5.value;
 
                         case 9:
                             if (!(currentParent[part] == null)) {
@@ -1116,7 +1119,7 @@ function WaitTillDataPathIsSet(dataPath) {
                             currentParent = currentParent[part];
 
                         case 15:
-                            _iteratorNormalCompletion6 = true;
+                            _iteratorNormalCompletion5 = true;
                             _context.next = 7;
                             break;
 
@@ -1127,26 +1130,26 @@ function WaitTillDataPathIsSet(dataPath) {
                         case 20:
                             _context.prev = 20;
                             _context.t0 = _context["catch"](5);
-                            _didIteratorError6 = true;
-                            _iteratorError6 = _context.t0;
+                            _didIteratorError5 = true;
+                            _iteratorError5 = _context.t0;
 
                         case 24:
                             _context.prev = 24;
                             _context.prev = 25;
 
-                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                                _iterator6.return();
+                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                _iterator5.return();
                             }
 
                         case 27:
                             _context.prev = 27;
 
-                            if (!_didIteratorError6) {
+                            if (!_didIteratorError5) {
                                 _context.next = 30;
                                 break;
                             }
 
-                            throw _iteratorError6;
+                            throw _iteratorError5;
 
                         case 30:
                             return _context.finish(27);

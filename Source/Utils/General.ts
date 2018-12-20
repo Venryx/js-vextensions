@@ -540,41 +540,64 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string
 	return treeRoot;
 }*/
 
-//export function DeepGet(obj, path, resultIfNullOrUndefined = null, resultIfUndefined_override = undefined) {
-export function DeepGet<T>(obj, pathOrPathNodes: string | (string | number)[], resultIfNull: T = null, sepChar = "/"): T {
-	//let pathNodes = path.SplitByAny("\\.", "\\/");
-	let pathNodes = pathOrPathNodes instanceof Array ? pathOrPathNodes : pathOrPathNodes.split(sepChar);
+/** @param sepChar Default: "/" */
+export function DeepGet<T>(obj, pathOrPathSegments: string | (string | number)[], resultIfNull: T = null, sepChar = "/"): T {
+	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
 	let result = obj;
-	for (let pathNode of pathNodes) {
+	for (let pathNode of pathSegments) {
 		if (result == null) break;
 		result = result[pathNode];
 	}
-	/*if (result === undefined)
-		return arguments.length == 4 ? resultIfUndefined_override : resultIfNullOrUndefined;
-	if (result == null)
-		return resultIfNullOrUndefined;*/
 	if (result == null) return resultIfNull;
 	return result;
 }
-/**
- * @param sepChar Default: "/"
- */
-export function DeepSet(obj, pathOrPathNodes: string | (string | number)[], newValue, sepChar = "/", createPathSegmentsIfMissing = true) {
-	//let pathNodes = path.SplitByAny("\\.", "\\/");
-	let pathNodes = pathOrPathNodes instanceof Array ? pathOrPathNodes : pathOrPathNodes.split(sepChar);
+/** @param sepChar Default: "/" */
+export function DeepSet(obj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/", createPathSegmentsIfMissing = true) {
+	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
 	let deepObj = obj;
 	// tunnel down to the object holding the path-specified prop
-	for (let pathNode of pathNodes.slice(0, -1)) {
-		if (deepObj[pathNode] == null) {
+	pathSegments.slice(0, -1).forEach(segment=> {
+		if (deepObj[segment] == null) {
 			if (createPathSegmentsIfMissing) {
-				deepObj[pathNode] = {};
+				deepObj[segment] = {};
 			} else {
-				Assert(false, `The given path (${pathNodes.join("/")}) had a missing segment (${pathNode}), so the deep-set failed.`);
+				Assert(false, `The given path (${pathSegments.join("/")}) had a missing segment (${segment}), so the deep-set failed.`);
 			}
 		}
-		deepObj = deepObj[pathNode];
-	}
-	deepObj[pathNodes.Last()] = newValue;
+		deepObj = deepObj[segment];
+	});
+	deepObj[pathSegments.Last()] = newValue;
+}
+/** @param sepChar Default: "/" */
+/*export function WithDeepSet(baseObj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/") {
+	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
+
+	let result;
+	let result_deep;
+	let baseObj_deep = baseObj;
+	// tunnel down to the given path, overwriting the result_deep and baseObj_deep variables along the way
+	pathSegments.forEach((segment, index)=> {
+		// initialize with correct constructor for special cases (there might be some others, but this is sufficient for now)
+		result_deep = baseObj_deep instanceof Array ? [...baseObj_deep] : {...baseObj_deep};
+		Object.setPrototypeOf(result_deep, Object.getPrototypeOf(baseObj_deep)); // set the prototype to match
+		result = result || result_deep;
+
+		if (index < pathSegments.length - 1) {
+			// tunnel down, for next iteration
+			result_deep = result_deep[segment];
+			baseObj_deep = baseObj_deep[segment];
+		} else {
+			result_deep[segment] = newValue;
+		}
+	});
+	return result;
+}*/
+export function WithDeepSet(baseObj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/") {
+	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
+	return {
+		...baseObj,
+		[pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue,
+	};
 }
 
 //static GetStackTraceStr(stackTrace?: string, sourceStackTrace?: boolean);
