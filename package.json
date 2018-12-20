@@ -2,11 +2,11 @@
   "name": "js-vextensions",
   "version": "0.0.8",
   "description": "Extensions for Javascript, by Venryx.",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "Dist/index.js",
+  "typings": "Dist/index.d.ts",
   "scripts": {
     "dev": "webpack --config webpack.config.js --colors --progress --watch",
-    "dist": "babel src/index.jsx -u -o dist/index.js --stage 1 --presets react"
+    "dist": "babel Source/index.jsx -u -o Dist/index.js --stage 1 --presets react"
   },
   "repository": {
     "type": "git",

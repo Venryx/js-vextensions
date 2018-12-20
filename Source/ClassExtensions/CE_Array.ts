@@ -372,5 +372,4 @@ if (typeof NodeList != "undefined") {
 // late imports
 // ==========
 
-declare function require(name: string): any;
 var {StableSort, Compare} = require("../Utils/General");

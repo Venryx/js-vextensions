@@ -5,10 +5,10 @@ var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 module.exports = {
 	mode: "none",
 	entry: [
-		"./src/index.ts"
+		"./Source/index.ts"
 	],
 	output: {
-		path: __dirname + "/dist",
+		path: __dirname + "/Dist",
 		publicPath: "http://localhost:8080/",
 		filename: "index.js",
 		libraryTarget: "umd",
@@ -17,7 +17,7 @@ module.exports = {
 	},
 	resolve: {
 		//root: paths.client(),
-		//root: "src",
+		//root: "Source",
 		extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
 	},
 	externals: {
