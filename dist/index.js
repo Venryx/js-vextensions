@@ -2177,12 +2177,11 @@ exports.IsBool = IsBool;
 exports.ToBool = ToBool;
 exports.IsObject = IsObject;
 exports.IsObjectOf = IsObjectOf;
-exports.IsNumber = IsNumber;
 exports.IsNumberString = IsNumberString;
+exports.IsNumber = IsNumber;
+exports.ToNumber = ToNumber;
 exports.IsInt = IsInt;
 exports.ToInt = ToInt;
-exports.IsFloat = IsFloat;
-exports.ToFloat = ToFloat;
 exports.IsString = IsString;
 exports.ToString = ToString;
 exports.IsFunction = IsFunction;
@@ -2232,6 +2231,11 @@ G({ IsObjectOf: IsObjectOf });
 function IsObjectOf(obj) {
     return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) == "object";
 }
+G({ IsNumberString: IsNumberString });
+function IsNumberString(obj) {
+    var allowNaN = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return IsString(obj) && obj.length && IsNumber(Number(obj), false, allowNaN);
+}
 G({ IsNumber: IsNumber });
 function IsNumber(obj) {
     var allowNumberObj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -2240,29 +2244,34 @@ function IsNumber(obj) {
     if (!allowNaN && IsNaN(obj)) return false;
     return typeof obj == "number" || allowNumberObj && obj instanceof Number;
 }
-G({ IsNumberString: IsNumberString });
-function IsNumberString(obj) {
-    var allowNaN = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+G({ ToNumber: ToNumber });
+/** Basically the same as Number(...), accepting numbers, and number-strings matching:
+1) "0100" -> 100 [in ES5+]
+2) "0x10" -> 16
+3) "5e3" -> 5000
+But does *not* match the following (for which it instead returns valIfConversionFails -- by default NaN):
+1) null -> 0
+2) "" -> 0*/
+function ToNumber(stringOrFloatVal) {
+    var valIfConversionFails = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : NaN;
 
-    if (!allowNaN && obj == "NaN") return false;
-    return IsString(obj) && parseInt(obj).toString() == obj;
+    if (!IsString(stringOrFloatVal) && !IsNumber(stringOrFloatVal)) return valIfConversionFails;
+    if (IsString(stringOrFloatVal) && stringOrFloatVal.length == 0) return valIfConversionFails;
+    return Number(stringOrFloatVal);
 }
 G({ IsInt: IsInt });
 function IsInt(obj) {
-    return typeof obj == "number" && parseFloat(obj) == parseInt(obj);
+    return IsNumber(obj) && parseInt(obj) == obj;
 }
 G({ ToInt: ToInt });
 function ToInt(stringOrFloatVal) {
-    return parseInt(Number(stringOrFloatVal) + "");
+    var valIfConversionFails = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : NaN;
+    return parseInt(ToNumber(stringOrFloatVal, valIfConversionFails) + "");
 }
-G({ IsFloat: IsFloat });
-function IsFloat(obj) {
-    return typeof obj == "number" && parseFloat(obj) != parseInt(obj);
-}
-G({ ToFloat: ToFloat });
-function ToFloat(stringOrIntVal) {
-    return parseFloat(stringOrIntVal);
-}
+/*G({IsFloat}); declare global { function IsFloat(obj): boolean; }
+export function IsFloat(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
+G({ToFloat}); declare global { function ToFloat(stringOrIntVal): number; }
+export function ToFloat(stringOrIntVal) { return parseFloat(stringOrIntVal); }*/
 G({ IsString: IsString });
 function IsString(obj) {
     var allowStringObj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;

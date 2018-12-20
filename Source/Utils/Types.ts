@@ -24,24 +24,35 @@ G({IsObject}); declare global { function IsObject(obj): obj is Object; }
 export function IsObject(obj) : obj is Object { return typeof obj == "object"; }
 G({IsObjectOf}); declare global { function IsObjectOf<T>(obj): obj is T; }
 export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
+
+G({IsNumberString}); declare global { function IsNumberString(obj, allowNaN?): boolean; }
+export function IsNumberString(obj, allowNaN = false) { return IsString(obj) && obj.length && IsNumber(Number(obj), false, allowNaN); }
 G({IsNumber}); declare global { function IsNumber(obj): obj is number; }
 export function IsNumber(obj, allowNumberObj = false, allowNaN = false): obj is number {
 	if (!allowNaN && IsNaN(obj)) return false;
 	return typeof obj == "number" || (allowNumberObj && obj instanceof Number);
 }
-G({IsNumberString}); declare global { function IsNumberString(obj, allowNaN?): boolean; }
-export function IsNumberString(obj, allowNaN = false) {
-	if (!allowNaN && obj == "NaN") return false;
-	return IsString(obj) && parseInt(obj).toString() == obj;
+G({ToNumber}); declare global { function ToNumber(stringOrFloatVal: string | number, valIfConversionFails?: number): number; }
+/** Basically the same as Number(...), accepting numbers, and number-strings matching:
+1) "0100" -> 100 [in ES5+]
+2) "0x10" -> 16
+3) "5e3" -> 5000
+But does *not* match the following (for which it instead returns valIfConversionFails -- by default NaN):
+1) null -> 0
+2) "" -> 0*/
+export function ToNumber(stringOrFloatVal: string | number, valIfConversionFails = NaN) {
+	if (!IsString(stringOrFloatVal) && !IsNumber(stringOrFloatVal)) return valIfConversionFails;
+	if (IsString(stringOrFloatVal) && stringOrFloatVal.length == 0) return valIfConversionFails;
+	return Number(stringOrFloatVal);
 }
 G({IsInt}); declare global { function IsInt(obj): obj is number; }
-export function IsInt(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) == parseInt(obj as any); }
-G({ToInt}); declare global { function ToInt(stringOrFloatVal): number; }
-export function ToInt(stringOrFloatVal) { return parseInt(Number(stringOrFloatVal)+""); }
-G({IsFloat}); declare global { function IsFloat(obj): boolean; }
+export function IsInt(obj) : obj is number { return IsNumber(obj) && parseInt(obj as any) == obj; }
+G({ToInt}); declare global { function ToInt(stringOrFloatVal: string | number, valIfConversionFails?: number): number; }
+export function ToInt(stringOrFloatVal: string | number, valIfConversionFails = NaN) { return parseInt(ToNumber(stringOrFloatVal, valIfConversionFails)+""); }
+/*G({IsFloat}); declare global { function IsFloat(obj): boolean; }
 export function IsFloat(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
 G({ToFloat}); declare global { function ToFloat(stringOrIntVal): number; }
-export function ToFloat(stringOrIntVal) { return parseFloat(stringOrIntVal); }
+export function ToFloat(stringOrIntVal) { return parseFloat(stringOrIntVal); }*/
 
 G({IsString}); declare global { function IsString(obj, allowStringObj?: boolean): obj is string; }
 export function IsString(obj, allowStringObj = false): obj is string {

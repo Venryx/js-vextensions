@@ -27,29 +27,32 @@ declare global  {
 }
 export declare function IsObjectOf<T>(obj: any): obj is T;
 declare global  {
+    function IsNumberString(obj: any, allowNaN?: any): boolean;
+}
+export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean;
+declare global  {
     function IsNumber(obj: any): obj is number;
 }
 export declare function IsNumber(obj: any, allowNumberObj?: boolean, allowNaN?: boolean): obj is number;
 declare global  {
-    function IsNumberString(obj: any, allowNaN?: any): boolean;
+    function ToNumber(stringOrFloatVal: string | number, valIfConversionFails?: number): number;
 }
-export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean;
+/** Basically the same as Number(...), accepting numbers, and number-strings matching:
+1) "0100" -> 100 [in ES5+]
+2) "0x10" -> 16
+3) "5e3" -> 5000
+But does *not* match the following (for which it instead returns valIfConversionFails -- by default NaN):
+1) null -> 0
+2) "" -> 0*/
+export declare function ToNumber(stringOrFloatVal: string | number, valIfConversionFails?: number): number;
 declare global  {
     function IsInt(obj: any): obj is number;
 }
 export declare function IsInt(obj: any): obj is number;
 declare global  {
-    function ToInt(stringOrFloatVal: any): number;
+    function ToInt(stringOrFloatVal: string | number, valIfConversionFails?: number): number;
 }
-export declare function ToInt(stringOrFloatVal: any): number;
-declare global  {
-    function IsFloat(obj: any): boolean;
-}
-export declare function IsFloat(obj: any): obj is number;
-declare global  {
-    function ToFloat(stringOrIntVal: any): number;
-}
-export declare function ToFloat(stringOrIntVal: any): number;
+export declare function ToInt(stringOrFloatVal: string | number, valIfConversionFails?: number): number;
 declare global  {
     function IsString(obj: any, allowStringObj?: boolean): obj is string;
 }
