@@ -118,7 +118,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "QuickIncrement", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["QuickIncrement"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "emptyEntities", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["emptyEntities"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "emptyObj", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["emptyObj"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "eo", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["eo"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "emptyArray", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["emptyArray"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "emptyArray_forLoading", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["emptyArray_forLoading"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "E", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["E"]; });
 
@@ -1427,7 +1433,10 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DoNothing", function() { return DoNothing; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DN", function() { return DN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QuickIncrement", function() { return QuickIncrement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "emptyEntities", function() { return emptyEntities; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "emptyObj", function() { return emptyObj; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eo", function() { return eo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "emptyArray", function() { return emptyArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "emptyArray_forLoading", function() { return emptyArray_forLoading; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "E", function() { return E; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CopyText", function() { return CopyText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FromJSON", function() { return FromJSON; });
@@ -1518,8 +1527,15 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 };
 
 var g = (typeof window === "undefined" ? "undefined" : _typeof(window)) == "object" ? window : global;
-if (Number.MIN_SAFE_INTEGER == null) Number.MIN_SAFE_INTEGER = -9007199254740991;
-if (Number.MAX_SAFE_INTEGER == null) Number.MAX_SAFE_INTEGER = 9007199254740991;
+
+if (Number.MIN_SAFE_INTEGER == null) {
+  Number.MIN_SAFE_INTEGER = -9007199254740991;
+}
+
+if (Number.MAX_SAFE_INTEGER == null) {
+  Number.MAX_SAFE_INTEGER = 9007199254740991;
+}
+
 g["G"] = G;
 
 function G() {
@@ -1552,11 +1568,11 @@ QuickIncrement["values"] = [];
 G({
   QuickIncrement: QuickIncrement
 });
-var emptyEntities = {
-  emptyObj: {},
-  emptyArray: [],
-  emptyArray_forLoading: []
-};
+var emptyObj = {};
+var eo = emptyObj; // used for (maybeNullVar || eo).prop;
+
+var emptyArray = [];
+var emptyArray_forLoading = [];
 G({
   E: E
 });
@@ -1587,8 +1603,8 @@ function E(e1, e2, e3, e4, e5, e6, e7, e8) {
     }
   }
 
-  if (emptyEntities.emptyObj && result.VKeys().length == 0) {
-    return emptyEntities.emptyObj;
+  if (emptyObj && result.VKeys().length == 0) {
+    return emptyObj;
   }
 
   return result; //return StyleSheet.create(result);
