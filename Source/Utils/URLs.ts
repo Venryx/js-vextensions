@@ -97,8 +97,9 @@ export class VURL {
 		result.hash = hashStr;
 		return result;
 	}
-	static FromState(state: {pathname?: string, search?: string, hash?: string}) {
-		let result = VURL.Parse(state ? (state.pathname||"") + (state.search||"") + (state.hash||"") : "");
+	static FromLocationObject(location: {pathname?: string, search?: string, hash?: string}) {
+		// todo: have this support all Location properties, not just those used by connected-react-router
+		let result = VURL.Parse(location ? (location.pathname||"") + (location.search||"") + (location.hash||"") : "");
 		//if (normalize) result = result.Normalized();
 		return result;
 	}

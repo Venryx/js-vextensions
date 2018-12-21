@@ -5,7 +5,7 @@ export declare function GetCurrentURLString(): string;
 export declare function GetUrlParts(url?: string): [string, string, string, string];
 export declare class VURL {
     static Parse(urlStr: string, useCurrentDomainIfMissing?: boolean, allowQuestionMarkAsVarSep?: boolean): VURL;
-    static FromState(state: {
+    static FromLocationObject(location: {
         pathname?: string;
         search?: string;
         hash?: string;

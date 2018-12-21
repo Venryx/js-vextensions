@@ -4549,9 +4549,10 @@ function () {
       return result;
     }
   }, {
-    key: "FromState",
-    value: function FromState(state) {
-      var result = VURL.Parse(state ? (state.pathname || "") + (state.search || "") + (state.hash || "") : ""); //if (normalize) result = result.Normalized();
+    key: "FromLocationObject",
+    value: function FromLocationObject(location) {
+      // todo: have this support all Location properties, not just those used by connected-react-router
+      var result = VURL.Parse(location ? (location.pathname || "") + (location.search || "") + (location.hash || "") : ""); //if (normalize) result = result.Normalized();
 
       return result;
     }
