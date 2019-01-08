@@ -506,7 +506,7 @@ Object.prototype._AddFunction_Inline = function VSet() {
 };
 
 Object.prototype._AddFunction_Inline = function Extended(x) {
-  var result = {};
+  var result = this instanceof Array ? [] : {};
 
   for (var name in this) {
     result[name] = this[name];

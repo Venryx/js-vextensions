@@ -141,14 +141,16 @@ Object.prototype._AddFunction_Inline = function VSet(...args) {
 };
 interface Object { Extended<T, T2>(this: T, x: T2): T & T2; }
 Object.prototype._AddFunction_Inline = function Extended(x) {
-	var result = {};
-	for (var name in this)
+	var result = this instanceof Array ? [] : {};
+	for (var name in this) {
 		result[name] = this[name];
-	if (x) {
-    	for (var name in x)
-    		result[name] = x[name];
 	}
-    return result;
+	if (x) {
+    	for (var name in x) {
+			result[name] = x[name];
+		}
+	}
+	return result;
 };
 /*interface Object { Extended2<T>(this, x: T): T; }
 Object.prototype._AddFunction_Inline = function Extended2(x) {
