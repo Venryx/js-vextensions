@@ -4941,6 +4941,7 @@ var BridgeMessage = function BridgeMessage(initialData) {
 var Bridge_Options = function Bridge_Options() {
   _classCallCheck(this, Bridge_Options);
 
+  this.receiveDataFunc_addImmediately = true;
   this.sendDataFunc_supportsObject = false;
 };
 var Bridge =
@@ -4960,7 +4961,7 @@ function () {
     this.callCallbacks = {};
     options = E(new Bridge_Options(), options);
     this.receiveDataFunc_adder = options.receiveDataFunc_adder;
-    this.SetUpReceiver();
+    if (options.receiveDataFunc_addImmediately) this.SetUpReceiver();
     this.sendDataFunc = options.sendDataFunc;
     this.sendDataFunc_supportsObject = options.sendDataFunc_supportsObject;
   } // low level data-transfer

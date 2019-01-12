@@ -8,6 +8,7 @@ export declare class BridgeMessage {
 }
 export declare class Bridge_Options {
     receiveDataFunc_adder: (receiveDataFunc: (text: string | Object) => any) => any;
+    receiveDataFunc_addImmediately?: boolean;
     sendDataFunc: (text: string | Object) => any;
     sendDataFunc_supportsObject?: boolean;
 }

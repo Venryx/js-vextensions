@@ -17,6 +17,7 @@ export class BridgeMessage {
 
 export class Bridge_Options {
 	receiveDataFunc_adder: (receiveDataFunc: (text: string | Object)=>any)=>any;
+	receiveDataFunc_addImmediately? = true;
 	sendDataFunc: (text: string | Object)=>any;
 	sendDataFunc_supportsObject? = false;
 }
@@ -26,7 +27,7 @@ export class Bridge {
 	constructor(options: Bridge_Options) {
 		options = E(new Bridge_Options(), options);
 		this.receiveDataFunc_adder = options.receiveDataFunc_adder;
-		this.SetUpReceiver();
+		if (options.receiveDataFunc_addImmediately) this.SetUpReceiver();
 		this.sendDataFunc = options.sendDataFunc;
 		this.sendDataFunc_supportsObject = options.sendDataFunc_supportsObject;
 	}
