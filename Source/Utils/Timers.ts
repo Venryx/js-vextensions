@@ -43,7 +43,7 @@ export function WaitXThenRun(delayInMS, func, ...args): number {
 	if (delayInMS == 0) {
 		return window["setImmediate"](func, ...args);
 	}
-	return setTimeout(func, delayInMS, ...args);
+	return setTimeout(func, delayInMS, ...args) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 }
 export function Sleep(ms) {
 	var startTime = new Date().getTime();
@@ -107,7 +107,7 @@ export class Timer {
 			if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
 				this.Stop();
 			}
-		}, this.intervalInMS);
+		}, this.intervalInMS) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 
 		return this;
 	}

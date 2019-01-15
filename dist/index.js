@@ -3402,7 +3402,7 @@ function WaitXThenRun(delayInMS, func) {
     return (_window = window)["setImmediate"].apply(_window, [func].concat(args));
   }
 
-  return setTimeout.apply(void 0, [func, delayInMS].concat(args));
+  return setTimeout.apply(void 0, [func, delayInMS].concat(args)); // "as any": maybe temp; used to allow source-importing from NodeJS
 }
 function Sleep(ms) {
   var startTime = new Date().getTime();
@@ -3472,7 +3472,8 @@ function () {
         if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) {
           _this.Stop();
         }
-      }, this.intervalInMS);
+      }, this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
+
       return this;
     }
   }, {
