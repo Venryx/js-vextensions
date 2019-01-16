@@ -2940,6 +2940,7 @@ String.prototype._AddFunction_Inline = function Func(func) {
 
 String.prototype._AddFunction_Inline = function AsMultiline() {
   var desiredIndent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var removeLineStr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "@RL";
   var result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
 
   if (desiredIndent != null) {
@@ -2950,6 +2951,14 @@ String.prototype._AddFunction_Inline = function AsMultiline() {
 
       lines = lines.map(function (line) {
         return line.replace(new RegExp("^\t{0,".concat(firstLineIndent, "}")), "");
+      }); // add the desired indent
+
+      lines = lines.map(function (line) {
+        return "\t".repeat(desiredIndent) + line;
+      }); // filter out lines with the special remove-line string
+
+      lines = lines.filter(function (a) {
+        return !a.includes(removeLineStr);
       });
       result = lines.join("\n");
     }

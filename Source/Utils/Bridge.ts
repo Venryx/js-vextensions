@@ -71,7 +71,7 @@ export class Bridge {
 		this.SendBridgeMessage(responseBridgeMessage);
 	}
 	// we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
-	async CallInternal(funcName: string, ...args: string[]) {
+	async CallInternal(funcName: string, ...args: any[]) {
 		let func = this.functions[funcName];
 		Assert(func, `Cannot find function "${funcName}".`)
 		return await func(...args);
@@ -86,7 +86,7 @@ export class Bridge {
 	
 	lastCallID = -1;
 	callCallbacks = {};
-	Call(funcName: string, ...args: string[]) {
+	Call(funcName: string, ...args: any[]) {
 		return new Promise((resolve, reject)=> {
 			let callID = ++this.lastCallID;
 

@@ -188,8 +188,15 @@ String.prototype._AddFunction_Inline = function OneFunc(func) {
     return oneFuncCache[funcKey];
 };*/
 
-interface String { AsMultiline(desiredIndent: number): string; }
-String.prototype._AddFunction_Inline = function AsMultiline(this: string, desiredIndent: number = null) {
+interface String {
+	/**
+	 * Reformats a multi-line string to represent the actual intended "block" of text.
+	 * @param desiredIndent How much to indent each line. (after removal of the first-line indent-length from each of them)
+	 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
+	 */
+	AsMultiline(desiredIndent: number, removeLineStr?: string): string;
+}
+String.prototype._AddFunction_Inline = function AsMultiline(this: string, desiredIndent: number = null, removeLineStr = "@RL") {
 	let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
 	if (desiredIndent != null) {
 		let firstLineIndent = (result.match(/^\t+/) || [""])[0].length;
@@ -197,6 +204,10 @@ String.prototype._AddFunction_Inline = function AsMultiline(this: string, desire
 			let lines = result.split("\n");
 			// remove X tabs from start of each line (where X is firstLineIndent)
 			lines = lines.map(line=>line.replace(new RegExp(`^\t{0,${firstLineIndent}}`), ""));
+			// add the desired indent
+			lines = lines.map(line=>"\t".repeat(desiredIndent) + line);
+			// filter out lines with the special remove-line string
+			lines = lines.filter(a=>!a.includes(removeLineStr));
 			result = lines.join("\n");
 		}
 	}

@@ -26,9 +26,9 @@ export declare class Bridge {
     };
     RegisterFunction(name: string, func: Function): void;
     OnReceiveFunctionCall(bridgeMessage: BridgeMessage): Promise<void>;
-    CallInternal(funcName: string, ...args: string[]): Promise<any>;
+    CallInternal(funcName: string, ...args: any[]): Promise<any>;
     OnReceiveCallback(bridgeMessage: BridgeMessage): void;
     lastCallID: number;
     callCallbacks: {};
-    Call(funcName: string, ...args: string[]): Promise<{}>;
+    Call(funcName: string, ...args: any[]): Promise<{}>;
 }
