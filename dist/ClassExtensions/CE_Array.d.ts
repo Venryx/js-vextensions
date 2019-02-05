@@ -90,6 +90,9 @@ interface Array<T> {
     Except(excludeItems: T[], excludeEachOnlyOnce?: boolean): T[];
 }
 interface Array<T> {
+    IfEmptyThen<T>(valIfSelfIsEmpty: T): T;
+}
+interface Array<T> {
     Min(valFunc?: (item: T) => number, asNumbers?: boolean): T;
 }
 interface Array<T> {

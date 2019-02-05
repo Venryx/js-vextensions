@@ -574,7 +574,18 @@ Object.prototype._AddFunction_Inline = function IsOneOf() {
     values[_key4] = arguments[_key4];
   }
 
-  return values.Contains(this);
+  if (values.Contains(this)) {
+    return true;
+  } // if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
+
+
+  var isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
+
+  if (isObjectFormOfPrimitive && values.Contains(this.valueOf())) {
+    return true;
+  }
+
+  return false;
 };
 
 var specialProps = ["_", "_key", "_id"]; //interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
@@ -1313,6 +1324,10 @@ Array.prototype._AddFunction_Inline = function Except() {
   return this.Where(function (a) {
     return !excludeItems.Contains(a);
   });
+};
+
+Array.prototype._AddFunction_Inline = function IfEmptyThen(valIfSelfIsEmpty) {
+  return this.length == 0 ? valIfSelfIsEmpty : this;
 };
 
 Array.prototype._AddFunction_Inline = function Min(valFunc) {

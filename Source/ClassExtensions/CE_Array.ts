@@ -285,6 +285,11 @@ Array.prototype._AddFunction_Inline = function Except(this: Array<any>, ...args)
 	return this.Where(a=>!excludeItems.Contains(a));
 };
 
+interface Array<T> { IfEmptyThen<T>(valIfSelfIsEmpty: T): T; }
+Array.prototype._AddFunction_Inline = function IfEmptyThen(this: Array<any>, valIfSelfIsEmpty) {
+	return this.length == 0 ? valIfSelfIsEmpty : this;
+};
+
 //Array.prototype._AddFunction_Inline = function JoinUsing(separator) { return this.join(separator);};
 interface Array<T> { Min(valFunc?: (item: T)=>number, asNumbers?: boolean): T; }
 Array.prototype._AddFunction_Inline = function Min(valFunc?, asNumbers = false) {

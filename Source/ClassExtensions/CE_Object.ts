@@ -188,14 +188,23 @@ Object.prototype._AddFunction_Inline = function Including(...propNames) {
 interface Object { Excluding(...propNames: string[]): Object; }
 Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
     var result = this.Extended();
-    for (let propName of propNames)
-        delete result[propName];
+    for (let propName of propNames) {
+		  delete result[propName];
+	 }
     return result;
 }
 
 interface Object { IsOneOf(...values: any[]): boolean; }
 Object.prototype._AddFunction_Inline = function IsOneOf(...values: any[]): boolean {
-	return values.Contains(this);
+	if (values.Contains(this)) {
+		return true;
+	}
+	// if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
+	let isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
+	if (isObjectFormOfPrimitive && values.Contains(this.valueOf())) {
+		return true;
+	}
+	return false;
 };
 
 var specialProps = ["_", "_key", "_id"];
