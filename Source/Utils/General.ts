@@ -162,7 +162,7 @@ function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
 
 	let copies = [{
 		source: originalObject,
-		target: Object.create(Object.getPrototypeOf(originalObject)),
+		target: Array.isArray(originalObject) ? [] : Object.create(Object.getPrototypeOf(originalObject)),
 	}];
 	let cloneObject = copies[0].target;
 	let sourceReferences = [originalObject];

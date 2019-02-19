@@ -1752,7 +1752,7 @@ function CloneWithPrototypes(originalObject) {
   if (originalObject == null) return originalObject;
   var copies = [{
     source: originalObject,
-    target: Object.create(Object.getPrototypeOf(originalObject))
+    target: Array.isArray(originalObject) ? [] : Object.create(Object.getPrototypeOf(originalObject))
   }];
   var cloneObject = copies[0].target;
   var sourceReferences = [originalObject];
