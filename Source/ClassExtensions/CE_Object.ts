@@ -296,11 +296,6 @@ Object.prototype._AddFunction_Inline = function FA_Add(item) {
 	this[openIndex] = item;
 };
 
-// [offset construct] (e.g. {left: 10, top: 10})
-// ==========
-
-Object.prototype._AddFunction_Inline = function plus(offset) { return { left: this.left + offset.left, top: this.top + offset.top }; };
-
 // late-require things from other modules, that are used in the methods
 // ==========
 
