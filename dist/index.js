@@ -4512,8 +4512,9 @@ var VURL =
 /*#__PURE__*/
 function () {
   _createClass(VURL, [{
-    key: "ToState",
-    value: function ToState() {
+    key: "ToLocationObject",
+    // doesn't supply all the properties of a Location object, but supplies the most common
+    value: function ToLocationObject() {
       return {
         pathname: this.toString({
           domain: false,

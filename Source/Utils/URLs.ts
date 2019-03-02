@@ -103,13 +103,14 @@ export class VURL {
 		//if (normalize) result = result.Normalized();
 		return result;
 	}
-	ToState() {
+	// doesn't supply all the properties of a Location object, but supplies the most common
+	ToLocationObject() {
 		return {
 			pathname: this.toString({domain: false, path: true, queryVars: false, hash: false}),
 			search: this.toString({domain: false, pathStartSlash: false, path: false, queryVars: true, hash: false}),
 			hash: this.toString({domain: false, pathStartSlash: false, path: false, queryVars: false, hash: true}),
 			key: "URLKey_" + Date.now(),
-		}
+		};
 	}
 
 	constructor(domain = "", pathNodes = [] as string[], queryVars = [] as QueryVar[], hash = "") {

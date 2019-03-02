@@ -10,7 +10,7 @@ export declare class VURL {
         search?: string;
         hash?: string;
     }): VURL;
-    ToState(): {
+    ToLocationObject(): {
         pathname: string;
         search: string;
         hash: string;
