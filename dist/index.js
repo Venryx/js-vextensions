@@ -379,11 +379,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+ // (ClassExtensions.ts)
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-// (ClassExtensions.ts)
 Object.defineProperty(Object.prototype, "_AddItem", {
   //configurable: true,
   enumerable: false,
@@ -690,6 +692,9 @@ Object.prototype._AddFunction_Inline = function FA_Add(item) {
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -2586,7 +2591,10 @@ module.exports = g;
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 if (typeof Element != "undefined") Element.prototype._AddItem("GetParents", function () {
   var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -2612,7 +2620,10 @@ if (typeof Element != "undefined") Element.prototype._AddItem("$", function (que
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Number.prototype._AddFunction_Inline = function IfN1Then(valIfSelfIsNeg1) {
   return this == -1 ? valIfSelfIsNeg1 : this;
@@ -2724,7 +2735,10 @@ Number.prototype._AddFunction_Inline = function ToPower(power) {
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 String.prototype._AddFunction_Inline = function TrimStart() {
   for (var _len = arguments.length, chars = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -2988,10 +3002,12 @@ String.prototype._AddFunction_Inline = function ToFloat() {
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// Function
+"use strict";
+ // Function
 // ==========
+
 Function.prototype._AddFunction_Inline = function AddTag(tag) {
   if (this.tags == null) this.tags = [];
   this.tags.push(tag);

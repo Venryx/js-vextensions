@@ -20,6 +20,8 @@
 		"noImplicitAny": false,
 		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true,
+		"alwaysStrict": true, // alternative: "@babel/plugin-transform-strict-mode"; went with this since doesn't require another npm package
+
 		"declaration": true,
 		"declarationDir": "Dist"
 	},
