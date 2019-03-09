@@ -1,15 +1,17 @@
-interface Number { IfN1Then<T>(valIfSelfIsNeg1: T): T; }
+import {IsNaN} from "..";
+
+declare global { interface Number { IfN1Then<T>(valIfSelfIsNeg1: T): T; } }
 Number.prototype._AddFunction_Inline = function IfN1Then(this: number, valIfSelfIsNeg1) {
 	return this == -1 ? valIfSelfIsNeg1 : this;
 };
 
-interface Number { NaNTo<T>(valIfSelfIsNaN: T): T; }
+declare global { interface Number { NaNTo<T>(valIfSelfIsNaN: T): T; } }
 Number.prototype._AddFunction_Inline = function NaNTo(valIfSelfIsNaN) {
 	return IsNaN(this) ? valIfSelfIsNaN : this;
 };
 
 //Number.prototype._AddFunction_Inline = function RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
-interface Number { ToPercentStr(precision?: number): string; }
+declare global { interface Number { ToPercentStr(precision?: number): string; } }
 Number.prototype._AddFunction_Inline = function ToPercentStr(this: number, precision?: number) {
 	let number = this * 100;
 	if (precision != null)
@@ -17,7 +19,7 @@ Number.prototype._AddFunction_Inline = function ToPercentStr(this: number, preci
 	return number.toString() + "%";
 };
 
-interface Number { RoundTo(multiple: number): number; }
+declare global { interface Number { RoundTo(multiple: number): number; } }
 Number.prototype._AddFunction_Inline = function RoundTo(this: number, multiple) {
 	//return Math.round(this / multiple) * multiple;
 	// Don't ask me why this works, but it does, and is faster. From: http://phrogz.net/round-to-nearest-via-modulus-division
@@ -28,7 +30,7 @@ Number.prototype._AddFunction_Inline = function RoundTo(this: number, multiple) 
 	let multiple_inverted = 1 / multiple;
 	return Math.round(this * multiple_inverted) / multiple_inverted;
 };
-interface Number { RoundTo_Str(multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string; }
+declare global { interface Number { RoundTo_Str(multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string; } }
 Number.prototype._AddFunction_Inline = function RoundTo_Str(this: number, multipleOf, fractionDigits = null, removeEmptyFraction = true) {
 	var resultValue = this.RoundTo(multipleOf);
 	var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
@@ -37,9 +39,9 @@ Number.prototype._AddFunction_Inline = function RoundTo_Str(this: number, multip
 	}
 	return result;
 };
-interface Number { FloorTo(multipleOf: number): number; }
+declare global { interface Number { FloorTo(multipleOf: number): number; } }
 Number.prototype._AddFunction_Inline = function FloorTo(this: number, multipleOf) { return Math.floor((new Number(this) as any) / multipleOf) * multipleOf; };
-interface Number { FloorTo_Str(multipleOf: number): string; }
+declare global { interface Number { FloorTo_Str(multipleOf: number): string; } }
 Number.prototype._AddFunction_Inline = function FloorTo_Str(this: number, multipleOf) {
 	var resultValue = this.FloorTo(multipleOf);
 	var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
@@ -47,9 +49,9 @@ Number.prototype._AddFunction_Inline = function FloorTo_Str(this: number, multip
 		result = result.TrimEnd("0").TrimEnd(".");
 	return result;
 };
-interface Number { CeilingTo(multipleOf: number): number; }
+declare global { interface Number { CeilingTo(multipleOf: number): number; } }
 Number.prototype._AddFunction_Inline = function CeilingTo(this: number, multipleOf) { return Math.ceil((new Number(this) as any) / multipleOf) * multipleOf; };
-interface Number { CeilingTo_Str(multipleOf: number): string; }
+declare global { interface Number { CeilingTo_Str(multipleOf: number): string; } }
 Number.prototype._AddFunction_Inline = function CeilingTo_Str(this: number, multipleOf) {
 	var resultValue = this.CeilingTo(multipleOf);
 	var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
@@ -58,15 +60,15 @@ Number.prototype._AddFunction_Inline = function CeilingTo_Str(this: number, mult
 	return result;
 };
 
-interface Number { KeepAtLeast(this: number, min: number): number; }
+declare global { interface Number { KeepAtLeast(this: number, min: number): number; } }
 Number.prototype._AddFunction_Inline = function KeepAtLeast(min: number) {
 	return Math.max(min, this);
 };
-interface Number { KeepAtMost(this: number, max: number): number; }
+declare global { interface Number { KeepAtMost(this: number, max: number): number; } }
 Number.prototype._AddFunction_Inline = function KeepAtMost(max: number) {
 	return Math.min(max, this);
 };
-interface Number { KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number; }
+declare global { interface Number { KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number; } }
 Number.prototype._AddFunction_Inline = function KeepBetween(min: number, max: number, allowFixMinMax = true) {
 	if (min > max && allowFixMinMax) {
 		[min, max] = [max, min];
@@ -75,7 +77,7 @@ Number.prototype._AddFunction_Inline = function KeepBetween(min: number, max: nu
 	if (this > max) return max;
 	return this;
 };
-interface Number { WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number; }
+declare global { interface Number { WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number; } }
 Number.prototype._AddFunction_Inline = function WrapToRange(min: number, max: number, maxOut = true) {
 	let val = this;
 	let size = max - min;
@@ -83,11 +85,11 @@ Number.prototype._AddFunction_Inline = function WrapToRange(min: number, max: nu
 	while (maxOut ? val >= max : val > max) val -= size;
 	return val;
 };
-interface Number { Distance(this: number, other: number): number; }
+declare global { interface Number { Distance(this: number, other: number): number; } }
 Number.prototype._AddFunction_Inline = function Distance(other: number) {
 	return Math.abs(this - other);
 };
-interface Number { ToPower(this: number, power: number): number; }
+declare global { interface Number { ToPower(this: number, power: number): number; } }
 Number.prototype._AddFunction_Inline = function ToPower(power: number) {
 	return Math.pow(this, power);
 };

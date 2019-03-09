@@ -1,7 +1,6 @@
 import {GetStackTraceStr} from "./General";
 import {JSVE} from "../JSVE";
 
-G({Assert}); declare global { function Assert(condition, messageOrMessageFunc?: string | Function); }
 export function Assert(condition, messageOrMessageFunc?: string | Function) {
 	if (condition) return;
 
@@ -14,7 +13,6 @@ export function Assert(condition, messageOrMessageFunc?: string | Function) {
 	debugger;
 	if (!skipError) throw new Error("Assert failed) " + message);
 }
-G({AssertWarn}); declare global { function AssertWarn(condition, messageOrMessageFunc?: string | Function); }
 export function AssertWarn(condition, messageOrMessageFunc?: string | Function) {
 	if (condition) return;
 
@@ -64,4 +62,3 @@ export class A_OfType_Wrapper {
 	type;
     set a(val) { Assert(val != null && val.GetType().IsDerivedFrom(this.type)); }
 }
-G({A, A_NotEqualTo_Wrapper, A_OfType_Wrapper});

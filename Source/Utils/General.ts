@@ -1,3 +1,6 @@
+import {IsPrimitive, IsString} from "./Types";
+import {Assert} from "..";
+
 declare var global;
 let g = typeof window == "object" ? window : global;
 
@@ -15,9 +18,7 @@ function G(...globalHolders) {
 	}
 }
 
-declare global { function DoNothing(...args); } G({DoNothing});
 export function DoNothing(...args) {}
-declare global { function DN(...args); } G({DN});
 export function DN(...args) {}
 
 //var quickIncrementValues = {};
@@ -27,15 +28,13 @@ export function QuickIncrement(name = "default") {
 	return QuickIncrement["values"][name];
 }
 QuickIncrement["values"] = [];
-G({QuickIncrement});
 
 export const emptyObj = {};
 export const eo = emptyObj as any; // used for (maybeNullVar || eo).prop;
 export const emptyArray = [];
 export const emptyArray_forLoading = [];
 
-G({E}); declare global {	function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8; }
-export							function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8 {
+export function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8):E1&E2&E3&E4&E5&E6&E7&E8 {
 	var result = {} as any;
 	for (var extend of arguments) {
 		result.Extend(extend);
@@ -82,7 +81,6 @@ export function CopyText(text) {
 // ==========
 
 // object-Json
-declare global { function FromJSON(json: string); } G({FromJSON});
 export function FromJSON(json: string) { return JSON.parse(json); }
 
 /*declare global { function ToJSON(obj, ...excludePropNames): string; } g.Extend({ToJSON});
@@ -103,7 +101,6 @@ export function ToJSON(obj, ...excludePropNames): string {
 		throw ex;
 	}
 }*/
-G({ToJSON}); declare global { function ToJSON(obj, replacerFunc?, spacing?: number): string; }
 export function ToJSON(obj, replacerFunc?, spacing?: number): string {
 	try {
 		return JSON.stringify(obj, replacerFunc, spacing);
@@ -114,7 +111,6 @@ export function ToJSON(obj, replacerFunc?, spacing?: number): string {
 	}
 }
 
-declare global { function ToJSON_Safe(obj, ...excludePropNames): string; } G({ToJSON_Safe});
 export function ToJSON_Safe(obj, ...excludePropNames) {
 	var cache = [];
 	var foundDuplicates = false;
@@ -137,7 +133,6 @@ export function ToJSON_Safe(obj, ...excludePropNames) {
 	return result;
 }
 
-declare global { function ToJSON_Try(obj, ...excludePropNames): string; } G({ToJSON_Try});
 export function ToJSON_Try(...args) {
 	try {
 		return ToJSON.apply(this, args);
@@ -145,8 +140,7 @@ export function ToJSON_Try(...args) {
 	return "[converting to JSON failed]";
 }
 
-declare global { function Clone(obj, keepPrototype?: boolean): any; } G({Clone});
-function Clone(obj, keepPrototype = false as boolean) {
+export function Clone(obj, keepPrototype = false as boolean) {
 	if (obj == null) return obj;
 	
 	let result = FromJSON(ToJSON(obj));
@@ -156,8 +150,7 @@ function Clone(obj, keepPrototype = false as boolean) {
 	return result;
 }
 
-declare global { function CloneWithPrototypes<T>(obj: T, keepInternalLinks?: boolean): T; } G({CloneWithPrototypes});
-function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
+export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
 	if (originalObject == null) return originalObject;
 
 	let copies = [{
@@ -249,11 +242,9 @@ export class IDProvider {
 	}
 }
 
-//const nl = "\n";
-G({nl: "\n"}); declare global { var nl: string; }
+export const nl = "\n";
 
-declare global { function AsObj(obj: any): any; } G({AsObj});
-function AsObj(obj: any) { 
+export function AsObj(obj: any) { 
 	if (typeof obj == "object") return obj;
 	if (obj != null) return obj.Props().ToMap(a=>a.name, a=>a.value);
 	return {};
@@ -355,10 +346,8 @@ export function CloneObject(obj, propMatchFunc?: Function, depth = 0) {
 	/*var Assert = require("../../Frame/General/Assert").Assert;
 	Assert(depth < 100, "CloneObject cannot work past depth 100! (probably circular ref)");*/
 
-	if (obj == null)
-		return null;
-	if (IsPrimitive(obj))
-		return obj;
+	if (obj == null) return null;
+	if (IsPrimitive(obj)) return obj;
 	//if (obj.GetType() == Array)
 	if (obj.constructor == Array)
 		return CloneArray(obj);
@@ -638,12 +627,10 @@ export function GetErrorMessagesUnderElement(element) {
 
 export const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 
-declare global { function FindDOM(selector: string): Element; } G({FindDOM});
-function FindDOM(selector: string) {
+export function FindDOM(selector: string) {
 	return document.querySelector(selector);
 }
-declare global { function FindDOMAll(selector: string): Element[]; } G({FindDOMAll});
-function FindDOMAll(selector: string) {
+export function FindDOMAll(selector: string) {
 	return Array.from(document.querySelectorAll(selector));
 }
 

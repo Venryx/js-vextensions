@@ -1,9 +1,16 @@
-interface Element {
-    GetParents(topDown?: boolean): HTMLElement[];
+import ".";
+declare global {
+    interface Element {
+        GetParents(topDown?: boolean): HTMLElement[];
+    }
 }
-interface Element {
-    GetSelfAndParents(topDown?: boolean): HTMLElement[];
+declare global {
+    interface Element {
+        GetSelfAndParents(topDown?: boolean): HTMLElement[];
+    }
 }
-interface Element {
-    $(queryStr: string): HTMLElement[];
+declare global {
+    interface Element {
+        $(queryStr: string): HTMLElement[];
+    }
 }

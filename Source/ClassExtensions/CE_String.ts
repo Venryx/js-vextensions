@@ -1,4 +1,6 @@
-interface String { TrimStart(...chars: string[]): string; }
+import ".";
+
+declare global { interface String { TrimStart(...chars: string[]): string; } }
 String.prototype._AddFunction_Inline = function TrimStart(this: string, ...chars: string[]) {
 	// fix for if called by VDF (which has a different signature)
 	//if (arguments[0] instanceof Array) chars = arguments[0];
@@ -6,13 +8,13 @@ String.prototype._AddFunction_Inline = function TrimStart(this: string, ...chars
 	for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && chars.Contains(this[iOfFirstToKeep]); iOfFirstToKeep++);
 	return this.slice(iOfFirstToKeep, this.length);
 };
-interface String { TrimEnd(...chars: string[]): string; }
+declare global { interface String { TrimEnd(...chars: string[]): string; } }
 String.prototype._AddFunction_Inline = function TrimEnd(this: string, ...chars: string[]) {
 	for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && chars.Contains(this[iOfLastToKeep]); iOfLastToKeep--);
 	return this.substr(0, iOfLastToKeep + 1);
 };
 
-interface String { Contains(str: string, startIndex?: number): boolean; }
+declare global { interface String { Contains(str: string, startIndex?: number): boolean; } }
 String.prototype._AddFunction_Inline = function Contains(str: string, startIndex?: number) {
 	return this.indexOf(str, startIndex) !== -1;
 };
@@ -25,9 +27,11 @@ String.prototype._AddFunction_Inline = function hashCode() {
 	}
 	return hash;
 };
-interface String {
-	Matches(str: string): {index: number}[];
-	Matches(regex: RegExp): RegExpMatchArray[];
+declare global {
+	interface String {
+		Matches(str: string): {index: number}[];
+		Matches(regex: RegExp): RegExpMatchArray[];
+	}
 }
 String.prototype._AddFunction_Inline = function Matches(strOrRegex: string | RegExp) {
 	if (typeof strOrRegex == "string") {
@@ -65,7 +69,7 @@ String.prototype._AddFunction_Inline = function Matches(strOrRegex: string | Reg
 		matches.push(match[groupIndex]);
 	return matches;
 };*/
-interface String { IndexOf_X: (str: string, indexX: number)=>number; }
+declare global { interface String { IndexOf_X: (str: string, indexX: number)=>number; } }
 /** indexX is 0-based */
 String.prototype._AddFunction_Inline = function IndexOf_X(str: string, indexX: number) {
 	var currentPos = -1;
@@ -77,7 +81,7 @@ String.prototype._AddFunction_Inline = function IndexOf_X(str: string, indexX: n
 	}
 	return currentPos;
 };
-interface String { IndexOf_XFromLast: (str: string, indexFromLastX: number)=>number; }
+declare global { interface String { IndexOf_XFromLast: (str: string, indexFromLastX: number)=>number; } }
 /** indexFromLastX is 0-based */
 String.prototype._AddFunction_Inline = function IndexOf_XFromLast(str: string, indexFromLastX: number) {
 	var currentPos = (this.length - str.length) + 1; // index just after the last-index-where-match-could-occur
@@ -89,7 +93,7 @@ String.prototype._AddFunction_Inline = function IndexOf_XFromLast(str: string, i
 	}
 	return currentPos;
 };
-interface String { IndexOfAny: (...strings: string[])=>number; }
+declare global { interface String { IndexOfAny: (...strings: string[])=>number; } }
 String.prototype._AddFunction_Inline = function IndexOfAny(this: string, ...strings: string[]) {
 	var lowestIndex = -1;
 	for (let str of strings) {
@@ -99,7 +103,7 @@ String.prototype._AddFunction_Inline = function IndexOfAny(this: string, ...stri
 	}
 	return lowestIndex;
 };
-interface String { LastIndexOfAny: (...strings: string[])=>number; }
+declare global { interface String { LastIndexOfAny: (...strings: string[])=>number; } }
 String.prototype._AddFunction_Inline = function LastIndexOfAny(this: string, ...strings: string[]) {
 	var highestIndex = -1;
 	for (let str of strings) {
@@ -109,20 +113,20 @@ String.prototype._AddFunction_Inline = function LastIndexOfAny(this: string, ...
 	}
 	return highestIndex;
 };
-interface String { StartsWithAny: (...strings: string[])=>boolean; }
+declare global { interface String { StartsWithAny: (...strings: string[])=>boolean; } }
 String.prototype._AddFunction_Inline = function StartsWithAny(this: string, ...strings: string[]) {
 	return strings.Any(str=>this.startsWith(str));
 };
-interface String { EndsWithAny: (...strings: string[])=>boolean; }
+declare global { interface String { EndsWithAny: (...strings: string[])=>boolean; } }
 String.prototype._AddFunction_Inline = function EndsWithAny(this: string, ...strings: string[]) {
 	return strings.Any(str=>this.endsWith(str));
 };
-interface String { ContainsAny: (...strings: string[])=>boolean; }
+declare global { interface String { ContainsAny: (...strings: string[])=>boolean; } }
 String.prototype._AddFunction_Inline = function ContainsAny(this: string, ...strings: string[]) {
 	return strings.Any(str=>this.Contains(str));
 };
 /** Separator-strings must be escaped. (they're passed into a regular-expression) */
-interface String { SplitByAny: (...separators: string[])=>string[]; }
+declare global { interface String { SplitByAny: (...separators: string[])=>string[]; } }
 String.prototype._AddFunction_Inline = function SplitByAny(...separators) {
 	/*var splitStr = "/";
 	for (let sep of separators)
@@ -132,7 +136,7 @@ String.prototype._AddFunction_Inline = function SplitByAny(...separators) {
 	let regex = new RegExp(separators.map(a=>`\\${a}`).join("|"));
 	return this.split(regex);
 };
-interface String { SplitAt: (index: number, includeCharAtIndex?)=>[string, string]; }
+declare global { interface String { SplitAt: (index: number, includeCharAtIndex?)=>[string, string]; } }
 String.prototype.SplitAt = function(index: number, includeCharAtIndex = false) {
 	if (index == -1) // if no split-index, pass source-string as part2 (makes more sense for paths and such)
 		return ["", this];
@@ -147,7 +151,7 @@ String.prototype._AddFunction_Inline = function Indent(indentCount) {
     var indentStr = "\t".repeat(indentCount);
     return this.replace(/^|(\n)/g, "$1" + indentStr);
 };
-interface String { KeepAtMost: (maxLength: number, moreMarkerStr?: string)=>string; }
+declare global { interface String { KeepAtMost: (maxLength: number, moreMarkerStr?: string)=>string; } }
 String.prototype._AddFunction_Inline = function KeepAtMost(this: string, maxLength: number, moreMarkerStr = "...") {
 	if (this.length <= maxLength) return this;
 	return this.substr(0, maxLength - moreMarkerStr.length) + moreMarkerStr;
@@ -163,9 +167,11 @@ Number.prototype._AddGetter_Inline = function IntToKey() {
 	return "e" + this;
 };*/
 
-interface String {
-	/** Creates a function from "func", setting its name to the "this" string's value. */
-	Func(func: Function): Function;
+declare global {
+	interface String {
+		/** Creates a function from "func", setting its name to the "this" string's value. */
+		Func(func: Function): Function;
+	}
 }
 String.prototype._AddFunction_Inline = function Func(func) {
 	func.SetName(this);
@@ -188,13 +194,15 @@ String.prototype._AddFunction_Inline = function OneFunc(func) {
     return oneFuncCache[funcKey];
 };*/
 
-interface String {
-	/**
-	 * Reformats a multi-line string to represent the actual intended "block" of text.
-	 * @param desiredIndent How much to indent each line. (after removal of the first-line indent-length from each of them)
-	 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
-	 */
-	AsMultiline(desiredIndent: number, removeLineStr?: string): string;
+declare global {
+	interface String {
+		/**
+		 * Reformats a multi-line string to represent the actual intended "block" of text.
+		 * @param desiredIndent How much to indent each line. (after removal of the first-line indent-length from each of them)
+		 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
+		 */
+		AsMultiline(desiredIndent: number, removeLineStr?: string): string;
+	}
 }
 String.prototype._AddFunction_Inline = function AsMultiline(this: string, desiredIndent: number = null, removeLineStr = "@RL") {
 	let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
@@ -220,7 +228,7 @@ String.prototype._AddFunction_Inline = function Substring(start, end) {
     return this.substring(start, end);
 };
 
-interface String { ToInt(): number; }
+declare global { interface String { ToInt(): number; } }
 String.prototype._AddFunction_Inline = function ToInt() { return parseInt(Number(this)+""); }
-interface String { ToFloat(): number; }
+declare global { interface String { ToFloat(): number; } }
 String.prototype._AddFunction_Inline = function ToFloat() { return Number(this); }

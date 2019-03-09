@@ -1,6 +1,9 @@
-interface Array<T> { Contains(item: T): boolean; }
+import ".";
+import {Assert} from "..";
+
+declare global { interface Array<T> { Contains(item: T): boolean; } }
 Array.prototype._AddFunction_Inline = function Contains(item) { return this.indexOf(item) != -1; };
-interface Array<T> { ContainsAny(...items: T[]): boolean; }
+declare global { interface Array<T> { ContainsAny(...items: T[]): boolean; } }
 Array.prototype._AddFunction_Inline = function ContainsAny(...items) {
     for (let item of items) {
         if (this.indexOf(item) != -1) {
@@ -22,7 +25,7 @@ Array.prototype._AddFunction_Inline = function Prepend(...newItems) { this.splic
 Array.prototype._AddFunction_Inline = function Add(item) { return this.push(item); };
 Array.prototype._AddFunction_Inline = function CAdd(item) { this.push(item); return this; }; // CAdd = ChainAdd
 Array.prototype._AddFunction_Inline = function TAdd(item) { this.push(item); return item; }; // TAdd = TransparentAdd
-interface Array<T> { AddRange(items: T[]): this; }
+declare global { interface Array<T> { AddRange(items: T[]): this; } }
 Array.prototype._AddFunction_Inline = function AddRange(array) {
 	//this.push(...array);
 	// use loop, since sending them all as arguments fails when there are ~10000+ items
@@ -31,7 +34,7 @@ Array.prototype._AddFunction_Inline = function AddRange(array) {
 	}
 	return this;
 };
-interface Array<T> { Remove(item: T): boolean; }
+declare global { interface Array<T> { Remove(item: T): boolean; } }
 Array.prototype._AddFunction_Inline = function Remove(item) {
 	var itemIndex = this.indexOf(item);
 	if (itemIndex == -1) return false;
@@ -39,19 +42,19 @@ Array.prototype._AddFunction_Inline = function Remove(item) {
 	this.splice(itemIndex, 1);
 	return true;
 };
-interface Array<T> { RemoveAll(items: T[]): void; }
+declare global { interface Array<T> { RemoveAll(items: T[]): void; } }
 Array.prototype._AddFunction_Inline = function RemoveAll(items) {
     for (let item of items)
         this.Remove(item);
 };
-interface Array<T> { RemoveAt(index: number): T; }
+declare global { interface Array<T> { RemoveAt(index: number): T; } }
 Array.prototype._AddFunction_Inline = function RemoveAt(index: number) { return this.splice(index, 1)[0]; };
-interface Array<T> { Insert(index: number, obj: T): void; }
+declare global { interface Array<T> { Insert(index: number, obj: T): void; } }
 Array.prototype._AddFunction_Inline = function Insert(index, obj) { this.splice(index, 0, obj); }
-interface Array<T> { SetItems(items: T[]): this; }
+declare global { interface Array<T> { SetItems(items: T[]): this; } }
 Array.prototype._AddFunction_Inline = function SetItems(items) { this.splice(0, this.length, ...items); }
 
-interface Array<T> { Reversed(): T[]; }
+declare global { interface Array<T> { Reversed(): T[]; } }
 Array.prototype._AddFunction_Inline = function Reversed() { 
 	var clone = this.slice(0);
 	clone.reverse();
@@ -63,7 +66,7 @@ Array.prototype._AddFunction_Inline = function Reversed() {
 // Linq replacements
 // ----------
 
-interface Array<T> { Any(matchFunc: (item: T, index?: number)=>boolean): boolean; }
+declare global { interface Array<T> { Any(matchFunc: (item: T, index?: number)=>boolean): boolean; } }
 Array.prototype._AddFunction_Inline = function Any(matchFunc) {
     for (let [index, item] of this.entries()) {
 		if (matchFunc == null || matchFunc.call(item, item, index)) {
@@ -72,7 +75,7 @@ Array.prototype._AddFunction_Inline = function Any(matchFunc) {
 	 }
     return false;
 };
-interface Array<T> { All(matchFunc: (item: T, index?: number)=>boolean): boolean; }
+declare global { interface Array<T> { All(matchFunc: (item: T, index?: number)=>boolean): boolean; } }
 Array.prototype._AddFunction_Inline = function All(matchFunc) {
     for (let [index, item] of this.entries()) {
         if (!matchFunc.call(item, item, index)) {
@@ -81,7 +84,7 @@ Array.prototype._AddFunction_Inline = function All(matchFunc) {
 	 }
     return true;
 };
-interface Array<T> { Where(matchFunc: (item: T, index?: number)=>boolean): T[]; }
+declare global { interface Array<T> { Where(matchFunc: (item: T, index?: number)=>boolean): T[]; } }
 Array.prototype._AddFunction_Inline = function Where(matchFunc) {
 	var result = [];
 	for (let [index, item] of this.entries()) {
@@ -91,7 +94,7 @@ Array.prototype._AddFunction_Inline = function Where(matchFunc) {
 	}
 	return result;
 };
-interface Array<T> { Select<T2>(matchFunc: (item: T, index?: number)=>T2): T2[]; }
+declare global { interface Array<T> { Select<T2>(matchFunc: (item: T, index?: number)=>T2): T2[]; } }
 Array.prototype._AddFunction_Inline = function Select(selectFunc) {
 	var result = [];
 	for (let [index, item] of this.entries()) {
@@ -99,7 +102,7 @@ Array.prototype._AddFunction_Inline = function Select(selectFunc) {
 	}
 	return result;
 };
-interface Array<T> { SelectMany<T2>(matchFunc: (item: T, index?: number)=>T2[]): T2[]; }
+declare global { interface Array<T> { SelectMany<T2>(matchFunc: (item: T, index?: number)=>T2[]): T2[]; } }
 Array.prototype._AddFunction_Inline = function SelectMany(selectFunc) {
 	var result = [];
 	for (let [index, item] of this.entries()) {
@@ -110,9 +113,9 @@ Array.prototype._AddFunction_Inline = function SelectMany(selectFunc) {
 //Array.prototype._AddFunction_Inline = function Count(matchFunc) { return this.Where(matchFunc).length; };
 //Array.prototype._AddFunction_Inline = function Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
 Array.prototype._AddGetter_Inline = function Count() { return this.length; }; // needed for items to be added properly to custom classes that extend Array
-interface Array<T> { VCount(matchFunc: (item: T)=>boolean): number; }
+declare global { interface Array<T> { VCount(matchFunc: (item: T)=>boolean): number; } }
 Array.prototype._AddFunction_Inline = function VCount(matchFunc) { return this.Where(matchFunc).length; };
-interface Array<T> { Clear(): void; }
+declare global { interface Array<T> { Clear(): void; } }
 Array.prototype._AddFunction_Inline = function Clear() {
 	/*while (this.length > 0)
 		this.pop();*/
@@ -122,7 +125,7 @@ Array.prototype._AddFunction_Inline = function Clear() {
 /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
 Array.prototype._AddFunction_Inline = function forEach_break(...args) { return this.some(...args); } */
 
-interface Array<T> { /** Throws an error if no items match. */ First(matchFunc?: (item: T, index: number)=>boolean): T; }
+declare global { interface Array<T> { /** Throws an error if no items match. */ First(matchFunc?: (item: T, index: number)=>boolean): T; } }
 Array.prototype._AddFunction_Inline = function First(matchFunc?) {
 	var result = this.FirstOrX(matchFunc);
 	if (result == null) {
@@ -130,7 +133,7 @@ Array.prototype._AddFunction_Inline = function First(matchFunc?) {
 	}
 	return result;
 }
-interface Array<T> { FirstOrX(matchFunc?: (item: T, index: number)=>boolean, x?): T; }
+declare global { interface Array<T> { FirstOrX(matchFunc?: (item: T, index: number)=>boolean, x?): T; } }
 Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc?, x = null) {
 	if (matchFunc) {
 		for (let [index, item] of this.entries()) {
@@ -145,7 +148,7 @@ Array.prototype._AddFunction_Inline = function FirstOrX(matchFunc?, x = null) {
 }
 //Array.prototype._AddFunction_Inline = function FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
 Array.prototype._AddFunction_Inline = function FirstWith(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-interface Array<T> { /** Throws an error if no items match. */ Last(matchFunc?: (item: T, index: number)=>boolean): T; }
+declare global { interface Array<T> { /** Throws an error if no items match. */ Last(matchFunc?: (item: T, index: number)=>boolean): T; } }
 Array.prototype._AddFunction_Inline = function Last(matchFunc?) {
 	var result = this.LastOrX(matchFunc);
 	if (result == null) {
@@ -153,7 +156,7 @@ Array.prototype._AddFunction_Inline = function Last(matchFunc?) {
 	}
 	return result;
 }
-interface Array<T> { LastOrX(matchFunc?: (item: T, index: number)=>boolean, x?): T; }
+declare global { interface Array<T> { LastOrX(matchFunc?: (item: T, index: number)=>boolean, x?): T; } }
 Array.prototype._AddFunction_Inline = function LastOrX(matchFunc?, x = null) {
 	if (matchFunc) {
 		for (var i = this.length - 1; i >= 0; i--) {
@@ -166,7 +169,7 @@ Array.prototype._AddFunction_Inline = function LastOrX(matchFunc?, x = null) {
 	}
 	return x;
 }
-interface Array<T> { XFromLast(x: number): T; }
+declare global { interface Array<T> { XFromLast(x: number): T; } }
 Array.prototype._AddFunction_Inline = function XFromLast(x: number) { return this[(this.length - 1) - x]; };
 
 // since JS doesn't have basic "foreach" system
@@ -176,7 +179,7 @@ Array.prototype._AddFunction_Inline = function ForEach(func) {
 	}
 };
 
-interface Array<T> { Move(item: any, newIndex: number, shiftInsertPointToPreserveFinalNeighbors?: boolean): number; }
+declare global { interface Array<T> { Move(item: any, newIndex: number, shiftInsertPointToPreserveFinalNeighbors?: boolean): number; } }
 Array.prototype._AddFunction_Inline = function Move(this: any[], item, newIndex, shiftInsertPointToPreserveFinalNeighbors = false) {
 	var oldIndex = this.indexOf(item);
 	if (oldIndex != -1) {
@@ -198,7 +201,7 @@ Array.prototype._AddFunction_Inline = function ToList(itemType = null) { return 
 		result.Add(keyFunc(this[i]), valFunc(this[i]));
 	return result;
 }*/
-interface Array<T> { ToMap(keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>any): any; }
+declare global { interface Array<T> { ToMap(keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>any): any; } }
 Array.prototype._AddFunction_Inline = function ToMap(this: any[], keyFunc, valFunc) {
 	var result = {};
 	for (let [index, item] of this.entries()) {
@@ -206,7 +209,7 @@ Array.prototype._AddFunction_Inline = function ToMap(this: any[], keyFunc, valFu
 	}
 	return result;
 }
-interface Array<T> { Skip(count: number): T[]; }
+declare global { interface Array<T> { Skip(count: number): T[]; } }
 Array.prototype._AddFunction_Inline = function Skip(count) {
 	var result = [];
 	for (var i = count; i < this.length; i++) {
@@ -214,7 +217,7 @@ Array.prototype._AddFunction_Inline = function Skip(count) {
 	}
 	return result;
 };
-interface Array<T> { Take(count: number): T[]; }
+declare global { interface Array<T> { Take(count: number): T[]; } }
 Array.prototype._AddFunction_Inline = function Take(count) {
 	var result = [];
 	for (var i = 0; i < count && i < this.length; i++) {
@@ -229,7 +232,7 @@ Array.prototype._AddFunction_Inline = function TakeLast(count) {
 	}
 	return result;
 };
-interface Array<T> { FindIndex(matchFunc?: (item: T, index: number)=>boolean): number; }
+declare global { interface Array<T> { FindIndex(matchFunc?: (item: T, index: number)=>boolean): number; } }
 Array.prototype._AddFunction_Inline = function FindIndex(matchFunc) {
 	for (let [index, item] of this.entries()) {
 		if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
@@ -244,19 +247,19 @@ Array.prototype._AddFunction_Inline = function FindIndex(matchFunc) {
             return index;
     return -1;
 };*/
-interface Array<T> { OrderBy(valFunc?: (item: T, index: number)=>any): T[]; }
+declare global { interface Array<T> { OrderBy(valFunc?: (item: T, index: number)=>any): T[]; } }
 Array.prototype._AddFunction_Inline = function OrderBy(valFunc = (item, index: number)=>item) {
 	/*var temp = this.ToList();
 	temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
 	return temp;*/
    return StableSort(this, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 };
-interface Array<T> { OrderByDescending(valFunc?: (item: T, index: number)=>any): T[]; }
+declare global { interface Array<T> { OrderByDescending(valFunc?: (item: T, index: number)=>any): T[]; } }
 Array.prototype._AddFunction_Inline = function OrderByDescending(valFunc = (item, index: number)=>item) {
 	return this.OrderBy((item, index)=>-valFunc(item, index));
 };
 
-interface Array<T> { Distinct(): T[]; }
+declare global { interface Array<T> { Distinct(): T[]; } }
 Array.prototype._AddFunction_Inline = function Distinct() {
 	var result = [];
 	for (var i in this) {
@@ -266,9 +269,11 @@ Array.prototype._AddFunction_Inline = function Distinct() {
 	}
 	return result;
 };
-interface Array<T> {
-	Except(...excludeItems: T[]): T[];
-	Except(excludeItems: T[], excludeEachOnlyOnce?: boolean): T[];
+declare global {
+	interface Array<T> {
+		Except(...excludeItems: T[]): T[];
+		Except(excludeItems: T[], excludeEachOnlyOnce?: boolean): T[];
+	}
 }
 Array.prototype._AddFunction_Inline = function Except(this: Array<any>, ...args) {
 	let excludeItems, excludeEachOnlyOnce = true;
@@ -285,13 +290,13 @@ Array.prototype._AddFunction_Inline = function Except(this: Array<any>, ...args)
 	return this.Where(a=>!excludeItems.Contains(a));
 };
 
-interface Array<T> { IfEmptyThen<T>(valIfSelfIsEmpty: T): T; }
+declare global { interface Array<T> { IfEmptyThen<T>(valIfSelfIsEmpty: T): T; } }
 Array.prototype._AddFunction_Inline = function IfEmptyThen(this: Array<any>, valIfSelfIsEmpty) {
 	return this.length == 0 ? valIfSelfIsEmpty : this;
 };
 
 //Array.prototype._AddFunction_Inline = function JoinUsing(separator) { return this.join(separator);};
-interface Array<T> { Min(valFunc?: (item: T)=>number, asNumbers?: boolean): T; }
+declare global { interface Array<T> { Min(valFunc?: (item: T)=>number, asNumbers?: boolean): T; } }
 Array.prototype._AddFunction_Inline = function Min(valFunc?, asNumbers = false) {
 	if (asNumbers) {
 		/*let values = valFunc ? this.map(valFunc) : this;
@@ -301,7 +306,7 @@ Array.prototype._AddFunction_Inline = function Min(valFunc?, asNumbers = false) 
 	}
     return this.OrderBy(valFunc).First();
 };
-interface Array<T> { Max(valFunc?: (item: T)=>number, asNumbers?: boolean): T; }
+declare global { interface Array<T> { Max(valFunc?: (item: T)=>number, asNumbers?: boolean): T; } }
 Array.prototype._AddFunction_Inline = function Max(valFunc?, asNumbers = false) {
 	if (asNumbers) {
 		/*let values = valFunc ? this.map(valFunc) : this;
@@ -311,7 +316,7 @@ Array.prototype._AddFunction_Inline = function Max(valFunc?, asNumbers = false) 
 	}
 	return this.OrderBy(valFunc).Last();
 };
-interface Array<T> { Sum(): number; }
+declare global { interface Array<T> { Sum(): number; } }
 Array.prototype._AddFunction_Inline = function Sum() {
    var total = 0;
 	for (let item of this) {
@@ -319,12 +324,12 @@ Array.prototype._AddFunction_Inline = function Sum() {
 	}
 	return total;
 };
-interface Array<T> { Average(): number; }
+declare global { interface Array<T> { Average(): number; } }
 Array.prototype._AddFunction_Inline = function Average() {
    var total = this.Sum();
 	return total / this.length;
 };
-interface Array<T> { Median(): number; }
+declare global { interface Array<T> { Median(): number; } }
 Array.prototype._AddFunction_Inline = function Median() {
    var ordered = this.OrderBy(a=>a);
 	if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
@@ -333,7 +338,7 @@ Array.prototype._AddFunction_Inline = function Median() {
 	return ordered[this.length / 2]; // otherwise, return the exactly-middle one
 };
 
-interface Array<T> { Random(): T; }
+declare global { interface Array<T> { Random(): T; } }
 Array.prototype._AddFunction_Inline = function Random() {
 	let index = Math.floor(Math.random() * this.length);
    return this[index];
@@ -367,7 +372,7 @@ ArrayIterator.prototype._AddFunction_Inline = function ToArray() {
 // NodeList
 // ==========
 
-interface NodeList { ToArray(): any[]; }
+declare global { interface NodeList { ToArray(): any[]; } }
 if (typeof NodeList != "undefined") {
 	NodeList.prototype._AddFunction_Inline = function ToArray() {
 		return Array.from(this);

@@ -1,4 +1,5 @@
 import { TryCall } from "./Timers";
+import {Assert, ToJSON, IsObject, IsString, FromJSON, E} from "..";
 
 export class BridgeMessage {
 	constructor(initialData?: Partial<BridgeMessage>) {

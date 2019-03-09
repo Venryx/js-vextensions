@@ -4,9 +4,6 @@ export declare class TimerContext {
 }
 export declare function TryCall<T>(func: (..._: any[]) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
-declare global {
-    function WaitXThenRun(delayInMS: any, func: any, ...args: any[]): number;
-}
 export declare function WaitXThenRun(delayInMS: any, func: any, ...args: any[]): number;
 export declare function Sleep(ms: any): void;
 export declare function SleepAsync(timeMS: any): Promise<{}>;

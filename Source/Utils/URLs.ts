@@ -1,4 +1,4 @@
-import {IsNumberString} from "./Types";
+import {E, Assert} from "..";
 
 export function ToAbsoluteUrl(url: string) {
 	 // Handle absolute URLs (with protocol-relative prefix)

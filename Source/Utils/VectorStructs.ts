@@ -1,4 +1,5 @@
 import {Global} from "./General";
+import {IsNaN, Assert} from "..";
 
 function IsNullOrNaN(value: number) {
 	return value === null || IsNaN(value);

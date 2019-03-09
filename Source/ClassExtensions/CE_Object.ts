@@ -1,3 +1,5 @@
+import {IsNaN, Assert} from "..";
+
 // (ClassExtensions.ts)
 
 //let g = window as any;
@@ -6,7 +8,7 @@
 // ==================
 
 // the below lets you do stuff like this: Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem");
-interface Object { _AddItem: (name: string, value)=>void; }
+declare global { interface Object { _AddItem: (name: string, value)=>void; } }
 Object.defineProperty(Object.prototype, "_AddItem", { // note; these functions should by default add non-enumerable properties/items
 	//configurable: true,
 	enumerable: false,
@@ -25,14 +27,14 @@ Object.defineProperty(Object.prototype, "_AddItem", { // note; these functions s
 			throw new Error(`Failed to add property "${name}" to type "${this}".`);*/
 	}
 });
-interface Object { _AddFunction: (name: string, func: Function)=>void; }
+declare global { interface Object { _AddFunction: (name: string, func: Function)=>void; } }
 Object.prototype._AddItem("_AddFunction", function(name, func) {
 	//this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
 	this._AddItem(name, func);
 });
 
 // the below lets you do stuff like this: Array.prototype._AddGetterSetter("AddX", null, function(value) { this.push(value); }); [].AddX = "newItem";
-interface Object { _AddGetterSetter: (name: string, getter: Function, setter: Function)=>void; }
+declare global { interface Object { _AddGetterSetter: (name: string, getter: Function, setter: Function)=>void; } }
 Object.prototype._AddFunction("_AddGetterSetter", function(name, getter, setter) {
 	//var name = (getter || setter).name || (getter || setter).toString().match(/^function\s*([^\s(]+)/)[1];
 	if (name in this) delete this[name];
@@ -45,15 +47,15 @@ Object.prototype._AddFunction("_AddGetterSetter", function(name, getter, setter)
 });
 
 // the below lets you do stuff like this: Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
-interface Object { _AddFunction_Inline: Function; }
+declare global { interface Object { _AddFunction_Inline: Function; } }
 Object.prototype._AddGetterSetter("_AddFunction_Inline", null, function(func) {
 	this._AddFunction(func.GetName(), func);
 });
-interface Object { _AddGetter_Inline: Function; }
+declare global { interface Object { _AddGetter_Inline: Function; } }
 Object.prototype._AddGetterSetter("_AddGetter_Inline", null, function(func) {
 	this._AddGetterSetter(func.GetName(), func, null);
 });
-interface Object { _AddSetter_Inline: Function; }
+declare global { interface Object { _AddSetter_Inline: Function; } }
 Object.prototype._AddGetterSetter("_AddSetter_Inline", null, function(func) {
 	this._AddGetterSetter(func.GetName(), null, func);
 });
@@ -62,9 +64,11 @@ Object.prototype._AddGetterSetter("_AddSetter_Inline", null, function(func) {
 // ==========
 
 //interface Function {
-interface Object { // add to Object interface, otherwise TS thinks "Function" refers to this interface instead of the Function class
-	GetName(): string;
-	SetName(name: string): Function;
+declare global {
+	interface Object { // add to Object interface, otherwise TS thinks "Function" refers to this interface instead of the Function class
+		GetName(): string;
+		SetName(name: string): Function;
+	}
 }
 
 //Function.prototype._AddFunction_Inline = function GetName() { return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1]; };
@@ -92,7 +96,7 @@ Function.prototype._AddFunction_Inline = function SetName(name: string) { this.n
 	return this;
 };*/
 
-interface Object { Extend: (obj)=>void; }
+declare global { interface Object { Extend: (obj)=>void; } }
 Object.prototype._AddFunction_Inline = function Extend(x) {
 	for (var name in x) {
 		var value = x[name];
@@ -106,9 +110,11 @@ Object.prototype._AddFunction_Inline = function Extend(x) {
 // seems this should work, to be consistent with in-class usage, but whatever; below it's an alternative that works for interfaces
 //interface Object { etet(props: any): this; }
 interface VSet_Options {prop?: PropertyDescriptor, deleteUndefined?: boolean, deleteNull?: boolean, deleteEmpty?: boolean};
-interface Object {
-	VSet<T>(this: T, props: any, options?: VSet_Options): T;
-	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
+declare global {
+	interface Object {
+		VSet<T>(this: T, props: any, options?: VSet_Options): T;
+		VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
+	}
 }
 Object.prototype._AddFunction_Inline = function VSet(...args) {
 	let props, options: VSet_Options, propName: string, propValue: string;
@@ -139,7 +145,7 @@ Object.prototype._AddFunction_Inline = function VSet(...args) {
 	}
 	return this;
 };
-interface Object { Extended<T, T2>(this: T, x: T2): T & T2; }
+declare global { interface Object { Extended<T, T2>(this: T, x: T2): T & T2; } }
 Object.prototype._AddFunction_Inline = function Extended(x) {
 	var result = this instanceof Array ? [] : {};
 	for (var name in this) {
@@ -158,24 +164,24 @@ Object.prototype._AddFunction_Inline = function Extended2(x) {
 };*/
 //Object.prototype._AddFunction_Inline = function E(x) { return this.Extended(x); };
 
-interface Object { VAct<T>(this: T, func: (self: T)=>any): T; }
+declare global { interface Object { VAct<T>(this: T, func: (self: T)=>any): T; } }
 Object.prototype._AddFunction_Inline = function VAct(action) {
 	action.call(this, this);
 	return this;
 };
 
-interface Object { As<T>(type: new(..._)=>T): T; }
+declare global { interface Object { As<T>(type: new(..._)=>T): T; } }
 Object.prototype._AddFunction_Inline = function As<T>(type: new(..._)=>T) {
 	Object.setPrototypeOf(this, type.prototype);
 	return this as T;
 };
-interface Object { Strip<T>(this: T): T; }
+declare global { interface Object { Strip<T>(this: T): T; } }
 Object.prototype._AddFunction_Inline = function Strip() {
 	Object.setPrototypeOf(this, Object.getPrototypeOf({}));
 	return this;
 };
 
-interface Object { Including(...propNames: string[]): Object; }
+declare global { interface Object { Including(...propNames: string[]): Object; } }
 Object.prototype._AddFunction_Inline = function Including(...propNames) {
 	var result = {};
 	for (let propName of propNames) {
@@ -185,7 +191,7 @@ Object.prototype._AddFunction_Inline = function Including(...propNames) {
 	}
 	return result;
 }
-interface Object { Excluding(...propNames: string[]): Object; }
+declare global { interface Object { Excluding(...propNames: string[]): Object; } }
 Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
     var result = this.Extended();
     for (let propName of propNames) {
@@ -194,7 +200,7 @@ Object.prototype._AddFunction_Inline = function Excluding(...propNames) {
     return result;
 }
 
-interface Object { IsOneOf(...values: any[]): boolean; }
+declare global { interface Object { IsOneOf(...values: any[]): boolean; } }
 Object.prototype._AddFunction_Inline = function IsOneOf(...values: any[]): boolean {
 	if (values.Contains(this)) {
 		return true;
@@ -210,9 +216,11 @@ Object.prototype._AddFunction_Inline = function IsOneOf(...values: any[]): boole
 var specialProps = ["_", "_key", "_id"];
 
 // todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
-interface Object {
-	Props<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
-	Props<T>(excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
+declare global {
+	interface Object {
+		Props<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
+		Props<T>(excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
+	}
 }
 //interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
 Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = false) {
@@ -225,9 +233,11 @@ Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = fals
 	}
 	return result;
 };
-interface Object {
-	Pairs<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
-	Pairs<T>(excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
+declare global {
+	interface Object {
+		Pairs<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
+		Pairs<T>(excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
+	}
 }
 Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps = false) {
 	var result = [];
@@ -240,16 +250,18 @@ Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps = fals
 	}
 	return result;
 };
-interface Object { VKeys(excludeSpecialProps?: boolean): string[]; }
+declare global { interface Object { VKeys(excludeSpecialProps?: boolean): string[]; } }
 Object.prototype._AddFunction_Inline = function VKeys(excludeSpecialProps = false) {
 	//if (excludeSpecialProps) return this.Props(true).map(a=>a.name);
 	if (excludeSpecialProps) return Object.keys(this).Except(specialProps);
 	return Object.keys(this);
 };
 //interface Object { VValues(excludeSpecialProps?: boolean): any[]; }
-interface Object {
-	VValues<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): T[];
-	VValues<T>(excludeSpecialProps?: boolean): T[];
+declare global {
+	interface Object {
+		VValues<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): T[];
+		VValues<T>(excludeSpecialProps?: boolean): T[];
+	}
 }
 Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps = false) {
 	//if (excludeSpecialProps) return this.Props(true).map(a=>a.value);
@@ -269,7 +281,7 @@ Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps = fa
 // Object[FakeArray]
 // ==========
 
-interface Object { FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[]; }
+declare global { interface Object { FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[]; } }
 Object.prototype._AddFunction_Inline = function FA_Select(selectFunc = a=>a) {
 	Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 	/*var result = this instanceof List ? new List(this.itemType) : [];
@@ -278,7 +290,7 @@ Object.prototype._AddFunction_Inline = function FA_Select(selectFunc = a=>a) {
 	return result;*/
 	return this.VValues(true).map(selectFunc);
 };
-interface Object { FA_RemoveAt(index: number); }
+declare global { interface Object { FA_RemoveAt(index: number); } }
 Object.prototype._AddFunction_Inline = function FA_RemoveAt(index: number) {
 	Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 	if (!(index in this)) return;
@@ -289,7 +301,7 @@ Object.prototype._AddFunction_Inline = function FA_RemoveAt(index: number) {
 		this[i - 1] = this[i];
 	delete this[i - 1]; // remove the extra copy of the last-item 
 };
-interface Object { FA_Add<T>(this: {[key: number]: T} | {[key: string]: T}, item: T); }
+declare global { interface Object { FA_Add<T>(this: {[key: number]: T} | {[key: string]: T}, item: T); } }
 Object.prototype._AddFunction_Inline = function FA_Add(item) {
 	Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 	for (var openIndex = 0; openIndex in this; openIndex++);

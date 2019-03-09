@@ -1,3 +1,5 @@
+import ".";
+
 // Function
 // ==========
 
@@ -31,7 +33,7 @@ Function.prototype._AddFunction_Inline = function RunThenReturn(args___) { this.
 // Date
 // ==========
 
-interface Date { readonly MonthDate: Date; }
+declare global { interface Date { readonly MonthDate: Date; } }
 Date.prototype._AddGetter_Inline = function MonthDate() {
 	return new Date(this.getFullYear(), this.getMonth(), 1);
 };
@@ -39,19 +41,19 @@ Date.prototype._AddGetter_Inline = function MonthDate() {
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
 };
-interface Date { isLeapYear: ()=>boolean; }
+declare global { interface Date { isLeapYear: ()=>boolean; } }
 Date.prototype.isLeapYear = function() { 
     return isLeapYear(this.getFullYear()); 
 };
 function getDaysInMonth(year, month) {
     return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 };
-interface Date { getDaysInMonth: ()=>number; }
+declare global { interface Date { getDaysInMonth: ()=>number; } }
 Date.prototype.getDaysInMonth = function() { 
     return getDaysInMonth(this.getFullYear(), this.getMonth());
 };
 
-interface Date { AddMonths: (value: number)=>void; }
+declare global { interface Date { AddMonths: (value: number)=>void; } }
 Date.prototype.AddMonths = function(value) {
     var n = this.getDate();
     this.setDate(1);
@@ -60,7 +62,7 @@ Date.prototype.AddMonths = function(value) {
     return this;
 };
 
-interface Date { Clone: ()=>Date; }
+declare global { interface Date { Clone: ()=>Date; } }
 Date.prototype.Clone = function() {
 	return new Date(this.getTime());
 }

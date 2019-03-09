@@ -1,4 +1,6 @@
-interface Element { GetParents(topDown?: boolean): HTMLElement[]; }
+import ".";
+
+declare global { interface Element { GetParents(topDown?: boolean): HTMLElement[]; } }
 if (typeof Element != "undefined")
 Element.prototype._AddItem("GetParents", function(this: HTMLElement, topDown = false) {
 	let result = [] as HTMLElement[];
@@ -10,14 +12,14 @@ Element.prototype._AddItem("GetParents", function(this: HTMLElement, topDown = f
 	if (topDown) result.reverse();
 	return result;
 });
-interface Element { GetSelfAndParents(topDown?: boolean): HTMLElement[]; }
+declare global { interface Element { GetSelfAndParents(topDown?: boolean): HTMLElement[]; } }
 if (typeof Element != "undefined")
 Element.prototype._AddItem("GetSelfAndParents", function(this: HTMLElement, topDown = false) {
 	let result = this.GetParents(topDown);
 	return topDown ? result.concat([this]) : [this].concat(result);
 });
 
-interface Element { $(queryStr: string): HTMLElement[]; }
+declare global { interface Element { $(queryStr: string): HTMLElement[]; } }
 if (typeof Element != "undefined")
 Element.prototype._AddItem("$", function(this: Element, queryStr: string): HTMLElement[] {
 	return this.querySelectorAll(queryStr).ToArray();

@@ -1,10 +1,4 @@
-declare global {
-    function Assert(condition: any, messageOrMessageFunc?: string | Function): any;
-}
 export declare function Assert(condition: any, messageOrMessageFunc?: string | Function): void;
-declare global {
-    function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): any;
-}
 export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
 export declare class A {
     static NonNull: <T>(value: T) => T;
