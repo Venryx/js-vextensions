@@ -4155,7 +4155,7 @@ function () {
   }, {
     key: "Intersects",
     value: function Intersects(other) {
-      return this.Right > other.x && this.x < other.Right && this.Top > other.Bottom && this.Bottom < other.Top;
+      return this.Right > other.x && this.x < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
     }
   }, {
     key: "Clone",
@@ -4234,6 +4234,12 @@ function () {
     set: function set(val) {
       var offset = val.Minus(this.Center);
       this.Position = this.Position.Plus(offset);
+    }
+  }], [{
+    key: "FromLTWH",
+    value: function FromLTWH(rect) {
+      var y0IsBottom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      return new VRect_1(rect.left, rect.top, rect.width, rect.height, y0IsBottom);
     }
   }]);
 

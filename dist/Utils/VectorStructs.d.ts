@@ -77,6 +77,12 @@ export declare function IsVRectShape(obj: any): obj is {
     z: number;
 };
 export declare class VRect {
+    static FromLTWH(rect: {
+        left: number;
+        top: number;
+        width: number;
+        height: number;
+    }, y0IsBottom?: boolean): VRect;
     constructor(pos: Vector2i, size: Vector2i, y0IsBottom?: boolean);
     constructor(x: number, y: number, width: number, height: number, y0IsBottom?: boolean);
     x: number;

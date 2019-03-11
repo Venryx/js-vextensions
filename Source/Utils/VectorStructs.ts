@@ -148,6 +148,10 @@ export function IsVRectShape(obj: any): obj is {x: number, y: number, z: number}
 
 @Global
 export class VRect {
+	static FromLTWH(rect: {left: number, top: number, width: number, height: number}, y0IsBottom = false) {
+		return new VRect(rect.left, rect.top, rect.width, rect.height, y0IsBottom);
+	}
+
 	constructor(pos: Vector2i, size: Vector2i, y0IsBottom?: boolean);
 	constructor(x: number, y: number, width: number, height: number, y0IsBottom?: boolean);
 	constructor(...args) {
@@ -276,7 +280,7 @@ export class VRect {
 	}
 
 	Intersects(other: VRect) {
-		return this.Right > other.x && this.x < other.Right && this.Top > other.Bottom && this.Bottom < other.Top;
+		return this.Right > other.x && this.x < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
 	}
 
 	Clone() {
