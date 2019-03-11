@@ -30,7 +30,7 @@ module.exports = {
         noParse: ["react"]
     },*/
     module: {
-        rules: [
+		rules: [
 			{
 				test: /\.(jsx?|tsx?)$/,
 				loader: "babel-loader",

@@ -110,13 +110,13 @@ declare global {
             [key: number]: T;
         } | {
             [key: string]: T;
-        }, excludeSpecialProps?: boolean): {
+        }, excludeSpecialProps?: boolean | 1): {
             index: number;
             key: string;
             keyNum?: number;
             value: T;
         }[];
-        Pairs<T>(excludeSpecialProps?: boolean): {
+        Pairs<T>(excludeSpecialProps?: boolean | 1): {
             index: number;
             key: string;
             keyNum?: number;
@@ -126,7 +126,7 @@ declare global {
 }
 declare global {
     interface Object {
-        VKeys(excludeSpecialProps?: boolean): string[];
+        VKeys(excludeSpecialProps?: boolean | 1): string[];
     }
 }
 declare global {
@@ -135,8 +135,8 @@ declare global {
             [key: number]: T;
         } | {
             [key: string]: T;
-        }, excludeSpecialProps?: boolean): T[];
-        VValues<T>(excludeSpecialProps?: boolean): T[];
+        }, excludeSpecialProps?: boolean | 1): T[];
+        VValues<T>(excludeSpecialProps?: boolean | 1): T[];
     }
 }
 declare global {

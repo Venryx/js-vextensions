@@ -235,11 +235,11 @@ Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = fals
 };
 declare global {
 	interface Object {
-		Pairs<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
-		Pairs<T>(excludeSpecialProps?: boolean): {index: number, key: string, keyNum?: number, value: T}[];
+		Pairs<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean | 1): {index: number, key: string, keyNum?: number, value: T}[];
+		Pairs<T>(excludeSpecialProps?: boolean | 1): {index: number, key: string, keyNum?: number, value: T}[];
 	}
 }
-Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps = false) {
+Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps: boolean | 1 = false) {
 	var result = [];
 	var i = 0;
 	for (var key in this) {
@@ -250,8 +250,8 @@ Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps = fals
 	}
 	return result;
 };
-declare global { interface Object { VKeys(excludeSpecialProps?: boolean): string[]; } }
-Object.prototype._AddFunction_Inline = function VKeys(excludeSpecialProps = false) {
+declare global { interface Object { VKeys(excludeSpecialProps?: boolean | 1): string[]; } }
+Object.prototype._AddFunction_Inline = function VKeys(excludeSpecialProps: boolean | 1 = false) {
 	//if (excludeSpecialProps) return this.Props(true).map(a=>a.name);
 	if (excludeSpecialProps) return Object.keys(this).Except(specialProps);
 	return Object.keys(this);
@@ -259,11 +259,11 @@ Object.prototype._AddFunction_Inline = function VKeys(excludeSpecialProps = fals
 //interface Object { VValues(excludeSpecialProps?: boolean): any[]; }
 declare global {
 	interface Object {
-		VValues<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): T[];
-		VValues<T>(excludeSpecialProps?: boolean): T[];
+		VValues<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean | 1): T[];
+		VValues<T>(excludeSpecialProps?: boolean | 1): T[];
 	}
 }
-Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps = false) {
+Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps: boolean | 1 = false) {
 	//if (excludeSpecialProps) return this.Props(true).map(a=>a.value);
 	if (excludeSpecialProps) return Object.keys(this).Except(specialProps).map(a=>this[a]);
 	return Object.keys(this).map(a=>this[a]);
