@@ -482,12 +482,10 @@ Object.prototype._AddFunction_Inline = function VSet() {
     options = args[2];
   }
 
-  options = options || {}; // also defined (and exported) from General.ts
-
-  var DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+  options = options || {};
 
   var SetProp = function SetProp(name, value) {
-    if (value === DEL || value === undefined && options.deleteUndefined || value === null && options.deleteNull || value === "" && options.deleteEmpty) {
+    if (value === ___WEBPACK_IMPORTED_MODULE_0__["DEL"] || value === undefined && options.deleteUndefined || value === null && options.deleteNull || value === "" && options.deleteEmpty) {
       delete _this[name];
       return;
     }

@@ -1,4 +1,4 @@
-import {IsNaN, Assert} from "..";
+import {IsNaN, Assert, DEL} from "..";
 
 // (ClassExtensions.ts)
 
@@ -121,9 +121,6 @@ Object.prototype._AddFunction_Inline = function VSet(...args) {
 	if (typeof args[0] == "object") [props, options] = args;
 	else [propName, propValue, options] = args;
 	options = options || {};
-
-	// also defined (and exported) from General.ts
-	var DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 
 	const SetProp = (name, value)=> {
 		if (value === DEL || (value === undefined && options.deleteUndefined) || (value === null && options.deleteNull) || (value === "" && options.deleteEmpty)) {
