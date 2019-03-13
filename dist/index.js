@@ -991,6 +991,7 @@ Array.prototype._AddFunction_Inline = function Select(selectFunc) {
 };
 
 Array.prototype._AddFunction_Inline = function SelectMany(selectFunc) {
+  //return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
   var result = [];
   var _iteratorNormalCompletion7 = true;
   var _didIteratorError7 = false;
@@ -2739,6 +2740,14 @@ function GetValues_ForSchema(enumType) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 
 if (typeof Element != "undefined") Element.prototype._AddItem("GetParents", function () {
   var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -2757,6 +2766,22 @@ if (typeof Element != "undefined") Element.prototype._AddItem("GetSelfAndParents
   var topDown = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var result = this.GetParents(topDown);
   return topDown ? result.concat([this]) : [this].concat(result);
+});
+if (typeof Element != "undefined") Element.prototype._AddItem("QuerySelector_BreadthFirst", function (selector) {
+  var currentLayerElements = _toConsumableArray(this.childNodes);
+
+  while (currentLayerElements.length) {
+    var firstMatchInLayer = currentLayerElements.find(function (a) {
+      return a["matches"] && a["matches"](selector);
+    });
+    if (firstMatchInLayer) return firstMatchInLayer; //currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
+
+    currentLayerElements = currentLayerElements.reduce(function (acc, item) {
+      return acc.concat(_toConsumableArray(item.childNodes));
+    }, []);
+  }
+
+  return null;
 });
 if (typeof Element != "undefined") Element.prototype._AddItem("$", function (queryStr) {
   return this.querySelectorAll(queryStr).ToArray();

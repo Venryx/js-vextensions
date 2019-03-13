@@ -103,7 +103,8 @@ Array.prototype._AddFunction_Inline = function Select(selectFunc) {
 	return result;
 };
 declare global { interface Array<T> { SelectMany<T2>(matchFunc: (item: T, index?: number)=>T2[]): T2[]; } }
-Array.prototype._AddFunction_Inline = function SelectMany(selectFunc) {
+Array.prototype._AddFunction_Inline = function SelectMany(this: Array<any>, selectFunc) {
+	//return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
 	var result = [];
 	for (let [index, item] of this.entries()) {
 		result.AddRange(selectFunc.call(item, item, index));

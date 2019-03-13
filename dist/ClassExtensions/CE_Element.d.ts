@@ -11,6 +11,11 @@ declare global {
 }
 declare global {
     interface Element {
+        QuerySelector_BreadthFirst(selector: string): HTMLElement;
+    }
+}
+declare global {
+    interface Element {
         $(queryStr: string): HTMLElement[];
     }
 }
