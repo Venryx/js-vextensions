@@ -1,6 +1,5 @@
-/* global __dirname */
 var webpack = require("webpack");
-var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+//var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 module.exports = {
 	mode: "none",
@@ -36,7 +35,7 @@ module.exports = {
 				loader: "babel-loader",
 				exclude: /node_modules/,
 				query: {
-					presets: ["@babel/env", "@babel/react"]
+					presets: ["@babel/env"]
 				}
 			},
 			{test: /\.tsx?$/, loader: "ts-loader"},
