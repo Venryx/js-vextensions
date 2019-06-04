@@ -106,7 +106,7 @@ declare global {
 }
 declare global {
     interface Array<T> {
-        Move(item: any, newIndex: number, shiftInsertPointToPreserveFinalNeighbors?: boolean): number;
+        Move(item: any, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number;
     }
 }
 declare global {
