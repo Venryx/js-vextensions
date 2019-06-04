@@ -180,10 +180,11 @@ Array.prototype._AddFunction_Inline = function ForEach(func) {
 	}
 };
 
-declare global { interface Array<T> { Move(item: any, newIndex: number, shiftInsertPointToPreserveFinalNeighbors?: boolean): number; } }
-Array.prototype._AddFunction_Inline = function Move(this: any[], item, newIndex, shiftInsertPointToPreserveFinalNeighbors = false) {
+declare global { interface Array<T> { Move(item: any, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number; } }
+Array.prototype._AddFunction_Inline = function Move(this: any[], item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex = false) {
 	var oldIndex = this.indexOf(item);
-	if (oldIndex != -1) {
+
+	/*if (oldIndex != -1) {
 		this.RemoveAt(oldIndex);
 		// New-index is understood to be the position-in-list to move the item to, as seen before the item started being moved.
 		// So compensate for remove-from-old-position list modification.
@@ -191,7 +192,21 @@ Array.prototype._AddFunction_Inline = function Move(this: any[], item, newIndex,
 			newIndex--;
 		}
 	}
-	this.Insert(newIndex, item);
+	this.Insert(newIndex, item);*/
+
+	if (newIndexAsPreRemovalIndexVSFinalIndex) {
+		this.Insert(newIndex, item);
+		if (oldIndex != -1) {
+			let oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
+			this.RemoveAt(oldEntry_currentIndex);
+		}
+	} else {
+		if (oldIndex != -1) {
+			this.RemoveAt(oldIndex);
+		}
+		this.Insert(newIndex, item);
+	}
+
 	return oldIndex;
 };
 
