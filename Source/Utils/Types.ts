@@ -24,13 +24,13 @@ export function IsNumber(obj, allowNumberObj = false, allowNaN = false): obj is 
 	if (!allowNaN && IsNaN(obj)) return false;
 	return typeof obj == "number" || (allowNumberObj && obj instanceof Number);
 }
-/** Basically the same as Number(...), accepting numbers, and number-strings matching:
-1) "0100" -> 100 [in ES5+]
+/** Basically the same as Number(...), accepting numbers, and converting number-strings of these forms:
+1) "010" -> 10 [ES5+], 8 [<ES5]
 2) "0x10" -> 16
 3) "5e3" -> 5000
-But does *not* match the following (for which it instead returns valIfConversionFails -- by default NaN):
-1) null -> 0
-2) "" -> 0*/
+Does *not* convert values of these forms (instead returns valIfConversionFails -- by default NaN):
+4) null -> ?
+5) "" -> ?*/
 export function ToNumber(stringOrFloatVal: string | number, valIfConversionFails = NaN) {
 	if (!IsString(stringOrFloatVal) && !IsNumber(stringOrFloatVal)) return valIfConversionFails;
 	if (IsString(stringOrFloatVal) && stringOrFloatVal.length == 0) return valIfConversionFails;
