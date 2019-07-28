@@ -17,52 +17,52 @@ export class BridgeMessage {
 }
 
 export class Bridge_Options {
-	receiveDataFunc_adder: (receiveDataFunc: (text: string | Object)=>any)=>any;
-	receiveDataFunc_addImmediately? = true;
-	sendDataFunc: (text: string | Object)=>any;
+	receiveChannelMessageFunc_adder: (receiveDataFunc: (channelMessage: string | Object)=>any)=>any;
+	receiveChannelMessageFunc_addImmediately? = true;
+	sendChannelMessageFunc: (channelMessage: string | Object)=>any;
 	channel_wrapBridgeMessage? = true;
-	channel_stringifyOuterMessageObj? = true;
+	channel_stringifyChannelMessageObj? = true;
 }
 
 export class Bridge {
 	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
 		options = E(new Bridge_Options(), options);
-		this.receiveDataFunc_adder = options.receiveDataFunc_adder;
-		if (options.receiveDataFunc_addImmediately) this.SetUpReceiver();
-		this.sendDataFunc = options.sendDataFunc;
+		this.receiveChannelMessageFunc_adder = options.receiveChannelMessageFunc_adder;
+		if (options.receiveChannelMessageFunc_addImmediately) this.SetUpReceiver();
+		this.sendChannelMessageFunc = options.sendChannelMessageFunc;
 		this.channel_wrapBridgeMessage = options.channel_wrapBridgeMessage;
-		this.channel_stringifyOuterMessageObj = options.channel_stringifyOuterMessageObj;
+		this.channel_stringifyChannelMessageObj = options.channel_stringifyChannelMessageObj;
 	}
-	receiveDataFunc_adder: (receiveTextFunc: (outerMessage: string | Object)=>any)=>any;
-	receiveDataFunc: (outerMessage: string | Object)=>any;
-	sendDataFunc: (outerMessage: string | Object)=>any;
+	receiveChannelMessageFunc_adder: (receiveTextFunc: (channelMessage: string | Object)=>any)=>any;
+	receiveChannelMessageFunc: (channelMessage: string | Object)=>any;
+	sendChannelMessageFunc: (channelMessage: string | Object)=>any;
 	/** Useful to ensure we ignore non-jsve-bridge messages. (the channel might be used by other systems as well) */
 	channel_wrapBridgeMessage = true;
 	/** Needed if the channel only supports strings being sent/received. */
-	channel_stringifyOuterMessageObj = true;
+	channel_stringifyChannelMessageObj = true;
 
 	// low level data-transfer
 	// ==========
 
 	SetUpReceiver() {
 		// add our own receive-text-func right now
-		this.receiveDataFunc = outerMessage=> {
-			let outerMessageObj;
-			if (this.channel_stringifyOuterMessageObj && IsString(outerMessage)) outerMessageObj = TryCall(()=>FromJSON(outerMessage)) || {};
-			if (!this.channel_stringifyOuterMessageObj && IsObject(outerMessage)) outerMessageObj = outerMessage;
-			let bridgeMessage: BridgeMessage = this.channel_wrapBridgeMessage ? outerMessageObj && outerMessageObj["JSVE_Bridge_message"] : outerMessageObj;
+		this.receiveChannelMessageFunc = channelMessage=> {
+			let channelMessageObj;
+			if (this.channel_stringifyChannelMessageObj && IsString(channelMessage)) channelMessageObj = TryCall(()=>FromJSON(channelMessage)) || {};
+			if (!this.channel_stringifyChannelMessageObj && IsObject(channelMessage)) channelMessageObj = channelMessage;
+			let bridgeMessage: BridgeMessage = this.channel_wrapBridgeMessage ? channelMessageObj && channelMessageObj["JSVE_Bridge_message"] : channelMessageObj;
 			if (!IsObject(bridgeMessage)) return;
 
 			if (bridgeMessage.functionCall_name) this.OnReceiveFunctionCall(bridgeMessage);
 			if (bridgeMessage.callback_callID != null) this.OnReceiveCallback(bridgeMessage);
 		};
-		this.receiveDataFunc_adder(this.receiveDataFunc);
+		this.receiveChannelMessageFunc_adder(this.receiveChannelMessageFunc);
 	}
 	SendBridgeMessage(bridgeMessage: BridgeMessage) {
-		let outerMessageObj = this.channel_wrapBridgeMessage ? {JSVE_Bridge_message: bridgeMessage} : bridgeMessage;
-		let outerMessage = this.channel_stringifyOuterMessageObj ? outerMessageObj : ToJSON(outerMessageObj);
-		this.sendDataFunc(outerMessage);
+		let channelMessageObj = this.channel_wrapBridgeMessage ? {JSVE_Bridge_message: bridgeMessage} : bridgeMessage;
+		let channelMessage = this.channel_stringifyChannelMessageObj ? ToJSON(channelMessageObj) : channelMessageObj;
+		this.sendChannelMessageFunc(channelMessage);
 	}
 
 	// for receiving function-calls (and callbacks) from external bridge

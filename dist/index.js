@@ -4949,9 +4949,9 @@ var BridgeMessage = function BridgeMessage(initialData) {
 var Bridge_Options = function Bridge_Options() {
   _classCallCheck(this, Bridge_Options);
 
-  this.receiveDataFunc_addImmediately = true;
+  this.receiveChannelMessageFunc_addImmediately = true;
   this.channel_wrapBridgeMessage = true;
-  this.channel_stringifyOuterMessageObj = true;
+  this.channel_stringifyChannelMessageObj = true;
 };
 var Bridge =
 /*#__PURE__*/
@@ -4964,7 +4964,7 @@ function () {
     this.channel_wrapBridgeMessage = true;
     /** Needed if the channel only supports strings being sent/received. */
 
-    this.channel_stringifyOuterMessageObj = true; // for receiving function-calls (and callbacks) from external bridge
+    this.channel_stringifyChannelMessageObj = true; // for receiving function-calls (and callbacks) from external bridge
     // ==========
 
     this.functions = {}; // for sending function-calls to external bridge
@@ -4973,11 +4973,11 @@ function () {
     this.lastCallID = -1;
     this.callCallbacks = {};
     options = Object(___WEBPACK_IMPORTED_MODULE_1__["E"])(new Bridge_Options(), options);
-    this.receiveDataFunc_adder = options.receiveDataFunc_adder;
-    if (options.receiveDataFunc_addImmediately) this.SetUpReceiver();
-    this.sendDataFunc = options.sendDataFunc;
+    this.receiveChannelMessageFunc_adder = options.receiveChannelMessageFunc_adder;
+    if (options.receiveChannelMessageFunc_addImmediately) this.SetUpReceiver();
+    this.sendChannelMessageFunc = options.sendChannelMessageFunc;
     this.channel_wrapBridgeMessage = options.channel_wrapBridgeMessage;
-    this.channel_stringifyOuterMessageObj = options.channel_stringifyOuterMessageObj;
+    this.channel_stringifyChannelMessageObj = options.channel_stringifyChannelMessageObj;
   } // low level data-transfer
   // ==========
 
@@ -4988,28 +4988,28 @@ function () {
       var _this = this;
 
       // add our own receive-text-func right now
-      this.receiveDataFunc = function (outerMessage) {
-        var outerMessageObj;
-        if (_this.channel_stringifyOuterMessageObj && Object(___WEBPACK_IMPORTED_MODULE_1__["IsString"])(outerMessage)) outerMessageObj = Object(_Timers__WEBPACK_IMPORTED_MODULE_0__["TryCall"])(function () {
-          return Object(___WEBPACK_IMPORTED_MODULE_1__["FromJSON"])(outerMessage);
+      this.receiveChannelMessageFunc = function (channelMessage) {
+        var channelMessageObj;
+        if (_this.channel_stringifyChannelMessageObj && Object(___WEBPACK_IMPORTED_MODULE_1__["IsString"])(channelMessage)) channelMessageObj = Object(_Timers__WEBPACK_IMPORTED_MODULE_0__["TryCall"])(function () {
+          return Object(___WEBPACK_IMPORTED_MODULE_1__["FromJSON"])(channelMessage);
         }) || {};
-        if (!_this.channel_stringifyOuterMessageObj && Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(outerMessage)) outerMessageObj = outerMessage;
-        var bridgeMessage = _this.channel_wrapBridgeMessage ? outerMessageObj && outerMessageObj["JSVE_Bridge_message"] : outerMessageObj;
+        if (!_this.channel_stringifyChannelMessageObj && Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(channelMessage)) channelMessageObj = channelMessage;
+        var bridgeMessage = _this.channel_wrapBridgeMessage ? channelMessageObj && channelMessageObj["JSVE_Bridge_message"] : channelMessageObj;
         if (!Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(bridgeMessage)) return;
         if (bridgeMessage.functionCall_name) _this.OnReceiveFunctionCall(bridgeMessage);
         if (bridgeMessage.callback_callID != null) _this.OnReceiveCallback(bridgeMessage);
       };
 
-      this.receiveDataFunc_adder(this.receiveDataFunc);
+      this.receiveChannelMessageFunc_adder(this.receiveChannelMessageFunc);
     }
   }, {
     key: "SendBridgeMessage",
     value: function SendBridgeMessage(bridgeMessage) {
-      var outerMessageObj = this.channel_wrapBridgeMessage ? {
+      var channelMessageObj = this.channel_wrapBridgeMessage ? {
         JSVE_Bridge_message: bridgeMessage
       } : bridgeMessage;
-      var outerMessage = this.channel_stringifyOuterMessageObj ? outerMessageObj : Object(___WEBPACK_IMPORTED_MODULE_1__["ToJSON"])(outerMessageObj);
-      this.sendDataFunc(outerMessage);
+      var channelMessage = this.channel_stringifyChannelMessageObj ? Object(___WEBPACK_IMPORTED_MODULE_1__["ToJSON"])(channelMessageObj) : channelMessageObj;
+      this.sendChannelMessageFunc(channelMessage);
     }
   }, {
     key: "RegisterFunction",
