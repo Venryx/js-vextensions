@@ -10,13 +10,13 @@ export declare function IsObject(obj: any): obj is Object;
 export declare function IsObjectOf<T>(obj: any): obj is T;
 export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean;
 export declare function IsNumber(obj: any, allowNumberObj?: boolean, allowNaN?: boolean): obj is number;
-/** Basically the same as Number(...), accepting numbers, and number-strings matching:
-1) "0100" -> 100 [in ES5+]
+/** Basically the same as Number(...), accepting numbers, and converting number-strings of these forms:
+1) "010" -> 10 [ES5+], 8 [<ES5]
 2) "0x10" -> 16
 3) "5e3" -> 5000
-But does *not* match the following (for which it instead returns valIfConversionFails -- by default NaN):
-1) null -> 0
-2) "" -> 0*/
+Does *not* convert values of these forms (instead returns valIfConversionFails -- by default NaN):
+4) null -> ?
+5) "" -> ?*/
 export declare function ToNumber(stringOrFloatVal: string | number, valIfConversionFails?: number): number;
 export declare function IsInt(obj: any): obj is number;
 export declare function ToInt(stringOrFloatVal: string | number, valIfConversionFails?: number): number;

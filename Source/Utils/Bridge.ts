@@ -42,7 +42,7 @@ export class Bridge {
 
 	SetUpReceiver() {
 		// add our own receive-text-func right now
-		this.receiveDataFunc = async data=> {
+		this.receiveDataFunc = data=> {
 			let bridgeMessage_direct = IsObject(data) && data["JSVE_Bridge_message"];
 			let bridgeMessage_inJSON = IsString(data) && (TryCall(()=>FromJSON(data)) || {})["JSVE_Bridge_message"];
 			let bridgeMessage: BridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;

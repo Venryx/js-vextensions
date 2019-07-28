@@ -2653,13 +2653,13 @@ function IsNumber(obj) {
   if (!allowNaN && IsNaN(obj)) return false;
   return typeof obj == "number" || allowNumberObj && obj instanceof Number;
 }
-/** Basically the same as Number(...), accepting numbers, and number-strings matching:
-1) "0100" -> 100 [in ES5+]
+/** Basically the same as Number(...), accepting numbers, and converting number-strings of these forms:
+1) "010" -> 10 [ES5+], 8 [<ES5]
 2) "0x10" -> 16
 3) "5e3" -> 5000
-But does *not* match the following (for which it instead returns valIfConversionFails -- by default NaN):
-1) null -> 0
-2) "" -> 0*/
+Does *not* convert values of these forms (instead returns valIfConversionFails -- by default NaN):
+4) null -> ?
+5) "" -> ?*/
 
 function ToNumber(stringOrFloatVal) {
   var valIfConversionFails = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : NaN;
@@ -4983,38 +4983,14 @@ function () {
 
       // add our own receive-text-func right now
       this.receiveDataFunc = function (data) {
-        return __awaiter(_this, void 0, void 0,
-        /*#__PURE__*/
-        regeneratorRuntime.mark(function _callee() {
-          var bridgeMessage_direct, bridgeMessage_inJSON, bridgeMessage;
-          return regeneratorRuntime.wrap(function _callee$(_context) {
-            while (1) {
-              switch (_context.prev = _context.next) {
-                case 0:
-                  bridgeMessage_direct = Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(data) && data["JSVE_Bridge_message"];
-                  bridgeMessage_inJSON = Object(___WEBPACK_IMPORTED_MODULE_1__["IsString"])(data) && (Object(_Timers__WEBPACK_IMPORTED_MODULE_0__["TryCall"])(function () {
-                    return Object(___WEBPACK_IMPORTED_MODULE_1__["FromJSON"])(data);
-                  }) || {})["JSVE_Bridge_message"];
-                  bridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;
-
-                  if (Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(bridgeMessage)) {
-                    _context.next = 5;
-                    break;
-                  }
-
-                  return _context.abrupt("return");
-
-                case 5:
-                  if (bridgeMessage.functionCall_name) this.OnReceiveFunctionCall(bridgeMessage);
-                  if (bridgeMessage.callback_callID != null) this.OnReceiveCallback(bridgeMessage);
-
-                case 7:
-                case "end":
-                  return _context.stop();
-              }
-            }
-          }, _callee, this);
-        }));
+        var bridgeMessage_direct = Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(data) && data["JSVE_Bridge_message"];
+        var bridgeMessage_inJSON = Object(___WEBPACK_IMPORTED_MODULE_1__["IsString"])(data) && (Object(_Timers__WEBPACK_IMPORTED_MODULE_0__["TryCall"])(function () {
+          return Object(___WEBPACK_IMPORTED_MODULE_1__["FromJSON"])(data);
+        }) || {})["JSVE_Bridge_message"];
+        var bridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;
+        if (!Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(bridgeMessage)) return;
+        if (bridgeMessage.functionCall_name) _this.OnReceiveFunctionCall(bridgeMessage);
+        if (bridgeMessage.callback_callID != null) _this.OnReceiveCallback(bridgeMessage);
       };
 
       this.receiveDataFunc_adder(this.receiveDataFunc);
@@ -5037,17 +5013,17 @@ function () {
     value: function OnReceiveFunctionCall(bridgeMessage) {
       return __awaiter(this, void 0, void 0,
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2() {
+      regeneratorRuntime.mark(function _callee() {
         var result, responseBridgeMessage;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context.prev = _context.next) {
               case 0:
-                _context2.next = 2;
+                _context.next = 2;
                 return this.CallInternal.apply(this, [bridgeMessage.functionCall_name].concat(_toConsumableArray(bridgeMessage.functionCall_args)));
 
               case 2:
-                result = _context2.sent;
+                result = _context.sent;
                 responseBridgeMessage = new BridgeMessage({
                   callback_callID: bridgeMessage.functionCall_callID,
                   callback_result: result
@@ -5056,10 +5032,10 @@ function () {
 
               case 5:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee, this);
       }));
     } // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
 
@@ -5072,26 +5048,26 @@ function () {
 
       return __awaiter(this, void 0, void 0,
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3() {
+      regeneratorRuntime.mark(function _callee2() {
         var func;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 func = this.functions[funcName];
                 Object(___WEBPACK_IMPORTED_MODULE_1__["Assert"])(func, "Cannot find function \"".concat(funcName, "\"."));
-                _context3.next = 4;
+                _context2.next = 4;
                 return func.apply(void 0, args);
 
               case 4:
-                return _context3.abrupt("return", _context3.sent);
+                return _context2.abrupt("return", _context2.sent);
 
               case 5:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee2, this);
       }));
     }
   }, {
