@@ -20,32 +20,38 @@ export class Bridge_Options {
 	receiveDataFunc_adder: (receiveDataFunc: (text: string | Object)=>any)=>any;
 	receiveDataFunc_addImmediately? = true;
 	sendDataFunc: (text: string | Object)=>any;
-	sendDataFunc_supportsObject? = false;
+	channel_wrapBridgeMessage? = true;
+	channel_stringifyOuterMessageObj? = true;
 }
 
 export class Bridge {
-	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard text that fails to load as JSON, or which fails to contain the special key "JSVE_Bridge_message". */
+	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
 		options = E(new Bridge_Options(), options);
 		this.receiveDataFunc_adder = options.receiveDataFunc_adder;
 		if (options.receiveDataFunc_addImmediately) this.SetUpReceiver();
 		this.sendDataFunc = options.sendDataFunc;
-		this.sendDataFunc_supportsObject = options.sendDataFunc_supportsObject;
+		this.channel_wrapBridgeMessage = options.channel_wrapBridgeMessage;
+		this.channel_stringifyOuterMessageObj = options.channel_stringifyOuterMessageObj;
 	}
-	receiveDataFunc_adder: (receiveTextFunc: (text: string | Object)=>any)=>any;
-	receiveDataFunc: (text: string | Object)=>any;
-	sendDataFunc: (text: string | Object)=>any;
-	sendDataFunc_supportsObject = false;
+	receiveDataFunc_adder: (receiveTextFunc: (outerMessage: string | Object)=>any)=>any;
+	receiveDataFunc: (outerMessage: string | Object)=>any;
+	sendDataFunc: (outerMessage: string | Object)=>any;
+	/** Useful to ensure we ignore non-jsve-bridge messages. (the channel might be used by other systems as well) */
+	channel_wrapBridgeMessage = true;
+	/** Needed if the channel only supports strings being sent/received. */
+	channel_stringifyOuterMessageObj = true;
 
 	// low level data-transfer
 	// ==========
 
 	SetUpReceiver() {
 		// add our own receive-text-func right now
-		this.receiveDataFunc = data=> {
-			let bridgeMessage_direct = IsObject(data) && data["JSVE_Bridge_message"];
-			let bridgeMessage_inJSON = IsString(data) && (TryCall(()=>FromJSON(data)) || {})["JSVE_Bridge_message"];
-			let bridgeMessage: BridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;
+		this.receiveDataFunc = outerMessage=> {
+			let outerMessageObj;
+			if (this.channel_stringifyOuterMessageObj && IsString(outerMessage)) outerMessageObj = TryCall(()=>FromJSON(outerMessage)) || {};
+			if (!this.channel_stringifyOuterMessageObj && IsObject(outerMessage)) outerMessageObj = outerMessage;
+			let bridgeMessage: BridgeMessage = this.channel_wrapBridgeMessage ? outerMessageObj && outerMessageObj["JSVE_Bridge_message"] : outerMessageObj;
 			if (!IsObject(bridgeMessage)) return;
 
 			if (bridgeMessage.functionCall_name) this.OnReceiveFunctionCall(bridgeMessage);
@@ -54,8 +60,9 @@ export class Bridge {
 		this.receiveDataFunc_adder(this.receiveDataFunc);
 	}
 	SendBridgeMessage(bridgeMessage: BridgeMessage) {
-		let data = {JSVE_Bridge_message: bridgeMessage};
-		this.sendDataFunc(this.sendDataFunc_supportsObject ? data : ToJSON(data));
+		let outerMessageObj = this.channel_wrapBridgeMessage ? {JSVE_Bridge_message: bridgeMessage} : bridgeMessage;
+		let outerMessage = this.channel_stringifyOuterMessageObj ? outerMessageObj : ToJSON(outerMessageObj);
+		this.sendDataFunc(outerMessage);
 	}
 
 	// for receiving function-calls (and callbacks) from external bridge

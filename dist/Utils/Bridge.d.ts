@@ -10,15 +10,19 @@ export declare class Bridge_Options {
     receiveDataFunc_adder: (receiveDataFunc: (text: string | Object) => any) => any;
     receiveDataFunc_addImmediately?: boolean;
     sendDataFunc: (text: string | Object) => any;
-    sendDataFunc_supportsObject?: boolean;
+    channel_wrapBridgeMessage?: boolean;
+    channel_stringifyOuterMessageObj?: boolean;
 }
 export declare class Bridge {
-    /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard text that fails to load as JSON, or which fails to contain the special key "JSVE_Bridge_message". */
+    /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
     constructor(options: Bridge_Options);
-    receiveDataFunc_adder: (receiveTextFunc: (text: string | Object) => any) => any;
-    receiveDataFunc: (text: string | Object) => any;
-    sendDataFunc: (text: string | Object) => any;
-    sendDataFunc_supportsObject: boolean;
+    receiveDataFunc_adder: (receiveTextFunc: (outerMessage: string | Object) => any) => any;
+    receiveDataFunc: (outerMessage: string | Object) => any;
+    sendDataFunc: (outerMessage: string | Object) => any;
+    /** Useful to ensure we ignore non-jsve-bridge messages. (the channel might be used by other systems as well) */
+    channel_wrapBridgeMessage: boolean;
+    /** Needed if the channel only supports strings being sent/received. */
+    channel_stringifyOuterMessageObj: boolean;
     SetUpReceiver(): void;
     SendBridgeMessage(bridgeMessage: BridgeMessage): void;
     functions: {

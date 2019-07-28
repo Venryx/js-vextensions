@@ -4950,16 +4950,21 @@ var Bridge_Options = function Bridge_Options() {
   _classCallCheck(this, Bridge_Options);
 
   this.receiveDataFunc_addImmediately = true;
-  this.sendDataFunc_supportsObject = false;
+  this.channel_wrapBridgeMessage = true;
+  this.channel_stringifyOuterMessageObj = true;
 };
 var Bridge =
 /*#__PURE__*/
 function () {
-  /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard text that fails to load as JSON, or which fails to contain the special key "JSVE_Bridge_message". */
+  /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
   function Bridge(options) {
     _classCallCheck(this, Bridge);
 
-    this.sendDataFunc_supportsObject = false; // for receiving function-calls (and callbacks) from external bridge
+    /** Useful to ensure we ignore non-jsve-bridge messages. (the channel might be used by other systems as well) */
+    this.channel_wrapBridgeMessage = true;
+    /** Needed if the channel only supports strings being sent/received. */
+
+    this.channel_stringifyOuterMessageObj = true; // for receiving function-calls (and callbacks) from external bridge
     // ==========
 
     this.functions = {}; // for sending function-calls to external bridge
@@ -4971,7 +4976,8 @@ function () {
     this.receiveDataFunc_adder = options.receiveDataFunc_adder;
     if (options.receiveDataFunc_addImmediately) this.SetUpReceiver();
     this.sendDataFunc = options.sendDataFunc;
-    this.sendDataFunc_supportsObject = options.sendDataFunc_supportsObject;
+    this.channel_wrapBridgeMessage = options.channel_wrapBridgeMessage;
+    this.channel_stringifyOuterMessageObj = options.channel_stringifyOuterMessageObj;
   } // low level data-transfer
   // ==========
 
@@ -4982,12 +4988,13 @@ function () {
       var _this = this;
 
       // add our own receive-text-func right now
-      this.receiveDataFunc = function (data) {
-        var bridgeMessage_direct = Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(data) && data["JSVE_Bridge_message"];
-        var bridgeMessage_inJSON = Object(___WEBPACK_IMPORTED_MODULE_1__["IsString"])(data) && (Object(_Timers__WEBPACK_IMPORTED_MODULE_0__["TryCall"])(function () {
-          return Object(___WEBPACK_IMPORTED_MODULE_1__["FromJSON"])(data);
-        }) || {})["JSVE_Bridge_message"];
-        var bridgeMessage = bridgeMessage_direct || bridgeMessage_inJSON;
+      this.receiveDataFunc = function (outerMessage) {
+        var outerMessageObj;
+        if (_this.channel_stringifyOuterMessageObj && Object(___WEBPACK_IMPORTED_MODULE_1__["IsString"])(outerMessage)) outerMessageObj = Object(_Timers__WEBPACK_IMPORTED_MODULE_0__["TryCall"])(function () {
+          return Object(___WEBPACK_IMPORTED_MODULE_1__["FromJSON"])(outerMessage);
+        }) || {};
+        if (!_this.channel_stringifyOuterMessageObj && Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(outerMessage)) outerMessageObj = outerMessage;
+        var bridgeMessage = _this.channel_wrapBridgeMessage ? outerMessageObj && outerMessageObj["JSVE_Bridge_message"] : outerMessageObj;
         if (!Object(___WEBPACK_IMPORTED_MODULE_1__["IsObject"])(bridgeMessage)) return;
         if (bridgeMessage.functionCall_name) _this.OnReceiveFunctionCall(bridgeMessage);
         if (bridgeMessage.callback_callID != null) _this.OnReceiveCallback(bridgeMessage);
@@ -4998,10 +5005,11 @@ function () {
   }, {
     key: "SendBridgeMessage",
     value: function SendBridgeMessage(bridgeMessage) {
-      var data = {
+      var outerMessageObj = this.channel_wrapBridgeMessage ? {
         JSVE_Bridge_message: bridgeMessage
-      };
-      this.sendDataFunc(this.sendDataFunc_supportsObject ? data : Object(___WEBPACK_IMPORTED_MODULE_1__["ToJSON"])(data));
+      } : bridgeMessage;
+      var outerMessage = this.channel_stringifyOuterMessageObj ? outerMessageObj : Object(___WEBPACK_IMPORTED_MODULE_1__["ToJSON"])(outerMessageObj);
+      this.sendDataFunc(outerMessage);
     }
   }, {
     key: "RegisterFunction",
