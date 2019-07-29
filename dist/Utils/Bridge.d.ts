@@ -6,13 +6,9 @@ export declare class BridgeMessage {
     callback_callID?: number;
     callback_result?: any;
 }
-export declare class Bridge_Options {
-    receiveChannelMessageFunc_adder: (receiveDataFunc: (channelMessage: string | Object) => any) => any;
+export declare type Bridge_Options = {
     receiveChannelMessageFunc_addImmediately?: boolean;
-    sendChannelMessageFunc: (channelMessage: string | Object) => any;
-    channel_wrapBridgeMessage?: boolean;
-    channel_stringifyChannelMessageObj?: boolean;
-}
+} & Pick<Bridge, "receiveChannelMessageFunc_adder" | "sendChannelMessageFunc"> & Partial<Pick<Bridge, "channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks">>;
 export declare class Bridge {
     /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
     constructor(options: Bridge_Options);
@@ -23,6 +19,8 @@ export declare class Bridge {
     channel_wrapBridgeMessage: boolean;
     /** Needed if the channel only supports strings being sent/received. */
     channel_stringifyChannelMessageObj: boolean;
+    /** Needed if the channel has >2 members; makes-so call-ids are random-numbers, and are filtered by each member to just the ones it knows it initiated. */
+    channel_safeCallbacks: boolean;
     SetUpReceiver(): void;
     SendBridgeMessage(bridgeMessage: BridgeMessage): void;
     functions: {

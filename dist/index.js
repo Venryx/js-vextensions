@@ -348,8 +348,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Utils_Bridge__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BridgeMessage", function() { return _Utils_Bridge__WEBPACK_IMPORTED_MODULE_10__["BridgeMessage"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Bridge_Options", function() { return _Utils_Bridge__WEBPACK_IMPORTED_MODULE_10__["Bridge_Options"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Bridge", function() { return _Utils_Bridge__WEBPACK_IMPORTED_MODULE_10__["Bridge"]; });
 
 
@@ -4893,7 +4891,6 @@ function CombineDynamicPropMaps() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BridgeMessage", function() { return BridgeMessage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Bridge_Options", function() { return Bridge_Options; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Bridge", function() { return Bridge; });
 /* harmony import */ var _Timers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
@@ -4946,13 +4943,15 @@ var BridgeMessage = function BridgeMessage(initialData) {
 
   this.Extend(initialData);
 };
-var Bridge_Options = function Bridge_Options() {
-  _classCallCheck(this, Bridge_Options);
+/*export class Bridge_Options {
+    receiveChannelMessageFunc_adder: (receiveDataFunc: (channelMessage: string | Object)=>any)=>any;
+    receiveChannelMessageFunc_addImmediately? = true;
+    sendChannelMessageFunc: (channelMessage: string | Object)=>any;
+    channel_wrapBridgeMessage? = true;
+    channel_stringifyChannelMessageObj? = true;
+    channel_safeCallbacks? = false;
+}*/
 
-  this.receiveChannelMessageFunc_addImmediately = true;
-  this.channel_wrapBridgeMessage = true;
-  this.channel_stringifyChannelMessageObj = true;
-};
 var Bridge =
 /*#__PURE__*/
 function () {
@@ -4964,20 +4963,20 @@ function () {
     this.channel_wrapBridgeMessage = true;
     /** Needed if the channel only supports strings being sent/received. */
 
-    this.channel_stringifyChannelMessageObj = true; // for receiving function-calls (and callbacks) from external bridge
+    this.channel_stringifyChannelMessageObj = true;
+    /** Needed if the channel has >2 members; makes-so call-ids are random-numbers, and are filtered by each member to just the ones it knows it initiated. */
+
+    this.channel_safeCallbacks = false; // for receiving function-calls (and callbacks) from external bridge
     // ==========
 
     this.functions = {}; // for sending function-calls to external bridge
     // ==========
 
-    this.lastCallID = -1;
+    this.lastCallID = -1; // only used if channel_safeCallbacks:false
+
     this.callCallbacks = {};
-    options = Object(___WEBPACK_IMPORTED_MODULE_1__["E"])(new Bridge_Options(), options);
-    this.receiveChannelMessageFunc_adder = options.receiveChannelMessageFunc_adder;
-    if (options.receiveChannelMessageFunc_addImmediately) this.SetUpReceiver();
-    this.sendChannelMessageFunc = options.sendChannelMessageFunc;
-    this.channel_wrapBridgeMessage = options.channel_wrapBridgeMessage;
-    this.channel_stringifyChannelMessageObj = options.channel_stringifyChannelMessageObj;
+    this.Extend(options.Excluding("receiveChannelMessageFunc_addImmediately"));
+    if (options.receiveChannelMessageFunc_addImmediately != false) this.SetUpReceiver();
   } // low level data-transfer
   // ==========
 
@@ -5081,7 +5080,14 @@ function () {
   }, {
     key: "OnReceiveCallback",
     value: function OnReceiveCallback(bridgeMessage) {
-      this.callCallbacks[bridgeMessage.callback_callID](bridgeMessage.callback_result);
+      var callback = this.callCallbacks[bridgeMessage.callback_callID];
+
+      if (callback == null) {
+        if (this.channel_safeCallbacks) return;
+        Object(___WEBPACK_IMPORTED_MODULE_1__["Assert"])(false, "Cannot find callback for call-id ".concat(bridgeMessage.callback_callID, "!"));
+      }
+
+      callback(bridgeMessage.callback_result);
     }
   }, {
     key: "Call",
@@ -5093,7 +5099,7 @@ function () {
       }
 
       return new Promise(function (resolve, reject) {
-        var callID = ++_this2.lastCallID;
+        var callID = _this2.channel_safeCallbacks ? Math.random() : ++_this2.lastCallID;
         var bridgeMessage = new BridgeMessage({
           functionCall_callID: callID,
           functionCall_name: funcName,

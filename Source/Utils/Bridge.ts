@@ -16,23 +16,25 @@ export class BridgeMessage {
 	callback_result?: any;
 }
 
-export class Bridge_Options {
+export type Bridge_Options = {receiveChannelMessageFunc_addImmediately?: boolean}
+	& Pick<Bridge,
+		"receiveChannelMessageFunc_adder" | "sendChannelMessageFunc">
+	& Partial<Pick<Bridge,
+		"channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks">>;
+/*export class Bridge_Options {
 	receiveChannelMessageFunc_adder: (receiveDataFunc: (channelMessage: string | Object)=>any)=>any;
 	receiveChannelMessageFunc_addImmediately? = true;
 	sendChannelMessageFunc: (channelMessage: string | Object)=>any;
 	channel_wrapBridgeMessage? = true;
 	channel_stringifyChannelMessageObj? = true;
-}
+	channel_safeCallbacks? = false;
+}*/
 
 export class Bridge {
 	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
-		options = E(new Bridge_Options(), options);
-		this.receiveChannelMessageFunc_adder = options.receiveChannelMessageFunc_adder;
-		if (options.receiveChannelMessageFunc_addImmediately) this.SetUpReceiver();
-		this.sendChannelMessageFunc = options.sendChannelMessageFunc;
-		this.channel_wrapBridgeMessage = options.channel_wrapBridgeMessage;
-		this.channel_stringifyChannelMessageObj = options.channel_stringifyChannelMessageObj;
+		this.Extend(options.Excluding("receiveChannelMessageFunc_addImmediately"));
+		if (options.receiveChannelMessageFunc_addImmediately != false) this.SetUpReceiver();
 	}
 	receiveChannelMessageFunc_adder: (receiveTextFunc: (channelMessage: string | Object)=>any)=>any;
 	receiveChannelMessageFunc: (channelMessage: string | Object)=>any;
@@ -41,6 +43,8 @@ export class Bridge {
 	channel_wrapBridgeMessage = true;
 	/** Needed if the channel only supports strings being sent/received. */
 	channel_stringifyChannelMessageObj = true;
+	/** Needed if the channel has >2 members; makes-so call-ids are random-numbers, and are filtered by each member to just the ones it knows it initiated. */
+	channel_safeCallbacks = false;
 
 	// low level data-transfer
 	// ==========
@@ -86,17 +90,22 @@ export class Bridge {
 	}
 
 	OnReceiveCallback(bridgeMessage: BridgeMessage) {
-		this.callCallbacks[bridgeMessage.callback_callID](bridgeMessage.callback_result);
+		let callback = this.callCallbacks[bridgeMessage.callback_callID];
+		if (callback == null) {
+			if (this.channel_safeCallbacks) return;
+			Assert(false, `Cannot find callback for call-id ${bridgeMessage.callback_callID}!`);
+		}
+		callback(bridgeMessage.callback_result);
 	}
 
 	// for sending function-calls to external bridge
 	// ==========
 	
-	lastCallID = -1;
+	lastCallID = -1; // only used if channel_safeCallbacks:false
 	callCallbacks = {};
 	Call(funcName: string, ...args: any[]) {
 		return new Promise((resolve, reject)=> {
-			let callID = ++this.lastCallID;
+			let callID = this.channel_safeCallbacks ? Math.random() : ++this.lastCallID;
 
 			let bridgeMessage = new BridgeMessage({functionCall_callID: callID, functionCall_name: funcName, functionCall_args: args});
 			this.SendBridgeMessage(bridgeMessage);
