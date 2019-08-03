@@ -4972,8 +4972,7 @@ function () {
     this.functions = {}; // for sending function-calls to external bridge
     // ==========
 
-    this.lastCallID = -1; // only used if channel_safeCallbacks:false
-
+    this.lastCallID = -1;
     this.callCallbacks = {};
     this.Extend(options.Excluding("receiveChannelMessageFunc_addImmediately"));
     if (options.receiveChannelMessageFunc_addImmediately != false) this.SetUpReceiver();
@@ -5099,7 +5098,8 @@ function () {
       }
 
       return new Promise(function (resolve, reject) {
-        var callID = _this2.channel_safeCallbacks ? Math.random() : ++_this2.lastCallID;
+        var callID = _this2.channel_safeCallbacks ? Math.random() : _this2.lastCallID + 1;
+        _this2.lastCallID = callID;
         var bridgeMessage = new BridgeMessage({
           functionCall_callID: callID,
           functionCall_name: funcName,

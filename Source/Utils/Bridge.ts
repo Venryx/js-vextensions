@@ -101,11 +101,12 @@ export class Bridge {
 	// for sending function-calls to external bridge
 	// ==========
 	
-	lastCallID = -1; // only used if channel_safeCallbacks:false
+	lastCallID = -1;
 	callCallbacks = {};
 	Call(funcName: string, ...args: any[]) {
 		return new Promise((resolve, reject)=> {
-			let callID = this.channel_safeCallbacks ? Math.random() : ++this.lastCallID;
+			let callID = this.channel_safeCallbacks ? Math.random() : this.lastCallID + 1;
+			this.lastCallID = callID;
 
 			let bridgeMessage = new BridgeMessage({functionCall_callID: callID, functionCall_name: funcName, functionCall_args: args});
 			this.SendBridgeMessage(bridgeMessage);
