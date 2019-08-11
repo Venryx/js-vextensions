@@ -1,2 +1,5 @@
-export declare function GetPropsChanged(obj1: any, obj2: any, returnNullIfSame?: boolean): any[];
-export declare function GetPropsChanged_WithValues(obj1: any, obj2: any, returnNullIfSame?: boolean): {};
+export declare function GetPropsChanged(oldObj: any, newObj: any, returnNullIfSame?: boolean): {
+    key: string;
+    oldVal: any;
+    newVal: any;
+}[];

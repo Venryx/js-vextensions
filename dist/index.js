@@ -227,8 +227,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Utils_Changes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(13);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GetPropsChanged", function() { return _Utils_Changes__WEBPACK_IMPORTED_MODULE_3__["GetPropsChanged"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GetPropsChanged_WithValues", function() { return _Utils_Changes__WEBPACK_IMPORTED_MODULE_3__["GetPropsChanged_WithValues"]; });
-
 /* harmony import */ var _Utils_Assert__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(14);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Assert", function() { return _Utils_Assert__WEBPACK_IMPORTED_MODULE_4__["Assert"]; });
 
@@ -3299,11 +3297,10 @@ JSVE.logFunc = console.log;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetPropsChanged", function() { return GetPropsChanged; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetPropsChanged_WithValues", function() { return GetPropsChanged_WithValues; });
-function GetPropsChanged(obj1, obj2) {
+function GetPropsChanged(oldObj, newObj) {
   var returnNullIfSame = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  obj1 = obj1 || {}, obj2 = obj2 || {};
-  var keys = obj1.VKeys().concat(obj2.VKeys()).Distinct();
+  oldObj = oldObj || {}, newObj = newObj || {};
+  var keys = oldObj.VKeys().concat(newObj.VKeys()).Distinct();
   var result = [];
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -3313,8 +3310,12 @@ function GetPropsChanged(obj1, obj2) {
     for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var key = _step.value;
 
-      if (obj1[key] !== obj2[key]) {
-        result.push(key);
+      if (oldObj[key] !== newObj[key]) {
+        result.push({
+          key: key,
+          oldVal: oldObj[key],
+          newVal: newObj[key]
+        });
       }
     }
   } catch (err) {
@@ -3335,44 +3336,18 @@ function GetPropsChanged(obj1, obj2) {
   if (result.length == 0 && returnNullIfSame) return null;
   return result;
 }
-function GetPropsChanged_WithValues(obj1, obj2) {
-  var returnNullIfSame = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  obj1 = obj1 || {}, obj2 = obj2 || {};
-  var keys = obj1.VKeys().concat(obj2.VKeys()).Distinct();
-  var result = {};
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = keys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var key = _step2.value;
-
-      if (obj1[key] !== obj2[key]) {
-        result[key] = {
-          1: obj1[key],
-          2: obj2[key]
-        };
-      }
+/*export function GetUpdates(oldData, newData, useNullInsteadOfUndefined = true) {
+    const result = {};
+    for (const key of oldData.VKeys(true).concat(newData.VKeys(true))) {
+        if (newData[key] !== oldData[key]) {
+            result[key] = newData[key];
+            if (newData[key] === undefined && useNullInsteadOfUndefined) {
+                result[key] = null;
+            }
+        }
     }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
-  }
-
-  if (result.VKeys().length == 0 && returnNullIfSame) return null;
-  return result;
-}
+    return RemoveHelpers(result);
+}*/
 
 /***/ }),
 /* 14 */
