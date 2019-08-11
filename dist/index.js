@@ -3666,35 +3666,59 @@ function () {
   }, {
     key: "Start",
     value: function Start() {
-      var _this = this;
+      var _this2 = this;
 
-      // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing a second triggering)
-      if (this.IsRunning) {
-        this.Stop();
+      var initialDelayOverride = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
+      if (this.IsRunning) this.Stop();
+      this.startTime = Date.now();
+
+      function StartRegularInterval() {
+        var _this = this;
+
+        this.nextTickTime = this.startTime + this.intervalInMS;
+        this.timerID = setInterval(function () {
+          _this.func();
+
+          _this.callCount++;
+
+          if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) {
+            _this.Stop();
+          } else {
+            //this.nextTickTime += this.intervalInMS;
+            _this.nextTickTime = Date.now() + _this.intervalInMS; // prevents out-of-sync from sleep-mode
+          }
+        }, this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
       }
 
-      this.startTime = Date.now();
-      this.nextTickTime = this.startTime + this.intervalInMS;
-      this.timerID = setInterval(function () {
-        _this.func();
+      if (initialDelayOverride != null) {
+        this.nextTickTime = this.startTime + initialDelayOverride;
+        this.timerID = setTimeout(function () {
+          _this2.func();
 
-        _this.nextTickTime += _this.intervalInMS;
-        _this.callCount++;
+          _this2.callCount++;
 
-        if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) {
-          _this.Stop();
-        }
-      }, this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
+          if (_this2.maxCallCount != -1 && _this2.callCount >= _this2.maxCallCount) {
+            _this2.Stop();
+          } else {
+            StartRegularInterval();
+          }
+        }, initialDelayOverride);
+      } else {
+        StartRegularInterval();
+      }
 
-      return this;
+      return this; // enable chaining, for SetContext() call
     }
   }, {
     key: "Stop",
     value: function Stop() {
+      var resetCallCount = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       clearInterval(this.timerID); //this.startTime = null;
 
       this.nextTickTime = null;
       this.timerID = -1;
+      if (resetCallCount) this.callCount = 0;
     }
   }, {
     key: "IsRunning",
