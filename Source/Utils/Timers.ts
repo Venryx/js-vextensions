@@ -90,31 +90,48 @@ export class Timer {
 	get IsRunning() { return this.timerID != -1; }
 	
 	callCount = 0;
-	Start() {
-		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing a second triggering)
-		if (this.IsRunning) {
-			this.Stop();
-		}
-		
+	Start(initialDelayOverride: number = null) {
+		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
+		if (this.IsRunning) this.Stop();
 		this.startTime = Date.now();
-		this.nextTickTime = this.startTime + this.intervalInMS;
-		this.timerID = setInterval(()=> {
-			this.func();
-			this.nextTickTime += this.intervalInMS;
 
-			this.callCount++;
-			if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
-				this.Stop();
-			}
-		}, this.intervalInMS) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
+		function StartRegularInterval() {
+			this.nextTickTime = this.startTime + this.intervalInMS;
+			this.timerID = setInterval(()=> {
+				this.func();
+				this.callCount++;
+				if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
+					this.Stop();
+				} else {
+					//this.nextTickTime += this.intervalInMS;
+					this.nextTickTime = Date.now() + this.intervalInMS; // prevents out-of-sync from sleep-mode
+				}
+			}, this.intervalInMS) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
+		}
 
-		return this;
+		if (initialDelayOverride != null) {
+			this.nextTickTime = this.startTime + initialDelayOverride;
+			this.timerID = setTimeout(()=> {
+				this.func();
+				this.callCount++;
+				if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
+					this.Stop();
+				} else {
+					StartRegularInterval();
+				}
+			}, initialDelayOverride);
+		} else {
+			StartRegularInterval();
+		}
+
+		return this; // enable chaining, for SetContext() call
 	}
-	Stop() {
+	Stop(resetCallCount = true) {
 		clearInterval(this.timerID);
 		//this.startTime = null;
 		this.nextTickTime = null;
 		this.timerID = -1;
+		if (resetCallCount) this.callCount = 0;
 	}
 }
 export class TimerS extends Timer {
