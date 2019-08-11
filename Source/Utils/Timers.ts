@@ -95,7 +95,7 @@ export class Timer {
 		if (this.IsRunning) this.Stop();
 		this.startTime = Date.now();
 
-		function StartRegularInterval() {
+		const StartRegularInterval = ()=> {
 			this.nextTickTime = this.startTime + this.intervalInMS;
 			this.timerID = setInterval(()=> {
 				this.func();
@@ -107,7 +107,7 @@ export class Timer {
 					this.nextTickTime = Date.now() + this.intervalInMS; // prevents out-of-sync from sleep-mode
 				}
 			}, this.intervalInMS) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
-		}
+		};
 
 		if (initialDelayOverride != null) {
 			this.nextTickTime = this.startTime + initialDelayOverride;
