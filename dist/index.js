@@ -3297,8 +3297,11 @@ JSVE.logFunc = console.log;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetPropsChanged", function() { return GetPropsChanged; });
+/* harmony import */ var _General__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+
 function GetPropsChanged(oldObj, newObj) {
   var returnNullIfSame = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var useJSONCompare = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   oldObj = oldObj || {}, newObj = newObj || {};
   var keys = oldObj.VKeys().concat(newObj.VKeys()).Distinct();
   var result = [];
@@ -3309,8 +3312,10 @@ function GetPropsChanged(oldObj, newObj) {
   try {
     for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var key = _step.value;
+      var newVal_forComparison = useJSONCompare ? Object(_General__WEBPACK_IMPORTED_MODULE_0__["ToJSON"])(newObj[key]) : newObj[key];
+      var oldVal_forComparison = useJSONCompare ? Object(_General__WEBPACK_IMPORTED_MODULE_0__["ToJSON"])(oldObj[key]) : oldObj[key];
 
-      if (oldObj[key] !== newObj[key]) {
+      if (newVal_forComparison !== oldVal_forComparison) {
         result.push({
           key: key,
           oldVal: oldObj[key],

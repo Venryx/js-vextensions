@@ -1,9 +1,13 @@
-export function GetPropsChanged(oldObj, newObj, returnNullIfSame = true): {key: string, oldVal: any, newVal: any}[] {
+import {ToJSON} from "./General";
+
+export function GetPropsChanged(oldObj, newObj, returnNullIfSame = true, useJSONCompare = false): {key: string, oldVal: any, newVal: any}[] {
 	oldObj = oldObj || {}, newObj = newObj || {};
 	let keys = oldObj.VKeys().concat(newObj.VKeys()).Distinct();
 	let result = [];
 	for (let key of keys) {
-		if (oldObj[key] !== newObj[key]) {
+		let newVal_forComparison = useJSONCompare ? ToJSON(newObj[key]) : newObj[key];
+		let oldVal_forComparison = useJSONCompare ? ToJSON(oldObj[key]) : oldObj[key];
+		if (newVal_forComparison !== oldVal_forComparison) {
 			result.push({key, oldVal: oldObj[key], newVal: newObj[key]});
 		}
 	}
