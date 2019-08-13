@@ -3658,7 +3658,8 @@ function () {
     _classCallCheck(this, Timer);
 
     this.timerID = -1;
-    this.callCount = 0;
+    this.callCount_thisRun = 0;
+    this.callCount_total = 0;
     this.intervalInMS = intervalInMS;
     this.func = func;
     this.maxCallCount = maxCallCount;
@@ -3677,6 +3678,7 @@ function () {
       var _this = this;
 
       var initialDelayOverride = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var resetCallCountForStops = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
       if (this.IsRunning) this.Stop();
       this.startTime = Date.now();
@@ -3686,9 +3688,10 @@ function () {
         _this.timerID = setInterval(function () {
           _this.func();
 
-          _this.callCount++;
+          _this.callCount_thisRun++;
+          _this.callCount_total++;
 
-          if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) {
+          if (_this.maxCallCount != -1 && _this.callCount_thisRun >= _this.maxCallCount) {
             _this.Stop();
           } else {
             //this.nextTickTime += this.intervalInMS;
@@ -3702,9 +3705,10 @@ function () {
         this.timerID = setTimeout(function () {
           _this.func();
 
-          _this.callCount++;
+          _this.callCount_thisRun++;
+          _this.callCount_total++;
 
-          if (_this.maxCallCount != -1 && _this.callCount >= _this.maxCallCount) {
+          if (_this.maxCallCount != -1 && _this.callCount_thisRun >= _this.maxCallCount) {
             _this.Stop();
           } else {
             StartRegularInterval();
@@ -3719,12 +3723,11 @@ function () {
   }, {
     key: "Stop",
     value: function Stop() {
-      var resetCallCount = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       clearInterval(this.timerID); //this.startTime = null;
 
       this.nextTickTime = null;
       this.timerID = -1;
-      if (resetCallCount) this.callCount = 0;
+      this.callCount_thisRun = 0;
     }
   }, {
     key: "IsRunning",

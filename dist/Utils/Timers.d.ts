@@ -18,9 +18,10 @@ export declare class Timer {
     nextTickTime: number;
     timerID: number;
     readonly IsRunning: boolean;
-    callCount: number;
-    Start(initialDelayOverride?: number): this;
-    Stop(resetCallCount?: boolean): void;
+    callCount_thisRun: number;
+    callCount_total: number;
+    Start(initialDelayOverride?: number, resetCallCountForStops?: boolean): this;
+    Stop(): void;
 }
 export declare class TimerS extends Timer {
     constructor(interval_decimal: any, func: any, maxCallCount?: number);

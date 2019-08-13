@@ -89,8 +89,9 @@ export class Timer {
 	timerID = -1;
 	get IsRunning() { return this.timerID != -1; }
 	
-	callCount = 0;
-	Start(initialDelayOverride: number = null) {
+	callCount_thisRun = 0;
+	callCount_total = 0;
+	Start(initialDelayOverride: number = null, resetCallCountForStops = true) {
 		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
 		if (this.IsRunning) this.Stop();
 		this.startTime = Date.now();
@@ -99,8 +100,9 @@ export class Timer {
 			this.nextTickTime = this.startTime + this.intervalInMS;
 			this.timerID = setInterval(()=> {
 				this.func();
-				this.callCount++;
-				if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
+				this.callCount_thisRun++;
+				this.callCount_total++;
+				if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
 					this.Stop();
 				} else {
 					//this.nextTickTime += this.intervalInMS;
@@ -113,8 +115,9 @@ export class Timer {
 			this.nextTickTime = this.startTime + initialDelayOverride;
 			this.timerID = setTimeout(()=> {
 				this.func();
-				this.callCount++;
-				if (this.maxCallCount != -1 && this.callCount >= this.maxCallCount) {
+				this.callCount_thisRun++;
+				this.callCount_total++;
+				if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
 					this.Stop();
 				} else {
 					StartRegularInterval();
@@ -126,12 +129,12 @@ export class Timer {
 
 		return this; // enable chaining, for SetContext() call
 	}
-	Stop(resetCallCount = true) {
+	Stop() {
 		clearInterval(this.timerID);
 		//this.startTime = null;
 		this.nextTickTime = null;
 		this.timerID = -1;
-		if (resetCallCount) this.callCount = 0;
+		this.callCount_thisRun = 0;
 	}
 }
 export class TimerS extends Timer {
