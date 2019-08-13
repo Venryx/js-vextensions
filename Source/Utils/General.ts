@@ -111,6 +111,25 @@ export function ToJSON(obj, replacerFunc?, spacing?: number): string {
 	}
 }
 
+export class ToJSON_WithSpaces_Options {
+	insideObjectBraces = false;
+	insideArrayBrackets = false;
+	betweenPropsOrItems = true;
+	betweenPropNameAndValue = true;
+}
+export function ToJSON_WithSpaces(obj, options?: Partial<ToJSON_WithSpaces_Options>) {
+	options = E(new ToJSON_WithSpaces_Options(), options);
+
+	let result = JSON.stringify(obj, null, 1); // stringify, with line-breaks and indents
+	result = result.replace(/^ +/gm, " "); // remove all but the first space for each line
+	result = result.replace(/\n/g, ""); // remove line-breaks
+	if (!options.insideObjectBraces) result = result.replace(/{ /g, "{").replace(/ }/g, "}");
+	if (!options.insideArrayBrackets) result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
+	if (!options.betweenPropsOrItems) result = result.replace(/, /g, ",");
+	if (!options.betweenPropNameAndValue) result = result.replace(/": /g, `":`);
+	return result;
+}
+
 export function ToJSON_Safe(obj, ...excludePropNames) {
 	var cache = [];
 	var foundDuplicates = false;

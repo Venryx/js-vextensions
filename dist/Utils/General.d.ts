@@ -12,6 +12,13 @@ export declare function E<E1, E2, E3, E4, E5, E6, E7, E8>(e1?: E1, e2?: E2, e3?:
 export declare function CopyText(text: any): void;
 export declare function FromJSON(json: string): any;
 export declare function ToJSON(obj: any, replacerFunc?: any, spacing?: number): string;
+export declare class ToJSON_WithSpaces_Options {
+    insideObjectBraces: boolean;
+    insideArrayBrackets: boolean;
+    betweenPropsOrItems: boolean;
+    betweenPropNameAndValue: boolean;
+}
+export declare function ToJSON_WithSpaces(obj: any, options?: Partial<ToJSON_WithSpaces_Options>): string;
 export declare function ToJSON_Safe(obj: any, ...excludePropNames: any[]): string;
 export declare function ToJSON_Try(...args: any[]): any;
 export declare function Clone(obj: any, keepPrototype?: boolean): any;

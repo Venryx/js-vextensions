@@ -134,6 +134,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ToJSON", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["ToJSON"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ToJSON_WithSpaces_Options", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["ToJSON_WithSpaces_Options"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ToJSON_WithSpaces", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["ToJSON_WithSpaces"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ToJSON_Safe", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["ToJSON_Safe"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ToJSON_Try", function() { return _Utils_General__WEBPACK_IMPORTED_MODULE_2__["ToJSON_Try"]; });
@@ -1473,6 +1477,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CopyText", function() { return CopyText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FromJSON", function() { return FromJSON; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToJSON", function() { return ToJSON; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToJSON_WithSpaces_Options", function() { return ToJSON_WithSpaces_Options; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToJSON_WithSpaces", function() { return ToJSON_WithSpaces; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToJSON_Safe", function() { return ToJSON_Safe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToJSON_Try", function() { return ToJSON_Try; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Clone", function() { return Clone; });
@@ -1530,11 +1536,11 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -1695,6 +1701,28 @@ function ToJSON(obj, replacerFunc, spacing) {
     if (ex.toString() == "TypeError: Converting circular structure to JSON") return ToJSON_Safe.apply(this, arguments);
     throw ex;
   }
+}
+var ToJSON_WithSpaces_Options = function ToJSON_WithSpaces_Options() {
+  _classCallCheck(this, ToJSON_WithSpaces_Options);
+
+  this.insideObjectBraces = false;
+  this.insideArrayBrackets = false;
+  this.betweenPropsOrItems = true;
+  this.betweenPropNameAndValue = true;
+};
+function ToJSON_WithSpaces(obj, options) {
+  options = E(new ToJSON_WithSpaces_Options(), options);
+  var result = JSON.stringify(obj, null, 1); // stringify, with line-breaks and indents
+
+  result = result.replace(/^ +/gm, " "); // remove all but the first space for each line
+
+  result = result.replace(/\n/g, ""); // remove line-breaks
+
+  if (!options.insideObjectBraces) result = result.replace(/{ /g, "{").replace(/ }/g, "}");
+  if (!options.insideArrayBrackets) result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
+  if (!options.betweenPropsOrItems) result = result.replace(/, /g, ",");
+  if (!options.betweenPropNameAndValue) result = result.replace(/": /g, "\":");
+  return result;
 }
 function ToJSON_Safe(obj) {
   for (var _len2 = arguments.length, excludePropNames = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
