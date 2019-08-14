@@ -5045,7 +5045,13 @@ function () {
   }, {
     key: "RegisterFunction",
     value: function RegisterFunction(name, func) {
+      if (this.functions[name]) throw new Error("Cannot register the same function-name twice: \"".concat(name, "\""));
       this.functions[name] = func;
+    }
+  }, {
+    key: "UnregisterFunction",
+    value: function UnregisterFunction(name) {
+      delete this.functions[name];
     }
   }, {
     key: "OnReceiveFunctionCall",

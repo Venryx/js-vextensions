@@ -27,6 +27,7 @@ export declare class Bridge {
         [key: string]: Function;
     };
     RegisterFunction(name: string, func: Function): void;
+    UnregisterFunction(name: string): void;
     OnReceiveFunctionCall(bridgeMessage: BridgeMessage): Promise<void>;
     CallInternal(funcName: string, ...args: any[]): Promise<any>;
     OnReceiveCallback(bridgeMessage: BridgeMessage): void;

@@ -74,7 +74,11 @@ export class Bridge {
 
 	functions = {} as {[key: string]: Function};
 	RegisterFunction(name: string, func: Function) {
+		if (this.functions[name]) throw new Error(`Cannot register the same function-name twice: "${name}"`);
 		this.functions[name] = func;
+	}
+	UnregisterFunction(name: string) {
+		delete this.functions[name];
 	}
 
 	async OnReceiveFunctionCall(bridgeMessage: BridgeMessage) {
