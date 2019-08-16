@@ -3570,11 +3570,45 @@ function () {
       }
 
       this.timers = [];
+    } // Can be useful on platforms (eg. Android) where setInterval() and setTimeout() stop working when the screen is off.
+    // Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
+
+  }, {
+    key: "ManuallyTriggerOverdueTimers",
+    value: function ManuallyTriggerOverdueTimers() {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.timers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var timer = _step2.value;
+
+          if (timer.nextTickTime && Date.now() > timer.nextTickTime && timer.nextTickFunc) {
+            timer.nextTickFunc();
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
     }
   }]);
 
   return TimerContext;
-}(); // methods
+}();
+TimerContext.default = new TimerContext();
+TimerContext.default_autoAddAll = false; // methods
 // ==========
 
 function TryCall(func) {
@@ -3660,17 +3694,56 @@ function () {
     this.timerID = -1;
     this.callCount_thisRun = 0;
     this.callCount_total = 0;
+    Object(___WEBPACK_IMPORTED_MODULE_0__["Assert"])(Object(___WEBPACK_IMPORTED_MODULE_0__["IsNumber"])(intervalInMS), "Interval must be a number.");
     this.intervalInMS = intervalInMS;
     this.func = func;
     this.maxCallCount = maxCallCount;
+
+    if (TimerContext.default_autoAddAll) {
+      TimerContext.default.timers.push(this);
+    }
   }
 
   _createClass(Timer, [{
     key: "SetContext",
     value: function SetContext(timerContext) {
       Object(___WEBPACK_IMPORTED_MODULE_0__["Assert"])(timerContext, "TimerContext cannot be null.");
+      this.timerContexts = (this.timerContexts || []).concat(timerContext);
       timerContext.timers.push(this);
       return this;
+    }
+  }, {
+    key: "RemoveFromContext",
+    value: function RemoveFromContext(timerContext) {
+      this.timerContexts.Remove(timerContext);
+      timerContext.timers.Remove(this);
+    }
+  }, {
+    key: "ClearContexts",
+    value: function ClearContexts() {
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.timerContexts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var context = _step3.value;
+          this.RemoveFromContext(context);
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
     }
   }, {
     key: "Start",
@@ -3678,14 +3751,13 @@ function () {
       var _this = this;
 
       var initialDelayOverride = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-      var resetCallCountForStops = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
       if (this.IsRunning) this.Stop();
       this.startTime = Date.now();
 
       var StartRegularInterval = function StartRegularInterval() {
         _this.nextTickTime = _this.startTime + _this.intervalInMS;
-        _this.timerID = setInterval(function () {
+        _this.timerID = setInterval(_this.nextTickFunc = function () {
           _this.func();
 
           _this.callCount_thisRun++;
@@ -3695,14 +3767,14 @@ function () {
             _this.Stop();
           } else {
             //this.nextTickTime += this.intervalInMS;
-            _this.nextTickTime = Date.now() + _this.intervalInMS; // prevents out-of-sync from sleep-mode
+            _this.nextTickTime = Date.now() + _this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
           }
         }, _this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
       };
 
       if (initialDelayOverride != null) {
         this.nextTickTime = this.startTime + initialDelayOverride;
-        this.timerID = setTimeout(function () {
+        this.timerID = setTimeout(this.nextTickFunc = function () {
           _this.func();
 
           _this.callCount_thisRun++;
@@ -3726,6 +3798,7 @@ function () {
       clearInterval(this.timerID); //this.startTime = null;
 
       this.nextTickTime = null;
+      this.nextTickFunc = null;
       this.timerID = -1;
       this.callCount_thisRun = 0;
     }
@@ -5002,7 +5075,8 @@ function () {
     this.channel_safeCallbacks = false; // for receiving function-calls (and callbacks) from external bridge
     // ==========
 
-    this.functions = {}; // for sending function-calls to external bridge
+    this.functions = {};
+    this.ignoreMissingFunctions = false; // for sending function-calls to external bridge
     // ==========
 
     this.lastCallID = -1;
@@ -5100,14 +5174,23 @@ function () {
             switch (_context2.prev = _context2.next) {
               case 0:
                 func = this.functions[funcName];
+
+                if (!(this.ignoreMissingFunctions && func == null)) {
+                  _context2.next = 3;
+                  break;
+                }
+
+                return _context2.abrupt("return");
+
+              case 3:
                 Object(___WEBPACK_IMPORTED_MODULE_1__["Assert"])(func, "Cannot find function \"".concat(funcName, "\"."));
-                _context2.next = 4;
+                _context2.next = 6;
                 return func.apply(void 0, args);
 
-              case 4:
+              case 6:
                 return _context2.abrupt("return", _context2.sent);
 
-              case 5:
+              case 7:
               case "end":
                 return _context2.stop();
             }

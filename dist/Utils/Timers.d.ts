@@ -1,6 +1,9 @@
 export declare class TimerContext {
+    static default: TimerContext;
+    static default_autoAddAll: boolean;
     timers: Timer[];
     Reset(): void;
+    ManuallyTriggerOverdueTimers(): void;
 }
 export declare function TryCall<T>(func: (..._: any[]) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
@@ -13,14 +16,18 @@ export declare class Timer {
     intervalInMS: number;
     func: Function;
     maxCallCount: number;
+    timerContexts: TimerContext[];
     SetContext(timerContext: TimerContext): this;
+    RemoveFromContext(timerContext: TimerContext): void;
+    ClearContexts(): void;
     startTime: number;
     nextTickTime: number;
+    nextTickFunc: Function;
     timerID: number;
     readonly IsRunning: boolean;
     callCount_thisRun: number;
     callCount_total: number;
-    Start(initialDelayOverride?: number, resetCallCountForStops?: boolean): this;
+    Start(initialDelayOverride?: number): this;
     Stop(): void;
 }
 export declare class TimerS extends Timer {

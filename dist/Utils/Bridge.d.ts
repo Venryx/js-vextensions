@@ -8,7 +8,7 @@ export declare class BridgeMessage {
 }
 export declare type Bridge_Options = {
     receiveChannelMessageFunc_addImmediately?: boolean;
-} & Pick<Bridge, "receiveChannelMessageFunc_adder" | "sendChannelMessageFunc"> & Partial<Pick<Bridge, "channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks">>;
+} & Pick<Bridge, "receiveChannelMessageFunc_adder" | "sendChannelMessageFunc"> & Partial<Pick<Bridge, "channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks" | "ignoreMissingFunctions">>;
 export declare class Bridge {
     /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
     constructor(options: Bridge_Options);
@@ -26,6 +26,7 @@ export declare class Bridge {
     functions: {
         [key: string]: Function;
     };
+    ignoreMissingFunctions: boolean;
     RegisterFunction(name: string, func: Function): void;
     UnregisterFunction(name: string): void;
     OnReceiveFunctionCall(bridgeMessage: BridgeMessage): Promise<void>;

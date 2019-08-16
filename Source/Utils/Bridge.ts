@@ -20,7 +20,7 @@ export type Bridge_Options = {receiveChannelMessageFunc_addImmediately?: boolean
 	& Pick<Bridge,
 		"receiveChannelMessageFunc_adder" | "sendChannelMessageFunc">
 	& Partial<Pick<Bridge,
-		"channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks">>;
+		"channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks" | "ignoreMissingFunctions">>;
 /*export class Bridge_Options {
 	receiveChannelMessageFunc_adder: (receiveDataFunc: (channelMessage: string | Object)=>any)=>any;
 	receiveChannelMessageFunc_addImmediately? = true;
@@ -73,6 +73,7 @@ export class Bridge {
 	// ==========
 
 	functions = {} as {[key: string]: Function};
+	ignoreMissingFunctions = false;
 	RegisterFunction(name: string, func: Function) {
 		if (this.functions[name]) throw new Error(`Cannot register the same function-name twice: "${name}"`);
 		this.functions[name] = func;
@@ -89,7 +90,8 @@ export class Bridge {
 	// we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
 	async CallInternal(funcName: string, ...args: any[]) {
 		let func = this.functions[funcName];
-		Assert(func, `Cannot find function "${funcName}".`)
+		if (this.ignoreMissingFunctions && func == null) return;
+		Assert(func, `Cannot find function "${funcName}".`);
 		return await func(...args);
 	}
 
