@@ -3584,7 +3584,7 @@ function () {
         for (var _iterator2 = this.timers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var timer = _step2.value;
 
-          if (timer.nextTickTime && Date.now() > timer.nextTickTime && timer.nextTickFunc) {
+          if (timer.NextTickFuncOverdue) {
             timer.nextTickFunc();
           }
         }
@@ -3806,6 +3806,11 @@ function () {
     key: "IsRunning",
     get: function get() {
       return this.timerID != -1;
+    }
+  }, {
+    key: "NextTickFuncOverdue",
+    get: function get() {
+      return this.nextTickTime && Date.now() > this.nextTickTime && this.nextTickFunc != null;
     }
   }]);
 

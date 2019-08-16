@@ -21,10 +21,11 @@ export declare class Timer {
     RemoveFromContext(timerContext: TimerContext): void;
     ClearContexts(): void;
     startTime: number;
-    nextTickTime: number;
-    nextTickFunc: Function;
     timerID: number;
     readonly IsRunning: boolean;
+    nextTickTime: number;
+    nextTickFunc: Function;
+    readonly NextTickFuncOverdue: boolean;
     callCount_thisRun: number;
     callCount_total: number;
     Start(initialDelayOverride?: number): this;

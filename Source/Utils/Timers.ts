@@ -16,7 +16,7 @@ export class TimerContext {
 	// Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
 	ManuallyTriggerOverdueTimers() {
 		for (let timer of this.timers) {
-			if (timer.nextTickTime && Date.now() > timer.nextTickTime && timer.nextTickFunc) {
+			if (timer.NextTickFuncOverdue) {
 				timer.nextTickFunc();
 			}
 		}
@@ -113,10 +113,14 @@ export class Timer {
 	}
 
 	startTime: number;
-	nextTickTime: number;
-	nextTickFunc: Function; // used by the TimerContext.ManuallyTriggerOverdueTimers() function
 	timerID = -1;
 	get IsRunning() { return this.timerID != -1; }
+
+	nextTickTime: number;
+	nextTickFunc: Function; // used by the TimerContext.ManuallyTriggerOverdueTimers() function
+	get NextTickFuncOverdue() {
+		return this.nextTickTime && Date.now() > this.nextTickTime && this.nextTickFunc != null;
+	}
 	
 	callCount_thisRun = 0;
 	callCount_total = 0;
