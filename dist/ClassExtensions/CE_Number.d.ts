@@ -15,6 +15,11 @@ declare global {
 }
 declare global {
     interface Number {
+        IsMultipleOf(multipleOf: number, maxDistToBeMultiple: number): number;
+    }
+}
+declare global {
+    interface Number {
         RoundTo(multiple: number): number;
     }
 }

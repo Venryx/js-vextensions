@@ -19,6 +19,13 @@ Number.prototype._AddFunction_Inline = function ToPercentStr(this: number, preci
 	return number.toString() + "%";
 };
 
+declare global { interface Number { IsMultipleOf(multipleOf: number, maxDistToBeMultiple: number): number; } }
+Number.prototype._AddFunction_Inline = function IsMultipleOf(this: number, multipleOf: number, maxDistToBeMultiple: number) {
+	let valRoundedToMultiple = this.RoundTo(multipleOf);
+	let distance = valRoundedToMultiple.Distance(this);
+	return distance <= maxDistToBeMultiple;
+};
+
 declare global { interface Number { RoundTo(multiple: number): number; } }
 Number.prototype._AddFunction_Inline = function RoundTo(this: number, multiple) {
 	//return Math.round(this / multiple) * multiple;
@@ -26,7 +33,8 @@ Number.prototype._AddFunction_Inline = function RoundTo(this: number, multiple) 
 	/*var half = multiple / 2;
 	return (this + half) - ((this + half) % multiple);*/
 
-	// This version handles fractions better. Ex: (.2 + .1).RoundTo(.1) == .3 (NOT 0.3000000000000004, as the simpler approach gives)
+	// Realign/scale the possible values/multiples, so that each value is given an integer slot. Place the actual value (this) within the appropriate slot using Math.round() int-rounding, then reverse the scaling to get the true rounded value.
+	// (This version handles fractions better. Ex: (.2 + .1).RoundTo(.1) == .3 [NOT 0.3000000000000004, as the simpler approach gives])
 	let multiple_inverted = 1 / multiple;
 	return Math.round(this * multiple_inverted) / multiple_inverted;
 };

@@ -2849,13 +2849,20 @@ Number.prototype._AddFunction_Inline = function ToPercentStr(precision) {
   return number.toString() + "%";
 };
 
+Number.prototype._AddFunction_Inline = function IsMultipleOf(multipleOf, maxDistToBeMultiple) {
+  var valRoundedToMultiple = this.RoundTo(multipleOf);
+  var distance = valRoundedToMultiple.Distance(this);
+  return distance <= maxDistToBeMultiple;
+};
+
 Number.prototype._AddFunction_Inline = function RoundTo(multiple) {
   //return Math.round(this / multiple) * multiple;
   // Don't ask me why this works, but it does, and is faster. From: http://phrogz.net/round-to-nearest-via-modulus-division
 
   /*var half = multiple / 2;
   return (this + half) - ((this + half) % multiple);*/
-  // This version handles fractions better. Ex: (.2 + .1).RoundTo(.1) == .3 (NOT 0.3000000000000004, as the simpler approach gives)
+  // Realign/scale the possible values/multiples, so that each value is given an integer slot. Place the actual value (this) within the appropriate slot using Math.round() int-rounding, then reverse the scaling to get the true rounded value.
+  // (This version handles fractions better. Ex: (.2 + .1).RoundTo(.1) == .3 [NOT 0.3000000000000004, as the simpler approach gives])
   var multiple_inverted = 1 / multiple;
   return Math.round(this * multiple_inverted) / multiple_inverted;
 };
