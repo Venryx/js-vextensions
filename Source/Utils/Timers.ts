@@ -132,9 +132,9 @@ export class Timer {
 		const StartRegularInterval = ()=> {
 			this.nextTickTime = this.startTime + this.intervalInMS;
 			this.timerID = setInterval(this.nextTickFunc = ()=> {
-				this.func();
 				this.callCount_thisRun++;
 				this.callCount_total++;
+				this.func();
 				if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
 					this.Stop();
 				} else {
@@ -147,9 +147,9 @@ export class Timer {
 		if (initialDelayOverride != null) {
 			this.nextTickTime = this.startTime + initialDelayOverride;
 			this.timerID = setTimeout(this.nextTickFunc = ()=> {
-				this.func();
 				this.callCount_thisRun++;
 				this.callCount_total++;
+				this.func();
 				if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
 					this.Stop();
 				} else {

@@ -3765,10 +3765,10 @@ function () {
       var StartRegularInterval = function StartRegularInterval() {
         _this.nextTickTime = _this.startTime + _this.intervalInMS;
         _this.timerID = setInterval(_this.nextTickFunc = function () {
-          _this.func();
-
           _this.callCount_thisRun++;
           _this.callCount_total++;
+
+          _this.func();
 
           if (_this.maxCallCount != -1 && _this.callCount_thisRun >= _this.maxCallCount) {
             _this.Stop();
@@ -3782,10 +3782,10 @@ function () {
       if (initialDelayOverride != null) {
         this.nextTickTime = this.startTime + initialDelayOverride;
         this.timerID = setTimeout(this.nextTickFunc = function () {
-          _this.func();
-
           _this.callCount_thisRun++;
           _this.callCount_total++;
+
+          _this.func();
 
           if (_this.maxCallCount != -1 && _this.callCount_thisRun >= _this.maxCallCount) {
             _this.Stop();
