@@ -2292,6 +2292,7 @@ function DeepGet(obj, pathOrPathSegments) {
 function DeepSet(obj, pathOrPathSegments, newValue) {
   var sepChar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "/";
   var createPathSegmentsIfMissing = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+  var deleteUndefined = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
   var pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
   var deepObj = obj; // tunnel down to the object holding the path-specified prop
 
@@ -2306,7 +2307,12 @@ function DeepSet(obj, pathOrPathSegments, newValue) {
 
     deepObj = deepObj[segment];
   });
-  deepObj[pathSegments.Last()] = newValue;
+
+  if (newValue === undefined && deleteUndefined) {
+    delete deepObj[pathSegments.Last()];
+  } else {
+    deepObj[pathSegments.Last()] = newValue;
+  }
 }
 /** @param sepChar Default: "/" */
 

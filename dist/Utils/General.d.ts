@@ -75,7 +75,7 @@ export declare function VisitTreeNodesInPath(treeRoot: any, pathNodesOrStr: stri
 /** @param sepChar Default: "/" */
 export declare function DeepGet<T>(obj: any, pathOrPathSegments: string | (string | number)[], resultIfNull?: T, sepChar?: string): T;
 /** @param sepChar Default: "/" */
-export declare function DeepSet(obj: any, pathOrPathSegments: string | (string | number)[], newValue: any, sepChar?: string, createPathSegmentsIfMissing?: boolean): void;
+export declare function DeepSet(obj: any, pathOrPathSegments: string | (string | number)[], newValue: any, sepChar?: string, createPathSegmentsIfMissing?: boolean, deleteUndefined?: boolean): void;
 /** @param sepChar Default: "/" */
 export declare function WithDeepSet(baseObj: any, pathOrPathSegments: string | (string | number)[], newValue: any, sepChar?: string): any;
 export declare function GetStackTraceStr(sourceStackTrace?: boolean): any;

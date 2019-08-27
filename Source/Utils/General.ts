@@ -565,7 +565,7 @@ export function DeepGet<T>(obj, pathOrPathSegments: string | (string | number)[]
 	return result;
 }
 /** @param sepChar Default: "/" */
-export function DeepSet(obj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/", createPathSegmentsIfMissing = true) {
+export function DeepSet(obj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/", createPathSegmentsIfMissing = true, deleteUndefined = false) {
 	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
 	let deepObj = obj;
 	// tunnel down to the object holding the path-specified prop
@@ -579,7 +579,11 @@ export function DeepSet(obj, pathOrPathSegments: string | (string | number)[], n
 		}
 		deepObj = deepObj[segment];
 	});
-	deepObj[pathSegments.Last()] = newValue;
+	if (newValue === undefined && deleteUndefined) {
+		delete deepObj[pathSegments.Last()];
+	} else {
+		deepObj[pathSegments.Last()] = newValue;
+	}
 }
 /** @param sepChar Default: "/" */
 /*export function WithDeepSet(baseObj, pathOrPathSegments: string | (string | number)[], newValue, sepChar = "/") {
