@@ -91,8 +91,20 @@ export function CreateClass(baseClass, classMembers) {
 // enums
 // ==========
 
-export function GetEntries(enumType, nameModifierFunc?: (name: string)=>string) {
-	return Object.keys(enumType).filter(a=>a.match(/^\D/) != null).map(name=>({name: nameModifierFunc ? nameModifierFunc(name) : name, value: enumType[name] as number}));
+/**
+ * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key
+ * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
+ */
+export function GetEntries(enumType: Object, nameModifierFunc?: (name: string)=>string) {
+	//let entryNames = Object.keys(enumType).filter(a=>a.match(/^\D/) != null);
+
+	// valid enum values are numbers and null, so any props other than those are the name->value props we want
+	/*let nameValuePairs = enumType.Pairs().filter(pair=>!IsNumberString(pair.key) && pair.key != "null");
+	return nameValuePairs.map(pair=>({name: nameModifierFunc ? nameModifierFunc(pair.key) : pair.key, value: pair.value as number}));*/
+
+	// valid enum values are numbers and null, so any keys other than those are the ones we want (they're the keys for the key->value pairs)
+	let entryNames = Object.keys(enumType).filter(key=>!IsNumberString(key) && key != "null");
+	return entryNames.map(name=>({name: nameModifierFunc ? nameModifierFunc(name) : name, value: enumType[name] as number}));
 }
 export function GetValues<T>(enumType): T[] {
 	return GetEntries(enumType).map(a=>a.value as any as T);

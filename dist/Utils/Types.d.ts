@@ -24,7 +24,11 @@ export declare function IsString(obj: any, allowStringObj?: boolean): obj is str
 export declare function ToString(val: any): string;
 export declare function IsFunction(obj: any): obj is Function;
 export declare function IsConstructor(obj: any): obj is new (..._: any[]) => any;
-export declare function GetEntries(enumType: any, nameModifierFunc?: (name: string) => string): {
+/**
+ * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key
+ * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
+ */
+export declare function GetEntries(enumType: Object, nameModifierFunc?: (name: string) => string): {
     name: string;
     value: number;
 }[];
