@@ -1099,7 +1099,7 @@ Array.prototype._AddFunction_Inline = function FirstWith(propName, propValue) {
 Array.prototype._AddFunction_Inline = function Last(matchFunc) {
   var result = this.LastOrX(matchFunc);
 
-  if (result == null) {
+  if (result === undefined) {
     throw new Error("Matching item not found.");
   }
 
@@ -3823,7 +3823,7 @@ function () {
   }, {
     key: "NextTickFuncOverdue",
     get: function get() {
-      return this.nextTickTime && Date.now() > this.nextTickTime && this.nextTickFunc != null;
+      return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
     }
   }]);
 

@@ -119,7 +119,7 @@ export class Timer {
 	nextTickTime: number;
 	nextTickFunc: Function; // used by the TimerContext.ManuallyTriggerOverdueTimers() function
 	get NextTickFuncOverdue() {
-		return this.nextTickTime && Date.now() > this.nextTickTime && this.nextTickFunc != null;
+		return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
 	}
 	
 	callCount_thisRun = 0;

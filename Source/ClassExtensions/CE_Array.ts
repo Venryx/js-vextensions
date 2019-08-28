@@ -152,7 +152,7 @@ Array.prototype._AddFunction_Inline = function FirstWith(propName, propValue) { 
 declare global { interface Array<T> { /** Throws an error if no items match. */ Last(matchFunc?: (item: T, index: number)=>boolean): T; } }
 Array.prototype._AddFunction_Inline = function Last(matchFunc?) {
 	var result = this.LastOrX(matchFunc);
-	if (result == null) {
+	if (result === undefined) {
 		throw new Error("Matching item not found.");
 	}
 	return result;
