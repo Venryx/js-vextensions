@@ -3810,7 +3810,7 @@ function () {
           } else {
             StartRegularInterval();
           }
-        }, initialDelayOverride);
+        }, initialDelayOverride); // "as any": maybe temp; used to allow source-importing from NodeJS
       } else {
         StartRegularInterval();
       }

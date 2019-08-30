@@ -155,7 +155,7 @@ export class Timer {
 				} else {
 					StartRegularInterval();
 				}
-			}, initialDelayOverride);
+			}, initialDelayOverride) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 		} else {
 			StartRegularInterval();
 		}
