@@ -232,8 +232,7 @@ export class VRect {
 	toString() { return this.x + " " + this.y + " " + this.width + " " + this.height; }
 
 	Equals(other) {
-		if (!(other instanceof VRect))
-			return false;
+		if (!(other instanceof VRect)) return false;
 		return this.toString() == other.toString();
 	}
 

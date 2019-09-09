@@ -198,7 +198,7 @@ declare global {
 	interface String {
 		/**
 		 * Reformats a multi-line string to represent the actual intended "block" of text.
-		 * @param desiredIndent How much to indent each line. (after removal of the first-line indent-length from each of them)
+		 * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
 		 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
 		 */
 		AsMultiline(desiredIndent: number, removeLineStr?: string): string;
