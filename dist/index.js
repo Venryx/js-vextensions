@@ -282,7 +282,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "IsObject", function() { return _Utils_Types__WEBPACK_IMPORTED_MODULE_6__["IsObject"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "IsObjectOf", function() { return _Utils_Types__WEBPACK_IMPORTED_MODULE_6__["IsObjectOf"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "IsTypeX", function() { return _Utils_Types__WEBPACK_IMPORTED_MODULE_6__["IsTypeX"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "IsNumberString", function() { return _Utils_Types__WEBPACK_IMPORTED_MODULE_6__["IsNumberString"]; });
 
@@ -2620,7 +2620,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsBool", function() { return IsBool; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToBool", function() { return ToBool; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsObject", function() { return IsObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsObjectOf", function() { return IsObjectOf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsTypeX", function() { return IsTypeX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsNumberString", function() { return IsNumberString; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsNumber", function() { return IsNumber; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToNumber", function() { return ToNumber; });
@@ -2669,9 +2669,11 @@ function ToBool(boolStr) {
 }
 function IsObject(obj) {
   return _typeof(obj) == "object";
-}
-function IsObjectOf(obj) {
-  return _typeof(obj) == "object";
+} //export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
+//export function IsOfType<T>(obj, typeConstructor: new()=>T) : obj is T { return obj.constructor.name == typeConstructor.name; }
+
+function IsTypeX(obj, typeConstructor) {
+  return obj instanceof typeConstructor;
 }
 function IsNumberString(obj) {
   var allowNaN = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;

@@ -7,7 +7,7 @@ export declare function IsPrimitive(obj: any): boolean;
 export declare function IsBool(obj: any): obj is boolean;
 export declare function ToBool(boolStr: any): boolean;
 export declare function IsObject(obj: any): obj is Object;
-export declare function IsObjectOf<T>(obj: any): obj is T;
+export declare function IsTypeX<T>(obj: Object, typeConstructor: new (...args: any[]) => T): obj is T;
 export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean;
 export declare function IsNumber(obj: any, allowNumberObj?: boolean, allowNaN?: boolean): obj is number;
 /** Basically the same as Number(...), accepting numbers, and converting number-strings of these forms:

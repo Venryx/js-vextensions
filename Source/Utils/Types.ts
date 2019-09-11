@@ -17,7 +17,9 @@ export function IsBool(obj) : obj is boolean { return typeof obj == "boolean"; }
 export function ToBool(boolStr) { return boolStr == "true" ? true : false; }
 
 export function IsObject(obj) : obj is Object { return typeof obj == "object"; }
-export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
+//export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
+//export function IsOfType<T>(obj, typeConstructor: new()=>T) : obj is T { return obj.constructor.name == typeConstructor.name; }
+export function IsTypeX<T>(obj: Object, typeConstructor: new(...args: any[])=>T) : obj is T { return obj instanceof typeConstructor; }
 
 export function IsNumberString(obj, allowNaN = false) { return IsString(obj) && obj.length && IsNumber(Number(obj), false, allowNaN); }
 export function IsNumber(obj, allowNumberObj = false, allowNaN = false): obj is number {
