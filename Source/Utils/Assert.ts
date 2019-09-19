@@ -1,7 +1,7 @@
 import {GetStackTraceStr} from "./General";
 import {JSVE} from "../JSVE";
 
-export function Assert(condition, messageOrMessageFunc?: string | Function) {
+export function Assert(condition, messageOrMessageFunc?: string | Function): condition is true {
 	if (condition) return;
 
 	var message = (messageOrMessageFunc as any) instanceof Function ? (messageOrMessageFunc as any)() : messageOrMessageFunc;
