@@ -49,7 +49,14 @@ g.setTimeout = function(func: Function, delayInMS = 0, ...args) {
 	return oldTimeout(func, delayInMS, ...args);
 }*/
 
-export function WaitXThenRun(delayInMS, func, ...args): number {
+/*export function Sleep(ms) {
+	var startTime = new Date().getTime();
+	while (new Date().getTime() - startTime < ms) {}
+}*/
+
+const maxTimeoutLength = 0x7FFFFFFF; // setTimeout limit is MAX_INT32=(2^31-1)
+export function WaitXThenRun(delayInMS: number, func: Function, ...args: any[]): number {
+	Assert(delayInMS <= maxTimeoutLength, `Cannot wait for longer than ${maxTimeoutLength} ms. (use WaitUntilXThenRun, if a long-delay is needed)`);
 	// setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
 	// on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
 	if (delayInMS == 0) {
@@ -57,13 +64,24 @@ export function WaitXThenRun(delayInMS, func, ...args): number {
 	}
 	return setTimeout(func, delayInMS, ...args) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 }
-export function Sleep(ms) {
-	var startTime = new Date().getTime();
-	while (new Date().getTime() - startTime < ms) {}
+export function WaitUntilXThenRun(targetDateTimeInMS: number, func: Function, ...args: any[]) {
+	var now = Date.now();
+	var diff = (targetDateTimeInMS - now).KeepAtLeast(0);
+	if (diff > maxTimeoutLength) {
+		WaitXThenRun(maxTimeoutLength, ()=>WaitUntilXThenRun(targetDateTimeInMS, func));
+	} else {
+		WaitXThenRun(diff, func);
+	}
 }
+
 export function SleepAsync(timeMS) {
 	return new Promise((resolve, reject)=> {
 		WaitXThenRun(timeMS, resolve);
+	});
+}
+export function SleepAsyncUntil(targetDateTimeInMS: number) {
+	return new Promise((resolve, reject)=> {
+		WaitUntilXThenRun(targetDateTimeInMS, resolve);
 	});
 }
 
