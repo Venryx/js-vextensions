@@ -251,9 +251,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WaitXThenRun", function() { return _Utils_Timers__WEBPACK_IMPORTED_MODULE_5__["WaitXThenRun"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sleep", function() { return _Utils_Timers__WEBPACK_IMPORTED_MODULE_5__["Sleep"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WaitUntilXThenRun", function() { return _Utils_Timers__WEBPACK_IMPORTED_MODULE_5__["WaitUntilXThenRun"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SleepAsync", function() { return _Utils_Timers__WEBPACK_IMPORTED_MODULE_5__["SleepAsync"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SleepAsyncUntil", function() { return _Utils_Timers__WEBPACK_IMPORTED_MODULE_5__["SleepAsyncUntil"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DoNothingXTimesThenDoY", function() { return _Utils_Timers__WEBPACK_IMPORTED_MODULE_5__["DoNothingXTimesThenDoY"]; });
 
@@ -3534,8 +3536,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TryCall", function() { return TryCall; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TryCall_OnX", function() { return TryCall_OnX; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WaitXThenRun", function() { return WaitXThenRun; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Sleep", function() { return Sleep; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WaitUntilXThenRun", function() { return WaitUntilXThenRun; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SleepAsync", function() { return SleepAsync; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SleepAsyncUntil", function() { return SleepAsyncUntil; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DoNothingXTimesThenDoY", function() { return DoNothingXTimesThenDoY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return Timer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimerS", function() { return TimerS; });
@@ -3670,13 +3673,21 @@ g.setTimeout = function(func: Function, delayInMS = 0, ...args) {
     return oldTimeout(func, delayInMS, ...args);
 }*/
 
+/*export function Sleep(ms) {
+    var startTime = new Date().getTime();
+    while (new Date().getTime() - startTime < ms) {}
+}*/
+
+var maxTimeoutLength = 0x7FFFFFFF; // setTimeout limit is MAX_INT32=(2^31-1)
+
 function WaitXThenRun(delayInMS, func) {
+  Object(___WEBPACK_IMPORTED_MODULE_0__["Assert"])(delayInMS <= maxTimeoutLength, "Cannot wait for longer than ".concat(maxTimeoutLength, " ms. (use WaitUntilXThenRun, if a long-delay is needed)")); // setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
+  // on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
+
   for (var _len3 = arguments.length, args = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
     args[_key3 - 2] = arguments[_key3];
   }
 
-  // setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
-  // on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
   if (delayInMS == 0) {
     var _window;
 
@@ -3685,14 +3696,26 @@ function WaitXThenRun(delayInMS, func) {
 
   return setTimeout.apply(void 0, [func, delayInMS].concat(args)); // "as any": maybe temp; used to allow source-importing from NodeJS
 }
-function Sleep(ms) {
-  var startTime = new Date().getTime();
+function WaitUntilXThenRun(targetDateTimeInMS, func) {
+  var now = Date.now();
+  var diff = (targetDateTimeInMS - now).KeepAtLeast(0);
 
-  while (new Date().getTime() - startTime < ms) {}
+  if (diff > maxTimeoutLength) {
+    WaitXThenRun(maxTimeoutLength, function () {
+      return WaitUntilXThenRun(targetDateTimeInMS, func);
+    });
+  } else {
+    WaitXThenRun(diff, func);
+  }
 }
 function SleepAsync(timeMS) {
   return new Promise(function (resolve, reject) {
     WaitXThenRun(timeMS, resolve);
+  });
+}
+function SleepAsyncUntil(targetDateTimeInMS) {
+  return new Promise(function (resolve, reject) {
+    WaitUntilXThenRun(targetDateTimeInMS, resolve);
   });
 }
 var DoNothingXTimesThenDoY_counters = {};

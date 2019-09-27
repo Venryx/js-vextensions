@@ -7,9 +7,10 @@ export declare class TimerContext {
 }
 export declare function TryCall<T>(func: (..._: any[]) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
-export declare function WaitXThenRun(delayInMS: any, func: any, ...args: any[]): number;
-export declare function Sleep(ms: any): void;
+export declare function WaitXThenRun(delayInMS: number, func: Function, ...args: any[]): number;
+export declare function WaitUntilXThenRun(targetDateTimeInMS: number, func: Function, ...args: any[]): void;
 export declare function SleepAsync(timeMS: any): Promise<{}>;
+export declare function SleepAsyncUntil(targetDateTimeInMS: number): Promise<{}>;
 export declare function DoNothingXTimesThenDoY(doNothingCount: number, func: Function, key?: string): void;
 export declare class Timer {
     constructor(intervalInMS: any, func: any, maxCallCount?: number);
