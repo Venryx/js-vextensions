@@ -320,7 +320,7 @@ Array.prototype._AddFunction_Inline = function Min(valFunc?, asNumbers = false) 
 		Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 		return Math.min(...this);
 	}
-    return this.OrderBy(valFunc).First();
+    return this.OrderBy(valFunc).FirstOrX();
 };
 declare global { interface Array<T> { Max(valFunc?: (item: T)=>number, asNumbers?: boolean): T; } }
 Array.prototype._AddFunction_Inline = function Max(valFunc?, asNumbers = false) {
@@ -330,7 +330,7 @@ Array.prototype._AddFunction_Inline = function Max(valFunc?, asNumbers = false) 
 		Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 		return Math.max(...this);
 	}
-	return this.OrderBy(valFunc).Last();
+	return this.OrderBy(valFunc).LastOrX();
 };
 declare global { interface Array<T> { Sum(): number; } }
 Array.prototype._AddFunction_Inline = function Sum() {

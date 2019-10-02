@@ -1363,7 +1363,7 @@ Array.prototype._AddFunction_Inline = function Min(valFunc) {
     return Math.min.apply(Math, _toConsumableArray(this));
   }
 
-  return this.OrderBy(valFunc).First();
+  return this.OrderBy(valFunc).FirstOrX();
 };
 
 Array.prototype._AddFunction_Inline = function Max(valFunc) {
@@ -1376,7 +1376,7 @@ Array.prototype._AddFunction_Inline = function Max(valFunc) {
     return Math.max.apply(Math, _toConsumableArray(this));
   }
 
-  return this.OrderBy(valFunc).Last();
+  return this.OrderBy(valFunc).LastOrX();
 };
 
 Array.prototype._AddFunction_Inline = function Sum() {
