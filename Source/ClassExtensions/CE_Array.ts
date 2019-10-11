@@ -1,6 +1,47 @@
 import ".";
 import {Assert} from "..";
 
+export interface ForEachExtras {
+	index: number;
+	Break: ()=>void;
+	Continue: ()=>void;
+}
+
+/*// since JS doesn't have basic "foreach" system
+Array.prototype._AddFunction_Inline = function ForEach(func) {
+	for (var i in this) {
+		func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
+	}
+};*/
+
+declare global { interface Array<T> { ForEach(func: (value: T, extras: ForEachExtras)=>any): void; } }
+Array.prototype._AddFunction_Inline = function ForEach(func: Function) {
+	for (let i = 0; i < this.length; i++) {
+		let shouldBreak = false;
+		let shouldContinue = false;
+		let extras = {index: i, Break: ()=>shouldBreak = true, Continue: ()=>shouldContinue = true};
+		func(this[i], extras);
+		if (shouldBreak) break;
+		if (shouldContinue) continue;
+	}
+}
+
+declare global { interface Array<T> { ForEachAsync(func: (value: T, extras: ForEachExtras)=>any): Promise<void>; } }
+Array.prototype._AddFunction_Inline = async function ForEachAsync(func: Function) {
+	for (let i = 0; i < this.length; i++) {
+		let shouldBreak = false;
+		let shouldContinue = false;
+		let extras = {index: i, Break: ()=>shouldBreak = true, Continue: ()=>shouldContinue = true};
+		await func(this[i], extras);
+		if (shouldBreak) break;
+		if (shouldContinue) continue;
+	}
+}
+/*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }
+Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {
+	await Promise.all(this.map(fn));
+}*/
+
 declare global { interface Array<T> { Contains(item: T): boolean; } }
 Array.prototype._AddFunction_Inline = function Contains(item) { return this.indexOf(item) != -1; };
 declare global { interface Array<T> { ContainsAny(...items: T[]): boolean; } }
@@ -172,13 +213,6 @@ Array.prototype._AddFunction_Inline = function LastOrX(matchFunc?, x = null) {
 }
 declare global { interface Array<T> { XFromLast(x: number): T; } }
 Array.prototype._AddFunction_Inline = function XFromLast(x: number) { return this[(this.length - 1) - x]; };
-
-// since JS doesn't have basic "foreach" system
-Array.prototype._AddFunction_Inline = function ForEach(func) {
-	for (var i in this) {
-		func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
-	}
-};
 
 declare global { interface Array<T> { Move(item: any, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number; } }
 Array.prototype._AddFunction_Inline = function Move(this: any[], item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex = false) {

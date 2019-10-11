@@ -720,8 +720,116 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : new P(function (resolve) {
+        resolve(result.value);
+      }).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
 
 
+
+
+Array.prototype._AddFunction_Inline = function ForEach(func) {
+  for (var i = 0; i < this.length; i++) {
+    var shouldBreak = false;
+    var shouldContinue = false;
+    var extras = {
+      index: i,
+      Break: function Break() {
+        return shouldBreak = true;
+      },
+      Continue: function Continue() {
+        return shouldContinue = true;
+      }
+    };
+    func(this[i], extras);
+    if (shouldBreak) break;
+    if (shouldContinue) continue;
+  }
+};
+
+Array.prototype._AddFunction_Inline = function ForEachAsync(func) {
+  return __awaiter(this, void 0, void 0,
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var i, shouldBreak, shouldContinue, extras;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            i = 0;
+
+          case 1:
+            if (!(i < this.length)) {
+              _context.next = 14;
+              break;
+            }
+
+            shouldBreak = false;
+            shouldContinue = false;
+            extras = {
+              index: i,
+              Break: function Break() {
+                return shouldBreak = true;
+              },
+              Continue: function Continue() {
+                return shouldContinue = true;
+              }
+            };
+            _context.next = 7;
+            return func(this[i], extras);
+
+          case 7:
+            if (!shouldBreak) {
+              _context.next = 9;
+              break;
+            }
+
+            return _context.abrupt("break", 14);
+
+          case 9:
+            if (!shouldContinue) {
+              _context.next = 11;
+              break;
+            }
+
+            return _context.abrupt("continue", 11);
+
+          case 11:
+            i++;
+            _context.next = 1;
+            break;
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+};
 
 Array.prototype._AddFunction_Inline = function Contains(item) {
   return this.indexOf(item) != -1;
@@ -1126,13 +1234,6 @@ Array.prototype._AddFunction_Inline = function LastOrX(matchFunc) {
 
 Array.prototype._AddFunction_Inline = function XFromLast(x) {
   return this[this.length - 1 - x];
-}; // since JS doesn't have basic "foreach" system
-
-
-Array.prototype._AddFunction_Inline = function ForEach(func) {
-  for (var i in this) {
-    func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
-  }
 };
 
 Array.prototype._AddFunction_Inline = function Move(item, newIndex) {

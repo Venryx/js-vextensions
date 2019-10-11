@@ -1,4 +1,19 @@
 import ".";
+export interface ForEachExtras {
+    index: number;
+    Break: () => void;
+    Continue: () => void;
+}
+declare global {
+    interface Array<T> {
+        ForEach(func: (value: T, extras: ForEachExtras) => any): void;
+    }
+}
+declare global {
+    interface Array<T> {
+        ForEachAsync(func: (value: T, extras: ForEachExtras) => any): Promise<void>;
+    }
+}
 declare global {
     interface Array<T> {
         Contains(item: T): boolean;
