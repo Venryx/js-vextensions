@@ -114,8 +114,8 @@ export declare class VRect {
     /** Returns true if rect would intersect the other, when wrapped to the 2/8 potential "other-sides" of given frame/backdrop. (-x, +x, -y, +y, -x -y, -x +y, +x -y, +x +y)
      * (note that it does the checks "stupidly", ie. just checking all possible switch-side variants, without checking if "switched side" version is actually on or even near the actual frame/backdrop) */
     Intersects_Advanced(other: VRect, options: {
-        xWrappedBy: number;
-        yWrappedBy: number;
+        xWrappedBy?: number;
+        yWrappedBy?: number;
     }): boolean;
     Clone(): VRect;
 }
