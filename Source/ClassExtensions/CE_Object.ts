@@ -102,7 +102,7 @@ Object.prototype._AddFunction_Inline = function Extend(x) {
 		var value = x[name];
 		//if (value !== undefined)
         this[name] = value;
-    }
+	}
 	return this;
 };
 

@@ -279,7 +279,23 @@ export class VRect {
 	}
 
 	Intersects(other: VRect) {
-		return this.Right > other.x && this.x < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
+		return this.Right > other.Left && this.Left < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
+	}
+	/** Returns true if rect would intersect the other, when wrapped to the 2/8 potential "other-sides" of given frame/backdrop. (-x, +x, -y, +y, -x -y, -x +y, +x -y, +x +y)
+	 * (note that it does the checks "stupidly", ie. just checking all possible switch-side variants, without checking if "switched side" version is actually on or even near the actual frame/backdrop) */
+	Intersects_Advanced(other: VRect, options: {xWrappedBy: number, yWrappedBy: number}) {
+		let variantsToCompare: VRect[] = [this];
+		if (options.xWrappedBy) {
+			variantsToCompare.push(...variantsToCompare.SelectMany(base=>{
+				return [base, base.NewX(x=>x - options.xWrappedBy), base.NewX(x=>x + options.xWrappedBy)];
+			}))
+		}
+		if (options.yWrappedBy) {
+			variantsToCompare.push(...variantsToCompare.SelectMany(base=>{
+				return [base, base.NewY(y=>y - options.yWrappedBy), base.NewY(y=>y + options.yWrappedBy)];
+			}))
+		}
+		return variantsToCompare.Any(a=>a.Intersects(other));
 	}
 
 	Clone() {

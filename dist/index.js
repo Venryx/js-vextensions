@@ -4029,6 +4029,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VBounds", function() { return VBounds; });
 /* harmony import */ var _General__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -4455,7 +4463,39 @@ function () {
   }, {
     key: "Intersects",
     value: function Intersects(other) {
-      return this.Right > other.x && this.x < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
+      return this.Right > other.Left && this.Left < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
+    }
+    /** Returns true if rect would intersect the other, when wrapped to the 2/8 potential "other-sides" of given frame/backdrop. (-x, +x, -y, +y, -x -y, -x +y, +x -y, +x +y)
+     * (note that it does the checks "stupidly", ie. just checking all possible switch-side variants, without checking if "switched side" version is actually on or even near the actual frame/backdrop) */
+
+  }, {
+    key: "Intersects_Advanced",
+    value: function Intersects_Advanced(other, options) {
+      var variantsToCompare = [this];
+
+      if (options.xWrappedBy) {
+        variantsToCompare.push.apply(variantsToCompare, _toConsumableArray(variantsToCompare.SelectMany(function (base) {
+          return [base, base.NewX(function (x) {
+            return x - options.xWrappedBy;
+          }), base.NewX(function (x) {
+            return x + options.xWrappedBy;
+          })];
+        })));
+      }
+
+      if (options.yWrappedBy) {
+        variantsToCompare.push.apply(variantsToCompare, _toConsumableArray(variantsToCompare.SelectMany(function (base) {
+          return [base, base.NewY(function (y) {
+            return y - options.yWrappedBy;
+          }), base.NewY(function (y) {
+            return y + options.yWrappedBy;
+          })];
+        })));
+      }
+
+      return variantsToCompare.Any(function (a) {
+        return a.Intersects(other);
+      });
     }
   }, {
     key: "Clone",
