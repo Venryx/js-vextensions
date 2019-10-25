@@ -3574,7 +3574,7 @@ function () {
       return new A_NotEqualTo_Wrapper(val1);
     }
   }, {
-    key: "NonNull",
+    key: "NonNull_",
     get: function get() {
       return function (value) {
         Assert(value != null, function () {
@@ -3582,9 +3582,11 @@ function () {
         });
         return value;
       };
-    },
+    }
+  }, {
+    key: "NonNull",
     set: function set(value) {
-      A.NonNull(value);
+      A.NonNull_(value);
     }
   }]);
 

@@ -1,7 +1,8 @@
 export declare function Assert(condition: any, messageOrMessageFunc?: string | Function): condition is true;
 export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
 export declare class A {
-    static NonNull: <T>(value: T) => T;
+    static readonly NonNull_: <T>(value: T) => T;
+    static NonNull: any;
     static NotEqualTo(val1: any): A_NotEqualTo_Wrapper;
 }
 export declare class A_NotEqualTo_Wrapper {

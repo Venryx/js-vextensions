@@ -35,14 +35,14 @@ export function AssertSimple(condition, messageOrMessageFunc?: string | Function
 }*/
 
 export class A {
-	static get NonNull() {
+	static get NonNull_() {
 		return function<T>(value: T) {
 			Assert(value != null, ()=>`Value cannot be null. (provided value: ${value})`);
 			return value;
 		};
 	}
 	static set NonNull(value) {
-		A.NonNull(value);
+		A.NonNull_(value);
 	}
 	static NotEqualTo(val1) {
 	    return new A_NotEqualTo_Wrapper(val1);
@@ -55,10 +55,10 @@ export class A {
 export class A_NotEqualTo_Wrapper {
 	constructor(val1) { this.val1 = val1; }
 	val1;
-    set a(val2) { Assert(val2 != this.val1); }
+   set a(val2) { Assert(val2 != this.val1); }
 }
 export class A_OfType_Wrapper {
 	constructor(type) { this.type = type; }
 	type;
-    set a(val) { Assert(val != null && val.GetType().IsDerivedFrom(this.type)); }
+   set a(val) { Assert(val != null && val.GetType().IsDerivedFrom(this.type)); }
 }
