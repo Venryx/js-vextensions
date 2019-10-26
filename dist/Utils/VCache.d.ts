@@ -2,6 +2,7 @@ export declare class Storage<T2, T3> {
     lastDynamicProps: T2;
     lastResult: T3;
     lastDebugInfo: any;
+    resultUpdateCount: number;
 }
 export declare let storages: {
     [storageKey: string]: Storage<any, any>;

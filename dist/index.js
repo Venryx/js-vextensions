@@ -5117,6 +5117,8 @@ function shallowEqual(objA, objB) {
 
 var Storage = function Storage() {
   _classCallCheck(this, Storage);
+
+  this.resultUpdateCount = 0;
 };
 var storages = {};
 function GetStorageForCachedTransform(transformType, staticProps) {
@@ -5137,14 +5139,16 @@ function GetStorageForCachedTransform(transformType, staticProps) {
 //export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
 
 function CachedTransform(transformType, staticProps, dynamicProps, transformFunc) {
+  //Assert(dynamicProps != null);
   var storage = GetStorageForCachedTransform(transformType, staticProps);
 
-  if (!shallowEqual(dynamicProps, storage.lastDynamicProps)) {
+  if (!shallowEqual(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
     /*MaybeLog(a=>a.cacheUpdates,
         ()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
     storage.lastDynamicProps = dynamicProps;
     storage.lastDebugInfo = {};
     storage.lastResult = transformFunc(storage.lastDebugInfo, staticProps, dynamicProps);
+    storage.resultUpdateCount++;
   }
 
   return storage.lastResult;

@@ -1,3 +1,5 @@
+import {Assert} from "./Assert";
+
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 // Performs equality by iterating through keys on an object and returning false when any key has values which are not strictly equal between the arguments.
 // Returns true when the values of all keys are strictly equal.
@@ -26,6 +28,7 @@ export class Storage<T2, T3> {
 	lastDynamicProps: T2;
 	lastResult: T3;
 	lastDebugInfo: any;
+	resultUpdateCount = 0;
 }
 export let storages = {} as {[storageKey: string]: Storage<any, any>};
 
@@ -50,14 +53,16 @@ export function CachedTransform<T, T2, T3>(
 	transformType: string, staticProps: any[], dynamicProps: T2,
 	transformFunc: (debugInfo: any, staticProps: any[], dynamicProps: T2)=>T3
 ): T3 {
+	//Assert(dynamicProps != null);
 	let storage = GetStorageForCachedTransform<T2, T3>(transformType, staticProps);
-	if (!shallowEqual(dynamicProps, storage.lastDynamicProps)) {
+	if (!shallowEqual(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
 		/*MaybeLog(a=>a.cacheUpdates,
 			()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
 
 		storage.lastDynamicProps = dynamicProps;
 		storage.lastDebugInfo = {};
 		storage.lastResult = transformFunc(storage.lastDebugInfo, staticProps, dynamicProps);
+		storage.resultUpdateCount++;
 	}
 	return storage.lastResult;
 }
