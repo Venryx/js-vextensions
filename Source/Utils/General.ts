@@ -553,6 +553,19 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string
 	return treeRoot;
 }*/
 
+export function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function) {
+	let funcStr = pathGetterFunc.toString();
+	Assert(!funcStr.includes("["), `State-getter-func cannot contain bracket-based property-access.\n${nl
+		}For variable inclusion, use multiple segments as in: ...ToPropChain("main", "mapViews", mapID)`);
+	/*const pathStr = funcStr.match(/return [^.]+\.(.+?);/)[1] as string;
+	//let result = pathStr.replace(/\./g, "/");
+	const result = pathStr.split(".");*/
+
+	let parts = funcStr.split(".").slice(1); // remove first segment, since it's just the "return xxx." part
+	parts[parts.length - 1] = parts[parts.length - 1].match(/^([a-zA-Z0-9_$]+)/)[1]; // remove semicolon (or whatever else) at the end
+	return parts;
+}
+
 /** @param sepChar Default: "/" */
 export function DeepGet<T>(obj, pathOrPathSegments: string | (string | number)[], resultIfNull: T = null, sepChar = "/"): T {
 	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);

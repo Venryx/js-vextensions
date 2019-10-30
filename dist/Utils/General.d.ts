@@ -72,6 +72,7 @@ export declare class TreeNode {
 export declare function GetTreeNodesInObjTree(obj: any, includeRootNode?: boolean, _ancestorNodes?: any[]): TreeNode[];
 export declare function GetTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, includeRootNode?: boolean, _ancestorNodes?: any[]): any[];
 export declare function VisitTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode) => any, visitRootNode?: boolean, _ancestorNodes?: any[]): any;
+export declare function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function): string[];
 /** @param sepChar Default: "/" */
 export declare function DeepGet<T>(obj: any, pathOrPathSegments: string | (string | number)[], resultIfNull?: T, sepChar?: string): T;
 /** @param sepChar Default: "/" */

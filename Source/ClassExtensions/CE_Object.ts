@@ -1,4 +1,5 @@
-import {IsNaN, Assert, DEL} from "..";
+import {IsNaN, Assert, DEL, nl, ConvertPathGetterFuncToPropChain} from "..";
+import {DeepGet} from "../Utils/General";
 
 // (ClassExtensions.ts)
 
@@ -101,7 +102,7 @@ Object.prototype._AddFunction_Inline = function Extend(x) {
 	for (var name in x) {
 		var value = x[name];
 		//if (value !== undefined)
-        this[name] = value;
+		this[name] = value;
 	}
 	return this;
 };
@@ -161,6 +162,14 @@ Object.prototype._AddFunction_Inline = function Extended2(x) {
 };*/
 //Object.prototype._AddFunction_Inline = function E(x) { return this.Extended(x); };
 
+declare global { interface Object {
+	SafeGet(this, path: string, resultIfNull?: any): any;
+	SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
+} }
+Object.prototype._AddFunction_Inline = function SafeGet(pathGetterFunc: Function, resultIfNull?: any) {
+	let pathSegments = ConvertPathGetterFuncToPropChain(pathGetterFunc);
+	return DeepGet(this, pathSegments, resultIfNull);
+};
 declare global { interface Object { VAct<T>(this: T, func: (self: T)=>any): T; } }
 Object.prototype._AddFunction_Inline = function VAct(action) {
 	action.call(this, this);

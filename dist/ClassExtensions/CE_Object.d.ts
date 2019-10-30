@@ -58,6 +58,12 @@ declare global {
 }
 declare global {
     interface Object {
+        SafeGet(this: any, path: string, resultIfNull?: any): any;
+        SafeGet<T, Result>(this: T, pathGetterFunc: (self: T) => Result, resultIfNull?: any): Result;
+    }
+}
+declare global {
+    interface Object {
         VAct<T>(this: T, func: (self: T) => any): T;
     }
 }
