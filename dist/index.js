@@ -4450,6 +4450,13 @@ function () {
       });
     }
   }, {
+    key: "NewPosition",
+    value: function NewPosition(valOrFunc) {
+      return this.Clone().VSet({
+        Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc
+      });
+    }
+  }, {
     key: "NewWidth",
     value: function NewWidth(valOrFunc) {
       return this.Clone().VSet({
@@ -4461,6 +4468,13 @@ function () {
     value: function NewHeight(valOrFunc) {
       return this.Clone().VSet({
         height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc
+      });
+    }
+  }, {
+    key: "NewSize",
+    value: function NewSize(valOrFunc) {
+      return this.Clone().VSet({
+        Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc
       });
     }
   }, {

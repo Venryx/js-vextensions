@@ -254,11 +254,17 @@ export class VRect {
 	NewTop(valOrFunc: number | ((oldVal: number)=>number)) {
 		return this.Clone().VSet({Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc});
 	}
+	NewPosition(valOrFunc: Vector2i | ((oldVal: Vector2i)=>Vector2i)) {
+		return this.Clone().VSet({Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc});
+	}
 	NewWidth(valOrFunc: number | ((oldVal: number)=>number)) {
 		return this.Clone().VSet({width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc});
 	}
 	NewHeight(valOrFunc: number | ((oldVal: number)=>number)) {
 		return this.Clone().VSet({height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc});
+	}
+	NewSize(valOrFunc: Vector2i | ((oldVal: Vector2i)=>Vector2i)) {
+		return this.Clone().VSet({Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc});
 	}
 
 	Grow(amountOnEachSide: number) {

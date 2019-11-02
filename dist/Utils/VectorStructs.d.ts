@@ -105,8 +105,10 @@ export declare class VRect {
     NewY(valOrFunc: number | ((oldVal: number) => number)): VRect;
     NewBottom(valOrFunc: number | ((oldVal: number) => number)): VRect;
     NewTop(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewPosition(valOrFunc: Vector2i | ((oldVal: Vector2i) => Vector2i)): VRect;
     NewWidth(valOrFunc: number | ((oldVal: number) => number)): VRect;
     NewHeight(valOrFunc: number | ((oldVal: number) => number)): VRect;
+    NewSize(valOrFunc: Vector2i | ((oldVal: Vector2i) => Vector2i)): VRect;
     Grow(amountOnEachSide: number): VRect;
     Encapsulating(rect: VRectShape): VRect;
     Encapsulate(rect: VRectShape): void;
