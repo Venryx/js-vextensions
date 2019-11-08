@@ -49,6 +49,17 @@ export function E<E1,E2,E3,E4,E5,E6,E7,E8>(e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6
 	//return StyleSheet.create(result);
 }
 
+export type GetFirstParamType<T> = T extends (val: infer Arg1Type)=>any ? Arg1Type : never;
+export function WrapWithGo<Func extends(val)=>any>(func: Func): Func & {Go: GetFirstParamType<Func>} {
+	Object.defineProperty(func, "Go", {
+		/*set: arg1=>{
+			func(arg1);
+		},*/
+		set: func,
+	});
+	return func as any;
+}
+
 export function CopyText(text) {
 	/*
 	//var note = $(`<input type="text">`).appendTo("body");
