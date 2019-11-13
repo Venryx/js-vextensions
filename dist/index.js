@@ -666,6 +666,18 @@ Object.prototype._AddFunction_Inline = function VValues() {
   return Object.keys(this).map(function (a) {
     return _this2[a];
   });
+}; // for symbols
+
+/*Object.prototype._AddFunction_Inline = function Pairs_Sym() {
+};*/
+
+
+Object.prototype._AddFunction_Inline = function Sym(symbolName) {
+  var symbols = Object.getOwnPropertySymbols(this);
+  var symbol = symbols.find(function (a) {
+    return a.toString() == "Symbol(".concat(symbolName, ")");
+  });
+  return this[symbol];
 };
 
 Object.prototype._AddFunction_Inline = function FA_Select() {

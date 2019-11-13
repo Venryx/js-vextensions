@@ -275,6 +275,15 @@ Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps: boo
 	return Object.keys(this).map(a=>this[a]);
 };
 
+// for symbols
+/*Object.prototype._AddFunction_Inline = function Pairs_Sym() {
+};*/
+Object.prototype._AddFunction_Inline = function Sym(symbolName: string) {
+	let symbols = Object.getOwnPropertySymbols(this);
+	let symbol = symbols.find(a=>a.toString() == `Symbol(${symbolName})`);
+	return this[symbol];
+};
+
 // this is a total hack : P -- fixes typescript-es2017 "TypeError: [module].default is not a constructor" issue
 /*Object.prototype._AddGetterSetter("default", function() {
 	return this;
