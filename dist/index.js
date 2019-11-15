@@ -3193,7 +3193,8 @@ String.prototype._AddFunction_Inline = function Matches(strOrRegex) {
   }
 
   var regex = strOrRegex;
-  if (!regex.global) throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
+  if (!regex.global) throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)"); // todo: make alternate solution, like setting flag ourselves
+
   var result = [];
   var match;
 

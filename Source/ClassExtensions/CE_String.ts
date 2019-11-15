@@ -50,7 +50,7 @@ String.prototype._AddFunction_Inline = function Matches(strOrRegex: string | Reg
 
 	let regex = strOrRegex;
 	if (!regex.global)
-		throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
+		throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)"); // todo: make alternate solution, like setting flag ourselves
 
 	let result = [] as RegExpMatchArray[];
 	let match;
