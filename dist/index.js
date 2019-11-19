@@ -537,8 +537,8 @@ Object.prototype._AddFunction_Inline = function Extended(x) {
   return result;
 };
 
-Object.prototype._AddFunction_Inline = function SafeGet(pathGetterFunc, resultIfNull) {
-  var pathSegments = Object(___WEBPACK_IMPORTED_MODULE_0__["ConvertPathGetterFuncToPropChain"])(pathGetterFunc);
+Object.prototype._AddFunction_Inline = function SafeGet(pathOrPathGetterFunc, resultIfNull) {
+  var pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : Object(___WEBPACK_IMPORTED_MODULE_0__["ConvertPathGetterFuncToPropChain"])(pathOrPathGetterFunc);
   return Object(_Utils_General__WEBPACK_IMPORTED_MODULE_1__["DeepGet"])(this, pathSegments, resultIfNull);
 };
 
@@ -715,10 +715,7 @@ Object.prototype._AddFunction_Inline = function FA_Add(item) {
   }
 
   this[openIndex] = item;
-}; // late-require things from other modules, that are used in the methods
-// ==========
-// Use "require" instead, so doesn't make TS see this as an external module. (and thus disable interface extension)
-// And use alternate names, so they don't get used in other files.
+};
 
 /***/ }),
 /* 4 */

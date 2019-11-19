@@ -1,8 +1,6 @@
 import {IsNaN, Assert, DEL, nl, ConvertPathGetterFuncToPropChain} from "..";
 import {DeepGet} from "../Utils/General";
 
-// (ClassExtensions.ts)
-
 //let g = window as any;
 
 // Object: base
@@ -166,8 +164,8 @@ declare global { interface Object {
 	SafeGet(this, path: string, resultIfNull?: any): any;
 	SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
 } }
-Object.prototype._AddFunction_Inline = function SafeGet(pathGetterFunc: Function, resultIfNull?: any) {
-	let pathSegments = ConvertPathGetterFuncToPropChain(pathGetterFunc);
+Object.prototype._AddFunction_Inline = function SafeGet(pathOrPathGetterFunc: Function, resultIfNull?: any) {
+	let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 	return DeepGet(this, pathSegments, resultIfNull);
 };
 declare global { interface Object { VAct<T>(this: T, func: (self: T)=>any): T; } }
@@ -330,9 +328,3 @@ Object.prototype._AddFunction_Inline = function FA_Add(item) {
 	for (var openIndex = 0; openIndex in this; openIndex++);
 	this[openIndex] = item;
 };
-
-// late-require things from other modules, that are used in the methods
-// ==========
-
-// Use "require" instead, so doesn't make TS see this as an external module. (and thus disable interface extension)
-// And use alternate names, so they don't get used in other files.
