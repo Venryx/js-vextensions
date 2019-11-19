@@ -219,10 +219,10 @@ Object.prototype._AddFunction_Inline = function IsOneOf(...values: any[]): boole
 	return false;
 };
 
-var specialProps = ["_", "_key", "_id"];
+export const specialKeys = ["_", "_key", "_id"];
 
 // todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
-declare global {
+/*declare global {
 	interface Object {
 		Props<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
 		Props<T>(excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
@@ -238,41 +238,49 @@ Object.prototype._AddFunction_Inline = function Props(excludeSpecialProps = fals
 		result.push({index: i++, name: propName, value: this[propName]});
 	}
 	return result;
-};
+};*/
 declare global {
 	interface Object {
-		Pairs<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean | 1): {index: number, key: string, keyNum?: number, value: T}[];
-		Pairs<T>(excludeSpecialProps?: boolean | 1): {index: number, key: string, keyNum?: number, value: T}[];
+		Pairs<K, V>(this: {[key: number]: V} | {[key: string]: V}, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
+		Pairs<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+		Pairs<K = any, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
 	}
 }
-Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialProps: boolean | 1 = false) {
+Object.prototype._AddFunction_Inline = function Pairs(excludeSpecialKeys: boolean | 1 = false) {
 	var result = [];
 	var i = 0;
-	for (var key in this) {
-		if (excludeSpecialProps && (key == "_" || key == "_key" || key == "_id")) continue;
-		let entry = {index: i++, key, keyNum: Number(key), value: this[key]};
+	let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+	for (let key of keys) {
+		if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
+		let entry = {index: i++, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key as any]};
 		if (IsNaN(entry.keyNum)) delete entry.keyNum;
 		result.push(entry);
 	}
 	return result;
 };
-declare global { interface Object { VKeys(excludeSpecialProps?: boolean | 1): string[]; } }
-Object.prototype._AddFunction_Inline = function VKeys(excludeSpecialProps: boolean | 1 = false) {
-	//if (excludeSpecialProps) return this.Props(true).map(a=>a.name);
-	if (excludeSpecialProps) return Object.keys(this).Except(specialProps);
-	return Object.keys(this);
-};
-//interface Object { VValues(excludeSpecialProps?: boolean): any[]; }
 declare global {
 	interface Object {
-		VValues<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean | 1): T[];
-		VValues<T>(excludeSpecialProps?: boolean | 1): T[];
+		VKeys<K>(this: {[key: number]: any} | {[key: string]: any}, excludeSpecialKeys?: boolean | 1): string[];
+		VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
+		VKeys<K = any>(excludeSpecialKeys?: boolean | 1): K[];
 	}
 }
-Object.prototype._AddFunction_Inline = function VValues(excludeSpecialProps: boolean | 1 = false) {
-	//if (excludeSpecialProps) return this.Props(true).map(a=>a.value);
-	if (excludeSpecialProps) return Object.keys(this).Except(specialProps).map(a=>this[a]);
-	return Object.keys(this).map(a=>this[a]);
+Object.prototype._AddFunction_Inline = function VKeys(excludeSpecialKeys: boolean | 1 = false) {
+	//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
+	let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+	if (excludeSpecialKeys) keys = keys.Except(specialKeys);
+	return keys;
+};
+//interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
+declare global {
+	interface Object {
+		VValues<V>(this: {[key: number]: V} | {[key: string]: V} | Map<any, V>, excludeSpecialKeys?: boolean | 1): V[];
+		VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
+	}
+}
+Object.prototype._AddFunction_Inline = function VValues(excludeSpecialKeys: boolean | 1 = false) {
+	//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
+	this.VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 };
 
 // for symbols

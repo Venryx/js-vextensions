@@ -395,6 +395,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "specialKeys", function() { return specialKeys; });
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _Utils_General__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -608,63 +609,63 @@ Object.prototype._AddFunction_Inline = function IsOneOf() {
   return false;
 };
 
-var specialProps = ["_", "_key", "_id"]; //interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
-
-Object.prototype._AddFunction_Inline = function Props() {
-  var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-  var result = [];
-  var i = 0;
-
-  for (var propName in this) {
-    if (excludeSpecialProps && (propName == "_" || propName == "_key" || propName == "_id")) continue; //result.push({index: i++, key: propName, name: propName, value: this[propName]});
-
-    result.push({
-      index: i++,
-      name: propName,
-      value: this[propName]
-    });
-  }
-
-  return result;
-};
+var specialKeys = ["_", "_key", "_id"];
 
 Object.prototype._AddFunction_Inline = function Pairs() {
-  var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var excludeSpecialKeys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var result = [];
   var i = 0;
+  var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
 
-  for (var key in this) {
-    if (excludeSpecialProps && (key == "_" || key == "_key" || key == "_id")) continue;
-    var entry = {
-      index: i++,
-      key: key,
-      keyNum: Number(key),
-      value: this[key]
-    };
-    if (Object(___WEBPACK_IMPORTED_MODULE_0__["IsNaN"])(entry.keyNum)) delete entry.keyNum;
-    result.push(entry);
+  try {
+    for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var key = _step.value;
+      if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
+      var entry = {
+        index: i++,
+        key: key,
+        keyNum: Number(key),
+        value: this instanceof Map ? this.get(key) : this[key]
+      };
+      if (Object(___WEBPACK_IMPORTED_MODULE_0__["IsNaN"])(entry.keyNum)) delete entry.keyNum;
+      result.push(entry);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
   }
 
   return result;
 };
 
 Object.prototype._AddFunction_Inline = function VKeys() {
-  var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-  //if (excludeSpecialProps) return this.Props(true).map(a=>a.name);
-  if (excludeSpecialProps) return Object.keys(this).Except(specialProps);
-  return Object.keys(this);
+  var excludeSpecialKeys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
+  var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+  if (excludeSpecialKeys) keys = keys.Except(specialKeys);
+  return keys;
 };
 
 Object.prototype._AddFunction_Inline = function VValues() {
   var _this2 = this;
 
-  var excludeSpecialProps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-  //if (excludeSpecialProps) return this.Props(true).map(a=>a.value);
-  if (excludeSpecialProps) return Object.keys(this).Except(specialProps).map(function (a) {
-    return _this2[a];
-  });
-  return Object.keys(this).map(function (a) {
-    return _this2[a];
+  var excludeSpecialKeys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
+  this.VKeys(excludeSpecialKeys).map(function (key) {
+    return _this2 instanceof Map ? _this2.get(key) : _this2[key];
   });
 }; // for symbols
 
@@ -873,7 +874,7 @@ var eo = emptyObj; // used for (maybeNullVar || eo).prop;
 
 var emptyArray = [];
 var emptyArray_forLoading = [];
-function E(e1, e2, e3, e4, e5, e6, e7, e8) {
+function E(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20) {
   var result = {};
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -882,7 +883,7 @@ function E(e1, e2, e3, e4, e5, e6, e7, e8) {
   try {
     for (var _iterator = arguments[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var extend = _step.value;
-      result.Extend(extend);
+      Object.assign(result, extend);
     } // if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
 
   } catch (err) {

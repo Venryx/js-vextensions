@@ -92,57 +92,52 @@ declare global {
         IsOneOf(...values: any[]): boolean;
     }
 }
+export declare const specialKeys: string[];
 declare global {
     interface Object {
-        Props<T>(this: {
-            [key: number]: T;
+        Pairs<K, V>(this: {
+            [key: number]: V;
         } | {
-            [key: string]: T;
-        }, excludeSpecialProps?: boolean): {
-            index: number;
-            name: string;
-            value: T;
-        }[];
-        Props<T>(excludeSpecialProps?: boolean): {
-            index: number;
-            name: string;
-            value: T;
-        }[];
-    }
-}
-declare global {
-    interface Object {
-        Pairs<T>(this: {
-            [key: number]: T;
-        } | {
-            [key: string]: T;
-        }, excludeSpecialProps?: boolean | 1): {
+            [key: string]: V;
+        }, excludeSpecialKeys?: boolean | 1): {
             index: number;
             key: string;
             keyNum?: number;
-            value: T;
+            value: V;
         }[];
-        Pairs<T>(excludeSpecialProps?: boolean | 1): {
+        Pairs<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {
             index: number;
-            key: string;
+            key: K;
             keyNum?: number;
-            value: T;
+            value: V;
+        }[];
+        Pairs<K = any, V = any>(excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: K;
+            keyNum?: number;
+            value: V;
         }[];
     }
 }
 declare global {
     interface Object {
-        VKeys(excludeSpecialProps?: boolean | 1): string[];
+        VKeys<K>(this: {
+            [key: number]: any;
+        } | {
+            [key: string]: any;
+        }, excludeSpecialKeys?: boolean | 1): string[];
+        VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
+        VKeys<K = any>(excludeSpecialKeys?: boolean | 1): K[];
     }
 }
 declare global {
     interface Object {
-        VValues<T>(this: {
-            [key: number]: T;
+        VValues<V>(this: {
+            [key: number]: V;
         } | {
-            [key: string]: T;
-        }, excludeSpecialProps?: boolean | 1): T[];
-        VValues<T>(excludeSpecialProps?: boolean | 1): T[];
+            [key: string]: V;
+        } | Map<any, V>, excludeSpecialKeys?: boolean | 1): V[];
+        VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
     }
 }
 declare global {
