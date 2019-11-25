@@ -16,6 +16,7 @@ export function IsPrimitive(obj) { return IsBool(obj) || IsNumber(obj) || IsStri
 export function IsBool(obj) : obj is boolean { return typeof obj == "boolean"; } //|| obj instanceof Boolean
 export function ToBool(boolStr) { return boolStr == "true" ? true : false; }
 
+//export function IsArray(obj) : obj is Object { return Array.isArray(obj); }
 export function IsObject(obj) : obj is Object { return typeof obj == "object"; }
 //export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
 //export function IsOfType<T>(obj, typeConstructor: new()=>T) : obj is T { return obj.constructor.name == typeConstructor.name; }

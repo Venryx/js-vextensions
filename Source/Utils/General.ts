@@ -753,7 +753,7 @@ export function StartDownload(content: string, filename: string, dataTypeStr = "
 	link.remove();
 }
 
-export function StartUpload(): Promise<string> {
+export function StartUpload(): Promise<string | ArrayBuffer> {
 	return new Promise(resolve=> {
 		let fileInput = document.createElement("input")
 		fileInput.type = "file";
@@ -765,6 +765,7 @@ export function StartUpload(): Promise<string> {
 			var reader = new FileReader();
 			reader.onload = e=> {
 				var contents = e.target["result"];
+				//Assert(typeof contents == "string")
 				resolve(contents);
 			};
 			reader.readAsText(file);

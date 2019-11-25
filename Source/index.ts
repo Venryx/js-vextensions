@@ -1,4 +1,4 @@
-import "./ClassExtensions";
+//import "./ClassExtensions";
 
 export * from "./JSVE";
 export * from "./Utils/General";
