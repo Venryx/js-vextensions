@@ -800,6 +800,26 @@ export function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T> {
 	return result;
 }
 
+export type WithFuncThisArgsAsAny_Type<T> = {
+	[P in keyof T]:
+		T[P] extends (this: any, ...args)=>any ? (this: any, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
+		T[P];
+};
+export function WithFuncThisArgsAsAny<T>(source: T): WithFuncThisArgsAsAny_Type<T> {
+	/*let result = {} as any;
+	for (let [key, oldVal] of Object.entries(source)) {
+		if (oldVal instanceof Function) {
+			result[key] = (thisArg, ...callArgs)=> {
+				return oldVal.apply(thisArg, callArgs);
+			};
+		} else {
+			result[key] = oldVal;
+		}
+	}
+	return result;*/
+	return source as any;
+}
+
 //function Test1<T>(thisArg: T): T { return null as any; } // helper
 //export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): typeof Test1 {
 //export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): (thisArg: T)=>T {
@@ -821,7 +841,7 @@ export function CreateWrapperForClassExtensions<T>(sourceClass: new(...args: any
 	// static proxy approach; fast because it doesn't create any functions, closures, or proxies per wrap/CE-method-call
 	//		(limitation: you must call the CE-method at "ObjectCE(something).MyCEMethod" right away, else currentThis will be outdated)
 	//let proxy = {} as InstanceType<Class>;
-	const proxy = {} as T;
+	const proxy = {} as WithFuncThisArgsAsAny_Type<T>;
 	let currentThis;
 	for (const key of Object.getOwnPropertyNames(sourceClass.prototype)) {
 		if (key == "constructor") continue; // no reason to call the wrapper's constructor

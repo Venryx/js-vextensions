@@ -5,9 +5,8 @@ ForEach(func) {
         func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
     }
 };*/
-export class ArrayCEClass extends Array {
+export class ArrayCEClass {
     constructor() {
-        super(...arguments);
         this.oldJoin = [].join;
     }
     ForEach(func) {
@@ -363,6 +362,7 @@ let ArrayCE_Base = CreateWrapperForClassExtensions(ArrayCEClass);
 };
 export const ArrayCE = ArrayCE_Base as any as typeof ArrayCE_TypedHelper;*/
 export const ArrayCE = ArrayCE_Base;
+//ArrayCE(["hi", "there"]).SelectMany(a=>[a.length]);
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {
     ToArray(this: ArrayIterator) {
@@ -370,12 +370,12 @@ export class ArrayIteratorCEClass {
     }
 }
 export const ArrayIteratorCE = CreateWrapperForClassExtensions(ArrayIteratorCEClass);*/
-export class NodeListCEClass extends NodeList {
-    ToArray() {
+/*export class NodeListCEClass {
+    ToArray(this: NodeList) {
         return Array.from(this);
     }
 }
-export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);
+export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);*/
 let a;
 ArrayCE(a).Contains;
 //# sourceMappingURL=CE_Array.js.map

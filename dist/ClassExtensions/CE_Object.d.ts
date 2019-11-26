@@ -1,3 +1,4 @@
+import { WithFuncThisArgsAsAny_Type } from "../Utils/General";
 export interface VSet_Options {
     prop?: PropertyDescriptor;
     deleteUndefined?: boolean;
@@ -15,8 +16,9 @@ export declare class ObjectCEClass<RealThis> {
     set _AddGetter_Inline(func: any);
     set _AddSetter_Inline(func: any);
     Extend(x: any): this;
-    VSet<T>(this: T, props: any, options?: VSet_Options): RealThis;
-    VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): RealThis;
+    VSet<T>(this: T, props: any, options?: VSet_Options): T;
+    VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): T;
+    VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T;
     Extended<T, T2>(this: T, x: T2): T & T2;
     SafeGet(path: string, resultIfNull?: any): any;
     SafeGet<T, Result>(this: T, pathGetterFunc: (self: T) => Result, resultIfNull?: any): Result;
@@ -74,4 +76,4 @@ export declare class ObjectCEClass<RealThis> {
         [key: string]: T;
     }, item: T): void;
 }
-export declare const ObjectCE: <T>(nextThis: T) => ObjectCEClass<T>;
+export declare const ObjectCE: <T>(nextThis: T) => WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;

@@ -1,4 +1,4 @@
-import {Assert, StableSort, Compare, WithFuncsStandalone, CreateWrapperForClassExtensions} from "..";
+import {Assert, StableSort, Compare, WithFuncsStandalone, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "..";
 
 export interface ForEachExtras {
 	index: number;
@@ -13,7 +13,7 @@ ForEach(func) {
 	}
 };*/
 
-export class ArrayCEClass<T> extends Array<T> {
+export class ArrayCEClass<T> {
 	ForEach(this: T[], func: (value: T, extras: ForEachExtras)=>any) {
 		for (let i = 0; i < this.length; i++) {
 			let shouldBreak = false;
@@ -379,7 +379,9 @@ let ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCECla
 	return CreateWrapperForClassExtensions<ArrayCEClass<T>>(ArrayCEClass)(nextThis);
 };
 export const ArrayCE = ArrayCE_Base as any as typeof ArrayCE_TypedHelper;*/
-export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>ArrayCEClass<T>;
+export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
+
+//ArrayCE(["hi", "there"]).SelectMany(a=>[a.length]);
 
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {
@@ -389,12 +391,12 @@ export class ArrayIteratorCEClass {
 }
 export const ArrayIteratorCE = CreateWrapperForClassExtensions(ArrayIteratorCEClass);*/
 
-export class NodeListCEClass extends NodeList {
+/*export class NodeListCEClass {
 	ToArray(this: NodeList) {
 		return Array.from(this);
 	}
 }
-export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);
+export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);*/
 
 
 let a: string[];

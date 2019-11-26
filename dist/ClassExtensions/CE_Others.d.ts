@@ -12,11 +12,11 @@ export declare const FunctionCE: {
     GetTags: (thisArg: Object, type?: any) => any;
     RunThenReturn: (thisArg: Object, ...args: any[]) => Function;
 };
-export declare class DateCEClass extends Date {
+export declare class DateCEClass {
     get MonthDate(this: Date): Date;
     IsLeapYear(this: Date): boolean;
     GetDaysInMonth(this: Date): number;
     AddMonths(this: Date, value: number): Date;
     Clone(this: Date): Date;
 }
-export declare const DateCE: (nextThis: any) => DateCEClass;
+export declare const DateCE: (nextThis: any) => import("..").WithFuncThisArgsAsAny_Type<DateCEClass>;

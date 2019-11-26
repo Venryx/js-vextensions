@@ -48,7 +48,7 @@ export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
-export declare function Compare(a: any, b: any, caseSensitive?: boolean): 1 | 0 | -1;
+export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
 export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
 export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;
 export declare function GetXToY(minX: any, maxY: any, interval?: number): any[];
@@ -104,5 +104,9 @@ declare type WithFuncsStandalone_Type<T> = {
     [P in keyof T]: T[P] extends (...args: any[]) => any ? (thisArg: Object, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
 };
 export declare function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T>;
-export declare function CreateWrapperForClassExtensions<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => T;
+export declare type WithFuncThisArgsAsAny_Type<T> = {
+    [P in keyof T]: T[P] extends (this: any, ...args: any[]) => any ? (this: any, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
+};
+export declare function WithFuncThisArgsAsAny<T>(source: T): WithFuncThisArgsAsAny_Type<T>;
+export declare function CreateWrapperForClassExtensions<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => WithFuncThisArgsAsAny_Type<T>;
 export {};

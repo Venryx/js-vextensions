@@ -1,9 +1,10 @@
+import { WithFuncThisArgsAsAny_Type } from "..";
 export interface ForEachExtras {
     index: number;
     Break: () => void;
     Continue: () => void;
 }
-export declare class ArrayCEClass<T> extends Array<T> {
+export declare class ArrayCEClass<T> {
     ForEach(this: T[], func: (value: T, extras: ForEachExtras) => any): void;
     ForEachAsync(this: T[], func: (value: T, extras: ForEachExtras) => any): Promise<void>;
     Contains(this: T[], item: T): boolean;
@@ -56,8 +57,4 @@ export declare class ArrayCEClass<T> extends Array<T> {
     oldJoin: (separator?: string) => string;
     join(this: T[], separator?: string): string;
 }
-export declare const ArrayCE: <T>(nextThis: T[]) => ArrayCEClass<T>;
-export declare class NodeListCEClass extends NodeList {
-    ToArray(this: NodeList): Node[];
-}
-export declare const NodeListCE: (nextThis: any) => NodeListCEClass;
+export declare const ArrayCE: <T>(nextThis: T[]) => WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;

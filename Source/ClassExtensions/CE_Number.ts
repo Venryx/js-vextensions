@@ -1,6 +1,6 @@
 import {IsNaN, WithFuncsStandalone, CreateWrapperForClassExtensions, StringCE} from "..";
 
-export class NumberCEClass extends Number {
+export class NumberCEClass {
 	IfN1Then(this: Number, valIfSelfIsNeg1) {
 		return this == -1 ? valIfSelfIsNeg1 : this;
 	}
@@ -72,7 +72,7 @@ export class NumberCEClass extends Number {
 		}
 		if (this < min) return min;
 		if (this > max) return max;
-		return this;
+		return this as number;
 	}
 	WrapToRange(this: Number, min: number, max: number, maxOut = true) {
 		let val = this as number;

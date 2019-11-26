@@ -1,6 +1,6 @@
-import {WithFuncsStandalone, CreateWrapperForClassExtensions, NodeListCE} from "..";
+import {WithFuncsStandalone, CreateWrapperForClassExtensions} from "..";
 
-export class ElementCEClass extends Element {
+export class ElementCEClass {
 	GetParents(this: Element, topDown = false) {
 		let result = [] as HTMLElement[];
 		let currentParent = this.parentElement;
@@ -28,18 +28,18 @@ export class ElementCEClass extends Element {
 		return $found.first(); // Return first match of the collection
 	}*/
 	QuerySelector_BreadthFirst(this: Element, selector: string) {
-		let currentLayerElements = [...this.childNodes];
+		let currentLayerElements = Array.from(this.childNodes);
 		while (currentLayerElements.length) {
 			let firstMatchInLayer = currentLayerElements.find(a=>a["matches"] && a["matches"](selector));
 			if (firstMatchInLayer) return firstMatchInLayer as HTMLElement;
 			//currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
-			currentLayerElements = currentLayerElements.reduce((acc, item)=>acc.concat([...item.childNodes]), []);
+			currentLayerElements = currentLayerElements.reduce((acc, item)=>acc.concat(Array.from(item.childNodes)), []);
 		}
 		return null;
 	}
 
 	$(this: Element, queryStr: string): HTMLElement[] {
-		return NodeListCE(this.querySelectorAll(queryStr)).ToArray() as HTMLElement[];
+		return Array.from(this.querySelectorAll(queryStr)) as HTMLElement[];
 	}
 }
 export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);

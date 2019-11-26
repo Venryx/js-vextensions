@@ -55,16 +55,16 @@ g.setTimeout = function(func: Function, delayInMS = 0, ...args) {
 }*/
 
 const maxTimeoutLength = 0x7FFFFFFF; // setTimeout limit is MAX_INT32=(2^31-1)
-export function WaitXThenRun(delayInMS: number, func: Function, ...args: any[]): number {
+export function WaitXThenRun(delayInMS: number, func: (...args: any[])=>void, ...args: any[]): number {
 	Assert(delayInMS <= maxTimeoutLength, `Cannot wait for longer than ${maxTimeoutLength} ms. (use WaitUntilXThenRun, if a long-delay is needed)`);
 	// setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
 	// on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
 	if (delayInMS == 0) {
-		return window["setImmediate"](func, ...args);
+		return window["setImmediate"](func, ...args) as any; // same as below
 	}
 	return setTimeout(func, delayInMS, ...args) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 }
-export function WaitUntilXThenRun(targetDateTimeInMS: number, func: Function, ...args: any[]) {
+export function WaitUntilXThenRun(targetDateTimeInMS: number, func: (...args: any[])=>void, ...args: any[]) {
 	var now = Date.now();
 	var diff = NumberCE(targetDateTimeInMS - now).KeepAtLeast(0);
 	if (diff > maxTimeoutLength) {

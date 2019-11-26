@@ -1,4 +1,4 @@
-export declare class StringCEClass extends String {
+export declare class StringCEClass {
     TrimStart(this: String, ...chars: string[]): string;
     TrimEnd(this: String, ...chars: string[]): string;
     Contains(this: String, str: string, startIndex?: number): boolean;
@@ -31,4 +31,4 @@ export declare class StringCEClass extends String {
     ToInt(): number;
     ToFloat(): number;
 }
-export declare const StringCE: (nextThis: any) => StringCEClass;
+export declare const StringCE: (nextThis: any) => import("..").WithFuncThisArgsAsAny_Type<StringCEClass>;

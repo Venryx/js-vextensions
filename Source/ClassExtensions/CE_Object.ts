@@ -1,5 +1,5 @@
 import {IsNaN, Assert, DEL, nl, ConvertPathGetterFuncToPropChain, ArrayCE} from "..";
-import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions} from "../Utils/General";
+import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "../Utils/General";
 
 export interface VSet_Options {
 	prop?: PropertyDescriptor;
@@ -91,9 +91,10 @@ export class ObjectCEClass<RealThis> {
 	}
 
 	// as replacement for C#'s "new MyClass() {prop = true}"
-	VSet<T>(this: T, props: any, options?: VSet_Options): RealThis;
-	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): RealThis;
-	VSet(...args): RealThis {
+	VSet<T>(this: T, props: any, options?: VSet_Options): T;
+	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
+	VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
+	VSet(...args) {
 		let props, options: VSet_Options, propName: string, propValue: string;
 		if (typeof args[0] == "object") [props, options] = args;
 		else [propName, propValue, options] = args;
@@ -288,12 +289,13 @@ export class ObjectCEClass<RealThis> {
 
 let ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
 // we don't actually call this; it's just a way to trick/control the type-checking to fix the issue with generics (there's probably a better way)
-const ObjectCE_TypedHelper = <T>(nextThis: T)=> {
+/*const ObjectCE_TypedHelper = <T>(nextThis: T)=> {
 	return CreateWrapperForClassExtensions<ObjectCEClass<T>>(ObjectCEClass)(nextThis);
 };
-export const ObjectCE = ObjectCE_Base as any as typeof ObjectCE_TypedHelper;
+export const ObjectCE = ObjectCE_Base as any as typeof ObjectCE_TypedHelper;*/
+export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
 
-class Test1{
+/*class Test1{
 	Test2() {}
 }
-ObjectCE(new Test1()).VSet({}).Test2
+ObjectCE(new Test1()).VSet({}).Test2*/

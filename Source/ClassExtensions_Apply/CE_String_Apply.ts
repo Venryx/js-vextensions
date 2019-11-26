@@ -4,7 +4,6 @@ import {StringCE, StringCEClass} from "../ClassExtensions/CE_String";
 TransferPrototypeProps(String.prototype, StringCEClass.prototype, {}, {configurable: true, enumerable: false});
 
 declare global {
-	// @ts-ignore
 	interface String extends StringCEClass {}
 	/*interface String {
 		TrimStart(...chars: string[]): string;

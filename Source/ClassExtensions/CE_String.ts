@@ -1,6 +1,6 @@
 import {WithFuncsStandalone, CreateWrapperForClassExtensions, ArrayCE} from "..";
 
-export class StringCEClass extends String {
+export class StringCEClass {
 	TrimStart(this: String, ...chars: string[]) {
 		// fix for if called by VDF (which has a different signature)
 		//if (arguments[0] instanceof Array) chars = arguments[0];

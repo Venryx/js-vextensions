@@ -1,5 +1,5 @@
-import { CreateWrapperForClassExtensions, NodeListCE } from "..";
-export class ElementCEClass extends Element {
+import { CreateWrapperForClassExtensions } from "..";
+export class ElementCEClass {
     GetParents(topDown = false) {
         let result = [];
         let currentParent = this.parentElement;
@@ -27,18 +27,18 @@ export class ElementCEClass extends Element {
         return $found.first(); // Return first match of the collection
     }*/
     QuerySelector_BreadthFirst(selector) {
-        let currentLayerElements = [...this.childNodes];
+        let currentLayerElements = Array.from(this.childNodes);
         while (currentLayerElements.length) {
             let firstMatchInLayer = currentLayerElements.find(a => a["matches"] && a["matches"](selector));
             if (firstMatchInLayer)
                 return firstMatchInLayer;
             //currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
-            currentLayerElements = currentLayerElements.reduce((acc, item) => acc.concat([...item.childNodes]), []);
+            currentLayerElements = currentLayerElements.reduce((acc, item) => acc.concat(Array.from(item.childNodes)), []);
         }
         return null;
     }
     $(queryStr) {
-        return NodeListCE(this.querySelectorAll(queryStr)).ToArray();
+        return Array.from(this.querySelectorAll(queryStr));
     }
 }
 export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);

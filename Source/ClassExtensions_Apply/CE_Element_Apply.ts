@@ -6,7 +6,6 @@ if (typeof Element != "undefined") {
 }
 
 declare global {
-	// @ts-ignore
 	interface Element extends ElementCEClass {}
 	/*interface Element {
 		GetParents(topDown?: boolean): HTMLElement[];

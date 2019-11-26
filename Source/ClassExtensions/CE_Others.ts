@@ -67,7 +67,7 @@ function isLeapYear(year) {
 function getDaysInMonth(year, month) {
 	return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCEClass extends Date {
+export class DateCEClass {
 	get MonthDate(this: Date) {
 		return new Date(this.getFullYear(), this.getMonth(), 1);
 	}
@@ -91,7 +91,7 @@ export class DateCEClass extends Date {
 }
 export const DateCE = CreateWrapperForClassExtensions(DateCEClass);
 
-/*export class ErrorCEClass extends Error {
+/*export class ErrorCEClass {
 	get Stack() {
 		// this causes the full stack-trace to be attached to the Error object (in Chrome)
 		if ((Error as any).captureStackTrace) {

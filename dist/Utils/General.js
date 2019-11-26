@@ -721,6 +721,20 @@ export function WithFuncsStandalone(source) {
     }
     return result;
 }
+export function WithFuncThisArgsAsAny(source) {
+    /*let result = {} as any;
+    for (let [key, oldVal] of Object.entries(source)) {
+        if (oldVal instanceof Function) {
+            result[key] = (thisArg, ...callArgs)=> {
+                return oldVal.apply(thisArg, callArgs);
+            };
+        } else {
+            result[key] = oldVal;
+        }
+    }
+    return result;*/
+    return source;
+}
 //function Test1<T>(thisArg: T): T { return null as any; } // helper
 //export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): typeof Test1 {
 //export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): (thisArg: T)=>T {
