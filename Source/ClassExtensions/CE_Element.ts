@@ -1,5 +1,5 @@
-export class ElementCEClass extends (Element || {} as new()=>Element) {
-	GetParents(topDown = false) {
+export class ElementCEClass {
+	GetParents(this: Element, topDown = false) {
 		let result = [] as HTMLElement[];
 		let currentParent = this.parentElement;
 		while (currentParent) {
@@ -25,7 +25,7 @@ export class ElementCEClass extends (Element || {} as new()=>Element) {
 		}
 		return $found.first(); // Return first match of the collection
 	}*/
-	QuerySelector_BreadthFirst(selector: string) {
+	QuerySelector_BreadthFirst(this: Element, selector: string) {
 		let currentLayerElements = [...this.childNodes];
 		while (currentLayerElements.length) {
 			let firstMatchInLayer = currentLayerElements.find(a=>a["matches"] && a["matches"](selector));
@@ -36,8 +36,8 @@ export class ElementCEClass extends (Element || {} as new()=>Element) {
 		return null;
 	}
 
-	$(queryStr: string): HTMLElement[] {
-		return this.querySelectorAll(queryStr).ToArray();
+	$(this: Element, queryStr: string): HTMLElement[] {
+		return this.querySelectorAll(queryStr).ToArray() as HTMLElement[];
 	}
 }
 export const ElementCE = ElementCEClass.prototype;

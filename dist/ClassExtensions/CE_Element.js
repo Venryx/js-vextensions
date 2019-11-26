@@ -1,4 +1,4 @@
-export class ElementCEClass extends (Element || {}) {
+export class ElementCEClass {
     GetParents(topDown = false) {
         let result = [];
         let currentParent = this.parentElement;

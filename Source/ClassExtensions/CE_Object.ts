@@ -9,12 +9,12 @@ export interface VSet_Options {
 }
 
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCEClass extends Object {
+export class ObjectCEClass {
 	// base
 	// ==========
 
-	// _AddItem helps you do stuff like this:
-	// 	Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem");
+	/** Helps you do stuff like this:
+		Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
 	_AddItem(name, value, forceAdd = false) {
 		if (name == null || name.length == 0)
 			throw new Error("No prop-name was specified for _AddItem() call.");
@@ -91,6 +91,8 @@ export class ObjectCEClass extends Object {
 	}
 
 	// as replacement for C#'s "new MyClass() {prop = true}"
+	VSet<T>(this: T, props: any, options?: VSet_Options): T;
+	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
 	VSet(...args) {
 		let props, options: VSet_Options, propName: string, propValue: string;
 		if (typeof args[0] == "object") [props, options] = args;
@@ -117,7 +119,7 @@ export class ObjectCEClass extends Object {
 		}
 		return this;
 	}
-	Extended(x: any) {
+	Extended<T, T2>(this: T, x: T2): T & T2 {
 		let result: any = this instanceof Array ? [] : {};
 		for (let name in this) {
 			result[name] = this[name];
@@ -135,12 +137,14 @@ export class ObjectCEClass extends Object {
 	};*/
 	//E(x) { return this.Extended(x); };
 
+	SafeGet(this, path: string, resultIfNull?: any): any;
+	SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
 	SafeGet(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
 		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
 	}
-	VAct(action) {
-		action.call(this, this);
+	VAct<T>(func: (self: T)=>any): this {
+		func.call(this, this);
 		return this;
 	}
 
@@ -153,7 +157,7 @@ export class ObjectCEClass extends Object {
 		return this;
 	}
 
-	Including(...propNames) {
+	Including(...propNames: string[]) {
 		var result = {};
 		for (let propName of propNames) {
 			if (propName in this) {
@@ -162,7 +166,7 @@ export class ObjectCEClass extends Object {
 		}
 		return result;
 	}
-	Excluding(...propNames) {
+	Excluding(...propNames: string[]) {
 		var result = Clone(this);
 		for (let propName of propNames) {
 			delete result[propName];
@@ -201,6 +205,9 @@ export class ObjectCEClass extends Object {
 		}
 		return result;
 	};*/
+	Pairs<K, V>(this: {[key: number]: V} | {[key: string]: V}, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
+	Pairs<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+	Pairs<K = any, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
 	Pairs(excludeSpecialKeys: boolean | 1 = false) {
 		var result = [];
 		var i = 0;
@@ -212,13 +219,20 @@ export class ObjectCEClass extends Object {
 			result.push(entry);
 		}
 		return result;
-	};
+	}
+
+	VKeys<K>(this: {[key: number]: any} | {[key: string]: any}, excludeSpecialKeys?: boolean | 1): string[];
+	VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
+	VKeys<K = any>(excludeSpecialKeys?: boolean | 1): K[];
 	VKeys(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
 		if (excludeSpecialKeys) keys = keys.Except(specialKeys);
 		return keys;
-	};
+	}
+
+	VValues<V>(this: {[key: number]: V} | {[key: string]: V} | Map<any, V>, excludeSpecialKeys?: boolean | 1): V[];
+	VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
 	//interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
 	VValues(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
@@ -245,8 +259,7 @@ export class ObjectCEClass extends Object {
 
 	// Object[FakeArray]
 	// ==========
-
-	FA_Select(selectFunc = a=>a) {
+	FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[] {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 		/*var result = this instanceof List ? new List(this.itemType) : [];
 		for (let [index, item] of this.entries())
@@ -264,7 +277,7 @@ export class ObjectCEClass extends Object {
 			this[i - 1] = this[i];
 		delete this[i - 1]; // remove the extra copy of the last-item 
 	};
-	FA_Add(item) {
+	FA_Add<T>(this: {[key: number]: T} | {[key: string]: T}, item: T) {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 		for (var openIndex = 0; openIndex in this; openIndex++);
 		this[openIndex] = item;

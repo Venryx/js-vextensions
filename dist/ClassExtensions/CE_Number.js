@@ -1,5 +1,5 @@
 import { IsNaN } from "..";
-export class NumberCEClass extends Number {
+export class NumberCEClass {
     IfN1Then(valIfSelfIsNeg1) {
         return this == -1 ? valIfSelfIsNeg1 : this;
     }

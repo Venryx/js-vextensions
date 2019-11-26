@@ -1,14 +1,14 @@
-export class FunctionCEClass extends Function {
-	GetName() {
+export class FunctionCEClass {
+	GetName(this: Function) {
 		//return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
 		return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
 	}
-	SetName(val) {
+	SetName(this: Function, val) {
 		this["name_fake"] = name;
 		return this;
 	}
 
-	AddTag(tag) {
+	AddTag(this: Function, tag) {
 		if (this["tags"] == null) this["tags"] = [];
 		this["tags"].push(tag);
 		return this;
@@ -26,14 +26,14 @@ export class FunctionCEClass extends Function {
 		var func = V.Slice(arguments).Last();
 		func.AddTags.apply(func, tags);
 	};*/
-	GetTags(type?) {
+	GetTags(this: Function, type?) {
 		return (this["tags"] || []).Where(a=>type == null || a instanceof type);
 	};
 
 	//AsStr(...args) { return require("../../V/V").Multiline(this, ...args); };
 	//AsStr(useExtraPreprocessing) { return require("../../V/V").Multiline(this, useExtraPreprocessing); };
 
-	RunThenReturn(...args) {
+	RunThenReturn(this: Function, ...args) {
 		this.apply(null, args);
 		return this;
 	};
@@ -46,25 +46,25 @@ function isLeapYear(year) {
 function getDaysInMonth(year, month) {
 	return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCEClass extends Date {
-	get MonthDate() {
+export class DateCEClass {
+	get MonthDate(this: Date) {
 		return new Date(this.getFullYear(), this.getMonth(), 1);
 	}
-	IsLeapYear() { 
+	IsLeapYear(this: Date) { 
 		return isLeapYear(this.getFullYear()); 
 	}
-  	GetDaysInMonth() { 
+  	GetDaysInMonth(this: Date) { 
 		return getDaysInMonth(this.getFullYear(), this.getMonth());
 	}
 
-	AddMonths(value) {
+	AddMonths(this: Date, value: number) {
 		var n = this.getDate();
 		this.setDate(1);
 		this.setMonth(this.getMonth() + value);
 		this.setDate(Math.min(n, this.GetDaysInMonth()));
 		return this;
   	}
-	Clone() {
+	Clone(this: Date) {
 		return new Date(this.getTime());
 	}
 }

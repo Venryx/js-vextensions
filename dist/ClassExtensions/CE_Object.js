@@ -1,11 +1,11 @@
 import { IsNaN, Assert, DEL, ConvertPathGetterFuncToPropChain } from "..";
 import { DeepGet, Clone } from "../Utils/General";
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCEClass extends Object {
+export class ObjectCEClass {
     // base
     // ==========
-    // _AddItem helps you do stuff like this:
-    // 	Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem");
+    /** Helps you do stuff like this:
+        Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
     _AddItem(name, value, forceAdd = false) {
         if (name == null || name.length == 0)
             throw new Error("No prop-name was specified for _AddItem() call.");
@@ -77,7 +77,6 @@ export class ObjectCEClass extends Object {
         }
         return this;
     }
-    // as replacement for C#'s "new MyClass() {prop = true}"
     VSet(...args) {
         let props, options, propName, propValue;
         if (typeof args[0] == "object")
@@ -120,17 +119,12 @@ export class ObjectCEClass extends Object {
         return result;
     }
     ;
-    /*interface Object { Extended2<T>(this, x: T): T; }
-    Extended2(x) {
-        return this.Extended(x);
-    };*/
-    //E(x) { return this.Extended(x); };
     SafeGet(pathOrPathGetterFunc, resultIfNull) {
         let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
         return DeepGet(this, pathSegments, resultIfNull);
     }
-    VAct(action) {
-        action.call(this, this);
+    VAct(func) {
+        func.call(this, this);
         return this;
     }
     As(type) {
@@ -169,24 +163,6 @@ export class ObjectCEClass extends Object {
         }
         return false;
     }
-    // todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
-    /*declare global {
-        interface Object {
-            Props<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
-            Props<T>(excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
-        }
-    }
-    //interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
-    Props(excludeSpecialProps = false) {
-        var result = [];
-        var i = 0;
-        for (var propName in this) {
-            if (excludeSpecialProps && (propName == "_" || propName == "_key" || propName == "_id")) continue;
-            //result.push({index: i++, key: propName, name: propName, value: this[propName]});
-            result.push({index: i++, name: propName, value: this[propName]});
-        }
-        return result;
-    };*/
     Pairs(excludeSpecialKeys = false) {
         var result = [];
         var i = 0;
@@ -201,7 +177,6 @@ export class ObjectCEClass extends Object {
         }
         return result;
     }
-    ;
     VKeys(excludeSpecialKeys = false) {
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
         let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -209,7 +184,6 @@ export class ObjectCEClass extends Object {
             keys = keys.Except(specialKeys);
         return keys;
     }
-    ;
     //interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
     VValues(excludeSpecialKeys = false) {
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
@@ -234,7 +208,7 @@ export class ObjectCEClass extends Object {
     });*/
     // Object[FakeArray]
     // ==========
-    FA_Select(selectFunc = a => a) {
+    FA_Select(selectFunc) {
         Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
         /*var result = this instanceof List ? new List(this.itemType) : [];
         for (let [index, item] of this.entries())

@@ -1,4 +1,4 @@
-export class StringCEClass extends String {
+export class StringCEClass {
 	TrimStart(this: string, ...chars: string[]) {
 		// fix for if called by VDF (which has a different signature)
 		//if (arguments[0] instanceof Array) chars = arguments[0];
@@ -11,10 +11,10 @@ export class StringCEClass extends String {
 		return this.substr(0, iOfLastToKeep + 1);
 	}
 
-	Contains(str: string, startIndex?: number) {
+	Contains(this: string, str: string, startIndex?: number) {
 		return this.indexOf(str, startIndex) !== -1;
 	}
-	hashCode() {
+	hashCode(this: string) {
 		var hash = 0;
 		for (var i = 0; i < this.length; i++) {
 			var char = this.charCodeAt(i);
@@ -61,7 +61,7 @@ export class StringCEClass extends String {
 		return matches;
 	}*/
 	/** indexX is 0-based */
-	IndexOf_X(str: string, indexX: number) {
+	IndexOf_X(this: string, str: string, indexX: number) {
 		var currentPos = -1;
 		for (var i = 0; i <= indexX; i++) {
 			var subIndex = this.indexOf(str, currentPos + 1);
@@ -72,7 +72,7 @@ export class StringCEClass extends String {
 		return currentPos;
 	}
 	/** indexFromLastX is 0-based */
-	IndexOf_XFromLast(str: string, indexFromLastX: number) {
+	IndexOf_XFromLast(this: string, str: string, indexFromLastX: number) {
 		var currentPos = (this.length - str.length) + 1; // index just after the last-index-where-match-could-occur
 		for (var i = 0; i <= indexFromLastX; i++) {
 			var subIndex = this.lastIndexOf(str, currentPos - 1);
@@ -110,7 +110,7 @@ export class StringCEClass extends String {
 		return strings.Any(str=>this.Contains(str));
 	}
 	/** Separator-strings must be escaped. (they're passed into a regular-expression) */
-	SplitByAny(...separators) {
+	SplitByAny(this: string, ...separators: string[]) {
 		/*var splitStr = "/";
 		for (let sep of separators)
 			splitStr += (splitStr.length > 1 ? "|" : "") + sep;
@@ -126,10 +126,10 @@ export class StringCEClass extends String {
 		let part2 = includeCharAtIndex ? this.substr(index) : this.substr(index + 1);
 		return [part1, part2] as [string, string];
 	}
-	Splice(index, removeCount, insert) {
+	Splice(this: string, index: number, removeCount: number, insert: string) {
 		return this.slice(0, index) + insert + this.slice(index + Math.abs(removeCount));
 	}
-	Indent(indentCount) {
+	Indent(this: string, indentCount: number) {
 		var indentStr = "\t".repeat(indentCount);
 		return this.replace(/^|(\n)/g, "$1" + indentStr);
 	}
@@ -148,6 +148,7 @@ export class StringCEClass extends String {
 		return "e" + this;
 	}*/
 
+	/** Creates a function from "func", setting its name to the "this" string's value. */
 	Func(func) {
 		func.SetName(this);
 		return func;
@@ -169,6 +170,11 @@ export class StringCEClass extends String {
 		return oneFuncCache[funcKey];
 	}*/
 
+	/**
+	 * Reformats a multi-line string to represent the actual intended "block" of text.
+	 * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
+	 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
+	 */
 	AsMultiline(this: string, desiredIndent: number = null, removeLineStr = "@RL") {
 		let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
 		if (desiredIndent != null) {
@@ -187,7 +193,7 @@ export class StringCEClass extends String {
 		return result;
 	}
 
-	Substring(start, end) {
+	Substring(this: string, start: number, end: number) {
 		if (end < 0)
 			end = this.length + end;
 		return this.substring(start, end);

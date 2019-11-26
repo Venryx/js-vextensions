@@ -47,7 +47,7 @@ export declare function AsArray(args: any): any;
 export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
-export declare function StableSort(array: any, compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): any;
+export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
 export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
 export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
 export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;

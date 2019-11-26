@@ -1,4 +1,4 @@
-export class StringCEClass extends String {
+export class StringCEClass {
     TrimStart(...chars) {
         // fix for if called by VDF (which has a different signature)
         //if (arguments[0] instanceof Array) chars = arguments[0];
@@ -146,6 +146,7 @@ export class StringCEClass extends String {
     Number.prototype._AddGetter_Inline = function IntToKey() {
         return "e" + this;
     }*/
+    /** Creates a function from "func", setting its name to the "this" string's value. */
     Func(func) {
         func.SetName(this);
         return func;
@@ -165,6 +166,11 @@ export class StringCEClass extends String {
         }
         return oneFuncCache[funcKey];
     }*/
+    /**
+     * Reformats a multi-line string to represent the actual intended "block" of text.
+     * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
+     * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
+     */
     AsMultiline(desiredIndent = null, removeLineStr = "@RL") {
         let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
         if (desiredIndent != null) {

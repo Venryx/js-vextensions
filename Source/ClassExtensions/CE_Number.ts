@@ -1,11 +1,11 @@
 import {IsNaN} from "..";
 
-export class NumberCEClass extends Number {
+export class NumberCEClass {
 	IfN1Then(this: number, valIfSelfIsNeg1) {
 		return this == -1 ? valIfSelfIsNeg1 : this;
 	}
 	
-	NaNTo(valIfSelfIsNaN) {
+	NaNTo(this: number, valIfSelfIsNaN) {
 		return IsNaN(this) ? valIfSelfIsNaN : this;
 	}
 	

@@ -1,4 +1,4 @@
-export class FunctionCEClass extends Function {
+export class FunctionCEClass {
     GetName() {
         //return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
         return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
@@ -44,7 +44,7 @@ function isLeapYear(year) {
 function getDaysInMonth(year, month) {
     return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCEClass extends Date {
+export class DateCEClass {
     get MonthDate() {
         return new Date(this.getFullYear(), this.getMonth(), 1);
     }

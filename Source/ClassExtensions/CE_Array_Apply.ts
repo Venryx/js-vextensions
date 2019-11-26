@@ -1,4 +1,4 @@
-import {ForEachExtras, ArrayCE, NodeListCE} from "./CE_Array";
+import {ForEachExtras, ArrayCE, NodeListCE, ArrayCEClass, NodeListCEClass} from "./CE_Array";
 import {TransferPrototypeProps} from "../Utils/General";
 
 TransferPrototypeProps(Array.prototype, ArrayCE, {}, {configurable: true, enumerable: false});
@@ -7,7 +7,8 @@ if (typeof NodeList != "undefined") {
 }
 
 declare global {
-	interface Array<T> {
+	interface Array<T> extends ArrayCEClass<T> {}
+	/*interface Array<T> {
 		ForEach(func: (value: T, extras: ForEachExtras)=>any): void;
 		ForEachAsync(func: (value: T, extras: ForEachExtras)=>any): Promise<void>;
 		Contains(item: T): boolean;
@@ -26,9 +27,9 @@ declare global {
 		SelectMany<T2>(matchFunc: (item: T, index?: number)=>T2[]): T2[];
 		VCount(matchFunc: (item: T)=>boolean): number;
 		Clear(): void;
-		/** Throws an error if no items match. */ First(matchFunc?: (item: T, index: number)=>boolean): T;
+		/** Throws an error if no items match. *#/ First(matchFunc?: (item: T, index: number)=>boolean): T;
 		FirstOrX(matchFunc?: (item: T, index: number)=>boolean, x?): T;
-		/** Throws an error if no items match. */ Last(matchFunc?: (item: T, index: number)=>boolean): T;
+		/** Throws an error if no items match. *#/ Last(matchFunc?: (item: T, index: number)=>boolean): T;
 		LastOrX(matchFunc?: (item: T, index: number)=>boolean, x?): T;
 		XFromLast(x: number): T;
 		Move(item: any, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number;
@@ -48,8 +49,9 @@ declare global {
 		Average(): number;
 		Median(): number;
 		Random(): T;
-	}
-	interface NodeList {
+	}*/
+	interface NodeList extends NodeListCEClass {}
+	/*interface NodeList {
 		ToArray(): any[];
-	}
+	}*/
 }

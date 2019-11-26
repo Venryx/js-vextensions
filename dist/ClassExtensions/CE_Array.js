@@ -14,9 +14,8 @@ ForEach(func) {
         func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
     }
 };*/
-export class ArrayCEClass extends Array {
+export class ArrayCEClass {
     constructor() {
-        super(...arguments);
         this.oldJoin = [].join;
     }
     ForEach(func) {
@@ -287,7 +286,7 @@ export class ArrayCEClass extends Array {
         }
         return -1;
     }
-    /*FindIndex(matchFunc) {
+    /*FindIndex(matchFunc: (item: T)=>boolean) {
         for (let [index, item] of this.entries())
             if (matchFunc.call(item, item))
                     return index;
@@ -385,15 +384,14 @@ export class ArrayCEClass extends Array {
     }
 }
 export const ArrayCE = ArrayCEClass.prototype;
-// ArrayIterator
-// ==========
 /*var ArrayIterator = [].entries().constructor;
-ArrayIterator.prototype._AddFunction_Inline = function ToArray() {
-    return Array.from(this);
-};*/
-// NodeList
-// ==========
-export class NodeListCEClass extends (NodeList || {}) {
+export class ArrayIteratorCEClass {
+    ToArray(this: ArrayIterator) {
+        return Array.from(this);
+    }
+}
+export const ArrayIteratorCE = ArrayIteratorCEClass.prototype;*/
+export class NodeListCEClass {
     ToArray() {
         return Array.from(this);
     }

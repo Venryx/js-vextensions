@@ -331,7 +331,7 @@ export function Multiline_NotCommented(functionWithCode) {
 	return result;
 }
 
-export function StableSort(array, compare: (aItem, bItem, aIndex: number, bIndex: number)=>number) { // needed for Chrome
+export function StableSort<T>(array: T[], compare: (aItem, bItem, aIndex: number, bIndex: number)=>number): T[] { // needed for Chrome
 	var array2 = array.map((item, index)=>({index, item}));
 	array2.sort((a, b)=> {
 		var r = compare(a.item, b.item, a.index, b.index);

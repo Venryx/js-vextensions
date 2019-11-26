@@ -1,6 +1,6 @@
-export declare class NumberCEClass extends Number {
+export declare class NumberCEClass {
     IfN1Then(this: number, valIfSelfIsNeg1: any): any;
-    NaNTo(valIfSelfIsNaN: any): any;
+    NaNTo(this: number, valIfSelfIsNaN: any): any;
     ToPercentStr(this: number, precision?: number): string;
     IsMultipleOf(this: number, multipleOf: number, maxDistToBeMultiple: number): boolean;
     RoundTo(this: number, multiple: any): number;

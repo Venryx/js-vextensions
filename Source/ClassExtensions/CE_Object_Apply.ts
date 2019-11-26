@@ -1,47 +1,37 @@
 import {TransferPrototypeProps} from "../Utils/General";
-import {ObjectCE, VSet_Options} from "./CE_Object";
+import {ObjectCE, VSet_Options, ObjectCEClass} from "./CE_Object";
 
 TransferPrototypeProps(Object.prototype, ObjectCE, {}, {configurable: true, enumerable: false});
 
 declare global {
-	interface Object {
+	interface Object extends ObjectCEClass {}
+	/*interface Object {
 		// base
-		_AddItem(name: string, value, forceAdd?: boolean): void;
-		_AddFunction(name: string, func: Function): void;
-		_AddGetterSetter(name: string, getter: Function, setter: Function): void;
-		_AddFunction_Inline: Function;
-		_AddGetter_Inline: Function;
-		_AddSetter_Inline: Function;
+		//_AddItem(name: string, value, forceAdd?: boolean): void;
+		_AddItem: typeof ObjectCEClass.prototype._AddItem;
+		_AddFunction: typeof ObjectCEClass.prototype._AddFunction;
+		_AddGetterSetter: typeof ObjectCEClass.prototype._AddGetterSetter;
+		_AddFunction_Inline: typeof ObjectCEClass.prototype._AddFunction_Inline;
+		_AddGetter_Inline: typeof ObjectCEClass.prototype._AddGetter_Inline;
+		_AddSetter_Inline: typeof ObjectCEClass.prototype._AddSetter_Inline;
 
 		// normal
-		Extend(obj): this;
-		// seems this should work, to be consistent with in-class usage, but whatever; below it's an alternative that works for interfaces
-		//interface Object { etet(props: any): this; }
-		VSet<T>(this: T, props: any, options?: VSet_Options): T;
-		VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
-		Extended<T, T2>(this: T, x: T2): T & T2;
-		SafeGet(this, path: string, resultIfNull?: any): any;
-		SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
-		VAct<T>(this: T, func: (self: T)=>any): this;
-		As<T>(type: new(..._)=>T): T;
-		Strip<T>(this: T): this;
-		Including(...propNames: string[]): Object;
-		Excluding(...propNames: string[]): Object;
-		IsOneOf(...values: any[]): boolean;
+		Extend: typeof ObjectCEClass.prototype.Extend;
+		VSet: typeof ObjectCEClass.prototype.VSet;
+		Extended: typeof ObjectCEClass.prototype.Extended;
+		SafeGet: typeof ObjectCEClass.prototype.SafeGet;
+		VAct: typeof ObjectCEClass.prototype.VAct;
+		As: typeof ObjectCEClass.prototype.As;
+		Strip: typeof ObjectCEClass.prototype.Strip;
+		Including: typeof ObjectCEClass.prototype.Including;
+		Excluding: typeof ObjectCEClass.prototype.Excluding;
 
-		Pairs<K, V>(this: {[key: number]: V} | {[key: string]: V}, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
-		Pairs<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-		Pairs<K = any, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+		Pairs: typeof ObjectCEClass.prototype.Pairs;
+		VKeys: typeof ObjectCEClass.prototype.VKeys;
+		VValues: typeof ObjectCEClass.prototype.VValues;
 
-		VKeys<K>(this: {[key: number]: any} | {[key: string]: any}, excludeSpecialKeys?: boolean | 1): string[];
-		VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
-		VKeys<K = any>(excludeSpecialKeys?: boolean | 1): K[];
-
-		VValues<V>(this: {[key: number]: V} | {[key: string]: V} | Map<any, V>, excludeSpecialKeys?: boolean | 1): V[];
-		VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
-
-		FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[];
-		FA_RemoveAt(index: number);
-		FA_Add<T>(this: {[key: number]: T} | {[key: string]: T}, item: T);
-	}
+		FA_Select: typeof ObjectCEClass.prototype.FA_Select;
+		FA_RemoveAt: typeof ObjectCEClass.prototype.FA_RemoveAt;
+		FA_Add: typeof ObjectCEClass.prototype.FA_Add;
+	}*/
 }

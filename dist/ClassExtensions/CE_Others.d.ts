@@ -1,16 +1,16 @@
-export declare class FunctionCEClass extends Function {
-    GetName(): any;
-    SetName(val: any): this;
-    AddTag(tag: any): this;
-    GetTags(type?: any): any;
-    RunThenReturn(...args: any[]): this;
+export declare class FunctionCEClass {
+    GetName(this: Function): any;
+    SetName(this: Function, val: any): Function;
+    AddTag(this: Function, tag: any): Function;
+    GetTags(this: Function, type?: any): any;
+    RunThenReturn(this: Function, ...args: any[]): Function;
 }
 export declare const FunctionCE: FunctionCEClass;
-export declare class DateCEClass extends Date {
+export declare class DateCEClass {
     readonly MonthDate: Date;
-    IsLeapYear(): boolean;
-    GetDaysInMonth(): number;
-    AddMonths(value: any): this;
-    Clone(): Date;
+    IsLeapYear(this: Date): boolean;
+    GetDaysInMonth(this: Date): number;
+    AddMonths(this: Date, value: number): Date;
+    Clone(this: Date): Date;
 }
 export declare const DateCE: DateCEClass;

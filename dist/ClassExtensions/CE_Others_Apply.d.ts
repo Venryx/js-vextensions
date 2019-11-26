@@ -1,14 +1,7 @@
+import { FunctionCEClass, DateCEClass } from "./CE_Others";
 declare global {
-    interface Object {
-        GetName(): string;
-        SetName(name: string): Function;
+    interface Function extends FunctionCEClass {
     }
-    interface Date {
-        readonly MonthDate: Date;
-        IsLeapYear(): boolean;
-        GetDaysInMonth(): number;
-        AddMonths(value: number): void;
-        Clone(): Date;
+    interface Date extends DateCEClass {
     }
 }
-export {};

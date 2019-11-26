@@ -1,10 +1,11 @@
 import {TransferPrototypeProps} from "../Utils/General";
-import {NumberCE} from "./CE_Number";
+import {NumberCE, NumberCEClass} from "./CE_Number";
 
 TransferPrototypeProps(Number.prototype, NumberCE, {}, {configurable: true, enumerable: false});
 
 declare global {
-	interface Number {
+	interface Number extends NumberCEClass {}
+	/*interface Number {
 		IfN1Then<T>(valIfSelfIsNeg1: T): T;
 		NaNTo<T>(valIfSelfIsNaN: T): T;
 		ToPercentStr(precision?: number): string;
@@ -21,5 +22,5 @@ declare global {
 		WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number;
 		Distance(this: number, other: number): number;
 		ToPower(this: number, power: number): number;
-	}
+	}*/
 }
