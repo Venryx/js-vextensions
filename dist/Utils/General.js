@@ -1,13 +1,5 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { IsPrimitive, IsString } from "./Types";
-import { Assert } from "..";
+import { Assert, ArrayCE, NumberCE, ObjectCE, StringCE } from "..";
 let g = typeof window == "object" ? window : global;
 if (Number.MIN_SAFE_INTEGER == null) {
     Number.MIN_SAFE_INTEGER = -9007199254740991;
@@ -140,7 +132,7 @@ export function ToJSON_Safe(obj, ...excludePropNames) {
     var cache = [];
     var foundDuplicates = false;
     var result = JSON.stringify(obj, function (key, value) {
-        if (excludePropNames.Contains(key))
+        if (ArrayCE(excludePropNames).Contains(key))
             return;
         if (typeof value == 'object' && value !== null) {
             // if circular reference found, discard key
@@ -229,7 +221,7 @@ export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
  */
 export function Range(min, max, step = 1, includeMax = true, roundToStep = true) {
     var result = [];
-    for (let i = min; includeMax ? i <= max : i < max; i = roundToStep ? (i + step).RoundTo(step) : i + step) {
+    for (let i = min; includeMax ? i <= max : i < max; i = roundToStep ? NumberCE(i + step).RoundTo(step) : i + step) {
         result.push(i);
     }
     return result;
@@ -317,14 +309,14 @@ export function Compare(a, b, caseSensitive = true) {
 export function Lerp(from, to, percentFromXToY, keepResultInRange = true) {
     let result = from + ((to - from) * percentFromXToY);
     if (keepResultInRange)
-        result = result.KeepBetween(from, to);
+        result = NumberCE(result).KeepBetween(from, to);
     return result;
 }
 export function GetPercentFromXToY(start, end, val, keepResultInRange = true) {
     // distance-from-x / distance-from-x-required-for-result-'1'
     var result = (val - start) / (end - start);
     if (keepResultInRange)
-        result = result.KeepBetween(0, 1);
+        result = NumberCE(result).KeepBetween(0, 1);
     return result;
 }
 export function GetXToY(minX, maxY, interval = 1) {
@@ -390,7 +382,7 @@ function GetHiddenHolder() {
     if (holder == null) {
         holder = document.createElement("div");
         holder.id = "jsve_hiddenContainer";
-        holder.style.Extend({ position: "absolute", left: `-1000px`, top: `-1000px`, width: `1000px`, height: `1000px`, overflow: "hidden" });
+        ObjectCE(holder.style).Extend({ position: "absolute", left: `-1000px`, top: `-1000px`, width: `1000px`, height: `1000px`, overflow: "hidden" });
         document.body.appendChild(holder);
     }
     return holder;
@@ -445,7 +437,7 @@ export class TreeNode {
     get PathNodes() {
         if (this.prop == "_root")
             return [];
-        return this.ancestorNodes.Select(a => a.prop).concat(this.prop);
+        return ArrayCE(this.ancestorNodes).Select(a => a.prop).concat(this.prop);
     }
     get PathStr() {
         return this.PathNodes.join("/");
@@ -472,8 +464,9 @@ export function GetTreeNodesInObjTree(obj, includeRootNode = false, _ancestorNod
         let value = obj[key];
         let currentNode = new TreeNode(_ancestorNodes, obj, key);
         result.push(currentNode);
-        if (typeof value == "object")
-            result.AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+        if (typeof value == "object") {
+            ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+        }
     }
     return result;
 }
@@ -493,7 +486,7 @@ export function GetTreeNodesInPath(treeRoot, pathNodesOrStr, includeRootNode = f
         result.push(new TreeNode([], { _root: treeRoot }, "_root"));
     result.push(childTreeNode);
     if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
-        result.push(...GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, descendantPathNodes.Skip(1).join("/"), false, _ancestorNodes.concat(childTreeNode)));
+        result.push(...GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, ArrayCE(descendantPathNodes).Skip(1).join("/"), false, _ancestorNodes.concat(childTreeNode)));
     return result;
 }
 /*export function GetTreeNodesInPath_WithRoot(treeRoot, path: string) {
@@ -506,7 +499,7 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr, visitFunc, visitR
     let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
     visitFunc(childTreeNode);
     if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
-        VisitTreeNodesInPath(childTreeNode.Value, descendantPathNodes.Skip(1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
+        VisitTreeNodesInPath(childTreeNode.Value, ArrayCE(descendantPathNodes).Skip(1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
     return treeRoot;
 }
 /*export function VisitTreeNodesInPath_WithRoot(treeRoot, path: string, visitFunc: (node: TreeNode)=>any) {
@@ -553,10 +546,10 @@ export function DeepSet(obj, pathOrPathSegments, newValue, sepChar = "/", create
         deepObj = deepObj[segment];
     });
     if (newValue === undefined && deleteUndefined) {
-        delete deepObj[pathSegments.Last()];
+        delete deepObj[ArrayCE(pathSegments).Last()];
     }
     else {
-        deepObj[pathSegments.Last()] = newValue;
+        deepObj[ArrayCE(pathSegments).Last()] = newValue;
     }
 }
 /** @param sepChar Default: "/" */
@@ -585,7 +578,7 @@ export function DeepSet(obj, pathOrPathSegments, newValue, sepChar = "/", create
 }*/
 export function WithDeepSet(baseObj, pathOrPathSegments, newValue, sepChar = "/") {
     let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
-    return Object.assign({}, baseObj, { [pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue });
+    return Object.assign(Object.assign({}, baseObj), { [pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue });
 }
 //@((()=> { if (g.onclick == null) g.onclick = ()=>console.log(V.GetStackTraceStr()); }) as any)
 export function GetStackTraceStr(...args) {
@@ -605,7 +598,7 @@ export function GetStackTraceStr(...args) {
         stackTrace = fakeError.stack;
         Error.stackTraceLimit = oldStackLimit;
     }
-    return stackTrace.substr(stackTrace.IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+    return stackTrace.substr(StringCE(stackTrace).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 export function GetErrorMessagesUnderElement(element) {
     //return element.querySelectorAll(":invalid").ToList().map(node=>node.validationMessage || `Invalid value.`);
@@ -619,21 +612,21 @@ export function FindDOMAll(selector) {
     return Array.from(document.querySelectorAll(selector));
 }
 export function WaitTillDataPathIsSet(dataPath) {
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+    return new Promise(async (resolve, reject) => {
         let dataPathParts = dataPath.split(".");
         let currentParent = g;
         for (let part of dataPathParts) {
             while (currentParent[part] == null) {
-                yield WaitTillPropertyIsSet(currentParent, part);
+                await WaitTillPropertyIsSet(currentParent, part);
             }
             currentParent = currentParent[part];
         }
         resolve();
-    }));
+    });
 }
 export function WaitTillPropertyIsSet(obj, prop) {
     return new Promise((resolve, reject) => {
-        obj._AddGetterSetter(prop, () => { }, value => {
+        ObjectCE(obj)._AddGetterSetter(prop, () => { }, value => {
             delete obj[prop]; // remove this hook
             obj[prop] = value; // set to provided value
             resolve();
@@ -710,8 +703,63 @@ export function StartUpload() {
     });
 }
 export function TransferPrototypeProps(target, source, descriptorBase, descriptorOverride) {
-    for (let [name, descriptor] of Object["getOwnPropertyDescriptors"](source).entries()) {
+    for (let [name, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(source))) {
         Object.defineProperty(target, name, E(descriptorBase, descriptor, descriptorOverride));
     }
+}
+export function WithFuncsStandalone(source) {
+    let result = {};
+    for (let [key, oldVal] of Object.entries(source)) {
+        if (oldVal instanceof Function) {
+            result[key] = (thisArg, ...callArgs) => {
+                return oldVal.apply(thisArg, callArgs);
+            };
+        }
+        else {
+            result[key] = oldVal;
+        }
+    }
+    return result;
+}
+//function Test1<T>(thisArg: T): T { return null as any; } // helper
+//export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): typeof Test1 {
+//export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): (thisArg: T)=>T {
+export function CreateWrapperForClassExtensions(sourceClass) {
+    /*return (thisArg: any)=> {
+        return null as T;
+    };*/
+    // proxy approach; nicer, but I don't like potential slowdown from creating new proxy each time a class-extension method is called!
+    /*return thisArg=> {
+        return new Proxy({}, {
+            get(target, key) {
+                return source[key].bind(thisArg);
+                /*return (...callArgs)=> {
+                    return source[key].apply(thisArg, callArgs);
+                };*#/
+            }
+        }) as InstanceType<Class>;
+    };*/
+    // static proxy approach; fast because it doesn't create any functions, closures, or proxies per wrap/CE-method-call
+    //		(limitation: you must call the CE-method at "ObjectCE(something).MyCEMethod" right away, else currentThis will be outdated)
+    //let proxy = {} as InstanceType<Class>;
+    const proxy = {};
+    let currentThis;
+    for (const key of Object.getOwnPropertyNames(sourceClass.prototype)) {
+        if (key == "constructor")
+            continue; // no reason to call the wrapper's constructor
+        const oldVal = sourceClass.prototype[key];
+        if (oldVal instanceof Function) {
+            proxy[key] = (...callArgs) => {
+                return oldVal.apply(currentThis, callArgs);
+            };
+        }
+        else {
+            proxy[key] = oldVal;
+        }
+    }
+    return (nextThis) => {
+        currentThis = nextThis;
+        return proxy;
+    };
 }
 //# sourceMappingURL=General.js.map

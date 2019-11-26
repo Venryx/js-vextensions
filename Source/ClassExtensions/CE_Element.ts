@@ -1,4 +1,6 @@
-export class ElementCEClass {
+import {WithFuncsStandalone, CreateWrapperForClassExtensions, NodeListCE} from "..";
+
+export class ElementCEClass extends Element {
 	GetParents(this: Element, topDown = false) {
 		let result = [] as HTMLElement[];
 		let currentParent = this.parentElement;
@@ -10,7 +12,7 @@ export class ElementCEClass {
 		return result;
 	}
 	GetSelfAndParents(this: HTMLElement, topDown = false) {
-		let result = this.GetParents(topDown);
+		let result = ElementCE(this).GetParents(topDown);
 		return topDown ? result.concat([this]) : [this].concat(result);
 	}
 
@@ -37,7 +39,7 @@ export class ElementCEClass {
 	}
 
 	$(this: Element, queryStr: string): HTMLElement[] {
-		return this.querySelectorAll(queryStr).ToArray() as HTMLElement[];
+		return NodeListCE(this.querySelectorAll(queryStr)).ToArray() as HTMLElement[];
 	}
 }
-export const ElementCE = ElementCEClass.prototype;
+export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);

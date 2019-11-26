@@ -34,5 +34,5 @@ export declare function GetEntries(enumType: Object, nameModifierFunc?: (name: s
 }[];
 export declare function GetValues<T>(enumType: any): T[];
 export declare function GetValues_ForSchema<T>(enumType: any): {
-    const: {};
+    const: unknown;
 }[];

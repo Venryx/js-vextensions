@@ -1,9 +1,9 @@
 import {TransferPrototypeProps} from "../Utils/General";
-import {FunctionCE, DateCE, FunctionCEClass, DateCEClass} from "./CE_Others";
+import {FunctionCE, DateCE, FunctionCEClass, DateCEClass} from "../ClassExtensions/CE_Others";
 
-TransferPrototypeProps(Function.prototype, FunctionCE, {}, {configurable: true, enumerable: false});
-TransferPrototypeProps(Date.prototype, DateCE, {}, {configurable: true, enumerable: false});
-//TransferPrototypeProps(Error.prototype, ErrorCE.prototype, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Function.prototype, FunctionCEClass.prototype, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Date.prototype, DateCEClass.prototype, {}, {configurable: true, enumerable: false});
+//TransferPrototypeProps(Error.prototype, ErrorCEClass.prototype, {}, {configurable: true, enumerable: false});
 
 declare global {
 	interface Function extends FunctionCEClass {}

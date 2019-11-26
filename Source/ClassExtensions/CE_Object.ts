@@ -1,5 +1,5 @@
-import {IsNaN, Assert, DEL, nl, ConvertPathGetterFuncToPropChain} from "..";
-import {DeepGet, Clone} from "../Utils/General";
+import {IsNaN, Assert, DEL, nl, ConvertPathGetterFuncToPropChain, ArrayCE} from "..";
+import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions} from "../Utils/General";
 
 export interface VSet_Options {
 	prop?: PropertyDescriptor;
@@ -9,7 +9,7 @@ export interface VSet_Options {
 }
 
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCEClass {
+export class ObjectCEClass<RealThis> {
 	// base
 	// ==========
 
@@ -91,9 +91,9 @@ export class ObjectCEClass {
 	}
 
 	// as replacement for C#'s "new MyClass() {prop = true}"
-	VSet<T>(this: T, props: any, options?: VSet_Options): T;
-	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
-	VSet(...args) {
+	VSet<T>(this: T, props: any, options?: VSet_Options): RealThis;
+	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): RealThis;
+	VSet(...args): RealThis {
 		let props, options: VSet_Options, propName: string, propValue: string;
 		if (typeof args[0] == "object") [props, options] = args;
 		else [propName, propValue, options] = args;
@@ -117,7 +117,7 @@ export class ObjectCEClass {
 		} else {
 			SetProp(propName, propValue);
 		}
-		return this;
+		return this as any;
 	}
 	Extended<T, T2>(this: T, x: T2): T & T2 {
 		let result: any = this instanceof Array ? [] : {};
@@ -175,12 +175,12 @@ export class ObjectCEClass {
 	}
 
 	IsOneOf(...values: any[]): boolean {
-		if (values.Contains(this)) {
+		if (ArrayCE(values).Contains(this)) {
 			return true;
 		}
 		// if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
 		let isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
-		if (isObjectFormOfPrimitive && values.Contains(this.valueOf())) {
+		if (isObjectFormOfPrimitive && ArrayCE(values).Contains(this.valueOf())) {
 			return true;
 		}
 		return false;
@@ -227,7 +227,7 @@ export class ObjectCEClass {
 	VKeys(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
-		if (excludeSpecialKeys) keys = keys.Except(specialKeys);
+		if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
 		return keys;
 	}
 
@@ -265,7 +265,7 @@ export class ObjectCEClass {
 		for (let [index, item] of this.entries())
 			result.Add(selectFunc.call(item, item, index));
 		return result;*/
-		return this.VValues(true).map(selectFunc);
+		return ObjectCE(this).VValues(true).map(selectFunc);
 	};
 	FA_RemoveAt(index: number) {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
@@ -283,4 +283,17 @@ export class ObjectCEClass {
 		this[openIndex] = item;
 	};
 }
-export const ObjectCE = ObjectCEClass.prototype;
+//export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
+//export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
+
+let ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
+// we don't actually call this; it's just a way to trick/control the type-checking to fix the issue with generics (there's probably a better way)
+const ObjectCE_TypedHelper = <T>(nextThis: T)=> {
+	return CreateWrapperForClassExtensions<ObjectCEClass<T>>(ObjectCEClass)(nextThis);
+};
+export const ObjectCE = ObjectCE_Base as any as typeof ObjectCE_TypedHelper;
+
+class Test1{
+	Test2() {}
+}
+ObjectCE(new Test1()).VSet({}).Test2

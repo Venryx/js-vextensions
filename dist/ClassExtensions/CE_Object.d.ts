@@ -5,18 +5,18 @@ export interface VSet_Options {
     deleteEmpty?: boolean;
 }
 export declare const specialKeys: string[];
-export declare class ObjectCEClass {
+export declare class ObjectCEClass<RealThis> {
     /** Helps you do stuff like this:
         Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
     _AddItem(name: any, value: any, forceAdd?: boolean): void;
     _AddFunction(name: any, func: any): void;
     _AddGetterSetter(name: any, getter: any, setter: any): void;
-    _AddFunction_Inline: any;
-    _AddGetter_Inline: any;
-    _AddSetter_Inline: any;
+    set _AddFunction_Inline(func: any);
+    set _AddGetter_Inline(func: any);
+    set _AddSetter_Inline(func: any);
     Extend(x: any): this;
-    VSet<T>(this: T, props: any, options?: VSet_Options): T;
-    VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): T;
+    VSet<T>(this: T, props: any, options?: VSet_Options): RealThis;
+    VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): RealThis;
     Extended<T, T2>(this: T, x: T2): T & T2;
     SafeGet(path: string, resultIfNull?: any): any;
     SafeGet<T, Result>(this: T, pathGetterFunc: (self: T) => Result, resultIfNull?: any): Result;
@@ -74,4 +74,4 @@ export declare class ObjectCEClass {
         [key: string]: T;
     }, item: T): void;
 }
-export declare const ObjectCE: ObjectCEClass;
+export declare const ObjectCE: <T>(nextThis: T) => ObjectCEClass<T>;

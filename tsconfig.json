@@ -14,7 +14,7 @@
 		//"maxNodeModulesJsDepth": 1,
 
 		// compiler options
-		"target": "es2015",
+		"target": "es2017",
 		//"allowJs": true,
 		"jsx": "react",
 		"noImplicitAny": false,
@@ -26,14 +26,10 @@
 		"declarationDir": "Dist"
 	},
 	"files": ["Source/index.ts"],
-	"include": [
-		"Typings/**/*.d.ts",
-		"Source/**/*.ts",
-		"Source/**/*.tsx"
-	],
-	"exclude": [
-		"Dist",
-		"node_modules"
-	],
+	/*"include": [
+		"Typings/**#/*.d.ts",
+		"Source/**#/*.ts",
+		"Source/**#/*.tsx"
+	],*/
 	"compileOnSave": true
 }

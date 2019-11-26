@@ -1,5 +1,5 @@
-import { IsNaN, Assert, DEL, ConvertPathGetterFuncToPropChain } from "..";
-import { DeepGet, Clone } from "../Utils/General";
+import { IsNaN, Assert, DEL, ConvertPathGetterFuncToPropChain, ArrayCE } from "..";
+import { DeepGet, Clone, CreateWrapperForClassExtensions } from "../Utils/General";
 export const specialKeys = ["_", "_key", "_id"];
 export class ObjectCEClass {
     // base
@@ -153,12 +153,12 @@ export class ObjectCEClass {
         return result;
     }
     IsOneOf(...values) {
-        if (values.Contains(this)) {
+        if (ArrayCE(values).Contains(this)) {
             return true;
         }
         // if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
         let isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
-        if (isObjectFormOfPrimitive && values.Contains(this.valueOf())) {
+        if (isObjectFormOfPrimitive && ArrayCE(values).Contains(this.valueOf())) {
             return true;
         }
         return false;
@@ -181,7 +181,7 @@ export class ObjectCEClass {
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
         let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         if (excludeSpecialKeys)
-            keys = keys.Except(specialKeys);
+            keys = ArrayCE(keys).Except(specialKeys);
         return keys;
     }
     //interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
@@ -214,7 +214,7 @@ export class ObjectCEClass {
         for (let [index, item] of this.entries())
             result.Add(selectFunc.call(item, item, index));
         return result;*/
-        return this.VValues(true).map(selectFunc);
+        return ObjectCE(this).VValues(true).map(selectFunc);
     }
     ;
     FA_RemoveAt(index) {
@@ -237,5 +237,16 @@ export class ObjectCEClass {
     }
     ;
 }
-export const ObjectCE = ObjectCEClass.prototype;
+//export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
+//export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
+let ObjectCE_Base = CreateWrapperForClassExtensions(ObjectCEClass);
+// we don't actually call this; it's just a way to trick/control the type-checking to fix the issue with generics (there's probably a better way)
+const ObjectCE_TypedHelper = (nextThis) => {
+    return CreateWrapperForClassExtensions(ObjectCEClass)(nextThis);
+};
+export const ObjectCE = ObjectCE_Base;
+class Test1 {
+    Test2() { }
+}
+ObjectCE(new Test1()).VSet({}).Test2;
 //# sourceMappingURL=CE_Object.js.map

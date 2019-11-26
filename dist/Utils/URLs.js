@@ -1,4 +1,4 @@
-import { E, Assert } from "..";
+import { E, Assert, StringCE, NumberCE } from "..";
 export function ToAbsoluteUrl(url) {
     // Handle absolute URLs (with protocol-relative prefix)
     // Example: //domain.com/file.png
@@ -34,14 +34,15 @@ export function GetUrlParts(url) {
     url = url || GetCurrentURLString();
     let [domainStr, pathStr, varsStr, hashStr] = Array(4).fill(0).map(a => "");
     let urlToProcess = url;
-    if (urlToProcess.Contains("#") && !varsStr.Contains("runJS=")) {
-        [urlToProcess, hashStr] = urlToProcess.SplitAt(urlToProcess.indexOf("#"));
+    if (urlToProcess.includes("#") && !varsStr.includes("runJS=")) {
+        [urlToProcess, hashStr] = StringCE(urlToProcess).SplitAt(urlToProcess.indexOf("#"));
     }
-    if (urlToProcess.Contains("?")) {
-        [urlToProcess, varsStr] = urlToProcess.SplitAt(urlToProcess.indexOf("?"));
+    if (urlToProcess.includes("?")) {
+        [urlToProcess, varsStr] = StringCE(urlToProcess).SplitAt(urlToProcess.indexOf("?"));
     }
     //if (urlToProcess.Matches("/").length == )
-    [domainStr, pathStr] = urlToProcess.SplitAt(urlToProcess.IndexOf_X("/", 2).IfN1Then(urlToProcess.length));
+    let splitAtSlash_pos = NumberCE(StringCE(urlToProcess).IndexOf_X("/", 2)).IfN1Then(urlToProcess.length);
+    [domainStr, pathStr] = StringCE(urlToProcess).SplitAt(splitAtSlash_pos);
     return [domainStr, pathStr, varsStr, hashStr];
 }
 function GetUrlPath(url, fromDomain = true) {
@@ -59,9 +60,9 @@ function GetUrlVars(url, allowQuestionMarkAsVarSep = true) {
     let varSeparators = allowQuestionMarkAsVarSep ? ["&", "?"] : ["&"];
     let [_, __, varsStr] = GetUrlParts(url);
     var vars = {}; //{[key: string]: string};
-    var parts = varsStr.SplitByAny(...varSeparators).filter(a => a);
+    var parts = StringCE(varsStr).SplitByAny(...varSeparators).filter(a => a);
     for (let part of parts) {
-        let [key, value] = part.SplitAt(part.indexOf("="));
+        let [key, value] = StringCE(part).SplitAt(part.indexOf("="));
         vars[key] = value;
     }
     return vars;
@@ -70,6 +71,12 @@ function GetUrlVars(url, allowQuestionMarkAsVarSep = true) {
     return fromAddressBar ? URL.Parse(GetCurrentURLString()) : URL.FromState(State("router"));
 }*/
 export class VURL {
+    constructor(domain = "", pathNodes = [], queryVars = [], hash = "") {
+        this.domain = domain;
+        this.pathNodes = pathNodes;
+        this.queryVars = queryVars;
+        this.hash = hash;
+    }
     static Parse(urlStr, useCurrentDomainIfMissing = true, allowQuestionMarkAsVarSep = true) {
         if (useCurrentDomainIfMissing && !urlStr.startsWith("http"))
             urlStr = window.location.origin + (urlStr.startsWith("/") ? "" : "/") + urlStr;
@@ -99,17 +106,11 @@ export class VURL {
             key: "URLKey_" + Date.now(),
         };
     }
-    constructor(domain = "", pathNodes = [], queryVars = [], hash = "") {
-        this.domain = domain;
-        this.pathNodes = pathNodes;
-        this.queryVars = queryVars;
-        this.hash = hash;
-    }
     DomainStr(withProtocol = true) {
         return withProtocol ? this.domain : this.DomainWithoutProtocol;
     }
-    get Protocol() { return this.domain && this.domain.Contains("://") ? this.domain.substr(0, this.domain.indexOf("://")) : null; }
-    get DomainWithoutProtocol() { return this.domain && this.domain.Contains("://") ? this.domain.substr(this.domain.indexOf("://") + 3) : this.domain; }
+    get Protocol() { return this.domain && StringCE(this.domain).Contains("://") ? this.domain.substr(0, this.domain.indexOf("://")) : null; }
+    get DomainWithoutProtocol() { return this.domain && StringCE(this.domain).Contains("://") ? this.domain.substr(this.domain.indexOf("://") + 3) : this.domain; }
     PathStr(pathStartSlash) {
         let result = "";
         if (pathStartSlash) {

@@ -1,20 +1,22 @@
-export class StringCEClass {
-	TrimStart(this: string, ...chars: string[]) {
+import {WithFuncsStandalone, CreateWrapperForClassExtensions, ArrayCE} from "..";
+
+export class StringCEClass extends String {
+	TrimStart(this: String, ...chars: string[]) {
 		// fix for if called by VDF (which has a different signature)
 		//if (arguments[0] instanceof Array) chars = arguments[0];
 
-		for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && chars.Contains(this[iOfFirstToKeep]); iOfFirstToKeep++);
+		for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && ArrayCE(chars).Contains(this[iOfFirstToKeep]); iOfFirstToKeep++);
 		return this.slice(iOfFirstToKeep, this.length);
 	}
-	TrimEnd(this: string, ...chars: string[]) {
-		for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && chars.Contains(this[iOfLastToKeep]); iOfLastToKeep--);
+	TrimEnd(this: String, ...chars: string[]) {
+		for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && ArrayCE(chars).Contains(this[iOfLastToKeep]); iOfLastToKeep--);
 		return this.substr(0, iOfLastToKeep + 1);
 	}
 
-	Contains(this: string, str: string, startIndex?: number) {
+	Contains(this: String, str: string, startIndex?: number) {
 		return this.indexOf(str, startIndex) !== -1;
 	}
-	hashCode(this: string) {
+	hashCode(this: String) {
 		var hash = 0;
 		for (var i = 0; i < this.length; i++) {
 			var char = this.charCodeAt(i);
@@ -23,7 +25,7 @@ export class StringCEClass {
 		}
 		return hash;
 	}
-	Matches(this: string, strOrRegex: string | RegExp) {
+	Matches(this: String, strOrRegex: string | RegExp) {
 		if (typeof strOrRegex == "string") {
 			let str = strOrRegex;
 			let result = [] as {index: number}[];
@@ -44,7 +46,7 @@ export class StringCEClass {
 		
 		let result = [] as RegExpMatchArray[];
 		let match;
-		while (match = regex.exec(this)) {
+		while (match = regex.exec(this as string)) {
 			result.push(match);
 		}
 		return result as any;
@@ -61,7 +63,7 @@ export class StringCEClass {
 		return matches;
 	}*/
 	/** indexX is 0-based */
-	IndexOf_X(this: string, str: string, indexX: number) {
+	IndexOf_X(this: String, str: string, indexX: number) {
 		var currentPos = -1;
 		for (var i = 0; i <= indexX; i++) {
 			var subIndex = this.indexOf(str, currentPos + 1);
@@ -72,7 +74,7 @@ export class StringCEClass {
 		return currentPos;
 	}
 	/** indexFromLastX is 0-based */
-	IndexOf_XFromLast(this: string, str: string, indexFromLastX: number) {
+	IndexOf_XFromLast(this: String, str: string, indexFromLastX: number) {
 		var currentPos = (this.length - str.length) + 1; // index just after the last-index-where-match-could-occur
 		for (var i = 0; i <= indexFromLastX; i++) {
 			var subIndex = this.lastIndexOf(str, currentPos - 1);
@@ -82,7 +84,7 @@ export class StringCEClass {
 		}
 		return currentPos;
 	}
-	IndexOfAny(this: string, ...strings: string[]) {
+	IndexOfAny(this: String, ...strings: string[]) {
 		var lowestIndex = -1;
 		for (let str of strings) {
 			var indexOfChar = this.indexOf(str);
@@ -91,7 +93,7 @@ export class StringCEClass {
 		}
 		return lowestIndex;
 	}
-	LastIndexOfAny(this: string, ...strings: string[]) {
+	LastIndexOfAny(this: String, ...strings: string[]) {
 		var highestIndex = -1;
 		for (let str of strings) {
 			var indexOfChar = this.lastIndexOf(str);
@@ -100,17 +102,17 @@ export class StringCEClass {
 		}
 		return highestIndex;
 	}
-	StartsWithAny(this: string, ...strings: string[]) {
-		return strings.Any(str=>this.startsWith(str));
+	StartsWithAny(this: String, ...strings: string[]) {
+		return ArrayCE(strings).Any(str=>this.startsWith(str));
 	}
-	EndsWithAny(this: string, ...strings: string[]) {
-		return strings.Any(str=>this.endsWith(str));
+	EndsWithAny(this: String, ...strings: string[]) {
+		return ArrayCE(strings).Any(str=>this.endsWith(str));
 	}
-	ContainsAny(this: string, ...strings: string[]) {
-		return strings.Any(str=>this.Contains(str));
+	ContainsAny(this: String, ...strings: string[]) {
+		return ArrayCE(strings).Any(str=>StringCE(this).Contains(str as string));
 	}
 	/** Separator-strings must be escaped. (they're passed into a regular-expression) */
-	SplitByAny(this: string, ...separators: string[]) {
+	SplitByAny(this: String, ...separators: string[]) {
 		/*var splitStr = "/";
 		for (let sep of separators)
 			splitStr += (splitStr.length > 1 ? "|" : "") + sep;
@@ -119,21 +121,21 @@ export class StringCEClass {
 		let regex = new RegExp(separators.map(a=>`\\${a}`).join("|"));
 		return this.split(regex);
 	}
-	SplitAt(this: string, index: number, includeCharAtIndex = false) {
+	SplitAt(this: String, index: number, includeCharAtIndex = false) {
 		if (index == -1) // if no split-index, pass source-string as part2 (makes more sense for paths and such)
 			return ["", this] as [string, string];
 		let part1 = this.substr(0, index);
 		let part2 = includeCharAtIndex ? this.substr(index) : this.substr(index + 1);
 		return [part1, part2] as [string, string];
 	}
-	Splice(this: string, index: number, removeCount: number, insert: string) {
+	Splice(this: String, index: number, removeCount: number, insert: string) {
 		return this.slice(0, index) + insert + this.slice(index + Math.abs(removeCount));
 	}
-	Indent(this: string, indentCount: number) {
+	Indent(this: String, indentCount: number) {
 		var indentStr = "\t".repeat(indentCount);
 		return this.replace(/^|(\n)/g, "$1" + indentStr);
 	}
-	KeepAtMost(this: string, maxLength: number, moreMarkerStr = "...") {
+	KeepAtMost(this: String, maxLength: number, moreMarkerStr = "...") {
 		if (this.length <= maxLength) return this;
 		return this.substr(0, maxLength - moreMarkerStr.length) + moreMarkerStr;
 	}
@@ -175,7 +177,7 @@ export class StringCEClass {
 	 * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
 	 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
 	 */
-	AsMultiline(this: string, desiredIndent: number = null, removeLineStr = "@RL") {
+	AsMultiline(this: String, desiredIndent: number = null, removeLineStr = "@RL") {
 		let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
 		if (desiredIndent != null) {
 			let firstLineIndent = (result.match(/^\t+/) || [""])[0].length;
@@ -193,7 +195,7 @@ export class StringCEClass {
 		return result;
 	}
 
-	Substring(this: string, start: number, end: number) {
+	Substring(this: String, start: number, end: number) {
 		if (end < 0)
 			end = this.length + end;
 		return this.substring(start, end);
@@ -202,4 +204,5 @@ export class StringCEClass {
 	ToInt() { return parseInt(Number(this)+""); }
 	ToFloat() { return Number(this); }
 }
-export const StringCE = StringCEClass.prototype;
+//export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
+export const StringCE = CreateWrapperForClassExtensions(StringCEClass);

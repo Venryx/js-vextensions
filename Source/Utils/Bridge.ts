@@ -1,9 +1,9 @@
 import { TryCall } from "./Timers";
-import {Assert, ToJSON, IsObject, IsString, FromJSON, E} from "..";
+import {Assert, ToJSON, IsObject, IsString, FromJSON, E, ObjectCE} from "..";
 
 export class BridgeMessage {
 	constructor(initialData?: Partial<BridgeMessage>) {
-		this.Extend(initialData);
+		ObjectCE(this).Extend(initialData);
 	}
 
 	// for sending a function-call
@@ -33,7 +33,7 @@ export type Bridge_Options = {receiveChannelMessageFunc_addImmediately?: boolean
 export class Bridge {
 	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
-		this.Extend(options.Excluding("receiveChannelMessageFunc_addImmediately"));
+		ObjectCE(this).Extend(ObjectCE(options).Excluding("receiveChannelMessageFunc_addImmediately"));
 		if (options.receiveChannelMessageFunc_addImmediately != false) this.SetUpReceiver();
 	}
 	receiveChannelMessageFunc_adder: (receiveTextFunc: (channelMessage: string | Object)=>any)=>any;

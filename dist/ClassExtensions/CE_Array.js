@@ -1,21 +1,13 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import ".";
-import { Assert, StableSort, Compare } from "..";
+import { Assert, StableSort, Compare, CreateWrapperForClassExtensions } from "..";
 /*// since JS doesn't have basic "foreach" system
 ForEach(func) {
     for (var i in this) {
         func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
     }
 };*/
-export class ArrayCEClass {
+export class ArrayCEClass extends Array {
     constructor() {
+        super(...arguments);
         this.oldJoin = [].join;
     }
     ForEach(func) {
@@ -30,19 +22,17 @@ export class ArrayCEClass {
                 continue;
         }
     }
-    ForEachAsync(func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (let i = 0; i < this.length; i++) {
-                let shouldBreak = false;
-                let shouldContinue = false;
-                let extras = { index: i, Break: () => shouldBreak = true, Continue: () => shouldContinue = true };
-                yield func(this[i], extras);
-                if (shouldBreak)
-                    break;
-                if (shouldContinue)
-                    continue;
-            }
-        });
+    async ForEachAsync(func) {
+        for (let i = 0; i < this.length; i++) {
+            let shouldBreak = false;
+            let shouldContinue = false;
+            let extras = { index: i, Break: () => shouldBreak = true, Continue: () => shouldContinue = true };
+            await func(this[i], extras);
+            if (shouldBreak)
+                break;
+            if (shouldContinue)
+                continue;
+        }
     }
     /*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }
     Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {
@@ -58,7 +48,6 @@ export class ArrayCEClass {
         }
         return false;
     }
-    ;
     // for some reason, this platform doesn't have entries() defined
     /*entries() {
         var result = [];
@@ -67,13 +56,9 @@ export class ArrayCEClass {
         return result;
     };*/
     Prepend(...newItems) { this.splice(0, 0, ...newItems); }
-    ;
     Add(item) { return this.push(item); }
-    ;
-    CAdd(item) { this.push(item); return this; }
-    ; // CAdd = ChainAdd
-    TAdd(item) { this.push(item); return item; }
-    ; // TAdd = TransparentAdd
+    CAdd(item) { this.push(item); return this; } // CAdd = ChainAdd
+    TAdd(item) { this.push(item); return item; } // TAdd = TransparentAdd
     AddRange(array) {
         //this.push(...array);
         // use loop, since sending them all as arguments fails when there are ~10000+ items
@@ -82,7 +67,6 @@ export class ArrayCEClass {
         }
         return this;
     }
-    ;
     Remove(item) {
         var itemIndex = this.indexOf(item);
         if (itemIndex == -1)
@@ -90,14 +74,12 @@ export class ArrayCEClass {
         this.splice(itemIndex, 1);
         return true;
     }
-    ;
     RemoveAll(items) {
-        for (let item of items)
-            this.Remove(item);
+        for (let item of items) {
+            ArrayCE(this).Remove(item);
+        }
     }
-    ;
     RemoveAt(index) { return this.splice(index, 1)[0]; }
-    ;
     Insert(index, obj) { this.splice(index, 0, obj); }
     SetItems(items) {
         this.splice(0, this.length, ...items);
@@ -119,7 +101,6 @@ export class ArrayCEClass {
         }
         return false;
     }
-    ;
     All(matchFunc) {
         for (let [index, item] of this.entries()) {
             if (!matchFunc.call(item, item, index)) {
@@ -128,7 +109,6 @@ export class ArrayCEClass {
         }
         return true;
     }
-    ;
     Where(matchFunc) {
         var result = [];
         for (let [index, item] of this.entries()) {
@@ -138,7 +118,6 @@ export class ArrayCEClass {
         }
         return result;
     }
-    ;
     Select(selectFunc) {
         var result = [];
         for (let [index, item] of this.entries()) {
@@ -146,32 +125,28 @@ export class ArrayCEClass {
         }
         return result;
     }
-    ;
     SelectMany(selectFunc) {
         //return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
         var result = [];
         for (let [index, item] of this.entries()) {
-            result.AddRange(selectFunc.call(item, item, index));
+            ArrayCE(result).AddRange(selectFunc.call(item, item, index));
         }
         return result;
     }
-    ;
     //Count(matchFunc) { return this.Where(matchFunc).length; };
     //Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
     Count() { return this.length; }
     ; // needed for items to be added properly to custom classes that extend Array
-    VCount(matchFunc) { return this.Where(matchFunc).length; }
-    ;
+    VCount(matchFunc) { return ArrayCE(this).Where(matchFunc).length; }
     Clear() {
         /*while (this.length > 0)
             this.pop();*/
         this.splice(0, this.length);
     }
-    ;
     /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
     forEach_break(...args) { return this.some(...args); } */
     First(matchFunc) {
-        var result = this.FirstOrX(matchFunc);
+        var result = ArrayCE(this).FirstOrX(matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");
         }
@@ -191,10 +166,9 @@ export class ArrayCEClass {
         return x;
     }
     //FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-    FirstWith(propName, propValue) { return this.Where(function () { return this[propName] == propValue; })[0]; }
-    ;
+    FirstWith(propName, propValue) { return ArrayCE(this).Where(function () { return this[propName] == propValue; })[0]; }
     Last(matchFunc) {
-        var result = this.LastOrX(matchFunc);
+        var result = ArrayCE(this).LastOrX(matchFunc);
         if (result === undefined) {
             throw new Error("Matching item not found.");
         }
@@ -214,7 +188,6 @@ export class ArrayCEClass {
         return x;
     }
     XFromLast(x) { return this[(this.length - 1) - x]; }
-    ;
     Move(item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex = false) {
         var oldIndex = this.indexOf(item);
         /*if (oldIndex != -1) {
@@ -227,21 +200,20 @@ export class ArrayCEClass {
         }
         this.Insert(newIndex, item);*/
         if (newIndexAsPreRemovalIndexVSFinalIndex) {
-            this.Insert(newIndex, item);
+            ArrayCE(this).Insert(newIndex, item);
             if (oldIndex != -1) {
                 let oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-                this.RemoveAt(oldEntry_currentIndex);
+                ArrayCE(this).RemoveAt(oldEntry_currentIndex);
             }
         }
         else {
             if (oldIndex != -1) {
-                this.RemoveAt(oldIndex);
+                ArrayCE(this).RemoveAt(oldIndex);
             }
-            this.Insert(newIndex, item);
+            ArrayCE(this).Insert(newIndex, item);
         }
         return oldIndex;
     }
-    ;
     ToList(itemType = null) { return [].concat(this); }
     /*ToDictionary(keyFunc, valFunc) {
         var result = new Dictionary();
@@ -263,7 +235,6 @@ export class ArrayCEClass {
         }
         return result;
     }
-    ;
     Take(count) {
         var result = [];
         for (var i = 0; i < count && i < this.length; i++) {
@@ -299,12 +270,12 @@ export class ArrayCEClass {
         return StableSort(this, (a, b, aIndex, bIndex) => Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
     }
     OrderByDescending(valFunc = (item, index) => item) {
-        return this.OrderBy((item, index) => -valFunc(item, index));
+        return ArrayCE(this).OrderBy((item, index) => -valFunc(item, index));
     }
     Distinct() {
         var result = [];
         for (var i in this) {
-            if (!result.Contains(this[i])) {
+            if (!ArrayCE(result).Contains(this[i])) {
                 result.push(this[i]);
             }
         }
@@ -319,11 +290,11 @@ export class ArrayCEClass {
         if (excludeEachOnlyOnce) {
             let result = this.slice();
             for (let excludeItem of excludeItems) {
-                result.Remove(excludeItem);
+                ArrayCE(result).Remove(excludeItem);
             }
             return result;
         }
-        return this.Where(a => !excludeItems.Contains(a));
+        return ArrayCE(this).Where(a => !excludeItems.Contains(a));
     }
     IfEmptyThen(valIfSelfIsEmpty) {
         return this.length == 0 ? valIfSelfIsEmpty : this;
@@ -336,7 +307,7 @@ export class ArrayCEClass {
             Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.min(...this);
         }
-        return this.OrderBy(valFunc).FirstOrX();
+        return ArrayCE(ArrayCE(this).OrderBy(valFunc)).FirstOrX();
     }
     Max(valFunc, asNumbers = false) {
         if (asNumbers) {
@@ -345,7 +316,7 @@ export class ArrayCEClass {
             Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.max(...this);
         }
-        return this.OrderBy(valFunc).LastOrX();
+        return ArrayCE(ArrayCE(this).OrderBy(valFunc)).LastOrX();
     }
     Sum() {
         var total = 0;
@@ -355,11 +326,11 @@ export class ArrayCEClass {
         return total;
     }
     Average() {
-        var total = this.Sum();
+        var total = ArrayCE(this).Sum();
         return total / this.length;
     }
     Median() {
-        var ordered = this.OrderBy(a => a);
+        var ordered = ArrayCE(this).OrderBy(a => a);
         if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
             return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
         }
@@ -383,18 +354,28 @@ export class ArrayCEClass {
         return result;
     }
 }
-export const ArrayCE = ArrayCEClass.prototype;
+//export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
+//export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
+let ArrayCE_Base = CreateWrapperForClassExtensions(ArrayCEClass);
+// we don't actually call this; it's just a way to trick/control the type-checking to fix the issue with generics (there's probably a better way)
+/*const ArrayCE_TypedHelper = <T>(nextThis: T[])=> {
+    return CreateWrapperForClassExtensions<ArrayCEClass<T>>(ArrayCEClass)(nextThis);
+};
+export const ArrayCE = ArrayCE_Base as any as typeof ArrayCE_TypedHelper;*/
+export const ArrayCE = ArrayCE_Base;
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {
     ToArray(this: ArrayIterator) {
         return Array.from(this);
     }
 }
-export const ArrayIteratorCE = ArrayIteratorCEClass.prototype;*/
-export class NodeListCEClass {
+export const ArrayIteratorCE = CreateWrapperForClassExtensions(ArrayIteratorCEClass);*/
+export class NodeListCEClass extends NodeList {
     ToArray() {
         return Array.from(this);
     }
 }
-export const NodeListCE = ArrayCEClass.prototype;
+export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);
+let a;
+ArrayCE(a).Contains;
 //# sourceMappingURL=CE_Array.js.map

@@ -1,10 +1,10 @@
 import {TransferPrototypeProps} from "../Utils/General";
-import {ObjectCE, VSet_Options, ObjectCEClass} from "./CE_Object";
+import {ObjectCE, VSet_Options, ObjectCEClass} from "../ClassExtensions/CE_Object";
 
-TransferPrototypeProps(Object.prototype, ObjectCE, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Object.prototype, ObjectCEClass.prototype, {}, {configurable: true, enumerable: false});
 
 declare global {
-	interface Object extends ObjectCEClass {
+	interface Object extends ObjectCEClass<Object> {
 		// we have to explicitly define these, since they have the tricky "this: T" behavior
 		/*VSet<T>(this: T, props: any, options?: VSet_Options): T;
 		VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;

@@ -1,4 +1,5 @@
-export class ElementCEClass {
+import { CreateWrapperForClassExtensions, NodeListCE } from "..";
+export class ElementCEClass extends Element {
     GetParents(topDown = false) {
         let result = [];
         let currentParent = this.parentElement;
@@ -11,7 +12,7 @@ export class ElementCEClass {
         return result;
     }
     GetSelfAndParents(topDown = false) {
-        let result = this.GetParents(topDown);
+        let result = ElementCE(this).GetParents(topDown);
         return topDown ? result.concat([this]) : [this].concat(result);
     }
     /*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
@@ -37,8 +38,8 @@ export class ElementCEClass {
         return null;
     }
     $(queryStr) {
-        return this.querySelectorAll(queryStr).ToArray();
+        return NodeListCE(this.querySelectorAll(queryStr)).ToArray();
     }
 }
-export const ElementCE = ElementCEClass.prototype;
+export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);
 //# sourceMappingURL=CE_Element.js.map

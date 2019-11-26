@@ -1,3 +1,22 @@
+import { WithFuncsStandalone, CreateWrapperForClassExtensions } from "..";
+/*function Test1(a, b: string, c) {}
+
+/*type ExtractArgs2Plus<T> = FirstParameterType<T>;
+export function Extract(func: (...args: any[])=>any) {
+    return (...args: Parameters<typeof func>)=>any;
+}
+export const Test1_Next = Extract(Test1);
+type FirstParameterType<T> = T extends (a: infer U, ...args: infer T2) => any ? T2 : unknown;*#/
+
+type Extract_Type<T> =
+        //T extends (...args)=>any ? (thisArg: Object, ...args: Parameters<T>)=>ReturnType<T> :
+        T extends (firstParam: infer FirstParam, ...args: infer RestOfParams)=>any ? (...args: RestOfParams)=>ReturnType<T> :
+        T;
+export function Extract<T>(source: T): Extract_Type<T> {
+    return null as any;
+}
+
+const Test2 = Extract(Test1);*/
 export class FunctionCEClass {
     GetName() {
         //return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
@@ -37,14 +56,14 @@ export class FunctionCEClass {
     }
     ;
 }
-export const FunctionCE = FunctionCEClass.prototype;
+export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
 function getDaysInMonth(year, month) {
     return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCEClass {
+export class DateCEClass extends Date {
     get MonthDate() {
         return new Date(this.getFullYear(), this.getMonth(), 1);
     }
@@ -58,14 +77,14 @@ export class DateCEClass {
         var n = this.getDate();
         this.setDate(1);
         this.setMonth(this.getMonth() + value);
-        this.setDate(Math.min(n, this.GetDaysInMonth()));
+        this.setDate(Math.min(n, DateCE(this).GetDaysInMonth()));
         return this;
     }
     Clone() {
         return new Date(this.getTime());
     }
 }
-export const DateCE = DateCEClass.prototype;
+export const DateCE = CreateWrapperForClassExtensions(DateCEClass);
 /*export class ErrorCEClass extends Error {
     get Stack() {
         // this causes the full stack-trace to be attached to the Error object (in Chrome)
@@ -76,5 +95,5 @@ export const DateCE = DateCEClass.prototype;
         return this.stack;
     }
 }
-export const ErrorCE = ErrorCEClass.prototype;*/ 
+export const ErrorCE = CreateWrapperForClassExtensions(ErrorCEClass);*/ 
 //# sourceMappingURL=CE_Others.js.map

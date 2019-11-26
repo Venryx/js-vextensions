@@ -1,19 +1,19 @@
-export declare class NumberCEClass {
-    IfN1Then(this: number, valIfSelfIsNeg1: any): any;
-    NaNTo(this: number, valIfSelfIsNaN: any): any;
-    ToPercentStr(this: number, precision?: number): string;
-    IsMultipleOf(this: number, multipleOf: number, maxDistToBeMultiple: number): boolean;
-    RoundTo(this: number, multiple: any): number;
-    RoundTo_Str(this: number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): string;
-    FloorTo(this: number, multipleOf: any): number;
-    FloorTo_Str(this: number, multipleOf: any): string;
-    CeilingTo(this: number, multipleOf: any): number;
-    CeilingTo_Str(this: number, multipleOf: any): string;
-    KeepAtLeast(this: number, min: number): number;
-    KeepAtMost(this: number, max: number): number;
-    KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number;
-    WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number;
-    Distance(this: number, other: number): number;
-    ToPower(this: number, power: number): number;
+export declare class NumberCEClass extends Number {
+    IfN1Then(this: Number, valIfSelfIsNeg1: any): any;
+    NaNTo(this: Number, valIfSelfIsNaN: any): any;
+    ToPercentStr(this: Number, precision?: number): string;
+    IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
+    RoundTo(this: Number, multiple: any): number;
+    RoundTo_Str(this: Number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): string;
+    FloorTo(this: Number, multipleOf: any): number;
+    FloorTo_Str(this: Number, multipleOf: any): string;
+    CeilingTo(this: Number, multipleOf: any): number;
+    CeilingTo_Str(this: Number, multipleOf: any): string;
+    KeepAtLeast(this: Number, min: number): number;
+    KeepAtMost(this: Number, max: number): number;
+    KeepBetween(this: Number, min: number, max: number, allowFixMinMax?: boolean): Number;
+    WrapToRange(this: Number, min: number, max: number, maxOut?: boolean): number;
+    Distance(this: Number, other: number): number;
+    ToPower(this: Number, power: number): number;
 }
-export declare const NumberCE: NumberCEClass;
+export declare const NumberCE: (nextThis: any) => NumberCEClass;

@@ -34,5 +34,5 @@ export declare class Bridge {
     OnReceiveCallback(bridgeMessage: BridgeMessage): void;
     lastCallID: number;
     callCallbacks: {};
-    Call(funcName: string, ...args: any[]): Promise<{}>;
+    Call(funcName: string, ...args: any[]): Promise<unknown>;
 }

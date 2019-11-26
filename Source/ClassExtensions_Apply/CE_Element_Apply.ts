@@ -1,11 +1,12 @@
 import {TransferPrototypeProps} from "../Utils/General";
-import {ElementCE, ElementCEClass} from "./CE_Element";
+import {ElementCE, ElementCEClass} from "../ClassExtensions/CE_Element";
 
 if (typeof Element != "undefined") {
-	TransferPrototypeProps(Element.prototype, ElementCE, {}, {configurable: true, enumerable: false});
+	TransferPrototypeProps(Element.prototype, ElementCEClass.prototype, {}, {configurable: true, enumerable: false});
 }
 
 declare global {
+	// @ts-ignore
 	interface Element extends ElementCEClass {}
 	/*interface Element {
 		GetParents(topDown?: boolean): HTMLElement[];

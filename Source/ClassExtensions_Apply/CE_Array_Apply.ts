@@ -1,12 +1,13 @@
-import {ForEachExtras, ArrayCE, NodeListCE, ArrayCEClass, NodeListCEClass} from "./CE_Array";
+import {ForEachExtras, ArrayCE, NodeListCE, ArrayCEClass, NodeListCEClass} from "../ClassExtensions/CE_Array";
 import {TransferPrototypeProps} from "../Utils/General";
 
-TransferPrototypeProps(Array.prototype, ArrayCE, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Array.prototype, ArrayCEClass.prototype, {}, {configurable: true, enumerable: false});
 if (typeof NodeList != "undefined") {
-	TransferPrototypeProps(NodeList.prototype, NodeListCE, {}, {configurable: true, enumerable: false});
+	TransferPrototypeProps(NodeList.prototype, NodeListCEClass.prototype, {}, {configurable: true, enumerable: false});
 }
 
 declare global {
+	// @ts-ignore
 	interface Array<T> extends ArrayCEClass<T> {}
 	/*interface Array<T> {
 		ForEach(func: (value: T, extras: ForEachExtras)=>any): void;
@@ -50,6 +51,7 @@ declare global {
 		Median(): number;
 		Random(): T;
 	}*/
+	// @ts-ignore
 	interface NodeList extends NodeListCEClass {}
 	/*interface NodeList {
 		ToArray(): any[];

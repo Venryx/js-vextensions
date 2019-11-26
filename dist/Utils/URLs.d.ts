@@ -19,16 +19,16 @@ export declare class VURL {
     constructor(domain?: string, pathNodes?: string[], queryVars?: QueryVar[], hash?: string);
     domain: string;
     DomainStr(withProtocol?: boolean): string;
-    readonly Protocol: string;
-    readonly DomainWithoutProtocol: string;
+    get Protocol(): string;
+    get DomainWithoutProtocol(): string;
     pathNodes: string[];
     PathStr(pathStartSlash?: boolean): string;
     queryVars: QueryVar[];
-    readonly QueryStr: string;
+    get QueryStr(): string;
     GetQueryVar(name: string): string;
     SetQueryVar(name: string, value: any): void;
     hash: string;
-    readonly HashStr: string;
+    get HashStr(): string;
     Clone(): VURL;
     toString(options?: {
         domain?: boolean;

@@ -7,8 +7,8 @@ export declare function IsVector2iShape(obj: any): obj is {
     y: number;
 };
 export declare class Vector2i {
-    static readonly zero: Vector2i;
-    static readonly one: Vector2i;
+    static get zero(): Vector2i;
+    static get one(): Vector2i;
     constructor(x?: number, y?: number);
     constructor(pos: {
         x: number;
@@ -47,8 +47,8 @@ export declare function IsVector3iShape(obj: any): obj is {
     z: number;
 };
 export declare class Vector3i {
-    static readonly zero: Vector3i;
-    static readonly one: Vector3i;
+    static get zero(): Vector3i;
+    static get one(): Vector3i;
     constructor(x?: any, y?: any, z?: any);
     x: number;
     y: number;
@@ -90,13 +90,20 @@ export declare class VRect {
     width: number;
     height: number;
     y0IsBottom: boolean;
-    Left: number;
-    Right: number;
-    Bottom: number;
-    Top: number;
-    Position: Vector2i;
-    Size: Vector2i;
-    Center: Vector2i;
+    get Left(): number;
+    set Left(val: number);
+    get Right(): number;
+    set Right(val: number);
+    get Bottom(): number;
+    set Bottom(val: number);
+    get Top(): number;
+    set Top(val: number);
+    get Position(): Vector2i;
+    set Position(val: Vector2i);
+    get Size(): Vector2i;
+    set Size(val: Vector2i);
+    get Center(): Vector2i;
+    set Center(val: Vector2i);
     toString(): string;
     Equals(other: any): boolean;
     NewX(valOrFunc: number | ((oldVal: number) => number)): VRect;

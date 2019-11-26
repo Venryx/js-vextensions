@@ -1,16 +1,8 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { TryCall } from "./Timers";
-import { Assert, ToJSON, IsObject, IsString, FromJSON } from "..";
+import { Assert, ToJSON, IsObject, IsString, FromJSON, ObjectCE } from "..";
 export class BridgeMessage {
     constructor(initialData) {
-        this.Extend(initialData);
+        ObjectCE(this).Extend(initialData);
     }
 }
 /*export class Bridge_Options {
@@ -38,7 +30,7 @@ export class Bridge {
         // ==========
         this.lastCallID = -1;
         this.callCallbacks = {};
-        this.Extend(options.Excluding("receiveChannelMessageFunc_addImmediately"));
+        ObjectCE(this).Extend(ObjectCE(options).Excluding("receiveChannelMessageFunc_addImmediately"));
         if (options.receiveChannelMessageFunc_addImmediately != false)
             this.SetUpReceiver();
     }
@@ -75,22 +67,18 @@ export class Bridge {
     UnregisterFunction(name) {
         delete this.functions[name];
     }
-    OnReceiveFunctionCall(bridgeMessage) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let result = yield this.CallInternal(bridgeMessage.functionCall_name, ...bridgeMessage.functionCall_args);
-            let responseBridgeMessage = new BridgeMessage({ callback_callID: bridgeMessage.functionCall_callID, callback_result: result });
-            this.SendBridgeMessage(responseBridgeMessage);
-        });
+    async OnReceiveFunctionCall(bridgeMessage) {
+        let result = await this.CallInternal(bridgeMessage.functionCall_name, ...bridgeMessage.functionCall_args);
+        let responseBridgeMessage = new BridgeMessage({ callback_callID: bridgeMessage.functionCall_callID, callback_result: result });
+        this.SendBridgeMessage(responseBridgeMessage);
     }
     // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
-    CallInternal(funcName, ...args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let func = this.functions[funcName];
-            if (this.ignoreMissingFunctions && func == null)
-                return;
-            Assert(func, `Cannot find function "${funcName}".`);
-            return yield func(...args);
-        });
+    async CallInternal(funcName, ...args) {
+        let func = this.functions[funcName];
+        if (this.ignoreMissingFunctions && func == null)
+            return;
+        Assert(func, `Cannot find function "${funcName}".`);
+        return await func(...args);
     }
     OnReceiveCallback(bridgeMessage) {
         let callback = this.callCallbacks[bridgeMessage.callback_callID];

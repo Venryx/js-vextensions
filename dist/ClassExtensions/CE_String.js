@@ -1,13 +1,14 @@
-export class StringCEClass {
+import { CreateWrapperForClassExtensions, ArrayCE } from "..";
+export class StringCEClass extends String {
     TrimStart(...chars) {
         // fix for if called by VDF (which has a different signature)
         //if (arguments[0] instanceof Array) chars = arguments[0];
-        for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && chars.Contains(this[iOfFirstToKeep]); iOfFirstToKeep++)
+        for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && ArrayCE(chars).Contains(this[iOfFirstToKeep]); iOfFirstToKeep++)
             ;
         return this.slice(iOfFirstToKeep, this.length);
     }
     TrimEnd(...chars) {
-        for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && chars.Contains(this[iOfLastToKeep]); iOfLastToKeep--)
+        for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && ArrayCE(chars).Contains(this[iOfLastToKeep]); iOfLastToKeep--)
             ;
         return this.substr(0, iOfLastToKeep + 1);
     }
@@ -100,13 +101,13 @@ export class StringCEClass {
         return highestIndex;
     }
     StartsWithAny(...strings) {
-        return strings.Any(str => this.startsWith(str));
+        return ArrayCE(strings).Any(str => this.startsWith(str));
     }
     EndsWithAny(...strings) {
-        return strings.Any(str => this.endsWith(str));
+        return ArrayCE(strings).Any(str => this.endsWith(str));
     }
     ContainsAny(...strings) {
-        return strings.Any(str => this.Contains(str));
+        return ArrayCE(strings).Any(str => StringCE(this).Contains(str));
     }
     /** Separator-strings must be escaped. (they're passed into a regular-expression) */
     SplitByAny(...separators) {
@@ -196,5 +197,6 @@ export class StringCEClass {
     ToInt() { return parseInt(Number(this) + ""); }
     ToFloat() { return Number(this); }
 }
-export const StringCE = StringCEClass.prototype;
+//export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
+export const StringCE = CreateWrapperForClassExtensions(StringCEClass);
 //# sourceMappingURL=CE_String.js.map

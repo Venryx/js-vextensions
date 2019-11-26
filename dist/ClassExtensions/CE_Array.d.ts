@@ -1,10 +1,9 @@
-import ".";
 export interface ForEachExtras {
     index: number;
     Break: () => void;
     Continue: () => void;
 }
-export declare class ArrayCEClass<T> {
+export declare class ArrayCEClass<T> extends Array<T> {
     ForEach(this: T[], func: (value: T, extras: ForEachExtras) => any): void;
     ForEachAsync(this: T[], func: (value: T, extras: ForEachExtras) => any): Promise<void>;
     Contains(this: T[], item: T): boolean;
@@ -57,8 +56,8 @@ export declare class ArrayCEClass<T> {
     oldJoin: (separator?: string) => string;
     join(this: T[], separator?: string): string;
 }
-export declare const ArrayCE: ArrayCEClass<any>;
-export declare class NodeListCEClass {
+export declare const ArrayCE: <T>(nextThis: T[]) => ArrayCEClass<T>;
+export declare class NodeListCEClass extends NodeList {
     ToArray(this: NodeList): Node[];
 }
-export declare const NodeListCE: ArrayCEClass<any>;
+export declare const NodeListCE: (nextThis: any) => NodeListCEClass;

@@ -48,7 +48,7 @@ export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
-export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
+export declare function Compare(a: any, b: any, caseSensitive?: boolean): 1 | 0 | -1;
 export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
 export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;
 export declare function GetXToY(minX: any, maxY: any, interval?: number): any[];
@@ -66,12 +66,13 @@ export declare function GetAutoElement(startHTML: string): Element;
 export declare class TreeNode {
     constructor(ancestorNodes: TreeNode[], obj: any, prop: any);
     ancestorNodes: TreeNode[];
-    readonly PathNodes: string[];
-    readonly PathStr: string;
-    readonly PathStr_Updeep: string;
+    get PathNodes(): string[];
+    get PathStr(): string;
+    get PathStr_Updeep(): string;
     obj: any;
     prop: string;
-    Value: any;
+    get Value(): any;
+    set Value(newVal: any);
 }
 export declare function GetTreeNodesInObjTree(obj: any, includeRootNode?: boolean, _ancestorNodes?: any[]): TreeNode[];
 export declare function GetTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, includeRootNode?: boolean, _ancestorNodes?: any[]): any[];
@@ -88,8 +89,8 @@ export declare function GetErrorMessagesUnderElement(element: any): any[];
 export declare const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 export declare function FindDOM(selector: string): Element;
 export declare function FindDOMAll(selector: string): Element[];
-export declare function WaitTillDataPathIsSet(dataPath: string): Promise<{}>;
-export declare function WaitTillPropertyIsSet(obj: Object, prop: string): Promise<{}>;
+export declare function WaitTillDataPathIsSet(dataPath: string): Promise<unknown>;
+export declare function WaitTillPropertyIsSet(obj: Object, prop: string): Promise<unknown>;
 export declare enum CapScheme {
     /** examplePropNameWithDuoWord */ PropName = 0,
     /** Example Title With Duo-Word */ Title = 1,
@@ -99,3 +100,9 @@ export declare function ChangeCapitalization(text: string, fromScheme: CapScheme
 export declare function StartDownload(content: string, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 export declare function StartUpload(): Promise<string | ArrayBuffer>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;
+declare type WithFuncsStandalone_Type<T> = {
+    [P in keyof T]: T[P] extends (...args: any[]) => any ? (thisArg: Object, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
+};
+export declare function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T>;
+export declare function CreateWrapperForClassExtensions<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => T;
+export {};

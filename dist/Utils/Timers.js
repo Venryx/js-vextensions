@@ -1,4 +1,4 @@
-import { Assert, IsNumber } from "..";
+import { Assert, IsNumber, NumberCE, ArrayCE } from "..";
 export class TimerContext {
     constructor() {
         this.timers = [];
@@ -64,7 +64,7 @@ export function WaitXThenRun(delayInMS, func, ...args) {
 }
 export function WaitUntilXThenRun(targetDateTimeInMS, func, ...args) {
     var now = Date.now();
-    var diff = (targetDateTimeInMS - now).KeepAtLeast(0);
+    var diff = NumberCE(targetDateTimeInMS - now).KeepAtLeast(0);
     if (diff > maxTimeoutLength) {
         WaitXThenRun(maxTimeoutLength, () => WaitUntilXThenRun(targetDateTimeInMS, func));
     }
@@ -113,8 +113,8 @@ export class Timer {
         return this;
     }
     RemoveFromContext(timerContext) {
-        this.timerContexts.Remove(timerContext);
-        timerContext.timers.Remove(this);
+        ArrayCE(this.timerContexts).Remove(timerContext);
+        ArrayCE(timerContext.timers).Remove(this);
     }
     ClearContexts() {
         for (let context of this.timerContexts) {

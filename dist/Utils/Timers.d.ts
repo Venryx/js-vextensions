@@ -9,8 +9,8 @@ export declare function TryCall<T>(func: (..._: any[]) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
 export declare function WaitXThenRun(delayInMS: number, func: Function, ...args: any[]): number;
 export declare function WaitUntilXThenRun(targetDateTimeInMS: number, func: Function, ...args: any[]): void;
-export declare function SleepAsync(timeMS: any): Promise<{}>;
-export declare function SleepAsyncUntil(targetDateTimeInMS: number): Promise<{}>;
+export declare function SleepAsync(timeMS: any): Promise<unknown>;
+export declare function SleepAsyncUntil(targetDateTimeInMS: number): Promise<unknown>;
 export declare function DoNothingXTimesThenDoY(doNothingCount: number, func: Function, key?: string): void;
 export declare class Timer {
     constructor(intervalInMS: any, func: any, maxCallCount?: number);
@@ -23,10 +23,10 @@ export declare class Timer {
     ClearContexts(): void;
     startTime: number;
     timerID: number;
-    readonly IsRunning: boolean;
+    get IsRunning(): boolean;
     nextTickTime: number;
     nextTickFunc: Function;
-    readonly NextTickFuncOverdue: boolean;
+    get NextTickFuncOverdue(): boolean;
     callCount_thisRun: number;
     callCount_total: number;
     Start(initialDelayOverride?: number): this;

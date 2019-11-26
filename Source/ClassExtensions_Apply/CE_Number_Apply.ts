@@ -1,7 +1,7 @@
 import {TransferPrototypeProps} from "../Utils/General";
-import {NumberCE, NumberCEClass} from "./CE_Number";
+import {NumberCE, NumberCEClass} from "../ClassExtensions/CE_Number";
 
-TransferPrototypeProps(Number.prototype, NumberCE, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Number.prototype, NumberCEClass.prototype, {}, {configurable: true, enumerable: false});
 
 declare global {
 	interface Number extends NumberCEClass {}

@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var Vector2i_1, Vector3i_1, VRect_1;
 import { Global } from "./General";
-import { IsNaN, Assert } from "..";
+import { IsNaN, Assert, NumberCE, ObjectCE, ArrayCE } from "..";
 function IsNullOrNaN(value) {
     return value === null || IsNaN(value);
 }
@@ -59,7 +59,7 @@ let Vector2i = Vector2i_1 = class Vector2i {
         return new Vector2i_1(this.x / x, this.y / y);
     }
     DistanceTo(other) {
-        return Math.sqrt((other.x - this.x).ToPower(2) + (other.y - this.y).ToPower(2));
+        return Math.sqrt(NumberCE(other.x - this.x).ToPower(2) + NumberCE(other.y - this.y).ToPower(2));
     }
 };
 Vector2i = Vector2i_1 = __decorate([
@@ -191,34 +191,34 @@ let VRect = VRect_1 = class VRect {
         return this.toString() == other.toString();
     }
     NewX(valOrFunc) {
-        return this.Clone().VSet({ x: valOrFunc instanceof Function ? valOrFunc(this.x) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ x: valOrFunc instanceof Function ? valOrFunc(this.x) : valOrFunc });
     }
     NewLeft(valOrFunc) {
-        return this.Clone().VSet({ Left: valOrFunc instanceof Function ? valOrFunc(this.Left) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ Left: valOrFunc instanceof Function ? valOrFunc(this.Left) : valOrFunc });
     }
     NewRight(valOrFunc) {
-        return this.Clone().VSet({ Right: valOrFunc instanceof Function ? valOrFunc(this.Right) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ Right: valOrFunc instanceof Function ? valOrFunc(this.Right) : valOrFunc });
     }
     NewY(valOrFunc) {
-        return this.Clone().VSet({ y: valOrFunc instanceof Function ? valOrFunc(this.y) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ y: valOrFunc instanceof Function ? valOrFunc(this.y) : valOrFunc });
     }
     NewBottom(valOrFunc) {
-        return this.Clone().VSet({ Bottom: valOrFunc instanceof Function ? valOrFunc(this.Bottom) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ Bottom: valOrFunc instanceof Function ? valOrFunc(this.Bottom) : valOrFunc });
     }
     NewTop(valOrFunc) {
-        return this.Clone().VSet({ Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc });
     }
     NewPosition(valOrFunc) {
-        return this.Clone().VSet({ Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc });
     }
     NewWidth(valOrFunc) {
-        return this.Clone().VSet({ width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc });
     }
     NewHeight(valOrFunc) {
-        return this.Clone().VSet({ height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc });
     }
     NewSize(valOrFunc) {
-        return this.Clone().VSet({ Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc });
+        return ObjectCE(this.Clone()).VSet({ Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc });
     }
     Grow(amountOnEachSide) {
         return new VRect_1(this.x - amountOnEachSide, this.y - amountOnEachSide, this.width + (amountOnEachSide * 2), this.height + (amountOnEachSide * 2));
@@ -244,16 +244,16 @@ let VRect = VRect_1 = class VRect {
     Intersects_Advanced(other, options) {
         let variantsToCompare = [this];
         if (options.xWrappedBy) {
-            variantsToCompare.push(...variantsToCompare.SelectMany(base => {
+            variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base => {
                 return [base, base.NewX(x => x - options.xWrappedBy), base.NewX(x => x + options.xWrappedBy)];
             }));
         }
         if (options.yWrappedBy) {
-            variantsToCompare.push(...variantsToCompare.SelectMany(base => {
+            variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base => {
                 return [base, base.NewY(y => y - options.yWrappedBy), base.NewY(y => y + options.yWrappedBy)];
             }));
         }
-        return variantsToCompare.Any(a => a.Intersects(other));
+        return ArrayCE(variantsToCompare).Any(a => a.Intersects(other));
     }
     Clone() {
         return new VRect_1(this.x, this.y, this.width, this.height);
