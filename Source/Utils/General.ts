@@ -774,3 +774,9 @@ export function StartUpload(): Promise<string | ArrayBuffer> {
 		fileInput.click();
 	});
 }
+
+export function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor) {
+	for (let [name, descriptor] of Object["getOwnPropertyDescriptors"](source).entries()) {
+		Object.defineProperty(target, name, E(descriptorBase, descriptor, descriptorOverride));
+	}
+}

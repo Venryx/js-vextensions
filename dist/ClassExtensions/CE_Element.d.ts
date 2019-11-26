@@ -1,21 +1,8 @@
-import ".";
-declare global {
-    interface Element {
-        GetParents(topDown?: boolean): HTMLElement[];
-    }
+declare const ElementCE_base: new () => Element;
+export declare class ElementCE extends ElementCE_base {
+    GetParents(topDown?: boolean): HTMLElement[];
+    GetSelfAndParents(this: HTMLElement, topDown?: boolean): HTMLElement[];
+    QuerySelector_BreadthFirst(selector: string): HTMLElement;
+    $(queryStr: string): HTMLElement[];
 }
-declare global {
-    interface Element {
-        GetSelfAndParents(topDown?: boolean): HTMLElement[];
-    }
-}
-declare global {
-    interface Element {
-        QuerySelector_BreadthFirst(selector: string): HTMLElement;
-    }
-}
-declare global {
-    interface Element {
-        $(queryStr: string): HTMLElement[];
-    }
-}
+export {};

@@ -1,11 +1,9 @@
-import {ForEachExtras, ArrayCE} from "./CE_Array";
+import {ForEachExtras, ArrayCE, NodeListCE} from "./CE_Array";
+import {TransferPrototypeProps} from "../Utils/General";
 
-for (let funcName of Object.getOwnPropertyNames(ArrayCE.prototype)) {
-	Object.defineProperty(Array.prototype, funcName, {
-		configurable: true, // for some reason, we get an error otherwise in non-dev mode (same for below)
-		enumerable: false,
-		value: ArrayCE.prototype[funcName],
-	});
+TransferPrototypeProps(Array.prototype, ArrayCE.prototype, {}, {configurable: true, enumerable: false});
+if (typeof NodeList != "undefined") {
+	TransferPrototypeProps(NodeList.prototype, NodeListCE.prototype, {}, {configurable: true, enumerable: false});
 }
 
 declare global {

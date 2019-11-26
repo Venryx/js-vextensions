@@ -1,81 +1,18 @@
-declare global {
-    interface Number {
-        IfN1Then<T>(valIfSelfIsNeg1: T): T;
-    }
+export declare class NumberCE extends Number {
+    IfN1Then(this: number, valIfSelfIsNeg1: any): any;
+    NaNTo(valIfSelfIsNaN: any): any;
+    ToPercentStr(this: number, precision?: number): string;
+    IsMultipleOf(this: number, multipleOf: number, maxDistToBeMultiple: number): boolean;
+    RoundTo(this: number, multiple: any): number;
+    RoundTo_Str(this: number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): string;
+    FloorTo(this: number, multipleOf: any): number;
+    FloorTo_Str(this: number, multipleOf: any): string;
+    CeilingTo(this: number, multipleOf: any): number;
+    CeilingTo_Str(this: number, multipleOf: any): string;
+    KeepAtLeast(this: number, min: number): number;
+    KeepAtMost(this: number, max: number): number;
+    KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number;
+    WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number;
+    Distance(this: number, other: number): number;
+    ToPower(this: number, power: number): number;
 }
-declare global {
-    interface Number {
-        NaNTo<T>(valIfSelfIsNaN: T): T;
-    }
-}
-declare global {
-    interface Number {
-        ToPercentStr(precision?: number): string;
-    }
-}
-declare global {
-    interface Number {
-        IsMultipleOf(multipleOf: number, maxDistToBeMultiple: number): number;
-    }
-}
-declare global {
-    interface Number {
-        RoundTo(multiple: number): number;
-    }
-}
-declare global {
-    interface Number {
-        RoundTo_Str(multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
-    }
-}
-declare global {
-    interface Number {
-        FloorTo(multipleOf: number): number;
-    }
-}
-declare global {
-    interface Number {
-        FloorTo_Str(multipleOf: number): string;
-    }
-}
-declare global {
-    interface Number {
-        CeilingTo(multipleOf: number): number;
-    }
-}
-declare global {
-    interface Number {
-        CeilingTo_Str(multipleOf: number): string;
-    }
-}
-declare global {
-    interface Number {
-        KeepAtLeast(this: number, min: number): number;
-    }
-}
-declare global {
-    interface Number {
-        KeepAtMost(this: number, max: number): number;
-    }
-}
-declare global {
-    interface Number {
-        KeepBetween(this: number, min: number, max: number, allowFixMinMax?: boolean): number;
-    }
-}
-declare global {
-    interface Number {
-        WrapToRange(this: number, min: number, max: number, maxOut?: boolean): number;
-    }
-}
-declare global {
-    interface Number {
-        Distance(this: number, other: number): number;
-    }
-}
-declare global {
-    interface Number {
-        ToPower(this: number, power: number): number;
-    }
-}
-export {};

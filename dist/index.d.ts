@@ -1,4 +1,9 @@
-import "./ClassExtensions";
+export * from "./ClassExtensions/CE_Array";
+export * from "./ClassExtensions/CE_Element";
+export * from "./ClassExtensions/CE_Number";
+export * from "./ClassExtensions/CE_Object";
+export * from "./ClassExtensions/CE_Others";
+export * from "./ClassExtensions/CE_String";
 export * from "./JSVE";
 export * from "./Utils/General";
 export * from "./Utils/Changes";
