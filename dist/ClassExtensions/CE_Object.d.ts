@@ -18,9 +18,9 @@ export declare class ObjectCEClass {
     VSet<T>(this: T, props: any, options?: VSet_Options): T;
     VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): T;
     Extended<T, T2>(this: T, x: T2): T & T2;
-    SafeGet(this: any, path: string, resultIfNull?: any): any;
+    SafeGet(path: string, resultIfNull?: any): any;
     SafeGet<T, Result>(this: T, pathGetterFunc: (self: T) => Result, resultIfNull?: any): Result;
-    VAct<T>(func: (self: T) => any): this;
+    VAct<T>(this: T, func: (self: T) => any): T;
     As<T>(type: new (..._: any[]) => T): T;
     Strip(): this;
     Including(...propNames: string[]): {};

@@ -137,13 +137,13 @@ export class ObjectCEClass {
 	};*/
 	//E(x) { return this.Extended(x); };
 
-	SafeGet(this, path: string, resultIfNull?: any): any;
+	SafeGet(path: string, resultIfNull?: any): any;
 	SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
 	SafeGet(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
 		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
 	}
-	VAct<T>(func: (self: T)=>any): this {
+	VAct<T>(this: T, func: (self: T)=>any): T {
 		func.call(this, this);
 		return this;
 	}

@@ -4,7 +4,15 @@ import {ObjectCE, VSet_Options, ObjectCEClass} from "./CE_Object";
 TransferPrototypeProps(Object.prototype, ObjectCE, {}, {configurable: true, enumerable: false});
 
 declare global {
-	interface Object extends ObjectCEClass {}
+	interface Object extends ObjectCEClass {
+		// we have to explicitly define these, since they have the tricky "this: T" behavior
+		/*VSet<T>(this: T, props: any, options?: VSet_Options): T;
+		VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
+		Extended<T, T2>(this: T, x: T2): T & T2;
+		SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
+		VAct<T>(this: T, func: (self: T)=>any): this;
+		Strip<T>(this: T): this;*/
+	}
 	/*interface Object {
 		// base
 		//_AddItem(name: string, value, forceAdd?: boolean): void;

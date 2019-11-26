@@ -36,7 +36,9 @@ export declare class ArrayCEClass<T> {
     XFromLast(this: T[], x: number): T;
     Move(this: T[], item: T, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number;
     ToList(this: T[], itemType?: any): any[];
-    ToMap(this: T[], keyFunc: (item: T, index: number) => string, valFunc: (item: T, index: number) => any): {};
+    ToMap<Value>(this: T[], keyFunc: (item: T, index: number) => string, valFunc: (item: T, index: number) => Value): {
+        [key: string]: Value;
+    };
     Skip(this: T[], count: number): any[];
     Take(this: T[], count: number): any[];
     TakeLast(this: T[], count: number): any[];

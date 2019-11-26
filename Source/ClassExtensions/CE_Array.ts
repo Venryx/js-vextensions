@@ -231,7 +231,7 @@ export class ArrayCEClass<T> {
 			result.Add(keyFunc(this[i]), valFunc(this[i]));
 		return result;
 	}*/
-	ToMap(this: T[], keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>any) {
+	ToMap<Value>(this: T[], keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>Value): {[key: string]: Value} {
 		var result = {};
 		for (let [index, item] of this.entries()) {
 			result[keyFunc(item, index)] = valFunc(item, index);
