@@ -9,7 +9,7 @@ export interface VSet_Options {
 }
 
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCE extends Object {
+export class ObjectCEClass extends Object {
 	// base
 	// ==========
 
@@ -270,3 +270,4 @@ export class ObjectCE extends Object {
 		this[openIndex] = item;
 	};
 }
+export const ObjectCE = ObjectCEClass.prototype;

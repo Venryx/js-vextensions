@@ -1,7 +1,7 @@
 import {TransferPrototypeProps} from "../Utils/General";
 import {ObjectCE, VSet_Options} from "./CE_Object";
 
-TransferPrototypeProps(Object.prototype, ObjectCE.prototype, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Object.prototype, ObjectCE, {}, {configurable: true, enumerable: false});
 
 declare global {
 	interface Object {

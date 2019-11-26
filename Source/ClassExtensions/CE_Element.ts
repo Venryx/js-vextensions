@@ -1,4 +1,4 @@
-export class ElementCE extends (Element || {} as new()=>Element) {
+export class ElementCEClass extends (Element || {} as new()=>Element) {
 	GetParents(topDown = false) {
 		let result = [] as HTMLElement[];
 		let currentParent = this.parentElement;
@@ -40,3 +40,4 @@ export class ElementCE extends (Element || {} as new()=>Element) {
 		return this.querySelectorAll(queryStr).ToArray();
 	}
 }
+export const ElementCE = ElementCEClass.prototype;

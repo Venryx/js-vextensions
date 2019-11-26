@@ -5,7 +5,7 @@ export interface VSet_Options {
     deleteEmpty?: boolean;
 }
 export declare const specialKeys: string[];
-export declare class ObjectCE extends Object {
+export declare class ObjectCEClass extends Object {
     _AddItem(name: any, value: any, forceAdd?: boolean): void;
     _AddFunction(name: any, func: any): void;
     _AddGetterSetter(name: any, getter: any, setter: any): void;
@@ -30,3 +30,4 @@ export declare class ObjectCE extends Object {
     FA_RemoveAt(index: number): void;
     FA_Add(item: any): void;
 }
+export declare const ObjectCE: ObjectCEClass;

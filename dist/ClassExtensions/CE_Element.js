@@ -1,4 +1,4 @@
-export class ElementCE extends (Element || {}) {
+export class ElementCEClass extends (Element || {}) {
     GetParents(topDown = false) {
         let result = [];
         let currentParent = this.parentElement;
@@ -40,4 +40,5 @@ export class ElementCE extends (Element || {}) {
         return this.querySelectorAll(queryStr).ToArray();
     }
 }
+export const ElementCE = ElementCEClass.prototype;
 //# sourceMappingURL=CE_Element.js.map

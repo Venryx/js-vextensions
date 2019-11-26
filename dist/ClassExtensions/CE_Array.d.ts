@@ -4,7 +4,7 @@ export interface ForEachExtras {
     Break: () => void;
     Continue: () => void;
 }
-export declare class ArrayCE<T> extends Array<T> {
+export declare class ArrayCEClass<T> extends Array<T> {
     ForEach(func: Function): void;
     ForEachAsync(func: Function): Promise<void>;
     Contains(item: any): boolean;
@@ -55,8 +55,10 @@ export declare class ArrayCE<T> extends Array<T> {
     oldJoin: (separator?: string) => string;
     join(separator?: string): string;
 }
-declare const NodeListCE_base: new () => NodeList;
-export declare class NodeListCE extends NodeListCE_base {
+export declare const ArrayCE: ArrayCEClass<any>;
+declare const NodeListCEClass_base: new () => NodeList;
+export declare class NodeListCEClass extends NodeListCEClass_base {
     ToArray(): Node[];
 }
+export declare const NodeListCE: ArrayCEClass<any>;
 export {};

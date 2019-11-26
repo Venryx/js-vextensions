@@ -1,4 +1,4 @@
-export declare class StringCE extends String {
+export declare class StringCEClass extends String {
     TrimStart(this: string, ...chars: string[]): string;
     TrimEnd(this: string, ...chars: string[]): string;
     Contains(str: string, startIndex?: number): boolean;
@@ -25,3 +25,4 @@ export declare class StringCE extends String {
     ToInt(): number;
     ToFloat(): number;
 }
+export declare const StringCE: StringCEClass;

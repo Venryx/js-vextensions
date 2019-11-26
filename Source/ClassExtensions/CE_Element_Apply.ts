@@ -2,7 +2,7 @@ import {TransferPrototypeProps} from "../Utils/General";
 import {ElementCE} from "./CE_Element";
 
 if (typeof Element != "undefined") {
-	TransferPrototypeProps(Element.prototype, ElementCE.prototype, {}, {configurable: true, enumerable: false});
+	TransferPrototypeProps(Element.prototype, ElementCE, {}, {configurable: true, enumerable: false});
 }
 
 declare global {

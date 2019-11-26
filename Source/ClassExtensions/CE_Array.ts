@@ -1,5 +1,5 @@
 import ".";
-import {Assert} from "..";
+import {Assert, StableSort, Compare} from "..";
 
 export interface ForEachExtras {
 	index: number;
@@ -14,7 +14,7 @@ ForEach(func) {
 	}
 };*/
 
-export class ArrayCE<T> extends Array<T> {
+export class ArrayCEClass<T> extends Array<T> {
 	ForEach(func: Function) {
 		for (let i = 0; i < this.length; i++) {
 			let shouldBreak = false;
@@ -371,6 +371,7 @@ export class ArrayCE<T> extends Array<T> {
 		return result;
 	}
 }
+export const ArrayCE = ArrayCEClass.prototype;
 
 // ArrayIterator
 // ==========
@@ -383,13 +384,9 @@ ArrayIterator.prototype._AddFunction_Inline = function ToArray() {
 // NodeList
 // ==========
 
-export class NodeListCE extends (NodeList || ({} as new()=>NodeList)) {
+export class NodeListCEClass extends (NodeList || ({} as new()=>NodeList)) {
 	ToArray() {
 		return Array.from(this);
 	}
 }
-
-// late imports
-// ==========
-
-var {StableSort, Compare} = require("../Utils/General");
+export const NodeListCE = ArrayCEClass.prototype;

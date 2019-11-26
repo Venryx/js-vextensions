@@ -7,14 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import ".";
-import { Assert } from "..";
+import { Assert, StableSort, Compare } from "..";
 /*// since JS doesn't have basic "foreach" system
 ForEach(func) {
     for (var i in this) {
         func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
     }
 };*/
-export class ArrayCE extends Array {
+export class ArrayCEClass extends Array {
     constructor() {
         super(...arguments);
         this.oldJoin = [].join;
@@ -384,6 +384,7 @@ export class ArrayCE extends Array {
         return result;
     }
 }
+export const ArrayCE = ArrayCEClass.prototype;
 // ArrayIterator
 // ==========
 /*var ArrayIterator = [].entries().constructor;
@@ -392,12 +393,10 @@ ArrayIterator.prototype._AddFunction_Inline = function ToArray() {
 };*/
 // NodeList
 // ==========
-export class NodeListCE extends (NodeList || {}) {
+export class NodeListCEClass extends (NodeList || {}) {
     ToArray() {
         return Array.from(this);
     }
 }
-// late imports
-// ==========
-var { StableSort, Compare } = require("../Utils/General");
+export const NodeListCE = ArrayCEClass.prototype;
 //# sourceMappingURL=CE_Array.js.map

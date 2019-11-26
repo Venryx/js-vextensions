@@ -1,4 +1,4 @@
-export class StringCE extends String {
+export class StringCEClass extends String {
     TrimStart(...chars) {
         // fix for if called by VDF (which has a different signature)
         //if (arguments[0] instanceof Array) chars = arguments[0];
@@ -190,4 +190,5 @@ export class StringCE extends String {
     ToInt() { return parseInt(Number(this) + ""); }
     ToFloat() { return Number(this); }
 }
+export const StringCE = StringCEClass.prototype;
 //# sourceMappingURL=CE_String.js.map

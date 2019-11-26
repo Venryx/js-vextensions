@@ -1,4 +1,4 @@
-export declare class NumberCE extends Number {
+export declare class NumberCEClass extends Number {
     IfN1Then(this: number, valIfSelfIsNeg1: any): any;
     NaNTo(valIfSelfIsNaN: any): any;
     ToPercentStr(this: number, precision?: number): string;
@@ -16,3 +16,4 @@ export declare class NumberCE extends Number {
     Distance(this: number, other: number): number;
     ToPower(this: number, power: number): number;
 }
+export declare const NumberCE: NumberCEClass;

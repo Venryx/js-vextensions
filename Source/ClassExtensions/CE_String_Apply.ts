@@ -1,7 +1,7 @@
 import {TransferPrototypeProps} from "../Utils/General";
 import {StringCE} from "./CE_String";
 
-TransferPrototypeProps(String.prototype, StringCE.prototype, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(String.prototype, StringCE, {}, {configurable: true, enumerable: false});
 
 declare global {
 	interface String {

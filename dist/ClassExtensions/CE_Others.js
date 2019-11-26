@@ -1,4 +1,4 @@
-export class FunctionCE extends Function {
+export class FunctionCEClass extends Function {
     GetName() {
         //return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
         return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
@@ -37,13 +37,14 @@ export class FunctionCE extends Function {
     }
     ;
 }
+export const FunctionCE = FunctionCEClass.prototype;
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
 function getDaysInMonth(year, month) {
     return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCE extends Date {
+export class DateCEClass extends Date {
     get MonthDate() {
         return new Date(this.getFullYear(), this.getMonth(), 1);
     }
@@ -64,7 +65,8 @@ export class DateCE extends Date {
         return new Date(this.getTime());
     }
 }
-/*export class ErrorCE extends Error {
+export const DateCE = DateCEClass.prototype;
+/*export class ErrorCEClass extends Error {
     get Stack() {
         // this causes the full stack-trace to be attached to the Error object (in Chrome)
         if ((Error as any).captureStackTrace) {
@@ -73,5 +75,6 @@ export class DateCE extends Date {
         }
         return this.stack;
     }
-}*/ 
+}
+export const ErrorCE = ErrorCEClass.prototype;*/ 
 //# sourceMappingURL=CE_Others.js.map

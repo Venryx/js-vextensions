@@ -1,5 +1,5 @@
 import { IsNaN } from "..";
-export class NumberCE extends Number {
+export class NumberCEClass extends Number {
     IfN1Then(valIfSelfIsNeg1) {
         return this == -1 ? valIfSelfIsNeg1 : this;
     }
@@ -84,4 +84,5 @@ export class NumberCE extends Number {
         return Math.pow(this, power);
     }
 }
+export const NumberCE = NumberCEClass.prototype;
 //# sourceMappingURL=CE_Number.js.map

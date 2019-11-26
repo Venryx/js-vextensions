@@ -1,7 +1,7 @@
 import { IsNaN, Assert, DEL, ConvertPathGetterFuncToPropChain } from "..";
 import { DeepGet, Clone } from "../Utils/General";
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCE extends Object {
+export class ObjectCEClass extends Object {
     // base
     // ==========
     // _AddItem helps you do stuff like this:
@@ -263,4 +263,5 @@ export class ObjectCE extends Object {
     }
     ;
 }
+export const ObjectCE = ObjectCEClass.prototype;
 //# sourceMappingURL=CE_Object.js.map

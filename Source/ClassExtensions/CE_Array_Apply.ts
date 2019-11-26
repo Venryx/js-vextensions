@@ -1,9 +1,9 @@
 import {ForEachExtras, ArrayCE, NodeListCE} from "./CE_Array";
 import {TransferPrototypeProps} from "../Utils/General";
 
-TransferPrototypeProps(Array.prototype, ArrayCE.prototype, {}, {configurable: true, enumerable: false});
+TransferPrototypeProps(Array.prototype, ArrayCE, {}, {configurable: true, enumerable: false});
 if (typeof NodeList != "undefined") {
-	TransferPrototypeProps(NodeList.prototype, NodeListCE.prototype, {}, {configurable: true, enumerable: false});
+	TransferPrototypeProps(NodeList.prototype, NodeListCE, {}, {configurable: true, enumerable: false});
 }
 
 declare global {
