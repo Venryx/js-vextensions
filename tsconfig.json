@@ -25,11 +25,14 @@
 		"declaration": true,
 		"declarationDir": "Dist"
 	},
-	"files": ["Source/index.ts"],
-	/*"include": [
-		"Typings/**#/*.d.ts",
-		"Source/**#/*.ts",
-		"Source/**#/*.tsx"
-	],*/
+	//"files": ["Source/index.ts"],
+	"include": [
+		"Typings/**/*.d.ts",
+		"Source/**/*.ts",
+		"Source/**/*.tsx"
+	],
+	"exclude": [
+		"Source/ClassExtensions/@ApplyTypes.ts"
+	],
 	"compileOnSave": true
 }

@@ -1,4 +1,6 @@
 //import "./ClassExtensions";
+//export * from "./ClassExtensions/@ApplyCode";
+//export * from "./ClassExtensions/@ApplyTypes"; // if desired, user project should import directly (from Source folder)
 export * from "./ClassExtensions/CE_Array";
 export * from "./ClassExtensions/CE_Element";
 export * from "./ClassExtensions/CE_Number";

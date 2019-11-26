@@ -239,12 +239,7 @@ export class ObjectCEClass {
 }
 //export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
-let ObjectCE_Base = CreateWrapperForClassExtensions(ObjectCEClass);
-// we don't actually call this; it's just a way to trick/control the type-checking to fix the issue with generics (there's probably a better way)
-/*const ObjectCE_TypedHelper = <T>(nextThis: T)=> {
-    return CreateWrapperForClassExtensions<ObjectCEClass<T>>(ObjectCEClass)(nextThis);
-};
-export const ObjectCE = ObjectCE_Base as any as typeof ObjectCE_TypedHelper;*/
+const ObjectCE_Base = CreateWrapperForClassExtensions(ObjectCEClass);
 export const ObjectCE = ObjectCE_Base;
 /*class Test1{
     Test2() {}

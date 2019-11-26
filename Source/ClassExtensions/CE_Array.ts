@@ -373,15 +373,8 @@ export class ArrayCEClass<T> {
 }
 //export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-let ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-// we don't actually call this; it's just a way to trick/control the type-checking to fix the issue with generics (there's probably a better way)
-/*const ArrayCE_TypedHelper = <T>(nextThis: T[])=> {
-	return CreateWrapperForClassExtensions<ArrayCEClass<T>>(ArrayCEClass)(nextThis);
-};
-export const ArrayCE = ArrayCE_Base as any as typeof ArrayCE_TypedHelper;*/
+const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
-
-//ArrayCE(["hi", "there"]).SelectMany(a=>[a.length]);
 
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {
@@ -397,7 +390,3 @@ export const ArrayIteratorCE = CreateWrapperForClassExtensions(ArrayIteratorCECl
 	}
 }
 export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);*/
-
-
-let a: string[];
-ArrayCE(a).Contains;
