@@ -1,4 +1,5 @@
-import {Assert, StableSort, Compare, WithFuncsStandalone, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "..";
+import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "../Utils/General";
+import {Assert} from "../Utils/Assert";
 
 export interface ForEachExtras {
 	index: number;

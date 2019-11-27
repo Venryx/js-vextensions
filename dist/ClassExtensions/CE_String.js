@@ -1,4 +1,5 @@
-import { CreateWrapperForClassExtensions, ArrayCE } from "..";
+import { ArrayCE } from "./CE_Array";
+import { CreateWrapperForClassExtensions } from "../Utils/General";
 export class StringCEClass {
     TrimStart(...chars) {
         // fix for if called by VDF (which has a different signature)

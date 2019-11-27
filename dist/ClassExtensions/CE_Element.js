@@ -1,4 +1,4 @@
-import { CreateWrapperForClassExtensions } from "..";
+import { CreateWrapperForClassExtensions } from "../Utils/General";
 export class ElementCEClass {
     GetParents(topDown = false) {
         let result = [];

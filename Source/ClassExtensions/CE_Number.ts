@@ -1,4 +1,6 @@
-import {IsNaN, WithFuncsStandalone, CreateWrapperForClassExtensions, StringCE} from "..";
+import {StringCE} from "./CE_String";
+import {CreateWrapperForClassExtensions} from "../Utils/General";
+import {IsNaN} from "../Utils/Types";
 
 export class NumberCEClass {
 	IfN1Then(this: Number, valIfSelfIsNeg1) {

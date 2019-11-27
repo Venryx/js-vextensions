@@ -1,4 +1,4 @@
-import { WithFuncsStandalone, CreateWrapperForClassExtensions } from "..";
+import { CreateWrapperForClassExtensions } from "../Utils/General";
 /*function Test1(a, b: string, c) {}
 
 /*type ExtractArgs2Plus<T> = FirstParameterType<T>;
@@ -56,7 +56,8 @@ export class FunctionCEClass {
     }
     ;
 }
-export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
+//export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
+export const FunctionCE = CreateWrapperForClassExtensions(FunctionCEClass);
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }

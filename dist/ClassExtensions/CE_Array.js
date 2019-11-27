@@ -1,4 +1,5 @@
-import { Assert, StableSort, Compare, CreateWrapperForClassExtensions } from "..";
+import { StableSort, Compare, CreateWrapperForClassExtensions } from "../Utils/General";
+import { Assert } from "../Utils/Assert";
 /*// since JS doesn't have basic "foreach" system
 ForEach(func) {
     for (var i in this) {

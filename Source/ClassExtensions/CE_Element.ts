@@ -1,4 +1,4 @@
-import {WithFuncsStandalone, CreateWrapperForClassExtensions} from "..";
+import {CreateWrapperForClassExtensions} from "../Utils/General";
 
 export class ElementCEClass {
 	GetParents(this: Element, topDown = false) {

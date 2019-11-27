@@ -1,4 +1,4 @@
-import { WithFuncThisArgsAsAny_Type } from "..";
+import { WithFuncThisArgsAsAny_Type } from "../Utils/General";
 export interface ForEachExtras {
     index: number;
     Break: () => void;

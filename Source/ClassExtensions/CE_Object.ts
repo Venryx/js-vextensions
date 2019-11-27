@@ -1,5 +1,7 @@
-import {IsNaN, Assert, DEL, nl, ConvertPathGetterFuncToPropChain, ArrayCE} from "..";
-import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "../Utils/General";
+import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
+import {ArrayCE} from "./CE_Array";
+import {IsNaN} from "../Utils/Types";
+import {Assert} from "../Utils/Assert";
 
 export interface VSet_Options {
 	prop?: PropertyDescriptor;

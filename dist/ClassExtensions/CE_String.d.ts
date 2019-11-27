@@ -31,4 +31,4 @@ export declare class StringCEClass {
     ToInt(): number;
     ToFloat(): number;
 }
-export declare const StringCE: (nextThis: any) => import("..").WithFuncThisArgsAsAny_Type<StringCEClass>;
+export declare const StringCE: (nextThis: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<StringCEClass>;

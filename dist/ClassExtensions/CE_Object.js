@@ -1,5 +1,7 @@
-import { IsNaN, Assert, DEL, ConvertPathGetterFuncToPropChain, ArrayCE } from "..";
-import { DeepGet, Clone, CreateWrapperForClassExtensions } from "../Utils/General";
+import { DeepGet, Clone, CreateWrapperForClassExtensions, ConvertPathGetterFuncToPropChain, DEL } from "../Utils/General";
+import { ArrayCE } from "./CE_Array";
+import { IsNaN } from "../Utils/Types";
+import { Assert } from "../Utils/Assert";
 export const specialKeys = ["_", "_key", "_id"];
 export class ObjectCEClass {
     // base
