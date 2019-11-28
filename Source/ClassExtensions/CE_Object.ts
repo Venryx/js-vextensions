@@ -161,7 +161,7 @@ export class ObjectCEClass<RealThis> {
 	}
 
 	Including(...propNames: string[]) {
-		var result = {};
+		var result = this instanceof Array ? [] : {};
 		for (let propName of propNames) {
 			if (propName in this) {
 				result[propName] = this[propName];
@@ -170,7 +170,8 @@ export class ObjectCEClass<RealThis> {
 		return result;
 	}
 	Excluding(...propNames: string[]) {
-		var result = Clone(this);
+		//var result = Clone(this); // doesn't work with funcs
+		var result = Object.assign(this instanceof Array ? [] : {}, this);
 		for (let propName of propNames) {
 			delete result[propName];
 		}

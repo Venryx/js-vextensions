@@ -14,7 +14,10 @@
 		//"maxNodeModulesJsDepth": 1,
 
 		// compiler options
-		"target": "es2017",
+		"lib": ["es2017", "dom"],
+		"target": "es5", // es5 for now, so that output works in NodeJS
+		"downlevelIteration": true,
+
 		//"allowJs": true,
 		"jsx": "react",
 		"noImplicitAny": false,
@@ -32,7 +35,7 @@
 		"Source/**/*.tsx"
 	],
 	"exclude": [
-		"Source/ClassExtensions/@ApplyTypes.ts"
+		"Source/ClassExtensions/@ApplyTypes.d.ts"
 	],
 	"compileOnSave": true
 }

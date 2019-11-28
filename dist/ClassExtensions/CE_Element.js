@@ -1,8 +1,13 @@
-import { CreateWrapperForClassExtensions } from "../Utils/General";
-export class ElementCEClass {
-    GetParents(topDown = false) {
-        let result = [];
-        let currentParent = this.parentElement;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var General_1 = require("../Utils/General");
+var ElementCEClass = /** @class */ (function () {
+    function ElementCEClass() {
+    }
+    ElementCEClass.prototype.GetParents = function (topDown) {
+        if (topDown === void 0) { topDown = false; }
+        var result = [];
+        var currentParent = this.parentElement;
         while (currentParent) {
             result.push(currentParent);
             currentParent = currentParent.parentElement;
@@ -10,11 +15,12 @@ export class ElementCEClass {
         if (topDown)
             result.reverse();
         return result;
-    }
-    GetSelfAndParents(topDown = false) {
-        let result = ElementCE(this).GetParents(topDown);
+    };
+    ElementCEClass.prototype.GetSelfAndParents = function (topDown) {
+        if (topDown === void 0) { topDown = false; }
+        var result = exports.ElementCE(this).GetParents(topDown);
         return topDown ? result.concat([this]) : [this].concat(result);
-    }
+    };
     /*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
         var $found = [];
         let currentSet = this.childNodes.ToArray();
@@ -26,20 +32,22 @@ export class ElementCEClass {
         }
         return $found.first(); // Return first match of the collection
     }*/
-    QuerySelector_BreadthFirst(selector) {
-        let currentLayerElements = Array.from(this.childNodes);
+    ElementCEClass.prototype.QuerySelector_BreadthFirst = function (selector) {
+        var currentLayerElements = Array.from(this.childNodes);
         while (currentLayerElements.length) {
-            let firstMatchInLayer = currentLayerElements.find(a => a["matches"] && a["matches"](selector));
+            var firstMatchInLayer = currentLayerElements.find(function (a) { return a["matches"] && a["matches"](selector); });
             if (firstMatchInLayer)
                 return firstMatchInLayer;
             //currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
-            currentLayerElements = currentLayerElements.reduce((acc, item) => acc.concat(Array.from(item.childNodes)), []);
+            currentLayerElements = currentLayerElements.reduce(function (acc, item) { return acc.concat(Array.from(item.childNodes)); }, []);
         }
         return null;
-    }
-    $(queryStr) {
+    };
+    ElementCEClass.prototype.$ = function (queryStr) {
         return Array.from(this.querySelectorAll(queryStr));
-    }
-}
-export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);
+    };
+    return ElementCEClass;
+}());
+exports.ElementCEClass = ElementCEClass;
+exports.ElementCE = General_1.CreateWrapperForClassExtensions(ElementCEClass);
 //# sourceMappingURL=CE_Element.js.map

@@ -69,8 +69,8 @@ export function CachedTransform<T, T2, T3>(
 
 export function CombineDynamicPropMaps(...maps) {
 	var result = {};
-	for (var [mapIndex, map] of maps.entries()) {
-		for (var key in map) {
+	for (const [mapIndex, map] of maps.entries()) {
+		for (const key in map) {
 			result[mapIndex + "_" + key] = map[key];
 		}
 	}

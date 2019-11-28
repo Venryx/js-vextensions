@@ -1,4 +1,6 @@
-import { CreateWrapperForClassExtensions } from "../Utils/General";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var General_1 = require("../Utils/General");
 /*function Test1(a, b: string, c) {}
 
 /*type ExtractArgs2Plus<T> = FirstParameterType<T>;
@@ -17,21 +19,23 @@ export function Extract<T>(source: T): Extract_Type<T> {
 }
 
 const Test2 = Extract(Test1);*/
-export class FunctionCEClass {
-    GetName() {
+var FunctionCEClass = /** @class */ (function () {
+    function FunctionCEClass() {
+    }
+    FunctionCEClass.prototype.GetName = function () {
         //return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
         return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
-    }
-    SetName(val) {
+    };
+    FunctionCEClass.prototype.SetName = function (val) {
         this["name_fake"] = name;
         return this;
-    }
-    AddTag(tag) {
+    };
+    FunctionCEClass.prototype.AddTag = function (tag) {
         if (this["tags"] == null)
             this["tags"] = [];
         this["tags"].push(tag);
         return this;
-    }
+    };
     /*Function.prototype._AddFunction_Inline = function AddTags(/*o:*#/ tags___) { // (already implemented in VDF.js file)
         if (this.tags == null)
             this.tags = [];
@@ -44,48 +48,62 @@ export class FunctionCEClass {
         var func = V.Slice(arguments).Last();
         func.AddTags.apply(func, tags);
     };*/
-    GetTags(type) {
-        return (this["tags"] || []).Where(a => type == null || a instanceof type);
-    }
+    FunctionCEClass.prototype.GetTags = function (type) {
+        return (this["tags"] || []).Where(function (a) { return type == null || a instanceof type; });
+    };
     ;
     //AsStr(...args) { return require("../../V/V").Multiline(this, ...args); };
     //AsStr(useExtraPreprocessing) { return require("../../V/V").Multiline(this, useExtraPreprocessing); };
-    RunThenReturn(...args) {
+    FunctionCEClass.prototype.RunThenReturn = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
         this.apply(null, args);
         return this;
-    }
+    };
     ;
-}
+    return FunctionCEClass;
+}());
+exports.FunctionCEClass = FunctionCEClass;
 //export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
-export const FunctionCE = CreateWrapperForClassExtensions(FunctionCEClass);
+exports.FunctionCE = General_1.CreateWrapperForClassExtensions(FunctionCEClass);
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
 function getDaysInMonth(year, month) {
     return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCEClass {
-    get MonthDate() {
-        return new Date(this.getFullYear(), this.getMonth(), 1);
+var DateCEClass = /** @class */ (function () {
+    function DateCEClass() {
     }
-    IsLeapYear() {
+    Object.defineProperty(DateCEClass.prototype, "MonthDate", {
+        get: function () {
+            return new Date(this.getFullYear(), this.getMonth(), 1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DateCEClass.prototype.IsLeapYear = function () {
         return isLeapYear(this.getFullYear());
-    }
-    GetDaysInMonth() {
+    };
+    DateCEClass.prototype.GetDaysInMonth = function () {
         return getDaysInMonth(this.getFullYear(), this.getMonth());
-    }
-    AddMonths(value) {
+    };
+    DateCEClass.prototype.AddMonths = function (value) {
         var n = this.getDate();
         this.setDate(1);
         this.setMonth(this.getMonth() + value);
-        this.setDate(Math.min(n, DateCE(this).GetDaysInMonth()));
+        this.setDate(Math.min(n, exports.DateCE(this).GetDaysInMonth()));
         return this;
-    }
-    Clone() {
+    };
+    DateCEClass.prototype.Clone = function () {
         return new Date(this.getTime());
-    }
-}
-export const DateCE = CreateWrapperForClassExtensions(DateCEClass);
+    };
+    return DateCEClass;
+}());
+exports.DateCEClass = DateCEClass;
+exports.DateCE = General_1.CreateWrapperForClassExtensions(DateCEClass);
 /*export class ErrorCEClass {
     get Stack() {
         // this causes the full stack-trace to be attached to the Error object (in Chrome)

@@ -1,20 +1,25 @@
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
 //import "./ClassExtensions";
 //export * from "./ClassExtensions/@ApplyCode";
 //export * from "./ClassExtensions/@ApplyTypes"; // if desired, user project should import directly (from Source folder)
-export * from "./ClassExtensions/CE_Array";
-export * from "./ClassExtensions/CE_Element";
-export * from "./ClassExtensions/CE_Number";
-export * from "./ClassExtensions/CE_Object";
-export * from "./ClassExtensions/CE_Others";
-export * from "./ClassExtensions/CE_String";
-export * from "./JSVE";
-export * from "./Utils/General";
-export * from "./Utils/Changes";
-export * from "./Utils/Assert";
-export * from "./Utils/Timers";
-export * from "./Utils/Types";
-export * from "./Utils/VectorStructs";
-export * from "./Utils/URLs";
-export * from "./Utils/VCache";
-export * from "./Utils/Bridge";
+__export(require("./ClassExtensions/CE_Array"));
+__export(require("./ClassExtensions/CE_Element"));
+__export(require("./ClassExtensions/CE_Number"));
+__export(require("./ClassExtensions/CE_Object"));
+__export(require("./ClassExtensions/CE_Others"));
+__export(require("./ClassExtensions/CE_String"));
+__export(require("./JSVE"));
+__export(require("./Utils/General"));
+__export(require("./Utils/Changes"));
+__export(require("./Utils/Assert"));
+__export(require("./Utils/Timers"));
+__export(require("./Utils/Types"));
+__export(require("./Utils/VectorStructs"));
+__export(require("./Utils/URLs"));
+__export(require("./Utils/VCache"));
+__export(require("./Utils/Bridge"));
 //# sourceMappingURL=index.js.map

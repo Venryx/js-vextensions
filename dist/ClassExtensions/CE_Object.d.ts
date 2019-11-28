@@ -26,7 +26,7 @@ export declare class ObjectCEClass<RealThis> {
     As<T>(type: new (..._: any[]) => T): T;
     Strip(): this;
     Including(...propNames: string[]): {};
-    Excluding(...propNames: string[]): any;
+    Excluding(...propNames: string[]): {} & this;
     IsOneOf(...values: any[]): boolean;
     Pairs<K, V>(this: {
         [key: number]: V;

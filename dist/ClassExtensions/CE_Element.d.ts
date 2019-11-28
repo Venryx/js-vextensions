@@ -4,4 +4,4 @@ export declare class ElementCEClass {
     QuerySelector_BreadthFirst(this: Element, selector: string): HTMLElement;
     $(this: Element, queryStr: string): HTMLElement[];
 }
-export declare const ElementCE: (nextThis: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<ElementCEClass>;
+export declare const ElementCE: (thisArg: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<ElementCEClass>;

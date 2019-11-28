@@ -1,14 +1,46 @@
-import { DeepGet, Clone, CreateWrapperForClassExtensions, ConvertPathGetterFuncToPropChain, DEL } from "../Utils/General";
-import { ArrayCE } from "./CE_Array";
-import { IsNaN } from "../Utils/Types";
-import { Assert } from "../Utils/Assert";
-export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCEClass {
+"use strict";
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var General_1 = require("../Utils/General");
+var CE_Array_1 = require("./CE_Array");
+var Types_1 = require("../Utils/Types");
+var Assert_1 = require("../Utils/Assert");
+exports.specialKeys = ["_", "_key", "_id"];
+var ObjectCEClass = /** @class */ (function () {
+    function ObjectCEClass() {
+    }
     // base
     // ==========
     /** Helps you do stuff like this:
         Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
-    _AddItem(name, value, forceAdd = false) {
+    ObjectCEClass.prototype._AddItem = function (name, value, forceAdd) {
+        if (forceAdd === void 0) { forceAdd = false; }
         if (name == null || name.length == 0)
             throw new Error("No prop-name was specified for _AddItem() call.");
         if (name in this)
@@ -22,37 +54,49 @@ export class ObjectCEClass {
         });
         /*if (this[name] == null)
             throw new Error(`Failed to add property "${name}" to type "${this}".`);*/
-    }
-    _AddFunction(name, func) {
+    };
+    ObjectCEClass.prototype._AddFunction = function (name, func) {
         //this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
         this._AddItem(name, func);
-    }
+    };
     // the below helps you do stuff like this:
     //		Array.prototype._AddGetterSetter("AddX", null, function(value) { this.push(value); }); [].AddX = "newItem";
-    _AddGetterSetter(name, getter, setter) {
+    ObjectCEClass.prototype._AddGetterSetter = function (name, getter, setter) {
         //var name = (getter || setter).name || (getter || setter).toString().match(/^function\s*([^\s(]+)/)[1];
         if (name in this)
             delete this[name];
         if (name in this)
             return; // workaround for some properties not being deleted
-        let info = { configurable: true, enumerable: false };
+        var info = { configurable: true, enumerable: false };
         if (getter)
             info.get = getter;
         if (setter)
             info.set = setter;
         Object.defineProperty(this, name, info);
-    }
-    // the below helps you do stuff like this:
-    //		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
-    set _AddFunction_Inline(func) {
-        this._AddFunction(func.GetName(), func);
-    }
-    set _AddGetter_Inline(func) {
-        this._AddGetterSetter(func.GetName(), func, null);
-    }
-    set _AddSetter_Inline(func) {
-        this._AddGetterSetter(func.GetName(), null, func);
-    }
+    };
+    Object.defineProperty(ObjectCEClass.prototype, "_AddFunction_Inline", {
+        // the below helps you do stuff like this:
+        //		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
+        set: function (func) {
+            this._AddFunction(func.GetName(), func);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ObjectCEClass.prototype, "_AddGetter_Inline", {
+        set: function (func) {
+            this._AddGetterSetter(func.GetName(), func, null);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ObjectCEClass.prototype, "_AddSetter_Inline", {
+        set: function (func) {
+            this._AddGetterSetter(func.GetName(), null, func);
+        },
+        enumerable: true,
+        configurable: true
+    });
     // normal
     // ==========
     //Object.prototype._AddSetter_Inline = function ExtendWith_Inline(value) { this.ExtendWith(value); };
@@ -71,134 +115,190 @@ export class ObjectCEClass {
         }
         return this;
     };*/
-    Extend(x) {
+    ObjectCEClass.prototype.Extend = function (x) {
         for (var name in x) {
             var value = x[name];
             //if (value !== undefined)
             this[name] = value;
         }
         return this;
-    }
-    VSet(...args) {
-        let props, options, propName, propValue;
+    };
+    ObjectCEClass.prototype.VSet = function () {
+        var _a, _b;
+        var _this = this;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var props, options, propName, propValue;
         if (typeof args[0] == "object")
-            [props, options] = args;
+            _a = __read(args, 2), props = _a[0], options = _a[1];
         else
-            [propName, propValue, options] = args;
+            _b = __read(args, 3), propName = _b[0], propValue = _b[1], options = _b[2];
         options = options || {};
-        const SetProp = (name, value) => {
-            if (value === DEL || (value === undefined && options.deleteUndefined) || (value === null && options.deleteNull) || (value === "" && options.deleteEmpty)) {
-                delete this[name];
+        var SetProp = function (name, value) {
+            if (value === General_1.DEL || (value === undefined && options.deleteUndefined) || (value === null && options.deleteNull) || (value === "" && options.deleteEmpty)) {
+                delete _this[name];
                 return;
             }
             if (options.prop) {
-                Object.defineProperty(this, name, Object.assign({ configurable: true }, options.prop, { value }));
+                Object.defineProperty(_this, name, Object.assign({ configurable: true }, options.prop, { value: value }));
             }
             else {
-                this[name] = value;
+                _this[name] = value;
             }
         };
         if (props) {
-            for (let name in props) {
-                SetProp(name, props[name]);
+            for (var name_1 in props) {
+                SetProp(name_1, props[name_1]);
             }
         }
         else {
             SetProp(propName, propValue);
         }
         return this;
-    }
-    Extended(x) {
-        let result = this instanceof Array ? [] : {};
-        for (let name in this) {
-            result[name] = this[name];
+    };
+    ObjectCEClass.prototype.Extended = function (x) {
+        var result = this instanceof Array ? [] : {};
+        for (var name_2 in this) {
+            result[name_2] = this[name_2];
         }
         if (x) {
-            for (let name in x) {
-                result[name] = x[name];
+            for (var name_3 in x) {
+                result[name_3] = x[name_3];
             }
         }
         return result;
-    }
+    };
     ;
-    SafeGet(pathOrPathGetterFunc, resultIfNull) {
-        let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
-        return DeepGet(this, pathSegments, resultIfNull);
-    }
-    VAct(func) {
+    ObjectCEClass.prototype.SafeGet = function (pathOrPathGetterFunc, resultIfNull) {
+        var pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : General_1.ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
+        return General_1.DeepGet(this, pathSegments, resultIfNull);
+    };
+    ObjectCEClass.prototype.VAct = function (func) {
         func.call(this, this);
         return this;
-    }
-    As(type) {
+    };
+    ObjectCEClass.prototype.As = function (type) {
         Object.setPrototypeOf(this, type.prototype);
         return this;
-    }
+    };
     ;
-    Strip() {
+    ObjectCEClass.prototype.Strip = function () {
         Object.setPrototypeOf(this, Object.getPrototypeOf({}));
         return this;
-    }
-    Including(...propNames) {
-        var result = {};
-        for (let propName of propNames) {
-            if (propName in this) {
-                result[propName] = this[propName];
+    };
+    ObjectCEClass.prototype.Including = function () {
+        var e_1, _a;
+        var propNames = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            propNames[_i] = arguments[_i];
+        }
+        var result = this instanceof Array ? [] : {};
+        try {
+            for (var propNames_1 = __values(propNames), propNames_1_1 = propNames_1.next(); !propNames_1_1.done; propNames_1_1 = propNames_1.next()) {
+                var propName = propNames_1_1.value;
+                if (propName in this) {
+                    result[propName] = this[propName];
+                }
             }
         }
-        return result;
-    }
-    Excluding(...propNames) {
-        var result = Clone(this);
-        for (let propName of propNames) {
-            delete result[propName];
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (propNames_1_1 && !propNames_1_1.done && (_a = propNames_1.return)) _a.call(propNames_1);
+            }
+            finally { if (e_1) throw e_1.error; }
         }
         return result;
-    }
-    IsOneOf(...values) {
-        if (ArrayCE(values).Contains(this)) {
+    };
+    ObjectCEClass.prototype.Excluding = function () {
+        var e_2, _a;
+        var propNames = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            propNames[_i] = arguments[_i];
+        }
+        //var result = Clone(this); // doesn't work with funcs
+        var result = Object.assign(this instanceof Array ? [] : {}, this);
+        try {
+            for (var propNames_2 = __values(propNames), propNames_2_1 = propNames_2.next(); !propNames_2_1.done; propNames_2_1 = propNames_2.next()) {
+                var propName = propNames_2_1.value;
+                delete result[propName];
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (propNames_2_1 && !propNames_2_1.done && (_a = propNames_2.return)) _a.call(propNames_2);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        return result;
+    };
+    ObjectCEClass.prototype.IsOneOf = function () {
+        var values = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            values[_i] = arguments[_i];
+        }
+        if (CE_Array_1.ArrayCE(values).Contains(this)) {
             return true;
         }
         // if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
-        let isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
-        if (isObjectFormOfPrimitive && ArrayCE(values).Contains(this.valueOf())) {
+        var isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
+        if (isObjectFormOfPrimitive && CE_Array_1.ArrayCE(values).Contains(this.valueOf())) {
             return true;
         }
         return false;
-    }
-    Pairs(excludeSpecialKeys = false) {
+    };
+    ObjectCEClass.prototype.Pairs = function (excludeSpecialKeys) {
+        var e_3, _a;
+        if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         var result = [];
         var i = 0;
-        let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
-        for (let key of keys) {
-            if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id"))
-                continue;
-            let entry = { index: i++, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
-            if (IsNaN(entry.keyNum))
-                delete entry.keyNum;
-            result.push(entry);
+        var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+        try {
+            for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
+                var key = keys_1_1.value;
+                if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id"))
+                    continue;
+                var entry = { index: i++, key: key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
+                if (Types_1.IsNaN(entry.keyNum))
+                    delete entry.keyNum;
+                result.push(entry);
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
+            }
+            finally { if (e_3) throw e_3.error; }
         }
         return result;
-    }
-    VKeys(excludeSpecialKeys = false) {
+    };
+    ObjectCEClass.prototype.VKeys = function (excludeSpecialKeys) {
+        if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
-        let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+        var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         if (excludeSpecialKeys)
-            keys = ArrayCE(keys).Except(specialKeys);
+            keys = CE_Array_1.ArrayCE(keys).Except(exports.specialKeys);
         return keys;
-    }
+    };
     //interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
-    VValues(excludeSpecialKeys = false) {
+    ObjectCEClass.prototype.VValues = function (excludeSpecialKeys) {
+        var _this = this;
+        if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-        return this.VKeys(excludeSpecialKeys).map(key => this instanceof Map ? this.get(key) : this[key]);
-    }
+        return this.VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
+    };
     // for symbols
     /*Pairs_Sym() {
     };*/
-    Sym(symbolName) {
-        let symbols = Object.getOwnPropertySymbols(this);
-        let symbol = symbols.find(a => a.toString() == `Symbol(${symbolName})`);
+    ObjectCEClass.prototype.Sym = function (symbolName) {
+        var symbols = Object.getOwnPropertySymbols(this);
+        var symbol = symbols.find(function (a) { return a.toString() == "Symbol(" + symbolName + ")"; });
         return this[symbol];
-    }
+    };
     ;
     // this is a total hack : P -- fixes typescript-es2017 "TypeError: [module].default is not a constructor" issue
     /*Object.prototype._AddGetterSetter("default", function() {
@@ -210,17 +310,17 @@ export class ObjectCEClass {
     });*/
     // Object[FakeArray]
     // ==========
-    FA_Select(selectFunc) {
-        Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+    ObjectCEClass.prototype.FA_Select = function (selectFunc) {
+        Assert_1.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
         /*var result = this instanceof List ? new List(this.itemType) : [];
         for (let [index, item] of this.entries())
             result.Add(selectFunc.call(item, item, index));
         return result;*/
-        return ObjectCE(this).VValues(true).map(selectFunc);
-    }
+        return exports.ObjectCE(this).VValues(true).map(selectFunc);
+    };
     ;
-    FA_RemoveAt(index) {
-        Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+    ObjectCEClass.prototype.FA_RemoveAt = function (index) {
+        Assert_1.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
         if (!(index in this))
             return;
         // remove target entry
@@ -229,20 +329,22 @@ export class ObjectCEClass {
         for (var i = index + 1; i in this; i++)
             this[i - 1] = this[i];
         delete this[i - 1]; // remove the extra copy of the last-item 
-    }
+    };
     ;
-    FA_Add(item) {
-        Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
+    ObjectCEClass.prototype.FA_Add = function (item) {
+        Assert_1.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
         for (var openIndex = 0; openIndex in this; openIndex++)
             ;
         this[openIndex] = item;
-    }
+    };
     ;
-}
+    return ObjectCEClass;
+}());
+exports.ObjectCEClass = ObjectCEClass;
 //export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
-const ObjectCE_Base = CreateWrapperForClassExtensions(ObjectCEClass);
-export const ObjectCE = ObjectCE_Base;
+var ObjectCE_Base = General_1.CreateWrapperForClassExtensions(ObjectCEClass);
+exports.ObjectCE = ObjectCE_Base;
 /*class Test1{
     Test2() {}
 }

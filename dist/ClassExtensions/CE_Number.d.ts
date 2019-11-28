@@ -16,4 +16,4 @@ export declare class NumberCEClass {
     Distance(this: Number, other: number): number;
     ToPower(this: Number, power: number): number;
 }
-export declare const NumberCE: (nextThis: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<NumberCEClass>;
+export declare const NumberCE: (thisArg: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<NumberCEClass>;

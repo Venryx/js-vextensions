@@ -33,6 +33,7 @@ export type Bridge_Options = {receiveChannelMessageFunc_addImmediately?: boolean
 export class Bridge {
 	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
+		debugger;
 		ObjectCE(this).Extend(ObjectCE(options).Excluding("receiveChannelMessageFunc_addImmediately"));
 		if (options.receiveChannelMessageFunc_addImmediately != false) this.SetUpReceiver();
 	}

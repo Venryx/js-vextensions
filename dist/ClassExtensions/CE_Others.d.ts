@@ -5,7 +5,7 @@ export declare class FunctionCEClass {
     GetTags(this: Function, type?: any): any;
     RunThenReturn(this: Function, ...args: any[]): Function;
 }
-export declare const FunctionCE: (nextThis: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<FunctionCEClass>;
+export declare const FunctionCE: (thisArg: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<FunctionCEClass>;
 export declare class DateCEClass {
     get MonthDate(this: Date): Date;
     IsLeapYear(this: Date): boolean;
@@ -13,4 +13,4 @@ export declare class DateCEClass {
     AddMonths(this: Date, value: number): Date;
     Clone(this: Date): Date;
 }
-export declare const DateCE: (nextThis: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<DateCEClass>;
+export declare const DateCE: (thisArg: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<DateCEClass>;

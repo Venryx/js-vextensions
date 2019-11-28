@@ -1,29 +1,103 @@
-import { Assert, IsNumber, NumberCE, ArrayCE } from "..";
-export class TimerContext {
-    constructor() {
-        this.timers = [];
-    }
-    Reset() {
-        for (let timer of this.timers) {
-            timer.Stop();
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
         }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var __1 = require("..");
+var TimerContext = /** @class */ (function () {
+    function TimerContext() {
         this.timers = [];
     }
-    // Can be useful on platforms (eg. Android) where setInterval() and setTimeout() stop working when the screen is off.
-    // Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
-    ManuallyTriggerOverdueTimers() {
-        for (let timer of this.timers) {
-            if (timer.NextTickFuncOverdue) {
-                timer.nextTickFunc();
+    TimerContext.prototype.Reset = function () {
+        var e_1, _a;
+        try {
+            for (var _b = __values(this.timers), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var timer = _c.value;
+                timer.Stop();
             }
         }
-    }
-}
-TimerContext.default = new TimerContext();
-TimerContext.default_autoAddAll = false;
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        this.timers = [];
+    };
+    // Can be useful on platforms (eg. Android) where setInterval() and setTimeout() stop working when the screen is off.
+    // Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
+    TimerContext.prototype.ManuallyTriggerOverdueTimers = function () {
+        var e_2, _a;
+        try {
+            for (var _b = __values(this.timers), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var timer = _c.value;
+                if (timer.NextTickFuncOverdue) {
+                    timer.nextTickFunc();
+                }
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+    };
+    TimerContext.default = new TimerContext();
+    TimerContext.default_autoAddAll = false;
+    return TimerContext;
+}());
+exports.TimerContext = TimerContext;
 // methods
 // ==========
-export function TryCall(func, ...args) {
+function TryCall(func) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
     //if (!(func instanceof Function)) return;
     if (typeof func != "function")
         return;
@@ -32,7 +106,12 @@ export function TryCall(func, ...args) {
     }
     catch (ex) { }
 }
-export function TryCall_OnX(obj, func, ...args) {
+exports.TryCall = TryCall;
+function TryCall_OnX(obj, func) {
+    var args = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args[_i - 2] = arguments[_i];
+    }
     if (typeof func != "function")
         return;
     try {
@@ -40,6 +119,7 @@ export function TryCall_OnX(obj, func, ...args) {
     }
     catch (ex) { }
 }
+exports.TryCall_OnX = TryCall_OnX;
 /*let oldTimeout = setTimeout;
 g.setTimeout = function(func: Function, delayInMS = 0, ...args) {
     // setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
@@ -52,38 +132,51 @@ g.setTimeout = function(func: Function, delayInMS = 0, ...args) {
     var startTime = new Date().getTime();
     while (new Date().getTime() - startTime < ms) {}
 }*/
-const maxTimeoutLength = 0x7FFFFFFF; // setTimeout limit is MAX_INT32=(2^31-1)
-export function WaitXThenRun(delayInMS, func, ...args) {
-    Assert(delayInMS <= maxTimeoutLength, `Cannot wait for longer than ${maxTimeoutLength} ms. (use WaitUntilXThenRun, if a long-delay is needed)`);
+var maxTimeoutLength = 0x7FFFFFFF; // setTimeout limit is MAX_INT32=(2^31-1)
+function WaitXThenRun(delayInMS, func) {
+    var args = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args[_i - 2] = arguments[_i];
+    }
+    __1.Assert(delayInMS <= maxTimeoutLength, "Cannot wait for longer than " + maxTimeoutLength + " ms. (use WaitUntilXThenRun, if a long-delay is needed)");
     // setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
     // on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
     if (delayInMS == 0) {
-        return window["setImmediate"](func, ...args); // same as below
+        return window["setImmediate"].apply(window, __spread([func], args)); // same as below
     }
-    return setTimeout(func, delayInMS, ...args); // "as any": maybe temp; used to allow source-importing from NodeJS
+    return setTimeout.apply(void 0, __spread([func, delayInMS], args)); // "as any": maybe temp; used to allow source-importing from NodeJS
 }
-export function WaitUntilXThenRun(targetDateTimeInMS, func, ...args) {
+exports.WaitXThenRun = WaitXThenRun;
+function WaitUntilXThenRun(targetDateTimeInMS, func) {
+    var args = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args[_i - 2] = arguments[_i];
+    }
     var now = Date.now();
-    var diff = NumberCE(targetDateTimeInMS - now).KeepAtLeast(0);
+    var diff = __1.NumberCE(targetDateTimeInMS - now).KeepAtLeast(0);
     if (diff > maxTimeoutLength) {
-        WaitXThenRun(maxTimeoutLength, () => WaitUntilXThenRun(targetDateTimeInMS, func));
+        WaitXThenRun(maxTimeoutLength, function () { return WaitUntilXThenRun(targetDateTimeInMS, func); });
     }
     else {
         WaitXThenRun(diff, func);
     }
 }
-export function SleepAsync(timeMS) {
-    return new Promise((resolve, reject) => {
+exports.WaitUntilXThenRun = WaitUntilXThenRun;
+function SleepAsync(timeMS) {
+    return new Promise(function (resolve, reject) {
         WaitXThenRun(timeMS, resolve);
     });
 }
-export function SleepAsyncUntil(targetDateTimeInMS) {
-    return new Promise((resolve, reject) => {
+exports.SleepAsync = SleepAsync;
+function SleepAsyncUntil(targetDateTimeInMS) {
+    return new Promise(function (resolve, reject) {
         WaitUntilXThenRun(targetDateTimeInMS, resolve);
     });
 }
+exports.SleepAsyncUntil = SleepAsyncUntil;
 var DoNothingXTimesThenDoY_counters = {};
-export function DoNothingXTimesThenDoY(doNothingCount, func, key = "default") {
+function DoNothingXTimesThenDoY(doNothingCount, func, key) {
+    if (key === void 0) { key = "default"; }
     if (DoNothingXTimesThenDoY_counters[key] == null) {
         DoNothingXTimesThenDoY_counters[key] = 0;
     }
@@ -92,13 +185,15 @@ export function DoNothingXTimesThenDoY(doNothingCount, func, key = "default") {
     }
     DoNothingXTimesThenDoY_counters[key]++;
 }
+exports.DoNothingXTimesThenDoY = DoNothingXTimesThenDoY;
 // interval is in seconds (can be decimal)
-export class Timer {
-    constructor(intervalInMS, func, maxCallCount = -1) {
+var Timer = /** @class */ (function () {
+    function Timer(intervalInMS, func, maxCallCount) {
+        if (maxCallCount === void 0) { maxCallCount = -1; }
         this.timerID = -1;
         this.callCount_thisRun = 0;
         this.callCount_total = 0;
-        Assert(IsNumber(intervalInMS), "Interval must be a number.");
+        __1.Assert(__1.IsNumber(intervalInMS), "Interval must be a number.");
         this.intervalInMS = intervalInMS;
         this.func = func;
         this.maxCallCount = maxCallCount;
@@ -106,53 +201,74 @@ export class Timer {
             TimerContext.default.timers.push(this);
         }
     }
-    SetContext(timerContext) {
-        Assert(timerContext, "TimerContext cannot be null.");
+    Timer.prototype.SetContext = function (timerContext) {
+        __1.Assert(timerContext, "TimerContext cannot be null.");
         this.timerContexts = (this.timerContexts || []).concat(timerContext);
         timerContext.timers.push(this);
         return this;
-    }
-    RemoveFromContext(timerContext) {
-        ArrayCE(this.timerContexts).Remove(timerContext);
-        ArrayCE(timerContext.timers).Remove(this);
-    }
-    ClearContexts() {
-        for (let context of this.timerContexts) {
-            this.RemoveFromContext(context);
+    };
+    Timer.prototype.RemoveFromContext = function (timerContext) {
+        __1.ArrayCE(this.timerContexts).Remove(timerContext);
+        __1.ArrayCE(timerContext.timers).Remove(this);
+    };
+    Timer.prototype.ClearContexts = function () {
+        var e_3, _a;
+        try {
+            for (var _b = __values(this.timerContexts), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var context = _c.value;
+                this.RemoveFromContext(context);
+            }
         }
-    }
-    get IsRunning() { return this.timerID != -1; }
-    get NextTickFuncOverdue() {
-        return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
-    }
-    Start(initialDelayOverride = null) {
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+    };
+    Object.defineProperty(Timer.prototype, "IsRunning", {
+        get: function () { return this.timerID != -1; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Timer.prototype, "NextTickFuncOverdue", {
+        get: function () {
+            return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Timer.prototype.Start = function (initialDelayOverride) {
+        var _this = this;
+        if (initialDelayOverride === void 0) { initialDelayOverride = null; }
         // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
         if (this.IsRunning)
             this.Stop();
         this.startTime = Date.now();
-        const StartRegularInterval = () => {
-            this.nextTickTime = this.startTime + this.intervalInMS;
-            this.timerID = setInterval(this.nextTickFunc = () => {
-                this.callCount_thisRun++;
-                this.callCount_total++;
-                this.func();
-                if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
-                    this.Stop();
+        var StartRegularInterval = function () {
+            _this.nextTickTime = _this.startTime + _this.intervalInMS;
+            _this.timerID = setInterval(_this.nextTickFunc = function () {
+                _this.callCount_thisRun++;
+                _this.callCount_total++;
+                _this.func();
+                if (_this.maxCallCount != -1 && _this.callCount_thisRun >= _this.maxCallCount) {
+                    _this.Stop();
                 }
                 else {
                     //this.nextTickTime += this.intervalInMS;
-                    this.nextTickTime = Date.now() + this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
+                    _this.nextTickTime = Date.now() + _this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
                 }
-            }, this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
+            }, _this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
         };
         if (initialDelayOverride != null) {
             this.nextTickTime = this.startTime + initialDelayOverride;
-            this.timerID = setTimeout(this.nextTickFunc = () => {
-                this.callCount_thisRun++;
-                this.callCount_total++;
-                this.func();
-                if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
-                    this.Stop();
+            this.timerID = setTimeout(this.nextTickFunc = function () {
+                _this.callCount_thisRun++;
+                _this.callCount_total++;
+                _this.func();
+                if (_this.maxCallCount != -1 && _this.callCount_thisRun >= _this.maxCallCount) {
+                    _this.Stop();
                 }
                 else {
                     StartRegularInterval();
@@ -163,27 +279,37 @@ export class Timer {
             StartRegularInterval();
         }
         return this; // enable chaining, for SetContext() call
-    }
-    Stop() {
+    };
+    Timer.prototype.Stop = function () {
         clearInterval(this.timerID);
         //this.startTime = null;
         this.nextTickTime = null;
         this.nextTickFunc = null;
         this.timerID = -1;
         this.callCount_thisRun = 0;
+    };
+    return Timer;
+}());
+exports.Timer = Timer;
+var TimerS = /** @class */ (function (_super) {
+    __extends(TimerS, _super);
+    function TimerS(interval_decimal, func, maxCallCount) {
+        if (maxCallCount === void 0) { maxCallCount = -1; }
+        return _super.call(this, interval_decimal * 1000, func, maxCallCount) || this;
     }
-}
-export class TimerS extends Timer {
-    constructor(interval_decimal, func, maxCallCount = -1) {
-        super(interval_decimal * 1000, func, maxCallCount);
-    }
-}
+    return TimerS;
+}(Timer));
+exports.TimerS = TimerS;
 var funcLastScheduledRunTimes = {};
-export function BufferAction(...args) {
+function BufferAction() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
     if (args.length == 2)
-        var [minInterval, func] = args, key = null;
+        var _a = __read(args, 2), minInterval = _a[0], func = _a[1], key = null;
     else if (args.length == 3)
-        var [key, minInterval, func] = args;
+        var _b = __read(args, 3), key = _b[0], minInterval = _b[1], func = _b[2];
     var lastScheduledRunTime = funcLastScheduledRunTimes[key] || 0;
     var now = new Date().getTime();
     var timeSinceLast = now - lastScheduledRunTime;
@@ -192,7 +318,7 @@ export function BufferAction(...args) {
         funcLastScheduledRunTimes[key] = now;
     }
     else {
-        let waitingForNextRunAlready = lastScheduledRunTime > now;
+        var waitingForNextRunAlready = lastScheduledRunTime > now;
         if (!waitingForNextRunAlready) { // else, if we're not already waiting for next-run, schedule next-run
             var nextRunTime = lastScheduledRunTime + minInterval;
             var timeTillNextRun = nextRunTime - now;
@@ -201,4 +327,5 @@ export function BufferAction(...args) {
         }
     }
 }
+exports.BufferAction = BufferAction;
 //# sourceMappingURL=Timers.js.map
