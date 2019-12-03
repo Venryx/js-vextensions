@@ -44,9 +44,15 @@ export declare class ObjectCEClass<RealThis> {
         keyNum?: number;
         value: V;
     }[];
-    Pairs<K = any, V = any>(excludeSpecialKeys?: boolean | 1): {
+    Pairs<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {
         index: number;
         key: K;
+        keyNum?: number;
+        value: V;
+    }[];
+    Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {
+        index: number;
+        key: string;
         keyNum?: number;
         value: V;
     }[];
@@ -56,7 +62,8 @@ export declare class ObjectCEClass<RealThis> {
         [key: string]: any;
     }, excludeSpecialKeys?: boolean | 1): string[];
     VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
-    VKeys<K = any>(excludeSpecialKeys?: boolean | 1): K[];
+    VKeys<K = string>(excludeSpecialKeys?: boolean | 1): K[];
+    VKeys(excludeSpecialKeys?: boolean | 1): string[];
     VValues<V>(this: {
         [key: number]: V;
     } | {
@@ -96,11 +103,11 @@ export declare const ObjectCES: {
     IsOneOf: (thisArg: Object, ...args: any[]) => boolean;
     Pairs: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => {
         index: number;
-        key: unknown;
+        key: string;
         keyNum?: number;
         value: unknown;
     }[];
-    VKeys: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => unknown[];
+    VKeys: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => string[];
     VValues: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => unknown[];
     Sym: (thisArg: Object, symbolName: string) => any;
     FA_Select: (thisArg: Object, selectFunc?: (item: unknown, index?: number) => unknown) => unknown[];

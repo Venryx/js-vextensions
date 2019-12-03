@@ -349,5 +349,6 @@ exports.ObjectCES = General_1.WithFuncsStandalone(ObjectCEClass.prototype);
 /*class Test1{
     Test2() {}
 }
-ObjectCE(new Test1()).VSet({}).Test2*/ 
+ObjectCE(new Test1()).VSet({}).Test2*/
+exports.ObjectCE(new Object()).Pairs()[0].key;
 //# sourceMappingURL=CE_Object.js.map

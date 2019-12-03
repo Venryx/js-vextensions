@@ -211,7 +211,8 @@ export class ObjectCEClass<RealThis> {
 	};*/
 	Pairs<K, V>(this: {[key: number]: V} | {[key: string]: V}, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
 	Pairs<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-	Pairs<K = any, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+	Pairs<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+	Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
 	Pairs(excludeSpecialKeys: boolean | 1 = false) {
 		var result = [];
 		var i = 0;
@@ -227,7 +228,8 @@ export class ObjectCEClass<RealThis> {
 
 	VKeys<K>(this: {[key: number]: any} | {[key: string]: any}, excludeSpecialKeys?: boolean | 1): string[];
 	VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
-	VKeys<K = any>(excludeSpecialKeys?: boolean | 1): K[];
+	VKeys<K = string>(excludeSpecialKeys?: boolean | 1): K[];
+	VKeys(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
 	VKeys(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -297,3 +299,5 @@ export const ObjectCES = WithFuncsStandalone(ObjectCEClass.prototype);
 	Test2() {}
 }
 ObjectCE(new Test1()).VSet({}).Test2*/
+
+ObjectCE(new Object()).Pairs()[0].key;
