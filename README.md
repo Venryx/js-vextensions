@@ -29,10 +29,16 @@ const array = [1, 2, 3];
 console.log(array.Skip(1)); // logs "2,3"
 ```
 
-##### Approach 2: (using wrapper)
+##### Approach 2.A: (using wrapper, with type specified)
 ```
 const array = [1, 2, 3];
 console.log(ArrayCE(array).Skip(1)); // logs "2,3"
+```
+
+##### Approach 2.B: (using wrapper, with type inferred)
+```
+const array = [1, 2, 3];
+console.log(CE(array).Skip(1)); // logs "2,3"
 ```
 
 ##### Approach 3: (using standalone functions)
