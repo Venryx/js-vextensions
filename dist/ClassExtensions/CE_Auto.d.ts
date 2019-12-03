@@ -1,0 +1,13 @@
+import { ArrayCE } from "./CE_Array";
+import { NumberCE } from "./CE_Number";
+import { ObjectCE } from "./CE_Object";
+import { StringCE } from "./CE_String";
+import { ElementCE } from "..";
+import { DateCE, FunctionCE } from "./CE_Others";
+export declare function CE(obj: number): ReturnType<typeof NumberCE>;
+export declare function CE(obj: string): ReturnType<typeof StringCE>;
+export declare function CE(obj: Element): ReturnType<typeof ElementCE>;
+export declare function CE(obj: Date): ReturnType<typeof DateCE>;
+export declare function CE(obj: Function): ReturnType<typeof FunctionCE>;
+export declare function CE(obj: Array<any>): ReturnType<typeof ArrayCE>;
+export declare function CE(obj: Object): ReturnType<typeof ObjectCE>;
