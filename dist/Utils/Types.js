@@ -18,7 +18,8 @@ function IsBool(obj) { return typeof obj == "boolean"; } //|| obj instanceof Boo
 exports.IsBool = IsBool;
 function ToBool(boolStr) { return boolStr == "true" ? true : false; }
 exports.ToBool = ToBool;
-//export function IsArray(obj) : obj is Object { return Array.isArray(obj); }
+function IsArray(obj) { return Array.isArray(obj); } // for briefness and/or consistency
+exports.IsArray = IsArray;
 function IsObject(obj) { return typeof obj == "object"; }
 exports.IsObject = IsObject;
 //export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }

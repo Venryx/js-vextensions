@@ -7,6 +7,7 @@ export * from "./ClassExtensions/CE_Number";
 export * from "./ClassExtensions/CE_Object";
 export * from "./ClassExtensions/CE_Others";
 export * from "./ClassExtensions/CE_String";
+export * from "./ClassExtensions/CE_Auto";
 
 export * from "./JSVE";
 export * from "./Utils/General";

@@ -12,6 +12,7 @@ __export(require("./ClassExtensions/CE_Number"));
 __export(require("./ClassExtensions/CE_Object"));
 __export(require("./ClassExtensions/CE_Others"));
 __export(require("./ClassExtensions/CE_String"));
+__export(require("./ClassExtensions/CE_Auto"));
 __export(require("./JSVE"));
 __export(require("./Utils/General"));
 __export(require("./Utils/Changes"));
