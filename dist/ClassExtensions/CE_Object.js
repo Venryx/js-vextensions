@@ -57,7 +57,7 @@ var ObjectCEClass = /** @class */ (function () {
     };
     ObjectCEClass.prototype._AddFunction = function (name, func) {
         //this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-        this._AddItem(name, func);
+        exports.ObjectCE._AddItem(this, name, func);
     };
     // the below helps you do stuff like this:
     //		Array.prototype._AddGetterSetter("AddX", null, function(value) { this.push(value); }); [].AddX = "newItem";
@@ -78,21 +78,21 @@ var ObjectCEClass = /** @class */ (function () {
         // the below helps you do stuff like this:
         //		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
         set: function (func) {
-            this._AddFunction(func.GetName(), func);
+            exports.ObjectCE._AddFunction(this, func.GetName(), func);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ObjectCEClass.prototype, "_AddGetter_Inline", {
         set: function (func) {
-            this._AddGetterSetter(func.GetName(), func, null);
+            exports.ObjectCE._AddGetterSetter(this, func.GetName(), func, null);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ObjectCEClass.prototype, "_AddSetter_Inline", {
         set: function (func) {
-            this._AddGetterSetter(func.GetName(), null, func);
+            exports.ObjectCE._AddGetterSetter(this, func.GetName(), null, func);
         },
         enumerable: true,
         configurable: true
@@ -240,12 +240,12 @@ var ObjectCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             values[_i] = arguments[_i];
         }
-        if (CE_Array_1.ArrayCE(values).Contains(this)) {
+        if (CE_Array_1.ArrayCE.Contains(values, this)) {
             return true;
         }
         // if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
         var isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
-        if (isObjectFormOfPrimitive && CE_Array_1.ArrayCE(values).Contains(this.valueOf())) {
+        if (isObjectFormOfPrimitive && CE_Array_1.ArrayCE.Contains(values, this.valueOf())) {
             return true;
         }
         return false;
@@ -281,7 +281,7 @@ var ObjectCEClass = /** @class */ (function () {
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
         var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         if (excludeSpecialKeys)
-            keys = CE_Array_1.ArrayCE(keys).Except(exports.specialKeys);
+            keys = CE_Array_1.ArrayCE.Except(keys, exports.specialKeys);
         return keys;
     };
     //interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
@@ -289,7 +289,7 @@ var ObjectCEClass = /** @class */ (function () {
         var _this = this;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-        return this.VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
+        return exports.ObjectCE.VKeys(this, excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
     };
     // for symbols
     /*Pairs_Sym() {
@@ -316,7 +316,7 @@ var ObjectCEClass = /** @class */ (function () {
         for (let [index, item] of this.entries())
             result.Add(selectFunc.call(item, item, index));
         return result;*/
-        return exports.ObjectCE(this).VValues(true).map(selectFunc);
+        return exports.ObjectCE.VValues(this, true).map(selectFunc);
     };
     ;
     ObjectCEClass.prototype.FA_RemoveAt = function (index) {
@@ -341,10 +341,10 @@ var ObjectCEClass = /** @class */ (function () {
     return ObjectCEClass;
 }());
 exports.ObjectCEClass = ObjectCEClass;
-//export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
+exports.ObjectCE = General_1.WithFuncsStandalone(ObjectCEClass.prototype);
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
-var ObjectCE_Base = General_1.CreateWrapperForClassExtensions(ObjectCEClass);
-exports.ObjectCE = ObjectCE_Base;
+/*const ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
+export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;*/
 /*class Test1{
     Test2() {}
 }

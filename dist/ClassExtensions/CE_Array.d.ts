@@ -1,4 +1,3 @@
-import { WithFuncThisArgsAsAny_Type } from "../Utils/General";
 export interface ForEachExtras {
     index: number;
     Break: () => void;
@@ -44,7 +43,7 @@ export declare class ArrayCEClass<T> {
     TakeLast(this: T[], count: number): any[];
     FindIndex(this: T[], matchFunc: (item: T) => boolean): number;
     OrderBy(this: T[], valFunc?: (item: any, index: number) => any): T[];
-    OrderByDescending(this: T[], valFunc?: (item: any, index: number) => any): T[];
+    OrderByDescending(this: T[], valFunc?: (item: any, index: number) => any): any[];
     Distinct(this: T[]): any[];
     Except(this: T[], ...args: any[]): any[];
     IfEmptyThen(this: T[], valIfSelfIsEmpty: any): any;
@@ -52,9 +51,61 @@ export declare class ArrayCEClass<T> {
     Max(this: T[], valFunc?: (item: T) => number, asNumbers?: boolean): any;
     Sum(this: number[]): number;
     Average(this: number[]): number;
-    Median(this: number[]): number;
+    Median(this: number[]): any;
     Random(this: T[]): T;
     oldJoin: (separator?: string) => string;
     join(this: T[], separator?: string): string;
 }
-export declare const ArrayCE: <T>(nextThis: T[]) => WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
+export declare const ArrayCE: {
+    ForEach: (thisArg: Object, func: (value: any, extras: ForEachExtras) => any) => void;
+    ForEachAsync: (thisArg: Object, func: (value: any, extras: ForEachExtras) => any) => Promise<void>;
+    Contains: (thisArg: Object, item: any) => boolean;
+    ContainsAny: (thisArg: Object, ...args: any[]) => boolean;
+    Prepend: (thisArg: Object, ...args: any[]) => void;
+    Add: (thisArg: Object, item: any) => number;
+    CAdd: (thisArg: Object, item: any) => any[];
+    TAdd: (thisArg: Object, item: any) => any;
+    AddRange: (thisArg: Object, array: any[]) => any[];
+    Remove: (thisArg: Object, item: any) => boolean;
+    RemoveAll: (thisArg: Object, items: any[]) => void;
+    RemoveAt: (thisArg: Object, index: number) => any;
+    Insert: (thisArg: Object, index: number, obj: any) => void;
+    SetItems: (thisArg: Object, items: any[]) => any[];
+    Reversed: (thisArg: Object) => any[];
+    Any: (thisArg: Object, matchFunc: (item: any, index?: number) => boolean) => boolean;
+    All: (thisArg: Object, matchFunc: (item: any, index?: number) => boolean) => boolean;
+    Where: (thisArg: Object, matchFunc: (item: any, index?: number) => boolean) => any[];
+    Select: (thisArg: Object, selectFunc: (item: any, index?: number) => unknown) => any[];
+    SelectMany: (thisArg: Object, selectFunc: (item: any, index?: number) => unknown) => any[];
+    Count: (thisArg: Object) => number;
+    VCount: (thisArg: Object, matchFunc: (item: any) => boolean) => number;
+    Clear: (thisArg: Object) => void;
+    First: (thisArg: Object, matchFunc?: (item: any) => boolean) => any;
+    FirstOrX: (thisArg: Object, matchFunc?: (item: any) => boolean, x?: any) => any;
+    FirstWith: (thisArg: Object, propName: string, propValue: any) => any;
+    Last: (thisArg: Object, matchFunc?: any) => any;
+    LastOrX: (thisArg: Object, matchFunc?: (item: any) => boolean, x?: any) => any;
+    XFromLast: (thisArg: Object, x: number) => any;
+    Move: (thisArg: Object, item: any, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean) => number;
+    ToList: (thisArg: Object, itemType?: any) => any[];
+    ToMap: (thisArg: Object, keyFunc: (item: any, index: number) => string, valFunc: (item: any, index: number) => unknown) => {
+        [key: string]: unknown;
+    };
+    Skip: (thisArg: Object, count: number) => any[];
+    Take: (thisArg: Object, count: number) => any[];
+    TakeLast: (thisArg: Object, count: number) => any[];
+    FindIndex: (thisArg: Object, matchFunc: (item: any) => boolean) => number;
+    OrderBy: (thisArg: Object, valFunc?: (item: any, index: number) => any) => any[];
+    OrderByDescending: (thisArg: Object, valFunc?: (item: any, index: number) => any) => any[];
+    Distinct: (thisArg: Object) => any[];
+    Except: (thisArg: Object, ...args: any[]) => any[];
+    IfEmptyThen: (thisArg: Object, valIfSelfIsEmpty: any) => any;
+    Min: (thisArg: Object, valFunc?: (item: any) => number, asNumbers?: boolean) => any;
+    Max: (thisArg: Object, valFunc?: (item: any) => number, asNumbers?: boolean) => any;
+    Sum: (thisArg: Object) => number;
+    Average: (thisArg: Object) => number;
+    Median: (thisArg: Object) => any;
+    Random: (thisArg: Object) => any;
+    oldJoin: (thisArg: Object, separator?: string) => string;
+    join: (thisArg: Object, separator?: string) => string;
+};

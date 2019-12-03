@@ -148,7 +148,7 @@ export function ToJSON_Safe(obj, ...excludePropNames) {
 	var cache = [];
 	var foundDuplicates = false;
 	var result = JSON.stringify(obj, function(key, value) {
-		if (ArrayCE(excludePropNames).Contains(key)) return;
+		if (ArrayCE.Contains(excludePropNames, key)) return;
 		if (typeof value == 'object' && value !== null) {
 			// if circular reference found, discard key
 			if (cache.indexOf(value) !== -1) {
@@ -252,7 +252,7 @@ export function Range(min: number, max: number, step = 1, includeMax = true, rou
 	for (
 		let i = min;
 		includeMax ? i <= max : i < max;
-		i = roundToStep ? NumberCE(i + step).RoundTo(step) : i + step
+		i = roundToStep ? NumberCE.RoundTo(i + step, step) : i + step
 	) {
 		result.push(i);
 	}
@@ -349,13 +349,13 @@ export function Compare(a, b, caseSensitive = true) {
 // just use the word 'percent', even though value is represented as fraction (e.g. 0.5, rather than 50[%])
 export function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange = true) {
 	let result = from + ((to - from) * percentFromXToY);
-	if (keepResultInRange) result = NumberCE(result).KeepBetween(from, to) as number;
+	if (keepResultInRange) result = NumberCE.KeepBetween(result, from, to) as number;
 	return result;
 }
 export function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange = true) {
 	// distance-from-x / distance-from-x-required-for-result-'1'
 	var result = (val - start) / (end - start);
-	if (keepResultInRange) result = NumberCE(result).KeepBetween(0, 1) as number;
+	if (keepResultInRange) result = NumberCE.KeepBetween(result, 0, 1) as number;
 	return result;
 }
 
@@ -426,7 +426,7 @@ function GetHiddenHolder() {
 	if (holder == null) {
 		holder = document.createElement("div");
 		holder.id = "jsve_hiddenContainer";
-		ObjectCE(holder.style).Extend({position: "absolute", left: `-1000px`, top: `-1000px`, width: `1000px`, height: `1000px`, overflow: "hidden"});
+		ObjectCE.Extend(holder.style, {position: "absolute", left: `-1000px`, top: `-1000px`, width: `1000px`, height: `1000px`, overflow: "hidden"});
 		document.body.appendChild(holder);
 	}
 	return holder;
@@ -490,7 +490,7 @@ export class TreeNode {
 	ancestorNodes: TreeNode[];
 	get PathNodes(): string[] {
 		if (this.prop == "_root") return [];
-		return ArrayCE(this.ancestorNodes).Select(a=>a.prop).concat(this.prop);
+		return ArrayCE.Select(this.ancestorNodes, a=>a.prop).concat(this.prop);
 	}
 	get PathStr() {
 		return this.PathNodes.join("/");
@@ -522,7 +522,7 @@ export function GetTreeNodesInObjTree(obj: any, includeRootNode = false, _ancest
 		let currentNode = new TreeNode(_ancestorNodes, obj, key);
 		result.push(currentNode);
 		if (typeof value == "object") {
-			ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+			ArrayCE.AddRange(result, GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
 		}
 	}
 	return result;
@@ -545,7 +545,7 @@ export function GetTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, 
 		result.push(new TreeNode([], {_root: treeRoot}, "_root"));
 	result.push(childTreeNode);
 	if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
-		result.push(...GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, ArrayCE(descendantPathNodes).Skip(1).join("/"), false, _ancestorNodes.concat(childTreeNode)));
+		result.push(...GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, ArrayCE.Skip(descendantPathNodes, 1).join("/"), false, _ancestorNodes.concat(childTreeNode)));
 	return result;
 }
 /*export function GetTreeNodesInPath_WithRoot(treeRoot, path: string) {
@@ -559,7 +559,7 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string
 	let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
 	visitFunc(childTreeNode);
 	if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
-		VisitTreeNodesInPath(childTreeNode.Value, ArrayCE(descendantPathNodes).Skip(1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
+		VisitTreeNodesInPath(childTreeNode.Value, ArrayCE.Skip(descendantPathNodes, 1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
 	return treeRoot;
 }
 /*export function VisitTreeNodesInPath_WithRoot(treeRoot, path: string, visitFunc: (node: TreeNode)=>any) {
@@ -607,9 +607,9 @@ export function DeepSet(obj, pathOrPathSegments: string | (string | number)[], n
 		deepObj = deepObj[segment];
 	});
 	if (newValue === undefined && deleteUndefined) {
-		delete deepObj[ArrayCE(pathSegments).Last()];
+		delete deepObj[ArrayCE.Last(pathSegments)];
 	} else {
-		deepObj[ArrayCE(pathSegments).Last()] = newValue;
+		deepObj[ArrayCE.Last(pathSegments)] = newValue;
 	}
 }
 /** @param sepChar Default: "/" */
@@ -667,7 +667,7 @@ export function GetStackTraceStr(...args) {
 		(Error as any).stackTraceLimit = oldStackLimit;
 	}
 
-	return stackTrace.substr(StringCE(stackTrace).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+	return stackTrace.substr(StringCE.IndexOf_X(stackTrace, "\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 
 export function GetErrorMessagesUnderElement(element) {
@@ -699,7 +699,7 @@ export function WaitTillDataPathIsSet(dataPath: string) {
 }
 export function WaitTillPropertyIsSet(obj: Object, prop: string) {
 	return new Promise((resolve, reject)=> {
-		ObjectCE(obj)._AddGetterSetter(prop, ()=>{}, value=> {
+		ObjectCE._AddGetterSetter(obj, prop, ()=>{}, value=> {
 			delete obj[prop]; // remove this hook
 			obj[prop] = value; // set to provided value
 			resolve();

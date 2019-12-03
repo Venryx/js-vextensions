@@ -18,7 +18,7 @@ var ElementCEClass = /** @class */ (function () {
     };
     ElementCEClass.prototype.GetSelfAndParents = function (topDown) {
         if (topDown === void 0) { topDown = false; }
-        var result = exports.ElementCE(this).GetParents(topDown);
+        var result = exports.ElementCE.GetParents(this, topDown);
         return topDown ? result.concat([this]) : [this].concat(result);
     };
     /*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
@@ -49,5 +49,6 @@ var ElementCEClass = /** @class */ (function () {
     return ElementCEClass;
 }());
 exports.ElementCEClass = ElementCEClass;
-exports.ElementCE = General_1.CreateWrapperForClassExtensions(ElementCEClass);
+exports.ElementCE = General_1.WithFuncsStandalone(ElementCEClass.prototype);
+//export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);
 //# sourceMappingURL=CE_Element.js.map

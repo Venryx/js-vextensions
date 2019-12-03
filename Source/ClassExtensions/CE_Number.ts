@@ -1,5 +1,5 @@
 import {StringCE} from "./CE_String";
-import {CreateWrapperForClassExtensions} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 import {IsNaN} from "../Utils/Types";
 
 export class NumberCEClass {
@@ -20,8 +20,8 @@ export class NumberCEClass {
 	}
 	
 	IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number) {
-		let valRoundedToMultiple = NumberCE(this).ToPercentStr(multipleOf);
-		let distance = NumberCE(valRoundedToMultiple).Distance(this as number);
+		let valRoundedToMultiple = NumberCE.ToPercentStr(this, multipleOf);
+		let distance = NumberCE.Distance(valRoundedToMultiple, this as number);
 		return distance <= maxDistToBeMultiple;
 	}
 	
@@ -37,27 +37,27 @@ export class NumberCEClass {
 		return Math.round(this as number * multiple_inverted) / multiple_inverted;
 	}
 	RoundTo_Str(this: Number, multipleOf, fractionDigits = null, removeEmptyFraction = true) {
-		var resultValue = NumberCE(this).RoundTo(multipleOf);
+		var resultValue = NumberCE.RoundTo(this, multipleOf);
 		var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
-		if (removeEmptyFraction && StringCE(result).Contains(".")) {
-			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+		if (removeEmptyFraction && StringCE.Contains(result, ".")) {
+			result = StringCE.TrimEnd(StringCE.TrimEnd(result, "0"), ".");
 		}
 		return result;
 	}
 	FloorTo(this: Number, multipleOf) { return Math.floor((new Number(this) as any) / multipleOf) * multipleOf; }
 	FloorTo_Str(this: Number, multipleOf) {
-		var resultValue = NumberCE(this).FloorTo(multipleOf);
+		var resultValue = NumberCE.FloorTo(this, multipleOf);
 		var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-		if (StringCE(result).Contains("."))
-			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+		if (StringCE.Contains(result, "."))
+			result = StringCE.TrimEnd(StringCE.TrimEnd(result, "0"), ".");
 		return result;
 	}
 	CeilingTo(this: Number, multipleOf) { return Math.ceil((new Number(this) as any) / multipleOf) * multipleOf; }
 	CeilingTo_Str(this: Number, multipleOf) {
-		var resultValue = NumberCE(this).CeilingTo(multipleOf);
+		var resultValue = NumberCE.CeilingTo(this, multipleOf);
 		var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-		if (StringCE(result).Contains("."))
-			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+		if (StringCE.Contains(result, "."))
+			result = StringCE.TrimEnd(StringCE.TrimEnd(result, "0"), ".");
 			//result = TrimEnd(TrimEnd(result, "0"), ".");
 			return result;
 	}
@@ -90,4 +90,5 @@ export class NumberCEClass {
 		return Math.pow(this as number, power);
 	}
 }
-export const NumberCE = CreateWrapperForClassExtensions(NumberCEClass);
+export const NumberCE = WithFuncsStandalone(NumberCEClass.prototype);
+//export const NumberCE = CreateWrapperForClassExtensions(NumberCEClass);

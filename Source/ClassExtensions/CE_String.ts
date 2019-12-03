@@ -1,16 +1,16 @@
 import {ArrayCE} from "./CE_Array";
-import {CreateWrapperForClassExtensions} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 
 export class StringCEClass {
 	TrimStart(this: String, ...chars: string[]) {
 		// fix for if called by VDF (which has a different signature)
 		//if (arguments[0] instanceof Array) chars = arguments[0];
 
-		for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && ArrayCE(chars).Contains(this[iOfFirstToKeep]); iOfFirstToKeep++);
+		for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && ArrayCE.Contains(chars, this[iOfFirstToKeep]); iOfFirstToKeep++);
 		return this.slice(iOfFirstToKeep, this.length);
 	}
 	TrimEnd(this: String, ...chars: string[]) {
-		for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && ArrayCE(chars).Contains(this[iOfLastToKeep]); iOfLastToKeep--);
+		for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && ArrayCE.Contains(chars, this[iOfLastToKeep]); iOfLastToKeep--);
 		return this.substr(0, iOfLastToKeep + 1);
 	}
 
@@ -104,13 +104,13 @@ export class StringCEClass {
 		return highestIndex;
 	}
 	StartsWithAny(this: String, ...strings: string[]) {
-		return ArrayCE(strings).Any(str=>this.startsWith(str));
+		return ArrayCE.Any(strings, str=>this.startsWith(str));
 	}
 	EndsWithAny(this: String, ...strings: string[]) {
-		return ArrayCE(strings).Any(str=>this.endsWith(str));
+		return ArrayCE.Any(strings, str=>this.endsWith(str));
 	}
 	ContainsAny(this: String, ...strings: string[]) {
-		return ArrayCE(strings).Any(str=>StringCE(this).Contains(str as string));
+		return ArrayCE.Any(strings, str=>StringCE.Contains(this, str as string));
 	}
 	/** Separator-strings must be escaped. (they're passed into a regular-expression) */
 	SplitByAny(this: String, ...separators: string[]) {
@@ -205,5 +205,5 @@ export class StringCEClass {
 	ToInt() { return parseInt(Number(this)+""); }
 	ToFloat() { return Number(this); }
 }
-//export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
-export const StringCE = CreateWrapperForClassExtensions(StringCEClass);
+export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
+//export const StringCE = CreateWrapperForClassExtensions(StringCEClass);

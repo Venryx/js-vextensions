@@ -111,7 +111,7 @@ var Vector2i = /** @class */ (function () {
         return new Vector2i_1(this.x / x, this.y / y);
     };
     Vector2i.prototype.DistanceTo = function (other) {
-        return Math.sqrt(__1.NumberCE(other.x - this.x).ToPower(2) + __1.NumberCE(other.y - this.y).ToPower(2));
+        return Math.sqrt(__1.NumberCE.ToPower(other.x - this.x, 2) + __1.NumberCE.ToPower(other.y - this.y, 2));
     };
     var Vector2i_1;
     Vector2i = Vector2i_1 = __decorate([
@@ -308,34 +308,34 @@ var VRect = /** @class */ (function () {
         return this.toString() == other.toString();
     };
     VRect.prototype.NewX = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ x: valOrFunc instanceof Function ? valOrFunc(this.x) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { x: valOrFunc instanceof Function ? valOrFunc(this.x) : valOrFunc });
     };
     VRect.prototype.NewLeft = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ Left: valOrFunc instanceof Function ? valOrFunc(this.Left) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { Left: valOrFunc instanceof Function ? valOrFunc(this.Left) : valOrFunc });
     };
     VRect.prototype.NewRight = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ Right: valOrFunc instanceof Function ? valOrFunc(this.Right) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { Right: valOrFunc instanceof Function ? valOrFunc(this.Right) : valOrFunc });
     };
     VRect.prototype.NewY = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ y: valOrFunc instanceof Function ? valOrFunc(this.y) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { y: valOrFunc instanceof Function ? valOrFunc(this.y) : valOrFunc });
     };
     VRect.prototype.NewBottom = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ Bottom: valOrFunc instanceof Function ? valOrFunc(this.Bottom) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { Bottom: valOrFunc instanceof Function ? valOrFunc(this.Bottom) : valOrFunc });
     };
     VRect.prototype.NewTop = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc });
     };
     VRect.prototype.NewPosition = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc });
     };
     VRect.prototype.NewWidth = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc });
     };
     VRect.prototype.NewHeight = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc });
     };
     VRect.prototype.NewSize = function (valOrFunc) {
-        return __1.ObjectCE(this.Clone()).VSet({ Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc });
+        return __1.ObjectCE.VSet(this.Clone(), { Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc });
     };
     VRect.prototype.Grow = function (amountOnEachSide) {
         return new VRect_1(this.x - amountOnEachSide, this.y - amountOnEachSide, this.width + (amountOnEachSide * 2), this.height + (amountOnEachSide * 2));
@@ -361,16 +361,16 @@ var VRect = /** @class */ (function () {
     VRect.prototype.Intersects_Advanced = function (other, options) {
         var variantsToCompare = [this];
         if (options.xWrappedBy) {
-            variantsToCompare.push.apply(variantsToCompare, __spread(__1.ArrayCE(variantsToCompare).SelectMany(function (base) {
+            variantsToCompare.push.apply(variantsToCompare, __spread(__1.ArrayCE.SelectMany(variantsToCompare, function (base) {
                 return [base, base.NewX(function (x) { return x - options.xWrappedBy; }), base.NewX(function (x) { return x + options.xWrappedBy; })];
             })));
         }
         if (options.yWrappedBy) {
-            variantsToCompare.push.apply(variantsToCompare, __spread(__1.ArrayCE(variantsToCompare).SelectMany(function (base) {
+            variantsToCompare.push.apply(variantsToCompare, __spread(__1.ArrayCE.SelectMany(variantsToCompare, function (base) {
                 return [base, base.NewY(function (y) { return y - options.yWrappedBy; }), base.NewY(function (y) { return y + options.yWrappedBy; })];
             })));
         }
-        return __1.ArrayCE(variantsToCompare).Any(function (a) { return a.Intersects(other); });
+        return __1.ArrayCE.Any(variantsToCompare, function (a) { return a.Intersects(other); });
     };
     VRect.prototype.Clone = function () {
         return new VRect_1(this.x, this.y, this.width, this.height);

@@ -78,7 +78,7 @@ export class Vector2i {
 	}
 
 	DistanceTo(other: Vector2i) {
-		return Math.sqrt(NumberCE(other.x - this.x).ToPower(2) + NumberCE(other.y - this.y).ToPower(2));
+		return Math.sqrt(NumberCE.ToPower(other.x - this.x, 2) + NumberCE.ToPower(other.y - this.y, 2));
 	}
 }
 
@@ -237,34 +237,34 @@ export class VRect {
 	}
 
 	NewX(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({x: valOrFunc instanceof Function ? valOrFunc(this.x) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {x: valOrFunc instanceof Function ? valOrFunc(this.x) : valOrFunc});
 	}
 	NewLeft(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({Left: valOrFunc instanceof Function ? valOrFunc(this.Left) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {Left: valOrFunc instanceof Function ? valOrFunc(this.Left) : valOrFunc});
 	}
 	NewRight(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({Right: valOrFunc instanceof Function ? valOrFunc(this.Right) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {Right: valOrFunc instanceof Function ? valOrFunc(this.Right) : valOrFunc});
 	}
 	NewY(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({y: valOrFunc instanceof Function ? valOrFunc(this.y) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {y: valOrFunc instanceof Function ? valOrFunc(this.y) : valOrFunc});
 	}
 	NewBottom(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({Bottom: valOrFunc instanceof Function ? valOrFunc(this.Bottom) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {Bottom: valOrFunc instanceof Function ? valOrFunc(this.Bottom) : valOrFunc});
 	}
 	NewTop(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc});
 	}
 	NewPosition(valOrFunc: Vector2i | ((oldVal: Vector2i)=>Vector2i)) {
-		return ObjectCE(this.Clone()).VSet({Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc});
 	}
 	NewWidth(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {width: valOrFunc instanceof Function ? valOrFunc(this.width) : valOrFunc});
 	}
 	NewHeight(valOrFunc: number | ((oldVal: number)=>number)) {
-		return ObjectCE(this.Clone()).VSet({height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc});
 	}
 	NewSize(valOrFunc: Vector2i | ((oldVal: Vector2i)=>Vector2i)) {
-		return ObjectCE(this.Clone()).VSet({Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc});
+		return ObjectCE.VSet(this.Clone(), {Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc});
 	}
 
 	Grow(amountOnEachSide: number) {
@@ -292,16 +292,16 @@ export class VRect {
 	Intersects_Advanced(other: VRect, options: {xWrappedBy?: number, yWrappedBy?: number}) {
 		let variantsToCompare: VRect[] = [this];
 		if (options.xWrappedBy) {
-			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
+			variantsToCompare.push(...ArrayCE.SelectMany(variantsToCompare, base=>{
 				return [base, base.NewX(x=>x - options.xWrappedBy), base.NewX(x=>x + options.xWrappedBy)];
 			}))
 		}
 		if (options.yWrappedBy) {
-			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
+			variantsToCompare.push(...ArrayCE.SelectMany(variantsToCompare, base=>{
 				return [base, base.NewY(y=>y - options.yWrappedBy), base.NewY(y=>y + options.yWrappedBy)];
 			}))
 		}
-		return ArrayCE(variantsToCompare).Any(a=>a.Intersects(other));
+		return ArrayCE.Any(variantsToCompare, a=>a.Intersects(other));
 	}
 
 	Clone() {

@@ -218,7 +218,7 @@ var ArrayCEClass = /** @class */ (function () {
         try {
             for (var items_2 = __values(items), items_2_1 = items_2.next(); !items_2_1.done; items_2_1 = items_2.next()) {
                 var item = items_2_1.value;
-                exports.ArrayCE(this).Remove(item);
+                exports.ArrayCE.Remove(this, item);
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -326,7 +326,7 @@ var ArrayCEClass = /** @class */ (function () {
         try {
             for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
-                exports.ArrayCE(result).AddRange(selectFunc.call(item, item, index));
+                exports.ArrayCE.AddRange(result, selectFunc.call(item, item, index));
             }
         }
         catch (e_8_1) { e_8 = { error: e_8_1 }; }
@@ -342,7 +342,7 @@ var ArrayCEClass = /** @class */ (function () {
     //Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
     ArrayCEClass.prototype.Count = function () { return this.length; };
     ; // needed for items to be added properly to custom classes that extend Array
-    ArrayCEClass.prototype.VCount = function (matchFunc) { return exports.ArrayCE(this).Where(matchFunc).length; };
+    ArrayCEClass.prototype.VCount = function (matchFunc) { return exports.ArrayCE.Where(this, matchFunc).length; };
     ArrayCEClass.prototype.Clear = function () {
         /*while (this.length > 0)
             this.pop();*/
@@ -351,7 +351,7 @@ var ArrayCEClass = /** @class */ (function () {
     /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
     forEach_break(...args) { return this.some(...args); } */
     ArrayCEClass.prototype.First = function (matchFunc) {
-        var result = exports.ArrayCE(this).FirstOrX(matchFunc);
+        var result = exports.ArrayCE.FirstOrX(this, matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");
         }
@@ -383,9 +383,9 @@ var ArrayCEClass = /** @class */ (function () {
         return x;
     };
     //FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-    ArrayCEClass.prototype.FirstWith = function (propName, propValue) { return exports.ArrayCE(this).Where(function () { return this[propName] == propValue; })[0]; };
+    ArrayCEClass.prototype.FirstWith = function (propName, propValue) { return exports.ArrayCE.Where(this, function () { return this[propName] == propValue; })[0]; };
     ArrayCEClass.prototype.Last = function (matchFunc) {
-        var result = exports.ArrayCE(this).LastOrX(matchFunc);
+        var result = exports.ArrayCE.LastOrX(this, matchFunc);
         if (result === undefined) {
             throw new Error("Matching item not found.");
         }
@@ -419,17 +419,17 @@ var ArrayCEClass = /** @class */ (function () {
         }
         this.Insert(newIndex, item);*/
         if (newIndexAsPreRemovalIndexVSFinalIndex) {
-            exports.ArrayCE(this).Insert(newIndex, item);
+            exports.ArrayCE.Insert(this, newIndex, item);
             if (oldIndex != -1) {
                 var oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-                exports.ArrayCE(this).RemoveAt(oldEntry_currentIndex);
+                exports.ArrayCE.RemoveAt(this, oldEntry_currentIndex);
             }
         }
         else {
             if (oldIndex != -1) {
-                exports.ArrayCE(this).RemoveAt(oldIndex);
+                exports.ArrayCE.RemoveAt(this, oldIndex);
             }
-            exports.ArrayCE(this).Insert(newIndex, item);
+            exports.ArrayCE.Insert(this, newIndex, item);
         }
         return oldIndex;
     };
@@ -516,12 +516,12 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.OrderByDescending = function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
-        return exports.ArrayCE(this).OrderBy(function (item, index) { return -valFunc(item, index); });
+        return exports.ArrayCE.OrderBy(this, function (item, index) { return -valFunc(item, index); });
     };
     ArrayCEClass.prototype.Distinct = function () {
         var result = [];
         for (var i in this) {
-            if (!exports.ArrayCE(result).Contains(this[i])) {
+            if (!exports.ArrayCE.Contains(result, this[i])) {
                 result.push(this[i]);
             }
         }
@@ -543,7 +543,7 @@ var ArrayCEClass = /** @class */ (function () {
             try {
                 for (var excludeItems_1 = __values(excludeItems), excludeItems_1_1 = excludeItems_1.next(); !excludeItems_1_1.done; excludeItems_1_1 = excludeItems_1.next()) {
                     var excludeItem = excludeItems_1_1.value;
-                    exports.ArrayCE(result).Remove(excludeItem);
+                    exports.ArrayCE.Remove(result, excludeItem);
                 }
             }
             catch (e_12_1) { e_12 = { error: e_12_1 }; }
@@ -555,7 +555,7 @@ var ArrayCEClass = /** @class */ (function () {
             }
             return result;
         }
-        return exports.ArrayCE(this).Where(function (a) { return !excludeItems.Contains(a); });
+        return exports.ArrayCE.Where(this, function (a) { return !excludeItems.Contains(a); });
     };
     ArrayCEClass.prototype.IfEmptyThen = function (valIfSelfIsEmpty) {
         return this.length == 0 ? valIfSelfIsEmpty : this;
@@ -569,7 +569,7 @@ var ArrayCEClass = /** @class */ (function () {
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.min.apply(Math, __spread(this));
         }
-        return exports.ArrayCE(exports.ArrayCE(this).OrderBy(valFunc)).FirstOrX();
+        return exports.ArrayCE.FirstOrX(exports.ArrayCE.OrderBy(this, valFunc));
     };
     ArrayCEClass.prototype.Max = function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
@@ -579,7 +579,7 @@ var ArrayCEClass = /** @class */ (function () {
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.max.apply(Math, __spread(this));
         }
-        return exports.ArrayCE(exports.ArrayCE(this).OrderBy(valFunc)).LastOrX();
+        return exports.ArrayCE.LastOrX(exports.ArrayCE.OrderBy(this, valFunc));
     };
     ArrayCEClass.prototype.Sum = function () {
         var e_13, _a;
@@ -600,11 +600,11 @@ var ArrayCEClass = /** @class */ (function () {
         return total;
     };
     ArrayCEClass.prototype.Average = function () {
-        var total = exports.ArrayCE(this).Sum();
+        var total = exports.ArrayCE.Sum(this);
         return total / this.length;
     };
     ArrayCEClass.prototype.Median = function () {
-        var ordered = exports.ArrayCE(this).OrderBy(function (a) { return a; });
+        var ordered = exports.ArrayCE.OrderBy(this, function (a) { return a; });
         if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
             return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
         }
@@ -631,10 +631,11 @@ var ArrayCEClass = /** @class */ (function () {
     return ArrayCEClass;
 }());
 exports.ArrayCEClass = ArrayCEClass;
+exports.ArrayCE = General_1.WithFuncsStandalone(ArrayCEClass.prototype);
 //export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-var ArrayCE_Base = General_1.CreateWrapperForClassExtensions(ArrayCEClass);
-exports.ArrayCE = ArrayCE_Base;
+/*const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
+export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;*/
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {
     ToArray(this: ArrayIterator) {

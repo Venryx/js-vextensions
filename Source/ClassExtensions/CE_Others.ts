@@ -1,5 +1,12 @@
 import {WithFuncsStandalone, CreateWrapperForClassExtensions} from "../Utils/General";
 
+/*
+There are two ways to make a class-extension<or>standalone-functions system:
+1) Define the functions as class methods, and create a typescript extractor that creates versions of those methods, with an added first parameter that is used as the this-arg.
+2) Define them as standalone functions, and create a typescript extractor that creates versions of those methods, with a real this-arg that is extracted and supplied as the first parameter.
+The "Extract" function below shows how to do approach 2. (we currently instead use approach 1, since I use them as class methods more frequently, and only the source approach allows function overloads)
+*/
+
 /*function Test1(a, b: string, c) {}
 
 /*type ExtractArgs2Plus<T> = FirstParameterType<T>;
@@ -17,7 +24,13 @@ export function Extract<T>(source: T): Extract_Type<T> {
 	return null as any;
 }
 
-const Test2 = Extract(Test1);*/
+const Test2 = Extract(Test1);
+export type exports1 = {Test2: typeof Test2};
+
+declare global {
+	interface String extends exports1 {}
+}
+"".Test2("", 5);*/
 
 export class FunctionCEClass {
 	GetName(this: Function) {
@@ -59,8 +72,8 @@ export class FunctionCEClass {
 		return this;
 	};
 }
-//export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
-export const FunctionCE = CreateWrapperForClassExtensions(FunctionCEClass);
+export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
+//export const FunctionCE = CreateWrapperForClassExtensions(FunctionCEClass);
 
 function isLeapYear(year) {
 	return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
@@ -83,14 +96,15 @@ export class DateCEClass {
 		var n = this.getDate();
 		this.setDate(1);
 		this.setMonth(this.getMonth() + value);
-		this.setDate(Math.min(n, DateCE(this).GetDaysInMonth()));
+		this.setDate(Math.min(n, DateCE.GetDaysInMonth(this)));
 		return this;
   	}
 	Clone(this: Date) {
 		return new Date(this.getTime());
 	}
 }
-export const DateCE = CreateWrapperForClassExtensions(DateCEClass);
+export const DateCE = WithFuncsStandalone(DateCEClass.prototype);
+//export const DateCE = CreateWrapperForClassExtensions(DateCEClass);
 
 /*export class ErrorCEClass {
 	get Stack() {

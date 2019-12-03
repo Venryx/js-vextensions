@@ -72,14 +72,14 @@ function GetUrlParts(url) {
     var _d = __read(Array(4).fill(0).map(function (a) { return ""; }), 4), domainStr = _d[0], pathStr = _d[1], varsStr = _d[2], hashStr = _d[3];
     var urlToProcess = url;
     if (urlToProcess.includes("#") && !varsStr.includes("runJS=")) {
-        _a = __read(__1.StringCE(urlToProcess).SplitAt(urlToProcess.indexOf("#")), 2), urlToProcess = _a[0], hashStr = _a[1];
+        _a = __read(__1.StringCE.SplitAt(urlToProcess, urlToProcess.indexOf("#")), 2), urlToProcess = _a[0], hashStr = _a[1];
     }
     if (urlToProcess.includes("?")) {
-        _b = __read(__1.StringCE(urlToProcess).SplitAt(urlToProcess.indexOf("?")), 2), urlToProcess = _b[0], varsStr = _b[1];
+        _b = __read(__1.StringCE.SplitAt(urlToProcess, urlToProcess.indexOf("?")), 2), urlToProcess = _b[0], varsStr = _b[1];
     }
     //if (urlToProcess.Matches("/").length == )
-    var splitAtSlash_pos = __1.NumberCE(__1.StringCE(urlToProcess).IndexOf_X("/", 2)).IfN1Then(urlToProcess.length);
-    _c = __read(__1.StringCE(urlToProcess).SplitAt(splitAtSlash_pos), 2), domainStr = _c[0], pathStr = _c[1];
+    var splitAtSlash_pos = __1.NumberCE.IfN1Then(__1.StringCE.IndexOf_X(urlToProcess, "/", 2), urlToProcess.length);
+    _c = __read(__1.StringCE.SplitAt(urlToProcess, splitAtSlash_pos), 2), domainStr = _c[0], pathStr = _c[1];
     return [domainStr, pathStr, varsStr, hashStr];
 }
 exports.GetUrlParts = GetUrlParts;
@@ -96,23 +96,23 @@ function GetUrlPath(url, fromDomain) {
     return pathStr;
 }
 function GetUrlVars(url, allowQuestionMarkAsVarSep) {
-    var _a, e_1, _b;
+    var e_1, _a;
     if (allowQuestionMarkAsVarSep === void 0) { allowQuestionMarkAsVarSep = true; }
     var varSeparators = allowQuestionMarkAsVarSep ? ["&", "?"] : ["&"];
-    var _c = __read(GetUrlParts(url), 3), _ = _c[0], __ = _c[1], varsStr = _c[2];
+    var _b = __read(GetUrlParts(url), 3), _ = _b[0], __ = _b[1], varsStr = _b[2];
     var vars = {}; //{[key: string]: string};
-    var parts = (_a = __1.StringCE(varsStr)).SplitByAny.apply(_a, __spread(varSeparators)).filter(function (a) { return a; });
+    var parts = __1.StringCE.SplitByAny.apply(__1.StringCE, __spread([varsStr], varSeparators)).filter(function (a) { return a; });
     try {
         for (var parts_1 = __values(parts), parts_1_1 = parts_1.next(); !parts_1_1.done; parts_1_1 = parts_1.next()) {
             var part = parts_1_1.value;
-            var _d = __read(__1.StringCE(part).SplitAt(part.indexOf("=")), 2), key = _d[0], value = _d[1];
+            var _c = __read(__1.StringCE.SplitAt(part, part.indexOf("=")), 2), key = _c[0], value = _c[1];
             vars[key] = value;
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }
     finally {
         try {
-            if (parts_1_1 && !parts_1_1.done && (_b = parts_1.return)) _b.call(parts_1);
+            if (parts_1_1 && !parts_1_1.done && (_a = parts_1.return)) _a.call(parts_1);
         }
         finally { if (e_1) throw e_1.error; }
     }
@@ -168,12 +168,12 @@ var VURL = /** @class */ (function () {
         return withProtocol ? this.domain : this.DomainWithoutProtocol;
     };
     Object.defineProperty(VURL.prototype, "Protocol", {
-        get: function () { return this.domain && __1.StringCE(this.domain).Contains("://") ? this.domain.substr(0, this.domain.indexOf("://")) : null; },
+        get: function () { return this.domain && __1.StringCE.Contains(this.domain, "://") ? this.domain.substr(0, this.domain.indexOf("://")) : null; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(VURL.prototype, "DomainWithoutProtocol", {
-        get: function () { return this.domain && __1.StringCE(this.domain).Contains("://") ? this.domain.substr(this.domain.indexOf("://") + 3) : this.domain; },
+        get: function () { return this.domain && __1.StringCE.Contains(this.domain, "://") ? this.domain.substr(this.domain.indexOf("://") + 3) : this.domain; },
         enumerable: true,
         configurable: true
     });
