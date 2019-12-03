@@ -1,5 +1,5 @@
 import {StringCE} from "./CE_String";
-import {CreateWrapperForClassExtensions} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 import {IsNaN} from "../Utils/Types";
 
 export class NumberCEClass {
@@ -91,3 +91,4 @@ export class NumberCEClass {
 	}
 }
 export const NumberCE = CreateWrapperForClassExtensions(NumberCEClass);
+export const NumberCES = WithFuncsStandalone(NumberCEClass.prototype);

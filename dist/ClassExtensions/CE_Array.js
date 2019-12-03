@@ -635,6 +635,7 @@ exports.ArrayCEClass = ArrayCEClass;
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 var ArrayCE_Base = General_1.CreateWrapperForClassExtensions(ArrayCEClass);
 exports.ArrayCE = ArrayCE_Base;
+exports.ArrayCES = General_1.WithFuncsStandalone(ArrayCEClass.prototype);
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {
     ToArray(this: ArrayIterator) {

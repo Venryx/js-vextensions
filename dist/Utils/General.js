@@ -1064,71 +1064,67 @@ function WithFuncThisArgsAsAny(source) {
     return source;
 }
 exports.WithFuncThisArgsAsAny = WithFuncThisArgsAsAny;
-//function Test1<T>(thisArg: T): T { return null as any; } // helper
-//export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): typeof Test1 {
-//export function AsWrapper<Class extends new()=>any, T extends InstanceType<Class>>(source: Class): (thisArg: T)=>T {
 function CreateWrapperForClassExtensions(sourceClass) {
-    /*return (thisArg: any)=> {
-        return null as T;
-    };*/
     // proxy approach; nicer, but I don't like potential slowdown from creating new proxy each time a class-extension method is called!
-    return function (thisArg) {
+    /*return (thisArg: any)=> {
         return new Proxy({}, {
-            get: function (target, key, receiver) {
-                /*console.log("Returning fake-func for..." + (key || "").toString());
-                let origFunc = sourceClass.prototype[key];
-                //return origFunc.bind(nextThis);
-                return (...callArgs)=> {
-                    return origFunc.apply(thisArg, callArgs);
-                };*/
-                if (key == "constructor")
-                    return Reflect.get(target, key, receiver); // no reason to call the wrapper's constructor
-                var descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
-                //let newDescriptor = Object.assign({}, descriptor);
+            get(target, key, receiver?) {
+                if (key == "constructor") return Reflect.get(target, key, receiver); // no reason to call the wrapper's constructor
+                let descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
                 if (descriptor.value instanceof Function) {
-                    var oldFunc_1 = descriptor.value;
-                    /*newDescriptor.value = (...callArgs)=> {
+                    let oldFunc = descriptor.value as Function;
+                    return (...callArgs)=> {
                         return oldFunc.apply(thisArg, callArgs);
-                    };*/
-                    return function () {
-                        var callArgs = [];
-                        for (var _i = 0; _i < arguments.length; _i++) {
-                            callArgs[_i] = arguments[_i];
-                        }
-                        return oldFunc_1.apply(thisArg, callArgs);
                     };
                 }
-                //Object.defineProperty(proxy, key, newDescriptor);
             }
-            //}) as InstanceType<Class>;
-            //}) as T;
-        });
-    };
-    // static proxy approach; fast because it doesn't create any functions, closures, or proxies per wrap/CE-method-call
-    //		(limitation: you must call the CE-method at "ObjectCE(something).MyCEMethod" right away, else currentThis will be outdated)
-    //	Actually, this approach is unreliable. To see why: (first log is wrapped, but before its method runs, the deeper Log wraps+runs!)
-    //		Object.prototype.Log = Log
-    // 	Log("Test1.").Log("deeper." + Log("deepest."))
-    // Log output: "Test1.", "deepest.", "deeper.deepest."
-    //let proxy = {} as InstanceType<Class>;
-    /*const proxy = {} as WithFuncThisArgsAsAny_Type<T>;
-    let currentThis;
-    for (const key of Object.getOwnPropertyNames(sourceClass.prototype)) {
-        if (key == "constructor") continue; // no reason to call the wrapper's constructor
-        let descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
-        let newDescriptor = Object.assign({}, descriptor);
+        //}) as T;
+        }) as WithFuncThisArgsAsAny_Type<T>;
+    };*/
+    var e_8, _a;
+    // Static proxy approach -- a bit faster since it doesn't create any functions, closures, or proxies per wrap/CE-method-call.
+    //	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
+    //let proxy = {} as T;
+    var proxy = {};
+    var thisArgStack = [];
+    var _loop_2 = function (key) {
+        if (key == "constructor")
+            return "continue"; // no reason to call the wrapper's constructor
+        var descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
+        var newDescriptor = Object.assign({}, descriptor);
         if (descriptor.value instanceof Function) {
-            let oldFunc = descriptor.value as Function;
-            newDescriptor.value = (...callArgs)=> {
-                return oldFunc.apply(currentThis, callArgs);
+            var oldFunc_1 = descriptor.value;
+            newDescriptor.value = function () {
+                var callArgs = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    callArgs[_i] = arguments[_i];
+                }
+                var thisArg = thisArgStack[thisArgStack.length - 1];
+                var result = oldFunc_1.apply(thisArg, callArgs);
+                //thisArgStack.length--;
+                thisArgStack.splice(thisArgStack.length - 1, 1);
+                return result;
             };
         }
         Object.defineProperty(proxy, key, newDescriptor);
+    };
+    try {
+        for (var _b = __values(Object.getOwnPropertyNames(sourceClass.prototype)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var key = _c.value;
+            _loop_2(key);
+        }
     }
-    return (nextThis: any)=> {
-        currentThis = nextThis;
+    catch (e_8_1) { e_8 = { error: e_8_1 }; }
+    finally {
+        try {
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+        }
+        finally { if (e_8) throw e_8.error; }
+    }
+    return function (nextThis) {
+        thisArgStack.push(nextThis);
         return proxy;
-    };*/
+    };
 }
 exports.CreateWrapperForClassExtensions = CreateWrapperForClassExtensions;
 //# sourceMappingURL=General.js.map

@@ -115,4 +115,5 @@ var NumberCEClass = /** @class */ (function () {
 }());
 exports.NumberCEClass = NumberCEClass;
 exports.NumberCE = General_1.CreateWrapperForClassExtensions(NumberCEClass);
+exports.NumberCES = General_1.WithFuncsStandalone(NumberCEClass.prototype);
 //# sourceMappingURL=CE_Number.js.map

@@ -276,6 +276,6 @@ var StringCEClass = /** @class */ (function () {
     return StringCEClass;
 }());
 exports.StringCEClass = StringCEClass;
-//export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
 exports.StringCE = General_1.CreateWrapperForClassExtensions(StringCEClass);
+exports.StringCES = General_1.WithFuncsStandalone(StringCEClass.prototype);
 //# sourceMappingURL=CE_String.js.map

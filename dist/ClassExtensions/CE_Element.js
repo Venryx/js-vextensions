@@ -50,4 +50,5 @@ var ElementCEClass = /** @class */ (function () {
 }());
 exports.ElementCEClass = ElementCEClass;
 exports.ElementCE = General_1.CreateWrapperForClassExtensions(ElementCEClass);
+exports.ElementCES = General_1.WithFuncsStandalone(ElementCEClass.prototype);
 //# sourceMappingURL=CE_Element.js.map

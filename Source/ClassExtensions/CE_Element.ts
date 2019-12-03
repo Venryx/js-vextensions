@@ -1,4 +1,4 @@
-import {CreateWrapperForClassExtensions} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 
 export class ElementCEClass {
 	GetParents(this: Element, topDown = false) {
@@ -43,3 +43,4 @@ export class ElementCEClass {
 	}
 }
 export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);
+export const ElementCES = WithFuncsStandalone(ElementCEClass.prototype);

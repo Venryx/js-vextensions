@@ -57,7 +57,7 @@ var ObjectCEClass = /** @class */ (function () {
     };
     ObjectCEClass.prototype._AddFunction = function (name, func) {
         //this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-        this._AddItem(name, func);
+        exports.ObjectCE(this)._AddItem(name, func);
     };
     // the below helps you do stuff like this:
     //		Array.prototype._AddGetterSetter("AddX", null, function(value) { this.push(value); }); [].AddX = "newItem";
@@ -78,21 +78,21 @@ var ObjectCEClass = /** @class */ (function () {
         // the below helps you do stuff like this:
         //		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
         set: function (func) {
-            this._AddFunction(func.GetName(), func);
+            exports.ObjectCE(this)._AddFunction(func.GetName(), func);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ObjectCEClass.prototype, "_AddGetter_Inline", {
         set: function (func) {
-            this._AddGetterSetter(func.GetName(), func, null);
+            exports.ObjectCE(this)._AddGetterSetter(func.GetName(), func, null);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ObjectCEClass.prototype, "_AddSetter_Inline", {
         set: function (func) {
-            this._AddGetterSetter(func.GetName(), null, func);
+            exports.ObjectCE(this)._AddGetterSetter(func.GetName(), null, func);
         },
         enumerable: true,
         configurable: true
@@ -289,7 +289,7 @@ var ObjectCEClass = /** @class */ (function () {
         var _this = this;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-        return this.VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
+        return exports.ObjectCE(this).VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
     };
     // for symbols
     /*Pairs_Sym() {
@@ -345,6 +345,7 @@ exports.ObjectCEClass = ObjectCEClass;
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
 var ObjectCE_Base = General_1.CreateWrapperForClassExtensions(ObjectCEClass);
 exports.ObjectCE = ObjectCE_Base;
+exports.ObjectCES = General_1.WithFuncsStandalone(ObjectCEClass.prototype);
 /*class Test1{
     Test2() {}
 }

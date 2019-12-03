@@ -77,3 +77,33 @@ export declare class ObjectCEClass<RealThis> {
     }, item: T): void;
 }
 export declare const ObjectCE: <T>(nextThis: T) => WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
+export declare const ObjectCES: {
+    _AddItem: (thisArg: Object, name: any, value: any, forceAdd?: boolean) => void;
+    _AddFunction: (thisArg: Object, name: any, func: any) => void;
+    _AddGetterSetter: (thisArg: Object, name: any, getter: any, setter: any) => void;
+    _AddFunction_Inline: any;
+    _AddGetter_Inline: any;
+    _AddSetter_Inline: any;
+    Extend: (thisArg: Object, x: any) => ObjectCEClass<any>;
+    VSet: (thisArg: Object, props: any, options?: VSet_Options) => any;
+    Extended: (thisArg: Object, x: unknown) => unknown;
+    SafeGet: (thisArg: Object, pathGetterFunc: (self: unknown) => unknown, resultIfNull?: any) => unknown;
+    VAct: (thisArg: Object, func: (self: unknown) => any) => unknown;
+    As: (thisArg: Object, type: new (..._: any[]) => unknown) => unknown;
+    Strip: (thisArg: Object) => ObjectCEClass<any>;
+    Including: (thisArg: Object, ...args: string[]) => {};
+    Excluding: (thisArg: Object, ...args: string[]) => ObjectCEClass<any>;
+    IsOneOf: (thisArg: Object, ...args: any[]) => boolean;
+    Pairs: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => {
+        index: number;
+        key: unknown;
+        keyNum?: number;
+        value: unknown;
+    }[];
+    VKeys: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => unknown[];
+    VValues: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => unknown[];
+    Sym: (thisArg: Object, symbolName: string) => any;
+    FA_Select: (thisArg: Object, selectFunc?: (item: unknown, index?: number) => unknown) => unknown[];
+    FA_RemoveAt: (thisArg: Object, index: number) => void;
+    FA_Add: (thisArg: Object, item: unknown) => void;
+};

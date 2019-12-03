@@ -1,4 +1,4 @@
-import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "../Utils/General";
+import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type, WithFuncsStandalone} from "../Utils/General";
 import {Assert} from "../Utils/Assert";
 
 export interface ForEachExtras {
@@ -376,6 +376,7 @@ export class ArrayCEClass<T> {
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
+export const ArrayCES = WithFuncsStandalone(ArrayCEClass.prototype);
 
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {

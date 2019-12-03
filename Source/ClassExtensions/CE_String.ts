@@ -1,5 +1,5 @@
 import {ArrayCE} from "./CE_Array";
-import {CreateWrapperForClassExtensions} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 
 export class StringCEClass {
 	TrimStart(this: String, ...chars: string[]) {
@@ -205,5 +205,5 @@ export class StringCEClass {
 	ToInt() { return parseInt(Number(this)+""); }
 	ToFloat() { return Number(this); }
 }
-//export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
 export const StringCE = CreateWrapperForClassExtensions(StringCEClass);
+export const StringCES = WithFuncsStandalone(StringCEClass.prototype);

@@ -34,7 +34,7 @@ export class ObjectCEClass<RealThis> {
 
 	_AddFunction(name, func) {
 		//this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-		this._AddItem(name, func);
+		ObjectCE(this)._AddItem(name, func);
 	}
 
 	// the below helps you do stuff like this:
@@ -53,13 +53,13 @@ export class ObjectCEClass<RealThis> {
 	// the below helps you do stuff like this:
 	//		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
 	set _AddFunction_Inline(func) {
-		this._AddFunction(func.GetName(), func);
+		ObjectCE(this)._AddFunction(func.GetName(), func);
 	}
 	set _AddGetter_Inline(func) {
-		this._AddGetterSetter(func.GetName(), func, null);
+		ObjectCE(this)._AddGetterSetter(func.GetName(), func, null);
 	}
 	set _AddSetter_Inline(func) {
-		this._AddGetterSetter(func.GetName(), null, func);
+		ObjectCE(this)._AddGetterSetter(func.GetName(), null, func);
 	}
 
 	// normal
@@ -240,7 +240,7 @@ export class ObjectCEClass<RealThis> {
 	//interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
 	VValues(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-		return this.VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
+		return ObjectCE(this).VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 	}
 
 	// for symbols
@@ -291,6 +291,7 @@ export class ObjectCEClass<RealThis> {
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
 const ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
 export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
+export const ObjectCES = WithFuncsStandalone(ObjectCEClass.prototype);
 
 /*class Test1{
 	Test2() {}

@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
+/*
+There are two ways to make a class-extension<or>standalone-functions system:
+1) Define the functions as class methods, and create a typescript extractor that creates versions of those methods, with an added first parameter that is used as the this-arg.
+2) Define them as standalone functions, and create a typescript extractor that creates versions of those methods, with a real this-arg that is extracted and supplied as the first parameter.
+The "Extract" function below shows how to do approach 2. (we currently instead use approach 1, since I use them as class methods more frequently, and only the source approach allows function overloads)
+*/
 /*function Test1(a, b: string, c) {}
 
 /*type ExtractArgs2Plus<T> = FirstParameterType<T>;
@@ -18,7 +24,13 @@ export function Extract<T>(source: T): Extract_Type<T> {
     return null as any;
 }
 
-const Test2 = Extract(Test1);*/
+const Test2 = Extract(Test1);
+export type exports1 = {Test2: typeof Test2};
+
+declare global {
+    interface String extends exports1 {}
+}
+"".Test2("", 5);*/
 var FunctionCEClass = /** @class */ (function () {
     function FunctionCEClass() {
     }
@@ -66,8 +78,8 @@ var FunctionCEClass = /** @class */ (function () {
     return FunctionCEClass;
 }());
 exports.FunctionCEClass = FunctionCEClass;
-//export const FunctionCE = WithFuncsStandalone(FunctionCEClass.prototype);
 exports.FunctionCE = General_1.CreateWrapperForClassExtensions(FunctionCEClass);
+exports.FunctionCES = General_1.WithFuncsStandalone(FunctionCEClass.prototype);
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
@@ -104,6 +116,7 @@ var DateCEClass = /** @class */ (function () {
 }());
 exports.DateCEClass = DateCEClass;
 exports.DateCE = General_1.CreateWrapperForClassExtensions(DateCEClass);
+exports.DateCES = General_1.WithFuncsStandalone(DateCEClass.prototype);
 /*export class ErrorCEClass {
     get Stack() {
         // this causes the full stack-trace to be attached to the Error object (in Chrome)
