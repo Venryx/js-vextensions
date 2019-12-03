@@ -36,8 +36,8 @@ var NumberCEClass = /** @class */ (function () {
         return number.toString() + "%";
     };
     NumberCEClass.prototype.IsMultipleOf = function (multipleOf, maxDistToBeMultiple) {
-        var valRoundedToMultiple = exports.NumberCE.ToPercentStr(this, multipleOf);
-        var distance = exports.NumberCE.Distance(valRoundedToMultiple, this);
+        var valRoundedToMultiple = exports.NumberCE(this).ToPercentStr(multipleOf);
+        var distance = exports.NumberCE(valRoundedToMultiple).Distance(this);
         return distance <= maxDistToBeMultiple;
     };
     NumberCEClass.prototype.RoundTo = function (multiple) {
@@ -53,27 +53,27 @@ var NumberCEClass = /** @class */ (function () {
     NumberCEClass.prototype.RoundTo_Str = function (multipleOf, fractionDigits, removeEmptyFraction) {
         if (fractionDigits === void 0) { fractionDigits = null; }
         if (removeEmptyFraction === void 0) { removeEmptyFraction = true; }
-        var resultValue = exports.NumberCE.RoundTo(this, multipleOf);
+        var resultValue = exports.NumberCE(this).RoundTo(multipleOf);
         var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
-        if (removeEmptyFraction && CE_String_1.StringCE.Contains(result, ".")) {
-            result = CE_String_1.StringCE.TrimEnd(CE_String_1.StringCE.TrimEnd(result, "0"), ".");
+        if (removeEmptyFraction && CE_String_1.StringCE(result).Contains(".")) {
+            result = CE_String_1.StringCE(CE_String_1.StringCE(result).TrimEnd("0")).TrimEnd(".");
         }
         return result;
     };
     NumberCEClass.prototype.FloorTo = function (multipleOf) { return Math.floor(new Number(this) / multipleOf) * multipleOf; };
     NumberCEClass.prototype.FloorTo_Str = function (multipleOf) {
-        var resultValue = exports.NumberCE.FloorTo(this, multipleOf);
+        var resultValue = exports.NumberCE(this).FloorTo(multipleOf);
         var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-        if (CE_String_1.StringCE.Contains(result, "."))
-            result = CE_String_1.StringCE.TrimEnd(CE_String_1.StringCE.TrimEnd(result, "0"), ".");
+        if (CE_String_1.StringCE(result).Contains("."))
+            result = CE_String_1.StringCE(CE_String_1.StringCE(result).TrimEnd("0")).TrimEnd(".");
         return result;
     };
     NumberCEClass.prototype.CeilingTo = function (multipleOf) { return Math.ceil(new Number(this) / multipleOf) * multipleOf; };
     NumberCEClass.prototype.CeilingTo_Str = function (multipleOf) {
-        var resultValue = exports.NumberCE.CeilingTo(this, multipleOf);
+        var resultValue = exports.NumberCE(this).CeilingTo(multipleOf);
         var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-        if (CE_String_1.StringCE.Contains(result, "."))
-            result = CE_String_1.StringCE.TrimEnd(CE_String_1.StringCE.TrimEnd(result, "0"), ".");
+        if (CE_String_1.StringCE(result).Contains("."))
+            result = CE_String_1.StringCE(CE_String_1.StringCE(result).TrimEnd("0")).TrimEnd(".");
         //result = TrimEnd(TrimEnd(result, "0"), ".");
         return result;
     };
@@ -114,6 +114,5 @@ var NumberCEClass = /** @class */ (function () {
     return NumberCEClass;
 }());
 exports.NumberCEClass = NumberCEClass;
-exports.NumberCE = General_1.WithFuncsStandalone(NumberCEClass.prototype);
-//export const NumberCE = CreateWrapperForClassExtensions(NumberCEClass);
+exports.NumberCE = General_1.CreateWrapperForClassExtensions(NumberCEClass);
 //# sourceMappingURL=CE_Number.js.map

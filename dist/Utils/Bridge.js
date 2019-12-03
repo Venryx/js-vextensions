@@ -60,7 +60,7 @@ var Timers_1 = require("./Timers");
 var __1 = require("..");
 var BridgeMessage = /** @class */ (function () {
     function BridgeMessage(initialData) {
-        __1.ObjectCE.Extend(this, initialData);
+        __1.ObjectCE(this).Extend(initialData);
     }
     return BridgeMessage;
 }());
@@ -91,7 +91,7 @@ var Bridge = /** @class */ (function () {
         this.lastCallID = -1;
         this.callCallbacks = {};
         debugger;
-        __1.ObjectCE.Extend(this, __1.ObjectCE.Excluding(options, "receiveChannelMessageFunc_addImmediately"));
+        __1.ObjectCE(this).Extend(__1.ObjectCE(options).Excluding("receiveChannelMessageFunc_addImmediately"));
         if (options.receiveChannelMessageFunc_addImmediately != false)
             this.SetUpReceiver();
     }

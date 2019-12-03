@@ -23,7 +23,7 @@ var StringCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             chars[_i] = arguments[_i];
         }
-        for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && CE_Array_1.ArrayCE.Contains(chars, this[iOfFirstToKeep]); iOfFirstToKeep++)
+        for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && CE_Array_1.ArrayCE(chars).Contains(this[iOfFirstToKeep]); iOfFirstToKeep++)
             ;
         return this.slice(iOfFirstToKeep, this.length);
     };
@@ -32,7 +32,7 @@ var StringCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             chars[_i] = arguments[_i];
         }
-        for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && CE_Array_1.ArrayCE.Contains(chars, this[iOfLastToKeep]); iOfLastToKeep--)
+        for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && CE_Array_1.ArrayCE(chars).Contains(this[iOfLastToKeep]); iOfLastToKeep--)
             ;
         return this.substr(0, iOfLastToKeep + 1);
     };
@@ -160,7 +160,7 @@ var StringCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             strings[_i] = arguments[_i];
         }
-        return CE_Array_1.ArrayCE.Any(strings, function (str) { return _this.startsWith(str); });
+        return CE_Array_1.ArrayCE(strings).Any(function (str) { return _this.startsWith(str); });
     };
     StringCEClass.prototype.EndsWithAny = function () {
         var _this = this;
@@ -168,7 +168,7 @@ var StringCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             strings[_i] = arguments[_i];
         }
-        return CE_Array_1.ArrayCE.Any(strings, function (str) { return _this.endsWith(str); });
+        return CE_Array_1.ArrayCE(strings).Any(function (str) { return _this.endsWith(str); });
     };
     StringCEClass.prototype.ContainsAny = function () {
         var _this = this;
@@ -176,7 +176,7 @@ var StringCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             strings[_i] = arguments[_i];
         }
-        return CE_Array_1.ArrayCE.Any(strings, function (str) { return exports.StringCE.Contains(_this, str); });
+        return CE_Array_1.ArrayCE(strings).Any(function (str) { return exports.StringCE(_this).Contains(str); });
     };
     /** Separator-strings must be escaped. (they're passed into a regular-expression) */
     StringCEClass.prototype.SplitByAny = function () {
@@ -276,6 +276,6 @@ var StringCEClass = /** @class */ (function () {
     return StringCEClass;
 }());
 exports.StringCEClass = StringCEClass;
-exports.StringCE = General_1.WithFuncsStandalone(StringCEClass.prototype);
-//export const StringCE = CreateWrapperForClassExtensions(StringCEClass);
+//export const StringCE = WithFuncsStandalone(StringCEClass.prototype);
+exports.StringCE = General_1.CreateWrapperForClassExtensions(StringCEClass);
 //# sourceMappingURL=CE_String.js.map

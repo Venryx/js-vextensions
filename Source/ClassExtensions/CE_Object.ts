@@ -34,7 +34,7 @@ export class ObjectCEClass<RealThis> {
 
 	_AddFunction(name, func) {
 		//this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-		ObjectCE._AddItem(this, name, func);
+		this._AddItem(name, func);
 	}
 
 	// the below helps you do stuff like this:
@@ -53,13 +53,13 @@ export class ObjectCEClass<RealThis> {
 	// the below helps you do stuff like this:
 	//		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
 	set _AddFunction_Inline(func) {
-		ObjectCE._AddFunction(this, func.GetName(), func);
+		this._AddFunction(func.GetName(), func);
 	}
 	set _AddGetter_Inline(func) {
-		ObjectCE._AddGetterSetter(this, func.GetName(), func, null);
+		this._AddGetterSetter(func.GetName(), func, null);
 	}
 	set _AddSetter_Inline(func) {
-		ObjectCE._AddGetterSetter(this, func.GetName(), null, func);
+		this._AddGetterSetter(func.GetName(), null, func);
 	}
 
 	// normal
@@ -179,12 +179,12 @@ export class ObjectCEClass<RealThis> {
 	}
 
 	IsOneOf(...values: any[]): boolean {
-		if (ArrayCE.Contains(values, this)) {
+		if (ArrayCE(values).Contains(this)) {
 			return true;
 		}
 		// if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
 		let isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
-		if (isObjectFormOfPrimitive && ArrayCE.Contains(values, this.valueOf())) {
+		if (isObjectFormOfPrimitive && ArrayCE(values).Contains(this.valueOf())) {
 			return true;
 		}
 		return false;
@@ -231,7 +231,7 @@ export class ObjectCEClass<RealThis> {
 	VKeys(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
-		if (excludeSpecialKeys) keys = ArrayCE.Except(keys, specialKeys);
+		if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
 		return keys;
 	}
 
@@ -240,7 +240,7 @@ export class ObjectCEClass<RealThis> {
 	//interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
 	VValues(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-		return ObjectCE.VKeys(this, excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
+		return this.VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 	}
 
 	// for symbols
@@ -269,7 +269,7 @@ export class ObjectCEClass<RealThis> {
 		for (let [index, item] of this.entries())
 			result.Add(selectFunc.call(item, item, index));
 		return result;*/
-		return ObjectCE.VValues(this, true).map(selectFunc);
+		return ObjectCE(this).VValues(true).map(selectFunc);
 	};
 	FA_RemoveAt(index: number) {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
@@ -287,10 +287,10 @@ export class ObjectCEClass<RealThis> {
 		this[openIndex] = item;
 	};
 }
-export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
+//export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
-/*const ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
-export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;*/
+const ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
+export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
 
 /*class Test1{
 	Test2() {}

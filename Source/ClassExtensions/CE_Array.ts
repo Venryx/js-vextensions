@@ -1,4 +1,4 @@
-import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type, WithFuncsStandalone} from "../Utils/General";
+import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type} from "../Utils/General";
 import {Assert} from "../Utils/Assert";
 
 export interface ForEachExtras {
@@ -80,7 +80,7 @@ export class ArrayCEClass<T> {
 	}
 	RemoveAll(this: T[], items: T[]) {
 		for (let item of items) {
-			ArrayCE.Remove(this, item);
+			ArrayCE(this).Remove(item);
 		}
 	}
 	RemoveAt(this: T[], index: number) { return this.splice(index, 1)[0]; }
@@ -137,14 +137,14 @@ export class ArrayCEClass<T> {
 		//return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
 		var result = [];
 		for (let [index, item] of this.entries()) {
-			ArrayCE.AddRange(result, selectFunc.call(item, item, index));
+			ArrayCE(result).AddRange(selectFunc.call(item, item, index));
 		}
 		return result;
 	}
 	//Count(matchFunc) { return this.Where(matchFunc).length; };
 	//Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
 	Count(this: T[]) { return this.length; }; // needed for items to be added properly to custom classes that extend Array
-	VCount(this: T[], matchFunc: (item: T)=>boolean) { return ArrayCE.Where(this, matchFunc).length; }
+	VCount(this: T[], matchFunc: (item: T)=>boolean) { return ArrayCE(this).Where(matchFunc).length; }
 	Clear(this: T[]) {
 		/*while (this.length > 0)
 			this.pop();*/
@@ -155,7 +155,7 @@ export class ArrayCEClass<T> {
 	forEach_break(...args) { return this.some(...args); } */
 
 	First(this: T[], matchFunc?: (item: T)=>boolean) {
-		var result = ArrayCE.FirstOrX(this, matchFunc);
+		var result = ArrayCE(this).FirstOrX(matchFunc);
 		if (result == null) {
 			throw new Error("Matching item not found.");
 		}
@@ -174,9 +174,9 @@ export class ArrayCEClass<T> {
 		return x;
 	}
 	//FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-	FirstWith(this: T[], propName: string, propValue: any) { return ArrayCE.Where(this, function() { return this[propName] == propValue; })[0]; }
+	FirstWith(this: T[], propName: string, propValue: any) { return ArrayCE(this).Where(function() { return this[propName] == propValue; })[0]; }
 	Last(this: T[], matchFunc?) {
-		var result = ArrayCE.LastOrX(this, matchFunc);
+		var result = ArrayCE(this).LastOrX(matchFunc);
 		if (result === undefined) {
 			throw new Error("Matching item not found.");
 		}
@@ -210,16 +210,16 @@ export class ArrayCEClass<T> {
 		this.Insert(newIndex, item);*/
 
 		if (newIndexAsPreRemovalIndexVSFinalIndex) {
-			ArrayCE.Insert(this, newIndex, item);
+			ArrayCE(this).Insert(newIndex, item);
 			if (oldIndex != -1) {
 				let oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-				ArrayCE.RemoveAt(this, oldEntry_currentIndex);
+				ArrayCE(this).RemoveAt(oldEntry_currentIndex);
 			}
 		} else {
 			if (oldIndex != -1) {
-				ArrayCE.RemoveAt(this, oldIndex);
+				ArrayCE(this).RemoveAt(oldIndex);
 			}
-			ArrayCE.Insert(this, newIndex, item);
+			ArrayCE(this).Insert(newIndex, item);
 		}
 
 		return oldIndex;
@@ -281,13 +281,13 @@ export class ArrayCEClass<T> {
 		return StableSort(this, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 	}
 	OrderByDescending(this: T[], valFunc = (item, index: number)=>item) {
-		return ArrayCE.OrderBy(this, (item, index)=>-valFunc(item, index));
+		return ArrayCE(this).OrderBy((item, index)=>-valFunc(item, index));
 	}
 
 	Distinct(this: T[]) {
 		var result = [];
 		for (var i in this) {
-			if (!ArrayCE.Contains(result, this[i])) {
+			if (!ArrayCE(result).Contains(this[i])) {
 				result.push(this[i]);
 			}
 		}
@@ -301,11 +301,11 @@ export class ArrayCEClass<T> {
 		if (excludeEachOnlyOnce) {
 			let result = this.slice();
 			for (let excludeItem of excludeItems) {
-				ArrayCE.Remove(result, excludeItem);
+				ArrayCE(result).Remove(excludeItem);
 			}
 			return result;
 		}
-		return ArrayCE.Where(this, a=>!excludeItems.Contains(a));
+		return ArrayCE(this).Where(a=>!excludeItems.Contains(a));
 	}
 
 	IfEmptyThen(this: T[], valIfSelfIsEmpty: any) {
@@ -320,7 +320,7 @@ export class ArrayCEClass<T> {
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 			return Math.min(...this as any as number[]);
 		}
-		return ArrayCE.FirstOrX(ArrayCE.OrderBy(this, valFunc));
+		return ArrayCE(ArrayCE(this).OrderBy(valFunc)).FirstOrX();
 	}
 	Max(this: T[], valFunc?: (item: T)=>number, asNumbers = false) {
 		if (asNumbers) {
@@ -329,7 +329,7 @@ export class ArrayCEClass<T> {
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 			return Math.max(...this as any as number[]);
 		}
-		return ArrayCE.LastOrX(ArrayCE.OrderBy(this, valFunc));
+		return ArrayCE(ArrayCE(this).OrderBy(valFunc)).LastOrX();
 	}
 	Sum(this: number[]) {
 		var total = 0;
@@ -339,11 +339,11 @@ export class ArrayCEClass<T> {
 		return total;
 	}
 	Average(this: number[]) {
-		var total = ArrayCE.Sum(this);
+		var total = ArrayCE(this).Sum();
 		return total / this.length;
 	}
 	Median(this: number[]) {
-		var ordered = ArrayCE.OrderBy(this, a=>a);
+		var ordered = ArrayCE(this).OrderBy(a=>a);
 		if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
 			return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
 		}
@@ -372,11 +372,10 @@ export class ArrayCEClass<T> {
 		return result;
 	}
 }
-export const ArrayCE = WithFuncsStandalone(ArrayCEClass.prototype);
 //export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-/*const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;*/
+const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
+export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
 
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {

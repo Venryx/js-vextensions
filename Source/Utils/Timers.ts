@@ -66,7 +66,7 @@ export function WaitXThenRun(delayInMS: number, func: (...args: any[])=>void, ..
 }
 export function WaitUntilXThenRun(targetDateTimeInMS: number, func: (...args: any[])=>void, ...args: any[]) {
 	var now = Date.now();
-	var diff = NumberCE.KeepAtLeast(targetDateTimeInMS - now, 0);
+	var diff = NumberCE(targetDateTimeInMS - now).KeepAtLeast(0);
 	if (diff > maxTimeoutLength) {
 		WaitXThenRun(maxTimeoutLength, ()=>WaitUntilXThenRun(targetDateTimeInMS, func));
 	} else {
@@ -121,8 +121,8 @@ export class Timer {
 		return this;
 	}
 	RemoveFromContext(timerContext: TimerContext) {
-		ArrayCE.Remove(this.timerContexts, timerContext);
-		ArrayCE.Remove(timerContext.timers, this);
+		ArrayCE(this.timerContexts).Remove(timerContext);
+		ArrayCE(timerContext.timers).Remove(this);
 	}
 	ClearContexts() {
 		for (let context of this.timerContexts) {

@@ -153,7 +153,7 @@ function WaitUntilXThenRun(targetDateTimeInMS, func) {
         args[_i - 2] = arguments[_i];
     }
     var now = Date.now();
-    var diff = __1.NumberCE.KeepAtLeast(targetDateTimeInMS - now, 0);
+    var diff = __1.NumberCE(targetDateTimeInMS - now).KeepAtLeast(0);
     if (diff > maxTimeoutLength) {
         WaitXThenRun(maxTimeoutLength, function () { return WaitUntilXThenRun(targetDateTimeInMS, func); });
     }
@@ -208,8 +208,8 @@ var Timer = /** @class */ (function () {
         return this;
     };
     Timer.prototype.RemoveFromContext = function (timerContext) {
-        __1.ArrayCE.Remove(this.timerContexts, timerContext);
-        __1.ArrayCE.Remove(timerContext.timers, this);
+        __1.ArrayCE(this.timerContexts).Remove(timerContext);
+        __1.ArrayCE(timerContext.timers).Remove(this);
     };
     Timer.prototype.ClearContexts = function () {
         var e_3, _a;

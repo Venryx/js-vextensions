@@ -42,14 +42,14 @@ export function GetUrlParts(url?: string): [string, string, string, string] {
 
 	let urlToProcess = url;
 	if (urlToProcess.includes("#") && !varsStr.includes("runJS=")) {
-		[urlToProcess, hashStr] = StringCE.SplitAt(urlToProcess, urlToProcess.indexOf("#"));
+		[urlToProcess, hashStr] = StringCE(urlToProcess).SplitAt(urlToProcess.indexOf("#"));
 	}
 	if (urlToProcess.includes("?")) {
-		[urlToProcess, varsStr] = StringCE.SplitAt(urlToProcess, urlToProcess.indexOf("?"));
+		[urlToProcess, varsStr] = StringCE(urlToProcess).SplitAt(urlToProcess.indexOf("?"));
 	}
 	//if (urlToProcess.Matches("/").length == )
-	let splitAtSlash_pos = NumberCE.IfN1Then(StringCE.IndexOf_X(urlToProcess, "/", 2), urlToProcess.length);
-	[domainStr, pathStr] = StringCE.SplitAt(urlToProcess, splitAtSlash_pos);
+	let splitAtSlash_pos = NumberCE(StringCE(urlToProcess).IndexOf_X("/", 2)).IfN1Then(urlToProcess.length);
+	[domainStr, pathStr] = StringCE(urlToProcess).SplitAt(splitAtSlash_pos);
 
 	return [domainStr, pathStr, varsStr, hashStr];
 }
@@ -69,9 +69,9 @@ function GetUrlVars(url?: string, allowQuestionMarkAsVarSep = true) {
 	
 	let [_, __, varsStr] = GetUrlParts(url);
 	var vars = {} as any; //{[key: string]: string};
-	var parts = StringCE.SplitByAny(varsStr, ...varSeparators).filter(a=>a);
+	var parts = StringCE(varsStr).SplitByAny(...varSeparators).filter(a=>a);
 	for (let part of parts) {
-		let [key, value] = StringCE.SplitAt(part, part.indexOf("="))
+		let [key, value] = StringCE(part).SplitAt(part.indexOf("="))
 		vars[key] = value;
 	}
 	return vars;
@@ -125,8 +125,8 @@ export class VURL {
 	DomainStr(withProtocol = true) {
 		return withProtocol ? this.domain : this.DomainWithoutProtocol;
 	}
-	get Protocol() { return this.domain && StringCE.Contains(this.domain, "://") ? this.domain.substr(0, this.domain.indexOf("://")) : null; }
-	get DomainWithoutProtocol() { return this.domain && StringCE.Contains(this.domain, "://") ? this.domain.substr(this.domain.indexOf("://") + 3) : this.domain; }
+	get Protocol() { return this.domain && StringCE(this.domain).Contains("://") ? this.domain.substr(0, this.domain.indexOf("://")) : null; }
+	get DomainWithoutProtocol() { return this.domain && StringCE(this.domain).Contains("://") ? this.domain.substr(this.domain.indexOf("://") + 3) : this.domain; }
 
 	pathNodes: string[];
 	PathStr(pathStartSlash?: boolean) {

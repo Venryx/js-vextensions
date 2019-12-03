@@ -3,7 +3,7 @@ import {Assert, ToJSON, IsObject, IsString, FromJSON, E, ObjectCE} from "..";
 
 export class BridgeMessage {
 	constructor(initialData?: Partial<BridgeMessage>) {
-		ObjectCE.Extend(this, initialData);
+		ObjectCE(this).Extend(initialData);
 	}
 
 	// for sending a function-call
@@ -34,7 +34,7 @@ export class Bridge {
 	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
 		debugger;
-		ObjectCE.Extend(this, ObjectCE.Excluding(options, "receiveChannelMessageFunc_addImmediately"));
+		ObjectCE(this).Extend(ObjectCE(options).Excluding("receiveChannelMessageFunc_addImmediately"));
 		if (options.receiveChannelMessageFunc_addImmediately != false) this.SetUpReceiver();
 	}
 	receiveChannelMessageFunc_adder: (receiveTextFunc: (channelMessage: string | Object)=>any)=>any;

@@ -16,21 +16,4 @@ export declare class NumberCEClass {
     Distance(this: Number, other: number): number;
     ToPower(this: Number, power: number): number;
 }
-export declare const NumberCE: {
-    IfN1Then: (thisArg: Object, valIfSelfIsNeg1: any) => any;
-    NaNTo: (thisArg: Object, valIfSelfIsNaN: any) => any;
-    ToPercentStr: (thisArg: Object, precision?: number) => string;
-    IsMultipleOf: (thisArg: Object, multipleOf: number, maxDistToBeMultiple: number) => boolean;
-    RoundTo: (thisArg: Object, multiple: any) => number;
-    RoundTo_Str: (thisArg: Object, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean) => string;
-    FloorTo: (thisArg: Object, multipleOf: any) => number;
-    FloorTo_Str: (thisArg: Object, multipleOf: any) => string;
-    CeilingTo: (thisArg: Object, multipleOf: any) => number;
-    CeilingTo_Str: (thisArg: Object, multipleOf: any) => string;
-    KeepAtLeast: (thisArg: Object, min: number) => number;
-    KeepAtMost: (thisArg: Object, max: number) => number;
-    KeepBetween: (thisArg: Object, min: number, max: number, allowFixMinMax?: boolean) => number;
-    WrapToRange: (thisArg: Object, min: number, max: number, maxOut?: boolean) => number;
-    Distance: (thisArg: Object, other: number) => number;
-    ToPower: (thisArg: Object, power: number) => number;
-};
+export declare const NumberCE: (thisArg: any) => import("../Utils/General").WithFuncThisArgsAsAny_Type<NumberCEClass>;

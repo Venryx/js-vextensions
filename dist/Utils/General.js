@@ -264,7 +264,7 @@ function ToJSON_Safe(obj) {
     var cache = [];
     var foundDuplicates = false;
     var result = JSON.stringify(obj, function (key, value) {
-        if (__1.ArrayCE.Contains(excludePropNames, key))
+        if (__1.ArrayCE(excludePropNames).Contains(key))
             return;
         if (typeof value == 'object' && value !== null) {
             // if circular reference found, discard key
@@ -366,7 +366,7 @@ function Range(min, max, step, includeMax, roundToStep) {
     if (includeMax === void 0) { includeMax = true; }
     if (roundToStep === void 0) { roundToStep = true; }
     var result = [];
-    for (var i = min; includeMax ? i <= max : i < max; i = roundToStep ? __1.NumberCE.RoundTo(i + step, step) : i + step) {
+    for (var i = min; includeMax ? i <= max : i < max; i = roundToStep ? __1.NumberCE(i + step).RoundTo(step) : i + step) {
         result.push(i);
     }
     return result;
@@ -467,7 +467,7 @@ function Lerp(from, to, percentFromXToY, keepResultInRange) {
     if (keepResultInRange === void 0) { keepResultInRange = true; }
     var result = from + ((to - from) * percentFromXToY);
     if (keepResultInRange)
-        result = __1.NumberCE.KeepBetween(result, from, to);
+        result = __1.NumberCE(result).KeepBetween(from, to);
     return result;
 }
 exports.Lerp = Lerp;
@@ -476,7 +476,7 @@ function GetPercentFromXToY(start, end, val, keepResultInRange) {
     // distance-from-x / distance-from-x-required-for-result-'1'
     var result = (val - start) / (end - start);
     if (keepResultInRange)
-        result = __1.NumberCE.KeepBetween(result, 0, 1);
+        result = __1.NumberCE(result).KeepBetween(0, 1);
     return result;
 }
 exports.GetPercentFromXToY = GetPercentFromXToY;
@@ -562,7 +562,7 @@ function GetHiddenHolder() {
     if (holder == null) {
         holder = document.createElement("div");
         holder.id = "jsve_hiddenContainer";
-        __1.ObjectCE.Extend(holder.style, { position: "absolute", left: "-1000px", top: "-1000px", width: "1000px", height: "1000px", overflow: "hidden" });
+        __1.ObjectCE(holder.style).Extend({ position: "absolute", left: "-1000px", top: "-1000px", width: "1000px", height: "1000px", overflow: "hidden" });
         document.body.appendChild(holder);
     }
     return holder;
@@ -631,7 +631,7 @@ var TreeNode = /** @class */ (function () {
         get: function () {
             if (this.prop == "_root")
                 return [];
-            return __1.ArrayCE.Select(this.ancestorNodes, function (a) { return a.prop; }).concat(this.prop);
+            return __1.ArrayCE(this.ancestorNodes).Select(function (a) { return a.prop; }).concat(this.prop);
         },
         enumerable: true,
         configurable: true
@@ -678,7 +678,7 @@ function GetTreeNodesInObjTree(obj, includeRootNode, _ancestorNodes) {
         var currentNode = new TreeNode(_ancestorNodes, obj, key);
         result.push(currentNode);
         if (typeof value == "object") {
-            __1.ArrayCE.AddRange(result, GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+            __1.ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
         }
     }
     return result;
@@ -703,7 +703,7 @@ function GetTreeNodesInPath(treeRoot, pathNodesOrStr, includeRootNode, _ancestor
     result.push(childTreeNode);
     if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
         result.push.apply(// if the path goes deeper than the current child-tree-node
-        result, __spread(GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, __1.ArrayCE.Skip(descendantPathNodes, 1).join("/"), false, _ancestorNodes.concat(childTreeNode))));
+        result, __spread(GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, __1.ArrayCE(descendantPathNodes).Skip(1).join("/"), false, _ancestorNodes.concat(childTreeNode))));
     return result;
 }
 exports.GetTreeNodesInPath = GetTreeNodesInPath;
@@ -719,7 +719,7 @@ function VisitTreeNodesInPath(treeRoot, pathNodesOrStr, visitFunc, visitRootNode
     var childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
     visitFunc(childTreeNode);
     if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
-        VisitTreeNodesInPath(childTreeNode.Value, __1.ArrayCE.Skip(descendantPathNodes, 1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
+        VisitTreeNodesInPath(childTreeNode.Value, __1.ArrayCE(descendantPathNodes).Skip(1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
     return treeRoot;
 }
 exports.VisitTreeNodesInPath = VisitTreeNodesInPath;
@@ -785,10 +785,10 @@ function DeepSet(obj, pathOrPathSegments, newValue, sepChar, createPathSegmentsI
         deepObj = deepObj[segment];
     });
     if (newValue === undefined && deleteUndefined) {
-        delete deepObj[__1.ArrayCE.Last(pathSegments)];
+        delete deepObj[__1.ArrayCE(pathSegments).Last()];
     }
     else {
-        deepObj[__1.ArrayCE.Last(pathSegments)] = newValue;
+        deepObj[__1.ArrayCE(pathSegments).Last()] = newValue;
     }
 }
 exports.DeepSet = DeepSet;
@@ -846,7 +846,7 @@ function GetStackTraceStr() {
         stackTrace = fakeError.stack;
         Error.stackTraceLimit = oldStackLimit;
     }
-    return stackTrace.substr(__1.StringCE.IndexOf_X(stackTrace, "\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+    return stackTrace.substr(__1.StringCE(stackTrace).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 exports.GetStackTraceStr = GetStackTraceStr;
 function GetErrorMessagesUnderElement(element) {
@@ -915,7 +915,7 @@ function WaitTillDataPathIsSet(dataPath) {
 exports.WaitTillDataPathIsSet = WaitTillDataPathIsSet;
 function WaitTillPropertyIsSet(obj, prop) {
     return new Promise(function (resolve, reject) {
-        __1.ObjectCE._AddGetterSetter(obj, prop, function () { }, function (value) {
+        __1.ObjectCE(obj)._AddGetterSetter(prop, function () { }, function (value) {
             delete obj[prop]; // remove this hook
             obj[prop] = value; // set to provided value
             resolve();
