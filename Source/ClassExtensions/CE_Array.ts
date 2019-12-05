@@ -285,8 +285,9 @@ export class ArrayCEClass<T> {
 	}
 
 	Distinct(this: T[]) {
-		var result = [];
-		for (var i in this) {
+		const result = [];
+		for (const i in this) {
+			if (!this.hasOwnProperty(i)) continue;
 			if (!ArrayCE(result).Contains(this[i])) {
 				result.push(this[i]);
 			}

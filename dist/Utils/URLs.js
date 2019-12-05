@@ -133,17 +133,28 @@ var VURL = /** @class */ (function () {
         this.hash = hash;
     }
     VURL.Parse = function (urlStr, useCurrentDomainIfMissing, allowQuestionMarkAsVarSep) {
+        var e_2, _a;
         if (useCurrentDomainIfMissing === void 0) { useCurrentDomainIfMissing = true; }
         if (allowQuestionMarkAsVarSep === void 0) { allowQuestionMarkAsVarSep = true; }
         if (useCurrentDomainIfMissing && !urlStr.startsWith("http"))
             urlStr = window.location.origin + (urlStr.startsWith("/") ? "" : "/") + urlStr;
-        var _a = __read(GetUrlParts(urlStr), 4), domainStr = _a[0], pathStr = _a[1], varsStr = _a[2], hashStr = _a[3];
+        var _b = __read(GetUrlParts(urlStr), 4), domainStr = _b[0], pathStr = _b[1], varsStr = _b[2], hashStr = _b[3];
         var queryVarsMap = GetUrlVars(urlStr, allowQuestionMarkAsVarSep);
         var result = new VURL();
         result.domain = domainStr;
         result.pathNodes = pathStr.length ? pathStr.split("/") : [];
-        for (var key in queryVarsMap) {
-            result.queryVars.push(new QueryVar(key, queryVarsMap[key]));
+        try {
+            for (var _c = __values(Object.keys(queryVarsMap)), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var key = _d.value;
+                result.queryVars.push(new QueryVar(key, queryVarsMap[key]));
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+            }
+            finally { if (e_2) throw e_2.error; }
         }
         result.hash = hashStr;
         return result;
@@ -189,7 +200,7 @@ var VURL = /** @class */ (function () {
     };
     Object.defineProperty(VURL.prototype, "QueryStr", {
         get: function () {
-            var e_2, _a;
+            var e_3, _a;
             var result = "";
             try {
                 for (var _b = __values(this.queryVars.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
@@ -197,12 +208,12 @@ var VURL = /** @class */ (function () {
                     result += (index == 0 ? "?" : "&") + queryVar.name + "=" + queryVar.value;
                 }
             }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            catch (e_3_1) { e_3 = { error: e_3_1 }; }
             finally {
                 try {
                     if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
                 }
-                finally { if (e_2) throw e_2.error; }
+                finally { if (e_3) throw e_3.error; }
             }
             return result;
         },

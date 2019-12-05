@@ -521,6 +521,8 @@ var ArrayCEClass = /** @class */ (function () {
     ArrayCEClass.prototype.Distinct = function () {
         var result = [];
         for (var i in this) {
+            if (!this.hasOwnProperty(i))
+                continue;
             if (!exports.ArrayCE(result).Contains(this[i])) {
                 result.push(this[i]);
             }

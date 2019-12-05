@@ -92,7 +92,7 @@ export class VURL {
 		let result = new VURL();
 		result.domain = domainStr;
 		result.pathNodes = pathStr.length ? pathStr.split("/") : [];
-		for (let key in queryVarsMap) {
+		for (let key of Object.keys(queryVarsMap)) {
 			result.queryVars.push(new QueryVar(key, queryVarsMap[key]));
 		}
 		result.hash = hashStr;

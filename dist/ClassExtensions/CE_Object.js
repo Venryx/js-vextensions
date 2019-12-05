@@ -116,10 +116,12 @@ var ObjectCEClass = /** @class */ (function () {
         return this;
     };*/
     ObjectCEClass.prototype.Extend = function (x) {
-        for (var name in x) {
-            var value = x[name];
+        for (var key in x) {
+            if (!x.hasOwnProperty(key))
+                continue;
+            var value = x[key];
             //if (value !== undefined)
-            this[name] = value;
+            this[key] = value;
         }
         return this;
     };
@@ -149,8 +151,10 @@ var ObjectCEClass = /** @class */ (function () {
             }
         };
         if (props) {
-            for (var name_1 in props) {
-                SetProp(name_1, props[name_1]);
+            for (var key in props) {
+                if (!props.hasOwnProperty(key))
+                    continue;
+                SetProp(key, props[key]);
             }
         }
         else {
@@ -160,12 +164,16 @@ var ObjectCEClass = /** @class */ (function () {
     };
     ObjectCEClass.prototype.Extended = function (x) {
         var result = this instanceof Array ? [] : {};
-        for (var name_2 in this) {
-            result[name_2] = this[name_2];
+        for (var key in this) {
+            if (!this.hasOwnProperty(key))
+                continue;
+            result[key] = this[key];
         }
         if (x) {
-            for (var name_3 in x) {
-                result[name_3] = x[name_3];
+            for (var key in x) {
+                if (!x.hasOwnProperty(key))
+                    continue;
+                result[key] = x[key];
             }
         }
         return result;
@@ -190,23 +198,24 @@ var ObjectCEClass = /** @class */ (function () {
     };
     ObjectCEClass.prototype.Including = function () {
         var e_1, _a;
-        var propNames = [];
+        var keys = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            propNames[_i] = arguments[_i];
+            keys[_i] = arguments[_i];
         }
         var result = this instanceof Array ? [] : {};
         try {
-            for (var propNames_1 = __values(propNames), propNames_1_1 = propNames_1.next(); !propNames_1_1.done; propNames_1_1 = propNames_1.next()) {
-                var propName = propNames_1_1.value;
-                if (propName in this) {
-                    result[propName] = this[propName];
-                }
+            for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
+                var key = keys_1_1.value;
+                //if (!this.hasOwnProperty(key)) continue;
+                if (!(key in this))
+                    continue; // we include the value, even if from prototype (user wouldn't list in keys array if didn't want it)
+                result[key] = this[key];
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (propNames_1_1 && !propNames_1_1.done && (_a = propNames_1.return)) _a.call(propNames_1);
+                if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
             }
             finally { if (e_1) throw e_1.error; }
         }
@@ -214,22 +223,22 @@ var ObjectCEClass = /** @class */ (function () {
     };
     ObjectCEClass.prototype.Excluding = function () {
         var e_2, _a;
-        var propNames = [];
+        var keys = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            propNames[_i] = arguments[_i];
+            keys[_i] = arguments[_i];
         }
         //var result = Clone(this); // doesn't work with funcs
         var result = Object.assign(this instanceof Array ? [] : {}, this);
         try {
-            for (var propNames_2 = __values(propNames), propNames_2_1 = propNames_2.next(); !propNames_2_1.done; propNames_2_1 = propNames_2.next()) {
-                var propName = propNames_2_1.value;
-                delete result[propName];
+            for (var keys_2 = __values(keys), keys_2_1 = keys_2.next(); !keys_2_1.done; keys_2_1 = keys_2.next()) {
+                var key = keys_2_1.value;
+                delete result[key];
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
-                if (propNames_2_1 && !propNames_2_1.done && (_a = propNames_2.return)) _a.call(propNames_2);
+                if (keys_2_1 && !keys_2_1.done && (_a = keys_2.return)) _a.call(keys_2);
             }
             finally { if (e_2) throw e_2.error; }
         }
@@ -257,8 +266,8 @@ var ObjectCEClass = /** @class */ (function () {
         var i = 0;
         var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         try {
-            for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
-                var key = keys_1_1.value;
+            for (var keys_3 = __values(keys), keys_3_1 = keys_3.next(); !keys_3_1.done; keys_3_1 = keys_3.next()) {
+                var key = keys_3_1.value;
                 if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id"))
                     continue;
                 var entry = { index: i++, key: key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
@@ -270,7 +279,7 @@ var ObjectCEClass = /** @class */ (function () {
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
         finally {
             try {
-                if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
+                if (keys_3_1 && !keys_3_1.done && (_a = keys_3.return)) _a.call(keys_3);
             }
             finally { if (e_3) throw e_3.error; }
         }
@@ -326,8 +335,9 @@ var ObjectCEClass = /** @class */ (function () {
         // remove target entry
         delete this[index];
         // move all the later entries down one index
-        for (var i = index + 1; i in this; i++)
+        for (var i = index + 1; i in this; i++) {
             this[i - 1] = this[i];
+        }
         delete this[i - 1]; // remove the extra copy of the last-item 
     };
     ;

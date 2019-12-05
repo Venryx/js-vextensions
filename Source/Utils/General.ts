@@ -511,13 +511,14 @@ export class TreeNode {
 		this.obj[this.prop] = newVal;
 	}
 }
-export function GetTreeNodesInObjTree(obj: any, includeRootNode = false, _ancestorNodes = []) {
+export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _ancestorNodes = []) {
 	Assert(_ancestorNodes.length <= 300, "Cannot traverse more than 300 levels into object tree. (probably circular)");
 
 	let result = [] as TreeNode[];
 	if (includeRootNode)
 		result.push(new TreeNode([], {_root: obj}, "_root"));
 	for (let key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;
 		let value = obj[key];
 		let currentNode = new TreeNode(_ancestorNodes, obj, key);
 		result.push(currentNode);

@@ -97,6 +97,8 @@ function CombineDynamicPropMaps() {
         for (var _b = __values(maps.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
             var _d = __read(_c.value, 2), mapIndex = _d[0], map = _d[1];
             for (var key in map) {
+                if (!map.hasOwnProperty(key))
+                    continue;
                 result[mapIndex + "_" + key] = map[key];
             }
         }

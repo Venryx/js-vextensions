@@ -674,6 +674,8 @@ function GetTreeNodesInObjTree(obj, includeRootNode, _ancestorNodes) {
     if (includeRootNode)
         result.push(new TreeNode([], { _root: obj }, "_root"));
     for (var key in obj) {
+        if (!obj.hasOwnProperty(key))
+            continue;
         var value = obj[key];
         var currentNode = new TreeNode(_ancestorNodes, obj, key);
         result.push(currentNode);

@@ -71,6 +71,7 @@ export function CombineDynamicPropMaps(...maps) {
 	var result = {};
 	for (const [mapIndex, map] of maps.entries()) {
 		for (const key in map) {
+			if (!map.hasOwnProperty(key)) continue;
 			result[mapIndex + "_" + key] = map[key];
 		}
 	}

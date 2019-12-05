@@ -84,10 +84,11 @@ export class ObjectCEClass<RealThis> {
 	};*/
 
 	Extend(x) {
-		for (var name in x) {
-			var value = x[name];
+		for (var key in x) {
+			if (!x.hasOwnProperty(key)) continue;
+			var value = x[key];
 			//if (value !== undefined)
-			this[name] = value;
+			this[key] = value;
 		}
 		return this;
 	}
@@ -114,8 +115,9 @@ export class ObjectCEClass<RealThis> {
 			}
 		};
 		if (props) {
-			for (let name in props) {
-				SetProp(name, props[name]);
+			for (let key in props) {
+				if (!props.hasOwnProperty(key)) continue;
+				SetProp(key, props[key]);
 			}
 		} else {
 			SetProp(propName, propValue);
@@ -124,12 +126,14 @@ export class ObjectCEClass<RealThis> {
 	}
 	Extended<T, T2>(this: T, x: T2): T & T2 {
 		let result: any = this instanceof Array ? [] : {};
-		for (let name in this) {
-			result[name] = this[name];
+		for (let key in this) {
+			if (!this.hasOwnProperty(key)) continue;
+			result[key] = this[key];
 		}
 		if (x) {
-			for (let name in x) {
-				result[name] = x[name];
+			for (let key in x) {
+				if (!x.hasOwnProperty(key)) continue;
+				result[key] = x[key];
 			}
 		}
 		return result;
@@ -160,20 +164,20 @@ export class ObjectCEClass<RealThis> {
 		return this;
 	}
 
-	Including(...propNames: string[]) {
+	Including(...keys: string[]) {
 		var result = this instanceof Array ? [] : {};
-		for (let propName of propNames) {
-			if (propName in this) {
-				result[propName] = this[propName];
-			}
+		for (let key of keys) {
+			//if (!this.hasOwnProperty(key)) continue;
+			if (!(key in this)) continue; // we include the value, even if from prototype (user wouldn't list in keys array if didn't want it)
+			result[key] = this[key];
 		}
 		return result;
 	}
-	Excluding(...propNames: string[]) {
+	Excluding(...keys: string[]) {
 		//var result = Clone(this); // doesn't work with funcs
 		var result = Object.assign(this instanceof Array ? [] : {}, this);
-		for (let propName of propNames) {
-			delete result[propName];
+		for (let key of keys) {
+			delete result[key];
 		}
 		return result;
 	}
@@ -279,8 +283,9 @@ export class ObjectCEClass<RealThis> {
 		// remove target entry
 		delete this[index];
 		// move all the later entries down one index
-		for (var i = index + 1; i in this; i++)
+		for (var i = index + 1; i in this; i++) {
 			this[i - 1] = this[i];
+		}
 		delete this[i - 1]; // remove the extra copy of the last-item 
 	};
 	FA_Add<T>(this: {[key: number]: T} | {[key: string]: T}, item: T) {

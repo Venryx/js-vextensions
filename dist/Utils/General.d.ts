@@ -74,7 +74,7 @@ export declare class TreeNode {
     get Value(): any;
     set Value(newVal: any);
 }
-export declare function GetTreeNodesInObjTree(obj: any, includeRootNode?: boolean, _ancestorNodes?: any[]): TreeNode[];
+export declare function GetTreeNodesInObjTree(obj: Object, includeRootNode?: boolean, _ancestorNodes?: any[]): TreeNode[];
 export declare function GetTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, includeRootNode?: boolean, _ancestorNodes?: any[]): any[];
 export declare function VisitTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode) => any, visitRootNode?: boolean, _ancestorNodes?: any[]): any;
 export declare function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function): string[];
