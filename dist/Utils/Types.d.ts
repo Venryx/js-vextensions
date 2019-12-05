@@ -6,7 +6,7 @@ export declare function IsNaN(obj: any): boolean;
 export declare function IsPrimitive(obj: any): boolean;
 export declare function IsBool(obj: any): obj is boolean;
 export declare function ToBool(boolStr: any): boolean;
-export declare function IsArray(obj: any): obj is Object;
+export declare function IsArray(obj: any): obj is Array<any>;
 export declare function IsObject(obj: any): obj is Object;
 export declare function IsTypeX<T>(obj: Object, typeConstructor: new (...args: any[]) => T): obj is T;
 export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean;
