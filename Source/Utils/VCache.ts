@@ -1,28 +1,5 @@
 import {Assert} from "./Assert";
-
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-// Performs equality by iterating through keys on an object and returning false when any key has values which are not strictly equal between the arguments.
-// Returns true when the values of all keys are strictly equal.
-function shallowEqual(objA, objB) {
-	if (Object.is(objA, objB))
-		return true;
-	if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null)
-		return false;
-
-	var keysA = Object.keys(objA);
-	var keysB = Object.keys(objB);
-	if (keysA.length !== keysB.length)
-		return false;
-
-	// test for A's keys different from B
-	for (var i = 0; i < keysA.length; i++) {
-		if (!hasOwnProperty.call(objB, keysA[i]) || !Object.is(objA[keysA[i]], objB[keysA[i]])) {
-			return false;
-		}
-	}
-
-	return true;
-}
+import {ShallowEquals} from "./General";
 
 export class Storage<T2, T3> {
 	lastDynamicProps: T2;
@@ -55,7 +32,7 @@ export function CachedTransform<T, T2, T3>(
 ): T3 {
 	//Assert(dynamicProps != null);
 	let storage = GetStorageForCachedTransform<T2, T3>(transformType, staticProps);
-	if (!shallowEqual(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
+	if (!ShallowEquals(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
 		/*MaybeLog(a=>a.cacheUpdates,
 			()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
 

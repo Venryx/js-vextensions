@@ -27,26 +27,7 @@ var __read = (this && this.__read) || function (o, n) {
     return ar;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-// Performs equality by iterating through keys on an object and returning false when any key has values which are not strictly equal between the arguments.
-// Returns true when the values of all keys are strictly equal.
-function shallowEqual(objA, objB) {
-    if (Object.is(objA, objB))
-        return true;
-    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null)
-        return false;
-    var keysA = Object.keys(objA);
-    var keysB = Object.keys(objB);
-    if (keysA.length !== keysB.length)
-        return false;
-    // test for A's keys different from B
-    for (var i = 0; i < keysA.length; i++) {
-        if (!hasOwnProperty.call(objB, keysA[i]) || !Object.is(objA[keysA[i]], objB[keysA[i]])) {
-            return false;
-        }
-    }
-    return true;
-}
+var General_1 = require("./General");
 var Storage = /** @class */ (function () {
     function Storage() {
         this.resultUpdateCount = 0;
@@ -75,7 +56,7 @@ exports.GetStorageForCachedTransform = GetStorageForCachedTransform;
 function CachedTransform(transformType, staticProps, dynamicProps, transformFunc) {
     //Assert(dynamicProps != null);
     var storage = GetStorageForCachedTransform(transformType, staticProps);
-    if (!shallowEqual(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
+    if (!General_1.ShallowEquals(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
         /*MaybeLog(a=>a.cacheUpdates,
             ()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
         storage.lastDynamicProps = dynamicProps;

@@ -13,6 +13,8 @@ export declare type GetFirstParamType<T> = T extends (val: infer Arg1Type) => an
 export declare function WrapWithGo<Func extends (val: any) => any>(func: Func): Func & {
     Go: GetFirstParamType<Func>;
 };
+export declare function ShallowEquals(objA: any, objB: any): boolean;
+export declare function ShallowChanged(objA: any, objB: any): boolean;
 export declare function CopyText(text: any): void;
 export declare function FromJSON(json: string): any;
 export declare function ToJSON(obj: any, replacerFunc?: any, spacing?: number): string;
