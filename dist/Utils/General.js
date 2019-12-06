@@ -1046,24 +1046,27 @@ exports.TransferPrototypeProps = TransferPrototypeProps;
 function WithFuncsStandalone(source) {
     var e_7, _a;
     var result = {};
-    var _loop_1 = function (key, oldVal) {
-        if (oldVal instanceof Function) {
-            result[key] = function (thisArg) {
+    var _loop_1 = function (key) {
+        if (key == "constructor")
+            return "continue"; // no reason to call the wrapper's constructor
+        var descriptor = Object.getOwnPropertyDescriptor(source, key);
+        var newDescriptor = Object.assign({}, descriptor);
+        if (descriptor.value instanceof Function) {
+            var oldFunc_1 = descriptor.value;
+            newDescriptor.value = function (thisArg) {
                 var callArgs = [];
                 for (var _i = 1; _i < arguments.length; _i++) {
                     callArgs[_i - 1] = arguments[_i];
                 }
-                return oldVal.apply(thisArg, callArgs);
+                return oldFunc_1.apply(thisArg, callArgs);
             };
         }
-        else {
-            result[key] = oldVal;
-        }
+        Object.defineProperty(result, key, newDescriptor);
     };
     try {
-        for (var _b = __values(Object.entries(source)), _c = _b.next(); !_c.done; _c = _b.next()) {
-            var _d = __read(_c.value, 2), key = _d[0], oldVal = _d[1];
-            _loop_1(key, oldVal);
+        for (var _b = __values(Object.getOwnPropertyNames(source)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var key = _c.value;
+            _loop_1(key);
         }
     }
     catch (e_7_1) { e_7 = { error: e_7_1 }; }
@@ -1120,14 +1123,14 @@ function CreateWrapperForClassExtensions(sourceClass) {
         var descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
         var newDescriptor = Object.assign({}, descriptor);
         if (descriptor.value instanceof Function) {
-            var oldFunc_1 = descriptor.value;
+            var oldFunc_2 = descriptor.value;
             newDescriptor.value = function () {
                 var callArgs = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
                     callArgs[_i] = arguments[_i];
                 }
                 var thisArg = thisArgStack[thisArgStack.length - 1];
-                var result = oldFunc_1.apply(thisArg, callArgs);
+                var result = oldFunc_2.apply(thisArg, callArgs);
                 //thisArgStack.length--;
                 thisArgStack.splice(thisArgStack.length - 1, 1);
                 return result;

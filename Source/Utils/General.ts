@@ -815,14 +815,17 @@ type WithFuncsStandalone_Type<T> = {
 };
 export function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T> {
 	let result = {} as any;
-	for (let [key, oldVal] of Object.entries(source)) {
-		if (oldVal instanceof Function) {
-			result[key] = (thisArg, ...callArgs)=> {
-				return oldVal.apply(thisArg, callArgs);
+	for (const key of Object.getOwnPropertyNames(source)) {
+		if (key == "constructor") continue; // no reason to call the wrapper's constructor
+		const descriptor = Object.getOwnPropertyDescriptor(source, key);
+		const newDescriptor = Object.assign({}, descriptor);
+		if (descriptor.value instanceof Function) {
+			const oldFunc = descriptor.value as Function;
+			newDescriptor.value = (thisArg, ...callArgs)=> {
+				return oldFunc.apply(thisArg, callArgs);
 			};
-		} else {
-			result[key] = oldVal;
 		}
+		Object.defineProperty(result, key, newDescriptor);
 	}
 	return result;
 }

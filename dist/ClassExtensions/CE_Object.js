@@ -31,6 +31,7 @@ var General_1 = require("../Utils/General");
 var CE_Array_1 = require("./CE_Array");
 var Types_1 = require("../Utils/Types");
 var Assert_1 = require("../Utils/Assert");
+var CE_Others_1 = require("./CE_Others");
 exports.specialKeys = ["_", "_key", "_id"];
 var ObjectCEClass = /** @class */ (function () {
     function ObjectCEClass() {
@@ -78,21 +79,21 @@ var ObjectCEClass = /** @class */ (function () {
         // the below helps you do stuff like this:
         //		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
         set: function (func) {
-            exports.ObjectCE(this)._AddFunction(func.GetName(), func);
+            exports.ObjectCE(this)._AddFunction(CE_Others_1.FunctionCE(func).GetName(), func);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ObjectCEClass.prototype, "_AddGetter_Inline", {
         set: function (func) {
-            exports.ObjectCE(this)._AddGetterSetter(func.GetName(), func, null);
+            exports.ObjectCE(this)._AddGetterSetter(CE_Others_1.FunctionCE(func).GetName(), func, null);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ObjectCEClass.prototype, "_AddSetter_Inline", {
         set: function (func) {
-            exports.ObjectCE(this)._AddGetterSetter(func.GetName(), null, func);
+            exports.ObjectCE(this)._AddGetterSetter(CE_Others_1.FunctionCE(func).GetName(), null, func);
         },
         enumerable: true,
         configurable: true
@@ -359,6 +360,6 @@ exports.ObjectCES = General_1.WithFuncsStandalone(ObjectCEClass.prototype);
 /*class Test1{
     Test2() {}
 }
-ObjectCE(new Test1()).VSet({}).Test2*/
-exports.ObjectCE(new Object()).Pairs()[0].key;
+ObjectCE(new Test1()).VSet({}).Test2
+ObjectCE(new Object()).Pairs()[0].key;*/ 
 //# sourceMappingURL=CE_Object.js.map

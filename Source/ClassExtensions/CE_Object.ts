@@ -2,6 +2,7 @@ import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, Wi
 import {ArrayCE} from "./CE_Array";
 import {IsNaN} from "../Utils/Types";
 import {Assert} from "../Utils/Assert";
+import {FunctionCE} from "./CE_Others";
 
 export interface VSet_Options {
 	prop?: PropertyDescriptor;
@@ -53,13 +54,13 @@ export class ObjectCEClass<RealThis> {
 	// the below helps you do stuff like this:
 	//		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
 	set _AddFunction_Inline(func) {
-		ObjectCE(this)._AddFunction(func.GetName(), func);
+		ObjectCE(this)._AddFunction(FunctionCE(func).GetName(), func);
 	}
 	set _AddGetter_Inline(func) {
-		ObjectCE(this)._AddGetterSetter(func.GetName(), func, null);
+		ObjectCE(this)._AddGetterSetter(FunctionCE(func).GetName(), func, null);
 	}
 	set _AddSetter_Inline(func) {
-		ObjectCE(this)._AddGetterSetter(func.GetName(), null, func);
+		ObjectCE(this)._AddGetterSetter(FunctionCE(func).GetName(), null, func);
 	}
 
 	// normal
@@ -303,6 +304,5 @@ export const ObjectCES = WithFuncsStandalone(ObjectCEClass.prototype);
 /*class Test1{
 	Test2() {}
 }
-ObjectCE(new Test1()).VSet({}).Test2*/
-
-ObjectCE(new Object()).Pairs()[0].key;
+ObjectCE(new Test1()).VSet({}).Test2
+ObjectCE(new Object()).Pairs()[0].key;*/
