@@ -5,6 +5,7 @@ import {StringCE, StringCEClass} from "./CE_String";
 import {ElementCE, ElementCEClass} from "..";
 import {IsObject, IsString, IsNumber, IsFunction, IsArray} from "../Utils/Types";
 import {DateCE, FunctionCE, FunctionCEClass, DateCEClass} from "./CE_Others";
+import {WithFuncThisArgsAsAny_Type} from "../Utils/General";
 
 /*interface CE_Auto_I {
 	(obj: Array<any>): typeof ArrayCE;
@@ -27,13 +28,14 @@ let classExtensionMap = {
 	Object: ObjectCE,
 }
 // uncommonly derived (simple to complex)
-export function CE(obj: number): NumberCEClass;
-export function CE(obj: string): StringCEClass;
-export function CE(obj: Date): DateCEClass;
-export function CE(obj: Function): FunctionCEClass;
+//export function CE(obj: number): ReturnType<typeof NumberCE>;
+export function CE(obj: number): WithFuncThisArgsAsAny_Type<NumberCEClass>;
+export function CE(obj: string): WithFuncThisArgsAsAny_Type<StringCEClass>;
+export function CE(obj: Date): WithFuncThisArgsAsAny_Type<DateCEClass>;
+export function CE(obj: Function): WithFuncThisArgsAsAny_Type<FunctionCEClass>;
 export function CE<T>(obj: Array<T>): ArrayCEClass<T>;
 // commonly derived
-export function CE(obj: Element): ElementCEClass;
+export function CE(obj: Element): WithFuncThisArgsAsAny_Type<ElementCEClass>;
 // base object
 export function CE<T extends Object>(obj: T): ObjectCEClass<T>;
 export function CE(obj, checkForUncommonDerived = false) {
