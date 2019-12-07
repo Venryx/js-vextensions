@@ -1,5 +1,5 @@
-import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
-import {ArrayCE} from "./CE_Array";
+import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
+import {ArrayCE, ArrayCE_funcs} from "./CE_Array";
 import {IsNaN} from "../Utils/Types";
 import {Assert} from "../Utils/Assert";
 import {FunctionCE} from "./CE_Others";
@@ -16,8 +16,9 @@ export type MapLike_StringyKey<V> = {[key: number]: V} | {[key: string]: V} | Ma
 export type MapLike<V> = {[key: number]: V} | {[key: string]: V};
 export type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
 
-export type TargetTFor<T> = T extends ObjectCEClass<infer TargetT> ? TargetT : T;
-type XOrWrapped<T> = T | ObjectCEClass<T>;
+//export type TargetTFor<T> = T extends ObjectCEProxy<infer TargetT> ? TargetT : T;
+export type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
+//export type XOrWrapped<T> = T | ObjectCEProxy<T>;*/
 
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
 	[P in keyof Source]:
@@ -29,7 +30,7 @@ export function WithFuncThisArgsAsXOrWrapped<Source>(source: Source): WithFuncTh
 }*/
 
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCEClass<TargetT> {
+export const ObjectCE_funcs = {
 	// base
 	// ==========
 
@@ -48,12 +49,12 @@ export class ObjectCEClass<TargetT> {
 		});
 		/*if (this[name] == null)
 			throw new Error(`Failed to add property "${name}" to type "${this}".`);*/
-	}
+	},
 
 	_AddFunction(name, func) {
 		//this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-		ObjectCE(this)._AddItem(name, func);
-	}
+		ObjectCE_Base(this)._AddItem(name, func);
+	},
 
 	// the below helps you do stuff like this:
 	//		Array.prototype._AddGetterSetter("AddX", null, function(value) { this.push(value); }); [].AddX = "newItem";
@@ -66,19 +67,19 @@ export class ObjectCEClass<TargetT> {
 		if (getter) info.get = getter;
 		if (setter) info.set = setter;
 		Object.defineProperty(this, name, info);
-	}
+	},
 
 	// the below helps you do stuff like this:
 	//		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
 	set _AddFunction_Inline(func) {
-		ObjectCE(this)._AddFunction(FunctionCE(func).GetName(), func);
-	}
+		ObjectCE_Base(this)._AddFunction(FunctionCE(func).GetName(), func);
+	},
 	set _AddGetter_Inline(func) {
-		ObjectCE(this)._AddGetterSetter(FunctionCE(func).GetName(), func, null);
-	}
+		ObjectCE_Base(this)._AddGetterSetter(FunctionCE(func).GetName(), func, null);
+	},
 	set _AddSetter_Inline(func) {
-		ObjectCE(this)._AddGetterSetter(FunctionCE(func).GetName(), null, func);
-	}
+		ObjectCE_Base(this)._AddGetterSetter(FunctionCE(func).GetName(), null, func);
+	},
 
 	// normal
 	// ==========
@@ -109,13 +110,18 @@ export class ObjectCEClass<TargetT> {
 			this[key] = value;
 		}
 		return this;
-	}
+	},
 
 	// as replacement for C#'s "new MyClass() {prop = true}"
-	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
+	/*VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
 	//VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
-	VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
-	VSet(...args) {
+	VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
+	VSet: <{
+		// as replacement for C#'s "new MyClass() {prop = true}"
+		<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
+		//VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
+		<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
+	}>((...args)=> {
 		let props, options: VSet_Options, propName: string, propValue: string;
 		if (typeof args[0] == "object") [props, options] = args;
 		else [propName, propValue, options] = args;
@@ -141,13 +147,13 @@ export class ObjectCEClass<TargetT> {
 			SetProp(propName, propValue);
 		}
 		return this as any;
-	}
+	}),
 	Extended<T, T2>(this: T, x: T2): TargetTFor<T> & T2 {
 	// maybe temp; explicit unwrapping, to fix odd "instantiation is excessively deep" ts-error (when calling .Extended from user project)
 	/*Extended<T, T2>(this: T, x: T2): T & T2;
-	Extended<T, T2>(this: ObjectCEClass<T>, x: T2): T & T2;
+	Extended<T, T2>(this: ObjectCEProxy<T>, x: T2): T & T2;
 	Extended(x: any) {*/
-	//Extended<T, T2>(this: ObjectCEClass<T> | T, x: T2): T & T2 {
+	//Extended<T, T2>(this: ObjectCEProxy<T> | T, x: T2): T & T2 {
 		let result: any = this instanceof Array ? [] : {};
 		for (let key in this as any) {
 			if (!this.hasOwnProperty(key)) continue;
@@ -160,32 +166,33 @@ export class ObjectCEClass<TargetT> {
 			}
 		}
 		return result;
-	};
+	},
 	/*interface Object { Extended2<T>(this, x: T): T; }
 	Extended2(x) {
 		return this.Extended(x);
 	};*/
 	//E(x) { return this.Extended(x); };
 
-	SafeGet(path: string, resultIfNull?: any): any;
-	SafeGet<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
-	SafeGet(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
+	SafeGet: <{
+		(path: string, resultIfNull?: any): any;
+		<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
+	}>((pathOrPathGetterFunc: string | Function, resultIfNull?: any)=> {
 		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
-	}
-	VAct<T>(this: T, func: (self: T)=>any): TargetTFor<T> {
+	}),
+	VAct<T>(this: T, func: (self: T)=>any): T {
 		func.call(this, this);
-		return this as TargetTFor<T>;
-	}
+		return this as T;
+	},
 
 	As<T>(type: new(..._)=>T) {
 		Object.setPrototypeOf(this, type.prototype);
 		return this as any as T;
-	};
+	},
 	Strip() {
 		Object.setPrototypeOf(this, Object.getPrototypeOf({}));
 		return this;
-	}
+	},
 
 	Including(...keys: string[]) {
 		var result = this instanceof Array ? [] : {};
@@ -195,7 +202,7 @@ export class ObjectCEClass<TargetT> {
 			result[key] = this[key];
 		}
 		return result;
-	}
+	},
 	Excluding(...keys: string[]) {
 		//var result = Clone(this); // doesn't work with funcs
 		var result = Object.assign(this instanceof Array ? [] : {}, this as any);
@@ -203,7 +210,7 @@ export class ObjectCEClass<TargetT> {
 			delete result[key];
 		}
 		return result;
-	}
+	},
 
 	IsOneOf(...values: any[]): boolean {
 		if (ArrayCE(values).Contains(this)) {
@@ -215,8 +222,7 @@ export class ObjectCEClass<TargetT> {
 			return true;
 		}
 		return false;
-	}
-
+	},
 
 	// todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
 	/*declare global {
@@ -235,13 +241,14 @@ export class ObjectCEClass<TargetT> {
 			result.push({index: i++, name: propName, value: this[propName]});
 		}
 		return result;
-	};*/
-	Pairs<K, V>(this: XOrWrapped<MapLike<V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
-	Pairs<K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-	Pairs<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-	//Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
-	Pairs(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
-	Pairs(excludeSpecialKeys: boolean | 1 = false) {
+	},*/
+	Pairs: <{
+		<K, V>(this: MapLike<V>, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
+		<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+		<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+		//<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
+		(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
+	}>((excludeSpecialKeys: boolean | 1 = false)=> {
 		var result = [];
 		var i = 0;
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -252,28 +259,30 @@ export class ObjectCEClass<TargetT> {
 			result.push(entry);
 		}
 		return result;
-	}
+	}),
 
-	VKeys(this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
-	VKeys<K>(this: XOrWrapped<Map<K, any>>, excludeSpecialKeys?: boolean | 1): K[];
-	VKeys<K = string>(excludeSpecialKeys?: boolean | 1): K[];
-	//VKeys(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
-	VKeys(excludeSpecialKeys?: boolean | 1): string[]; // generics-less version (needed for some ts edge-cases)
-	VKeys(excludeSpecialKeys: boolean | 1 = false) {
+	VKeys: <{
+		(this: MapLike<any>, excludeSpecialKeys?: boolean | 1): string[];
+		<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
+		<K = string>(excludeSpecialKeys?: boolean | 1): K[];
+		//(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
+		(excludeSpecialKeys?: boolean | 1): string[]; // generics-less version (needed for some ts edge-cases)
+	}>((excludeSpecialKeys: boolean | 1 = false)=> {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
 		if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
 		return keys;
-	}
+	}),
 
-	VValues<V>(this: MapOrMapLike<V>, excludeSpecialKeys?: boolean | 1): V[];
-	VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
-	//interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
-	//VValues(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
-	VValues(excludeSpecialKeys: boolean | 1 = false) {
+	VValues: <{
+		<V>(this: MapOrMapLike<V>, excludeSpecialKeys?: boolean | 1): V[];
+		<V = any>(excludeSpecialKeys?: boolean | 1): V[];
+		//(excludeSpecialKeys?: boolean): any[];
+		//(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
+	}>((excludeSpecialKeys: boolean | 1 = false)=> {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-		return ObjectCE(this).VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
-	}
+		return ObjectCE_Base(this).VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
+	}),
 
 	// for symbols
 	/*Pairs_Sym() {
@@ -282,7 +291,7 @@ export class ObjectCEClass<TargetT> {
 		let symbols = Object.getOwnPropertySymbols(this);
 		let symbol = symbols.find(a=>a.toString() == `Symbol(${symbolName})`);
 		return this[symbol];
-	}
+	},
 
 	// this is a total hack : P -- fixes typescript-es2017 "TypeError: [module].default is not a constructor" issue
 	/*Object.prototype._AddGetterSetter("default", function() {
@@ -320,10 +329,17 @@ export class ObjectCEClass<TargetT> {
 		this[openIndex] = item;
 	};*/
 }
-//export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
-//export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
-const ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
-//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
-export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>ObjectCEClass<T>;
-//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsXOrWrapped_Type<ObjectCEClass<T>>;
-export const ObjectCES = WithFuncsStandalone(ObjectCEClass.prototype);
+/*export type ArrayCE_funcs_PlusObject<T> = Array<T> & typeof ArrayCE_funcs;
+export interface ArrayCEProxy<T> extends ArrayCE_funcs_PlusObject<T> {}*/
+export interface ObjectCEProxyInterface<T> {
+	_magicTypeMarker: T; // this makes type-script "carry" the type-data of an ObjectCEProxy, within this proxy type (which therefore doesn't cause recursion issues from TargetTFor) 
+}
+export type ObjectCEProxy<T> = typeof ObjectCE_funcs & ObjectCEProxyInterface<T>;
+
+//export const ObjectCE = WithFuncsStandalone(ObjectCEProxy.prototype);
+//export const ObjectCE = CreateProxyForClassExtensions(ObjectCEProxy);
+const ObjectCE_Base = CreateProxyForClassExtensions(ObjectCE_funcs);
+//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEProxy<T>>;
+export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>ObjectCEProxy<T>;
+//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsXOrWrapped_Type<ObjectCEProxy<T>>;
+export const ObjectCES = WithFuncsStandalone(ObjectCE_funcs);

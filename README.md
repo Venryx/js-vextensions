@@ -15,12 +15,12 @@ npm install --save js-vextensions
 Setup:
 ```
 // To add the class-extension typings (so typescript knows the class/prototype contains those methods)
-// /// <reference path="../node_modules/js-vextensions/Source/ClassExtensions/@ApplyTypes.d.ts"/> // type import approach A
-// import "js-vextensions/Source/ClassExtensions/@ApplyTypes"; // type import approach B
-type __ = typeof import("../node_modules/js-vextensions/Source/ClassExtensions/@ApplyTypes"); // type import approach C (recommended)
+// /// <reference path="../node_modules/js-vextensions/Helpers/@ApplyCETypes.d.ts"/> // type import approach A
+// import "js-vextensions/Helpers/@ApplyCETypes"; // type import approach B
+type __ = typeof import("../node_modules/js-vextensions/Helpers/@ApplyCETypes"); // type import approach C (recommended)
 
 // To actually add the methods to the class-prototype chain (so it works at runtime)
-import "js-vextensions/Dist/ClassExtensions/@ApplyCode";
+import "js-vextensions/Helpers/@ApplyCECode";
 ```
 
 Usage:

@@ -10,88 +10,136 @@ export declare type MapLike<V> = {
     [key: string]: V;
 };
 export declare type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
-export declare type TargetTFor<T> = T extends ObjectCEClass<infer TargetT> ? TargetT : T;
-declare type XOrWrapped<T> = T | ObjectCEClass<T>;
+export declare type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
 export declare const specialKeys: string[];
-export declare class ObjectCEClass<TargetT> {
+export declare const ObjectCE_funcs: {
     /** Helps you do stuff like this:
         Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
     _AddItem(name: any, value: any, forceAdd?: boolean): void;
     _AddFunction(name: any, func: any): void;
     _AddGetterSetter(name: any, getter: any, setter: any): void;
-    set _AddFunction_Inline(func: any);
-    set _AddGetter_Inline(func: any);
-    set _AddSetter_Inline(func: any);
-    Extend(x: any): this;
-    VSet<T>(this: T, propName: string, propValue: any, options?: VSet_Options): TargetTFor<T>;
-    VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>;
-    Extended<T, T2>(this: T, x: T2): TargetTFor<T> & T2;
-    SafeGet(path: string, resultIfNull?: any): any;
-    SafeGet<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>) => Result, resultIfNull?: any): Result;
-    VAct<T>(this: T, func: (self: T) => any): TargetTFor<T>;
-    As<T>(type: new (..._: any[]) => T): T;
-    Strip(): this;
-    Including(...keys: string[]): {};
-    Excluding(...keys: string[]): any;
-    IsOneOf(...values: any[]): boolean;
-    Pairs<K, V>(this: XOrWrapped<MapLike<V>>, excludeSpecialKeys?: boolean | 1): {
-        index: number;
-        key: string;
-        keyNum?: number;
-        value: V;
-    }[];
-    Pairs<K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
-        index: number;
-        key: K;
-        keyNum?: number;
-        value: V;
-    }[];
-    Pairs<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {
-        index: number;
-        key: K;
-        keyNum?: number;
-        value: V;
-    }[];
-    Pairs(excludeSpecialKeys?: boolean | 1): {
-        index: number;
-        key: string;
-        keyNum?: number;
-        value: any;
-    }[];
-    VKeys(this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
-    VKeys<K>(this: XOrWrapped<Map<K, any>>, excludeSpecialKeys?: boolean | 1): K[];
-    VKeys<K = string>(excludeSpecialKeys?: boolean | 1): K[];
-    VKeys(excludeSpecialKeys?: boolean | 1): string[];
-    VValues<V>(this: MapOrMapLike<V>, excludeSpecialKeys?: boolean | 1): V[];
-    VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
-    Sym(symbolName: string): any;
-}
-export declare const ObjectCE: <T>(nextThis: T) => ObjectCEClass<T>;
-export declare const ObjectCES: {
-    _AddItem: (thisArg: Object, name: any, value: any, forceAdd?: boolean) => void;
-    _AddFunction: (thisArg: Object, name: any, func: any) => void;
-    _AddGetterSetter: (thisArg: Object, name: any, getter: any, setter: any) => void;
     _AddFunction_Inline: any;
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
-    Extend: (thisArg: Object, x: any) => ObjectCEClass<any>;
-    VSet: (thisArg: Object, props: any, options?: VSet_Options) => unknown;
-    Extended: (thisArg: Object, x: unknown) => unknown;
-    SafeGet: (thisArg: Object, pathGetterFunc: (self: unknown) => unknown, resultIfNull?: any) => unknown;
-    VAct: (thisArg: Object, func: (self: unknown) => any) => unknown;
-    As: (thisArg: Object, type: new (..._: any[]) => unknown) => unknown;
-    Strip: (thisArg: Object) => ObjectCEClass<any>;
-    Including: (thisArg: Object, ...args: string[]) => {};
-    Excluding: (thisArg: Object, ...args: string[]) => any;
-    IsOneOf: (thisArg: Object, ...args: any[]) => boolean;
-    Pairs: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => {
-        index: number;
-        key: string;
-        keyNum?: number;
-        value: any;
-    }[];
-    VKeys: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => string[];
-    VValues: (thisArg: Object, excludeSpecialKeys?: boolean | 1) => unknown[];
-    Sym: (thisArg: Object, symbolName: string) => any;
+    Extend(x: any): any;
+    VSet: {
+        <T>(this: T, propName: string, propValue: any, options?: VSet_Options): TargetTFor<T>;
+        <T_1>(this: T_1, props: any, options?: VSet_Options): TargetTFor<T_1>;
+    };
+    Extended<T_2, T2>(this: T_2, x: T2): TargetTFor<T_2> & T2;
+    SafeGet: {
+        (path: string, resultIfNull?: any): any;
+        <T_3, Result>(this: T_3, pathGetterFunc: (self: T_3) => Result, resultIfNull?: any): Result;
+    };
+    VAct<T_4>(this: T_4, func: (self: T_4) => any): T_4;
+    As<T_5>(type: new (..._: any[]) => T_5): T_5;
+    Strip(): any;
+    Including(...keys: string[]): {};
+    Excluding(...keys: string[]): any;
+    IsOneOf(...values: any[]): boolean;
+    Pairs: {
+        <K, V>(this: MapLike<V>, excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: string;
+            keyNum?: number;
+            value: V;
+        }[];
+        <K_1, V_1>(this: Map<K_1, V_1>, excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: K_1;
+            keyNum?: number;
+            value: V_1;
+        }[];
+        <K_2 = string, V_2 = any>(excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: K_2;
+            keyNum?: number;
+            value: V_2;
+        }[];
+        (excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: string;
+            keyNum?: number;
+            value: any;
+        }[];
+    };
+    VKeys: {
+        (this: MapLike<any>, excludeSpecialKeys?: boolean | 1): string[];
+        <K_3>(this: Map<K_3, any>, excludeSpecialKeys?: boolean | 1): K_3[];
+        <K_4 = string>(excludeSpecialKeys?: boolean | 1): K_4[];
+        (excludeSpecialKeys?: boolean | 1): string[];
+    };
+    VValues: {
+        <V_3>(this: MapOrMapLike<V_3>, excludeSpecialKeys?: boolean | 1): V_3[];
+        <V_4 = any>(excludeSpecialKeys?: boolean | 1): V_4[];
+    };
+    Sym(symbolName: string): any;
 };
-export {};
+export interface ObjectCEProxyInterface<T> {
+    _magicTypeMarker: T;
+}
+export declare type ObjectCEProxy<T> = typeof ObjectCE_funcs & ObjectCEProxyInterface<T>;
+export declare const ObjectCE: <T>(nextThis: T) => ObjectCEProxy<T>;
+export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_Type<{
+    /** Helps you do stuff like this:
+        Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
+    _AddItem(name: any, value: any, forceAdd?: boolean): void;
+    _AddFunction(name: any, func: any): void;
+    _AddGetterSetter(name: any, getter: any, setter: any): void;
+    _AddFunction_Inline: any;
+    _AddGetter_Inline: any;
+    _AddSetter_Inline: any;
+    Extend(x: any): any;
+    VSet: {
+        <T>(this: T, propName: string, propValue: any, options?: VSet_Options): TargetTFor<T>;
+        <T_1>(this: T_1, props: any, options?: VSet_Options): TargetTFor<T_1>;
+    };
+    Extended<T_2, T2>(this: T_2, x: T2): TargetTFor<T_2> & T2;
+    SafeGet: {
+        (path: string, resultIfNull?: any): any;
+        <T_3, Result>(this: T_3, pathGetterFunc: (self: T_3) => Result, resultIfNull?: any): Result;
+    };
+    VAct<T_4>(this: T_4, func: (self: T_4) => any): T_4;
+    As<T_5>(type: new (..._: any[]) => T_5): T_5;
+    Strip(): any;
+    Including(...keys: string[]): {};
+    Excluding(...keys: string[]): any;
+    IsOneOf(...values: any[]): boolean;
+    Pairs: {
+        <K, V>(this: MapLike<V>, excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: string;
+            keyNum?: number;
+            value: V;
+        }[];
+        <K_1, V_1>(this: Map<K_1, V_1>, excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: K_1;
+            keyNum?: number;
+            value: V_1;
+        }[];
+        <K_2 = string, V_2 = any>(excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: K_2;
+            keyNum?: number;
+            value: V_2;
+        }[];
+        (excludeSpecialKeys?: boolean | 1): {
+            index: number;
+            key: string;
+            keyNum?: number;
+            value: any;
+        }[];
+    };
+    VKeys: {
+        (this: MapLike<any>, excludeSpecialKeys?: boolean | 1): string[];
+        <K_3>(this: Map<K_3, any>, excludeSpecialKeys?: boolean | 1): K_3[];
+        <K_4 = string>(excludeSpecialKeys?: boolean | 1): K_4[];
+        (excludeSpecialKeys?: boolean | 1): string[];
+    };
+    VValues: {
+        <V_3>(this: MapOrMapLike<V_3>, excludeSpecialKeys?: boolean | 1): V_3[];
+        <V_4 = any>(excludeSpecialKeys?: boolean | 1): V_4[];
+    };
+    Sym(symbolName: string): any;
+}>;

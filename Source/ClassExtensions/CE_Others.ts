@@ -1,4 +1,4 @@
-import {WithFuncsStandalone, CreateWrapperForClassExtensions, CreateWrapperForClassExtensions_ThisAsAny} from "../Utils/General";
+import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
 
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
@@ -32,21 +32,21 @@ declare global {
 }
 "".Test2("", 5);*/
 
-export class FunctionCEClass {
+export const FunctionCE_funcs = {
 	GetName(this: Function) {
 		//return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
 		return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
-	}
+	},
 	SetName(this: Function, val) {
 		this["name_fake"] = name;
 		return this;
-	}
+	},
 
 	AddTag(this: Function, tag) {
 		if (this["tags"] == null) this["tags"] = [];
 		this["tags"].push(tag);
 		return this;
-	}
+	},
 
 	/*Function.prototype._AddFunction_Inline = function AddTags(/*o:*#/ tags___) { // (already implemented in VDF.js file)
 		if (this.tags == null)
@@ -62,7 +62,7 @@ export class FunctionCEClass {
 	};*/
 	GetTags(this: Function, type?) {
 		return (this["tags"] || []).Where(a=>type == null || a instanceof type);
-	};
+	},
 
 	//AsStr(...args) { return require("../../V/V").Multiline(this, ...args); };
 	//AsStr(useExtraPreprocessing) { return require("../../V/V").Multiline(this, useExtraPreprocessing); };
@@ -70,10 +70,11 @@ export class FunctionCEClass {
 	RunThenReturn(this: Function, ...args) {
 		this.apply(null, args);
 		return this;
-	};
-}
-export const FunctionCE = CreateWrapperForClassExtensions_ThisAsAny(FunctionCEClass);
-export const FunctionCES = WithFuncsStandalone(FunctionCEClass.prototype);
+	},
+};
+export type FunctionCEProxy = Function & typeof FunctionCE_funcs;
+export const FunctionCE = CreateProxyForClassExtensions(FunctionCE_funcs);
+export const FunctionCES = WithFuncsStandalone(FunctionCE_funcs);
 
 function isLeapYear(year) {
 	return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
@@ -81,16 +82,16 @@ function isLeapYear(year) {
 function getDaysInMonth(year, month) {
 	return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-export class DateCEClass {
+export const DateCE_funcs = {
 	get MonthDate(this: Date) {
 		return new Date(this.getFullYear(), this.getMonth(), 1);
-	}
+	},
 	IsLeapYear(this: Date) { 
 		return isLeapYear(this.getFullYear()); 
-	}
+	},
   	GetDaysInMonth(this: Date) { 
 		return getDaysInMonth(this.getFullYear(), this.getMonth());
-	}
+	},
 
 	AddMonths(this: Date, value: number) {
 		var n = this.getDate();
@@ -98,15 +99,16 @@ export class DateCEClass {
 		this.setMonth(this.getMonth() + value);
 		this.setDate(Math.min(n, DateCE(this).GetDaysInMonth()));
 		return this;
-  	}
+  	},
 	Clone(this: Date) {
 		return new Date(this.getTime());
-	}
-}
-export const DateCE = CreateWrapperForClassExtensions_ThisAsAny(DateCEClass);
-export const DateCES = WithFuncsStandalone(DateCEClass.prototype);
+	},
+};
+export type DateCEProxy = Date & typeof DateCE_funcs;
+export const DateCE = CreateProxyForClassExtensions(DateCE_funcs);
+export const DateCES = WithFuncsStandalone(DateCE_funcs);
 
-/*export class ErrorCEClass {
+/*export class ErrorCEProxy {
 	get Stack() {
 		// this causes the full stack-trace to be attached to the Error object (in Chrome)
 		if ((Error as any).captureStackTrace) {
@@ -116,4 +118,4 @@ export const DateCES = WithFuncsStandalone(DateCEClass.prototype);
 		return this.stack;
 	}
 }
-export const ErrorCE = CreateWrapperForClassExtensions(ErrorCEClass);*/
+export const ErrorCE = CreateProxyForClassExtensions(ErrorCEProxy);*/

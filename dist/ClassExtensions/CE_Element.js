@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
-var ElementCEClass = /** @class */ (function () {
-    function ElementCEClass() {
-    }
-    ElementCEClass.prototype.GetParents = function (topDown) {
+exports.ElementCE_funcs = {
+    GetParents: function (topDown) {
         if (topDown === void 0) { topDown = false; }
         var result = [];
         var currentParent = this.parentElement;
@@ -15,12 +13,12 @@ var ElementCEClass = /** @class */ (function () {
         if (topDown)
             result.reverse();
         return result;
-    };
-    ElementCEClass.prototype.GetSelfAndParents = function (topDown) {
+    },
+    GetSelfAndParents: function (topDown) {
         if (topDown === void 0) { topDown = false; }
         var result = exports.ElementCE(this).GetParents(topDown);
         return topDown ? result.concat([this]) : [this].concat(result);
-    };
+    },
     /*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
         var $found = [];
         let currentSet = this.childNodes.ToArray();
@@ -32,7 +30,7 @@ var ElementCEClass = /** @class */ (function () {
         }
         return $found.first(); // Return first match of the collection
     }*/
-    ElementCEClass.prototype.QuerySelector_BreadthFirst = function (selector) {
+    QuerySelector_BreadthFirst: function (selector) {
         var currentLayerElements = Array.from(this.childNodes);
         while (currentLayerElements.length) {
             var firstMatchInLayer = currentLayerElements.find(function (a) { return a["matches"] && a["matches"](selector); });
@@ -42,13 +40,11 @@ var ElementCEClass = /** @class */ (function () {
             currentLayerElements = currentLayerElements.reduce(function (acc, item) { return acc.concat(Array.from(item.childNodes)); }, []);
         }
         return null;
-    };
-    ElementCEClass.prototype.$ = function (queryStr) {
+    },
+    $: function (queryStr) {
         return Array.from(this.querySelectorAll(queryStr));
-    };
-    return ElementCEClass;
-}());
-exports.ElementCEClass = ElementCEClass;
-exports.ElementCE = General_1.CreateWrapperForClassExtensions_ThisAsAny(ElementCEClass);
-exports.ElementCES = General_1.WithFuncsStandalone(ElementCEClass.prototype);
+    },
+};
+exports.ElementCE = General_1.CreateProxyForClassExtensions(exports.ElementCE_funcs);
+exports.ElementCES = General_1.WithFuncsStandalone(exports.ElementCE_funcs);
 //# sourceMappingURL=CE_Element.js.map

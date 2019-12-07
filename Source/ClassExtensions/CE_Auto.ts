@@ -1,11 +1,10 @@
-import {ArrayCE, ArrayCEClass} from "./CE_Array";
-import {NumberCE, NumberCEClass} from "./CE_Number";
-import {ObjectCE, ObjectCEClass} from "./CE_Object";
-import {StringCE, StringCEClass} from "./CE_String";
-import {ElementCE, ElementCEClass} from "..";
+import {ArrayCE, ArrayCEProxy} from "./CE_Array";
+import {NumberCE, NumberCEProxy} from "./CE_Number";
+import {ObjectCE, ObjectCEProxy} from "./CE_Object";
+import {StringCE, StringCEProxy} from "./CE_String";
+import {ElementCE, ElementCEProxy} from "..";
 import {IsObject, IsString, IsNumber, IsFunction, IsArray} from "../Utils/Types";
-import {DateCE, FunctionCE, FunctionCEClass, DateCEClass} from "./CE_Others";
-import {WithFuncThisArgsAsAny_Type} from "../Utils/General";
+import {DateCE, FunctionCE, FunctionCEProxy, DateCEProxy} from "./CE_Others";
 
 /*interface CE_Auto_I {
 	(obj: Array<any>): typeof ArrayCE;
@@ -29,16 +28,16 @@ let classExtensionMap = {
 }
 // uncommonly derived (simple to complex)
 //export function CE(obj: number): ReturnType<typeof NumberCE>;
-export function CE(obj: number): WithFuncThisArgsAsAny_Type<NumberCEClass>;
-export function CE(obj: string): WithFuncThisArgsAsAny_Type<StringCEClass>;
-export function CE(obj: Date): WithFuncThisArgsAsAny_Type<DateCEClass>;
-export function CE(obj: Function): WithFuncThisArgsAsAny_Type<FunctionCEClass>;
-export function CE<T>(obj: Array<T>): ArrayCEClass<T>;
+export function CE(obj: number): NumberCEProxy;
+export function CE(obj: string): StringCEProxy;
+export function CE(obj: Date): DateCEProxy;
+export function CE(obj: Function): FunctionCEProxy;
+export function CE<T>(obj: Array<T>): ArrayCEProxy<T>;
 // commonly derived
-export function CE(obj: Element): WithFuncThisArgsAsAny_Type<ElementCEClass>;
+export function CE(obj: Element): ElementCEProxy;
 // base object
-export function CE<T extends Object>(obj: T): ObjectCEClass<T>;
-//export function CE<T extends Object>(obj: T): WithFuncThisArgsAsXOrWrapped_Type<ObjectCEClass<T>>;
+export function CE<T extends Object>(obj: T): ObjectCEProxy<T>;
+//export function CE<T extends Object>(obj: T): WithFuncThisArgsAsXOrWrapped_Type<ObjectCEProxy<T>>;
 export function CE(obj, checkForUncommonDerived = false) {
 	// first, try to get class-extension func based on direct constructor name (most common case)
 	let typeName = obj.constructor ? obj.constructor.name : null;

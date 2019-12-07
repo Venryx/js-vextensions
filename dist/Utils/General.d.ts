@@ -102,14 +102,8 @@ export declare function ChangeCapitalization(text: string, fromScheme: CapScheme
 export declare function StartDownload(content: string, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 export declare function StartUpload(): Promise<string | ArrayBuffer>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;
-declare type WithFuncsStandalone_Type<T> = {
+export declare type WithFuncsStandalone_Type<T> = {
     [P in keyof T]: T[P] extends (...args: any[]) => any ? (thisArg: Object, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
 };
 export declare function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T>;
-export declare type WithFuncThisArgsAsAny_Type<T> = {
-    [P in keyof T]: T[P] extends (this: any, ...args: any[]) => any ? (this: any, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
-};
-export declare function WithFuncThisArgsAsAny<T>(source: T): WithFuncThisArgsAsAny_Type<T>;
-export declare function CreateWrapperForClassExtensions_ThisAsAny<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => WithFuncThisArgsAsAny_Type<T>;
-export declare function CreateWrapperForClassExtensions<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => T;
-export {};
+export declare function CreateProxyForClassExtensions(sourceClass_prototype: any): (nextThis: any) => any;

@@ -73,13 +73,14 @@ var Assert_1 = require("../Utils/Assert");
 //type ArrayLike_Unwrap<T> =
 /*type Unwrapped<T> =
     T extends Array<infer ItemT> ? ItemT[] :
-    T extends ArrayCEClass<infer ItemT> ? ItemT[] :
+    T extends ArrayCEProxy<infer ItemT> ? ItemT[] :
     never;*/
-var ArrayCEClass = /** @class */ (function () {
-    function ArrayCEClass() {
-        this.oldJoin = [].join;
-    }
-    ArrayCEClass.prototype.ForEach = function (func) {
+function AlsoExtendsArray(funcs) {
+    return funcs;
+}
+exports.AlsoExtendsArray = AlsoExtendsArray;
+exports.ArrayCE_funcs = AlsoExtendsArray({
+    ForEach: function (func) {
         var self = this;
         var _loop_1 = function (i) {
             var shouldBreak = false;
@@ -97,8 +98,8 @@ var ArrayCEClass = /** @class */ (function () {
             if (state_1 === "break")
                 break;
         }
-    };
-    ArrayCEClass.prototype.ForEachAsync = function (func) {
+    },
+    ForEachAsync: function (func) {
         return __awaiter(this, void 0, void 0, function () {
             var self, _loop_2, this_2, i, state_2;
             return __generator(this, function (_a) {
@@ -142,17 +143,16 @@ var ArrayCEClass = /** @class */ (function () {
                 }
             });
         });
-    };
+    },
     /*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }
     Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {
         await Promise.all(this.map(fn));
-    }*/
-    ArrayCEClass.prototype.Contains = function (item) {
+    },*/
+    Contains: function (item) {
         var self = this;
         return self.indexOf(item) != -1;
-    };
-    ;
-    ArrayCEClass.prototype.ContainsAny = function () {
+    },
+    ContainsAny: function () {
         var e_1, _a;
         var items = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -175,7 +175,7 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_1) throw e_1.error; }
         }
         return false;
-    };
+    },
     // for some reason, this platform doesn't have entries() defined
     /*entries() {
         var result = [];
@@ -183,29 +183,29 @@ var ArrayCEClass = /** @class */ (function () {
             result.push([i, this[i]]);
         return result;
     };*/
-    ArrayCEClass.prototype.Prepend = function () {
+    Prepend: function () {
         var newItems = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             newItems[_i] = arguments[_i];
         }
         var self = this;
         self.splice.apply(self, __spread([0, 0], newItems));
-    };
-    ArrayCEClass.prototype.Add = function (item) {
+    },
+    Add: function (item) {
         var self = this;
         return self.push(item);
-    };
-    ArrayCEClass.prototype.CAdd = function (item) {
+    },
+    CAdd: function (item) {
         var self = this;
         self.push(item);
         return self;
-    };
-    ArrayCEClass.prototype.TAdd = function (item) {
+    },
+    TAdd: function (item) {
         var self = this;
         self.push(item);
         return item;
-    };
-    ArrayCEClass.prototype.AddRange = function (array) {
+    },
+    AddRange: function (array) {
         var e_2, _a;
         var self = this;
         try {
@@ -224,16 +224,16 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_2) throw e_2.error; }
         }
         return this;
-    };
-    ArrayCEClass.prototype.Remove = function (item) {
+    },
+    Remove: function (item) {
         var self = this;
         var itemIndex = self.indexOf(item);
         if (itemIndex == -1)
             return false;
         self.splice(itemIndex, 1);
         return true;
-    };
-    ArrayCEClass.prototype.RemoveAll = function (items) {
+    },
+    RemoveAll: function (items) {
         var e_3, _a;
         var self = this;
         try {
@@ -249,30 +249,30 @@ var ArrayCEClass = /** @class */ (function () {
             }
             finally { if (e_3) throw e_3.error; }
         }
-    };
-    ArrayCEClass.prototype.RemoveAt = function (index) {
+    },
+    RemoveAt: function (index) {
         var self = this;
         return self.splice(index, 1)[0];
-    };
-    ArrayCEClass.prototype.Insert = function (index, obj) {
+    },
+    Insert: function (index, obj) {
         var self = this;
         self.splice(index, 0, obj);
-    };
-    ArrayCEClass.prototype.SetItems = function (items) {
+    },
+    SetItems: function (items) {
         var self = this;
         self.splice.apply(self, __spread([0, self.length], items));
         return self;
-    };
-    ArrayCEClass.prototype.Reversed = function () {
+    },
+    Reversed: function () {
         var self = this;
         var clone = self.slice(0);
         clone.reverse();
         return clone;
-    };
+    },
     //Object.prototype._AddFunction_Inline = function AsRef() { return new NodeReference_ByPath(this); }
     // Linq replacements
     // ----------
-    ArrayCEClass.prototype.Any = function (matchFunc) {
+    Any: function (matchFunc) {
         var e_4, _a;
         var self = this;
         try {
@@ -291,8 +291,8 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_4) throw e_4.error; }
         }
         return false;
-    };
-    ArrayCEClass.prototype.All = function (matchFunc) {
+    },
+    All: function (matchFunc) {
         var e_5, _a;
         var self = this;
         try {
@@ -311,8 +311,8 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_5) throw e_5.error; }
         }
         return true;
-    };
-    ArrayCEClass.prototype.Where = function (matchFunc) {
+    },
+    Where: function (matchFunc) {
         var e_6, _a;
         var self = this;
         var result = [];
@@ -332,8 +332,8 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_6) throw e_6.error; }
         }
         return result;
-    };
-    ArrayCEClass.prototype.Select = function (selectFunc) {
+    },
+    Select: function (selectFunc) {
         var e_7, _a;
         var self = this;
         var result = [];
@@ -351,8 +351,8 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_7) throw e_7.error; }
         }
         return result;
-    };
-    ArrayCEClass.prototype.SelectMany = function (selectFunc) {
+    },
+    SelectMany: function (selectFunc) {
         var e_8, _a;
         var self = this;
         //return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
@@ -371,36 +371,35 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_8) throw e_8.error; }
         }
         return result;
-    };
+    },
     //Count(matchFunc) { return this.Where(matchFunc).length; };
     //Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
     // needed for items to be added properly to custom classes that extend Array
-    ArrayCEClass.prototype.Count = function () {
+    Count: function () {
         var self = this;
         return self.length;
-    };
-    ;
-    ArrayCEClass.prototype.VCount = function (matchFunc) {
+    },
+    VCount: function (matchFunc) {
         var self = this;
         return exports.ArrayCE(self).Where(matchFunc).length;
-    };
-    ArrayCEClass.prototype.Clear = function () {
+    },
+    Clear: function () {
         var self = this;
         /*while (this.length > 0)
             this.pop();*/
         self.splice(0, self.length);
-    };
+    },
     /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
     forEach_break(...args) { return this.some(...args); } */
-    ArrayCEClass.prototype.First = function (matchFunc) {
+    First: function (matchFunc) {
         var self = this;
         var result = exports.ArrayCE(self).FirstOrX(matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");
         }
         return result;
-    };
-    ArrayCEClass.prototype.FirstOrX = function (matchFunc, x) {
+    },
+    FirstOrX: function (matchFunc, x) {
         var e_9, _a;
         if (x === void 0) { x = null; }
         var self = this;
@@ -425,21 +424,21 @@ var ArrayCEClass = /** @class */ (function () {
             return self[0];
         }
         return x;
-    };
+    },
     //FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-    ArrayCEClass.prototype.FirstWith = function (propName, propValue) {
+    FirstWith: function (propName, propValue) {
         var self = this;
         return exports.ArrayCE(self).Where(function () { return this[propName] == propValue; })[0];
-    };
-    ArrayCEClass.prototype.Last = function (matchFunc) {
+    },
+    Last: function (matchFunc) {
         var self = this;
         var result = exports.ArrayCE(self).LastOrX(matchFunc);
         if (result === undefined) {
             throw new Error("Matching item not found.");
         }
         return result;
-    };
-    ArrayCEClass.prototype.LastOrX = function (matchFunc, x) {
+    },
+    LastOrX: function (matchFunc, x) {
         if (x === void 0) { x = null; }
         var self = this;
         if (matchFunc) {
@@ -453,12 +452,12 @@ var ArrayCEClass = /** @class */ (function () {
             return self[self.length - 1];
         }
         return x;
-    };
-    ArrayCEClass.prototype.XFromLast = function (x) {
+    },
+    XFromLast: function (x) {
         var self = this;
         return self[(self.length - 1) - x];
-    };
-    ArrayCEClass.prototype.Move = function (item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex) {
+    },
+    Move: function (item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex) {
         if (newIndexAsPreRemovalIndexVSFinalIndex === void 0) { newIndexAsPreRemovalIndexVSFinalIndex = false; }
         var self = this;
         var oldIndex = self.indexOf(item);
@@ -485,15 +484,15 @@ var ArrayCEClass = /** @class */ (function () {
             exports.ArrayCE(self).Insert(newIndex, item);
         }
         return oldIndex;
-    };
-    //ToList<T>(this: ArrayLike<T>, itemType = null) { return [].concat(this); }
+    },
+    //ToList<T>(this: T[], itemType = null) { return [].concat(this); }
     /*ToDictionary(keyFunc, valFunc) {
         var result = new Dictionary();
         for (var i in this)
             result.Add(keyFunc(this[i]), valFunc(this[i]));
         return result;
     }*/
-    ArrayCEClass.prototype.ToMap = function (keyFunc, valFunc) {
+    ToMap: function (keyFunc, valFunc) {
         var e_10, _a;
         var self = this;
         var result = {};
@@ -511,32 +510,32 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_10) throw e_10.error; }
         }
         return result;
-    };
-    ArrayCEClass.prototype.Skip = function (count) {
+    },
+    Skip: function (count) {
         var self = this;
         var result = [];
         for (var i = count; i < self.length; i++) {
             result.push(self[i]);
         }
         return result;
-    };
-    ArrayCEClass.prototype.Take = function (count) {
+    },
+    Take: function (count) {
         var self = this;
         var result = [];
         for (var i = 0; i < count && i < self.length; i++) {
             result.push(self[i]);
         }
         return result;
-    };
-    ArrayCEClass.prototype.TakeLast = function (count) {
+    },
+    TakeLast: function (count) {
         var self = this;
         var result = [];
         for (var i = 0; i < count && (self.length - 1) - i >= 0; i++) {
             result.push(self[(self.length - 1) - i]);
         }
         return result;
-    };
-    ArrayCEClass.prototype.FindIndex = function (matchFunc) {
+    },
+    FindIndex: function (matchFunc) {
         var e_11, _a;
         var self = this;
         try {
@@ -555,27 +554,27 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_11) throw e_11.error; }
         }
         return -1;
-    };
+    },
     /*FindIndex(matchFunc: (item: T)=>boolean) {
         for (let [index, item] of this.entries())
             if (matchFunc.call(item, item))
                     return index;
         return -1;
     };*/
-    ArrayCEClass.prototype.OrderBy = function (valFunc) {
+    OrderBy: function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
         var self = this;
         /*var temp = this.ToList();
         temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
         return temp;*/
         return General_1.StableSort(self, function (a, b, aIndex, bIndex) { return General_1.Compare(valFunc(a, aIndex), valFunc(b, bIndex)); });
-    };
-    ArrayCEClass.prototype.OrderByDescending = function (valFunc) {
+    },
+    OrderByDescending: function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
         var self = this;
         return exports.ArrayCE(self).OrderBy(function (item, index) { return -valFunc(item, index); });
-    };
-    ArrayCEClass.prototype.Distinct = function () {
+    },
+    Distinct: function () {
         var self = this;
         var result = [];
         for (var i in self) {
@@ -586,8 +585,8 @@ var ArrayCEClass = /** @class */ (function () {
             }
         }
         return result;
-    };
-    ArrayCEClass.prototype.Except = function () {
+    },
+    Except: function () {
         var _a, e_12, _b;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -617,13 +616,13 @@ var ArrayCEClass = /** @class */ (function () {
             return result;
         }
         return exports.ArrayCE(self).Where(function (a) { return !excludeItems.Contains(a); });
-    };
-    ArrayCEClass.prototype.IfEmptyThen = function (valIfSelfIsEmpty) {
+    },
+    IfEmptyThen: function (valIfSelfIsEmpty) {
         var self = this;
         return self.length == 0 ? valIfSelfIsEmpty : this;
-    };
+    },
     //JoinUsing(separator) { return this.join(separator);};
-    ArrayCEClass.prototype.Min = function (valFunc, asNumbers) {
+    Min: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
         var self = this;
         if (asNumbers) {
@@ -633,8 +632,8 @@ var ArrayCEClass = /** @class */ (function () {
             return Math.min.apply(Math, __spread(this));
         }
         return exports.ArrayCE(exports.ArrayCE(self).OrderBy(valFunc)).FirstOrX();
-    };
-    ArrayCEClass.prototype.Max = function (valFunc, asNumbers) {
+    },
+    Max: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
         var self = this;
         if (asNumbers) {
@@ -644,8 +643,8 @@ var ArrayCEClass = /** @class */ (function () {
             return Math.max.apply(Math, __spread(this));
         }
         return exports.ArrayCE(exports.ArrayCE(self).OrderBy(valFunc)).LastOrX();
-    };
-    ArrayCEClass.prototype.Sum = function () {
+    },
+    Sum: function () {
         var e_13, _a;
         var self = this;
         var total = 0;
@@ -663,26 +662,27 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_13) throw e_13.error; }
         }
         return total;
-    };
-    ArrayCEClass.prototype.Average = function () {
+    },
+    Average: function () {
         var self = this;
         var total = exports.ArrayCE(self).Sum();
         return total / self.length;
-    };
-    ArrayCEClass.prototype.Median = function () {
+    },
+    Median: function () {
         var self = this;
         var ordered = exports.ArrayCE(self).OrderBy(function (a) { return a; });
         if (self.length % 2 == 0) { // if even number of elements, average two middlest ones
             return ordered[(self.length / 2) - 1] + ordered[self.length / 2];
         }
         return ordered[self.length / 2]; // otherwise, return the exactly-middle one
-    };
-    ArrayCEClass.prototype.Random = function () {
+    },
+    Random: function () {
         var self = this;
         var index = Math.floor(Math.random() * self.length);
         return this[index];
-    };
-    ArrayCEClass.prototype.join = function (separator) {
+    },
+    //oldJoin: [].join,
+    join: function (separator) {
         if (separator === void 0) { separator = ","; }
         var self = this;
         if (self.length == 0)
@@ -696,28 +696,26 @@ var ArrayCEClass = /** @class */ (function () {
         /*let oldResult = oldJoin.apply(this, arguments);
         if (oldResult != result) debugger;*/
         return result;
-    };
-    return ArrayCEClass;
-}());
-exports.ArrayCEClass = ArrayCEClass;
-//export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
-//export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-var ArrayCE_Base = General_1.CreateWrapperForClassExtensions(ArrayCEClass);
-//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
+    },
+});
+//export const ArrayCE = CreateProxyForClassExtensions(ArrayCEProxy);
+//export const ArrayCE = CreateProxyForClassExtensions<ArrayCEProxy<any>>(ArrayCEProxy);
+var ArrayCE_Base = General_1.CreateProxyForClassExtensions(exports.ArrayCE_funcs);
+//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEProxy<T>>;
 exports.ArrayCE = ArrayCE_Base;
-//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsXOrWrapped_Type<ArrayCEClass<T>>;
-exports.ArrayCES = General_1.WithFuncsStandalone(ArrayCEClass.prototype);
+//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsXOrWrapped_Type<ArrayCEProxy<T>>;
+exports.ArrayCES = General_1.WithFuncsStandalone(exports.ArrayCE_funcs);
 /*var ArrayIterator = [].entries().constructor;
-export class ArrayIteratorCEClass {
+export class ArrayIteratorCEProxy {
     ToArray(this: ArrayIterator) {
         return Array.from(this);
     }
 }
-export const ArrayIteratorCE = CreateWrapperForClassExtensions(ArrayIteratorCEClass);*/
-/*export class NodeListCEClass {
+export const ArrayIteratorCE = CreateProxyForClassExtensions(ArrayIteratorCEProxy);*/
+/*export class NodeListCEProxy {
     ToArray(this: NodeList) {
         return Array.from(this);
     }
 }
-export const NodeListCE = CreateWrapperForClassExtensions(NodeListCEClass);*/ 
+export const NodeListCE = CreateProxyForClassExtensions(NodeListCEProxy);*/ 
 //# sourceMappingURL=CE_Array.js.map

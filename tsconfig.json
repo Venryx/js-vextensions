@@ -35,7 +35,8 @@
 		"Source/**/*.tsx"
 	],
 	"exclude": [
-		"Source/ClassExtensions/@ApplyTypes.d.ts"
+		"Helpers/@ApplyTypes.d.ts",
+		"Helpers/@ApplyCode.ts"
 	],
 	"compileOnSave": true
 }

@@ -294,7 +294,7 @@ export class VRect {
 		if (options.xWrappedBy) {
 			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
 				return [base, base.NewX(x=>x - options.xWrappedBy), base.NewX(x=>x + options.xWrappedBy)];
-			}))
+			}));
 		}
 		if (options.yWrappedBy) {
 			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{

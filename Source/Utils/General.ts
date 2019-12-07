@@ -808,7 +808,7 @@ export function TransferPrototypeProps(target: Object, source: Object, descripto
 	}
 }
 
-type WithFuncsStandalone_Type<T> = {
+export type WithFuncsStandalone_Type<T> = {
 	[P in keyof T]:
 		T[P] extends (...args)=>any ? (thisArg: Object, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
 		T[P];
@@ -830,14 +830,14 @@ export function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T> {
 	return result;
 }
 
-export type WithFuncThisArgsAsAny_Type<T> = {
+/*export type WithFuncThisArgsAsAny_Type<T> = {
 	[P in keyof T]:
 		T[P] extends (this: any, ...args)=>any ? (this: any, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
 		T[P];
 };
 export function WithFuncThisArgsAsAny<T>(source: T): WithFuncThisArgsAsAny_Type<T> {
 	return source as any;
-}
+}*/
 
 /*export type WithFuncThisArgTypesWrappedBy_Type<T> = {
 	[P in keyof T]:
@@ -849,10 +849,11 @@ export function WithFuncThisArgTypesWrappedBy<T>(source: T): WithFuncThisArgType
 }*/
 
 // use this simpler variant for class-extensions of target-types, where the class-extension methods don't need the type-generics of the target-type
-export function CreateWrapperForClassExtensions_ThisAsAny<T>(sourceClass: new(...args: any[])=>T) {
-	return CreateWrapperForClassExtensions<WithFuncThisArgsAsAny_Type<T>>(sourceClass as any);
-}
-export function CreateWrapperForClassExtensions<T>(sourceClass: new(...args: any[])=>T) {
+/*export function CreateProxyForClassExtensions_ThisAsAny<T>(sourceClass: new(...args: any[])=>T) {
+	return CreateProxyForClassExtensions<WithFuncThisArgsAsAny_Type<T>>(sourceClass as any);
+}*/
+//export function CreateProxyForClassExtensions<T>(sourceClass: new(...args: any[])=>T) {
+export function CreateProxyForClassExtensions(sourceClass_prototype: any) {
 	// proxy approach; nicer, but I don't like potential slowdown from creating new proxy each time a class-extension method is called!
 	/*return (thisArg: any)=> {
 		return new Proxy({}, {
@@ -872,12 +873,13 @@ export function CreateWrapperForClassExtensions<T>(sourceClass: new(...args: any
 
 	// Static proxy approach -- a bit faster since it doesn't create any functions, closures, or proxies per wrap/CE-method-call.
 	//	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
-	let proxy = {} as T;
+	//let proxy = {} as T;
+	let proxy = {} as any;
 	//const proxy = {} as WithFuncThisArgsAsAny_Type<T>;
 	const thisArgStack = [];
-	for (const key of Object.getOwnPropertyNames(sourceClass.prototype)) {
+	for (const key of Object.getOwnPropertyNames(sourceClass_prototype)) {
 		if (key == "constructor") continue; // no reason to call the wrapper's constructor
-		const descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
+		const descriptor = Object.getOwnPropertyDescriptor(sourceClass_prototype, key);
 		const newDescriptor = Object.assign({}, descriptor);
 		if (descriptor.value instanceof Function) {
 			const oldFunc = descriptor.value as Function;

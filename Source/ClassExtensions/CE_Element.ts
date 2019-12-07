@@ -1,6 +1,6 @@
-import {CreateWrapperForClassExtensions, WithFuncsStandalone, CreateWrapperForClassExtensions_ThisAsAny} from "../Utils/General";
+import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
 
-export class ElementCEClass {
+export const ElementCE_funcs = {
 	GetParents(this: Element, topDown = false) {
 		let result = [] as HTMLElement[];
 		let currentParent = this.parentElement;
@@ -10,11 +10,11 @@ export class ElementCEClass {
 		}
 		if (topDown) result.reverse();
 		return result;
-	}
+	},
 	GetSelfAndParents(this: HTMLElement, topDown = false) {
 		let result = ElementCE(this).GetParents(topDown);
 		return topDown ? result.concat([this]) : [this].concat(result);
-	}
+	},
 
 	/*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
 		var $found = [];
@@ -36,11 +36,12 @@ export class ElementCEClass {
 			currentLayerElements = currentLayerElements.reduce((acc, item)=>acc.concat(Array.from(item.childNodes)), []);
 		}
 		return null;
-	}
+	},
 
 	$(this: Element, queryStr: string): HTMLElement[] {
 		return Array.from(this.querySelectorAll(queryStr)) as HTMLElement[];
-	}
+	},
 }
-export const ElementCE = CreateWrapperForClassExtensions_ThisAsAny(ElementCEClass);
-export const ElementCES = WithFuncsStandalone(ElementCEClass.prototype);
+export type ElementCEProxy = Element & typeof ElementCE_funcs;
+export const ElementCE = CreateProxyForClassExtensions(ElementCE_funcs);
+export const ElementCES = WithFuncsStandalone(ElementCE_funcs);

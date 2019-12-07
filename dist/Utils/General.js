@@ -1079,10 +1079,14 @@ function WithFuncsStandalone(source) {
     return result;
 }
 exports.WithFuncsStandalone = WithFuncsStandalone;
-function WithFuncThisArgsAsAny(source) {
-    return source;
-}
-exports.WithFuncThisArgsAsAny = WithFuncThisArgsAsAny;
+/*export type WithFuncThisArgsAsAny_Type<T> = {
+    [P in keyof T]:
+        T[P] extends (this: any, ...args)=>any ? (this: any, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
+        T[P];
+};
+export function WithFuncThisArgsAsAny<T>(source: T): WithFuncThisArgsAsAny_Type<T> {
+    return source as any;
+}*/
 /*export type WithFuncThisArgTypesWrappedBy_Type<T> = {
     [P in keyof T]:
         T[P] extends (this: infer T2, ...args)=>any ? (this: T<T2>, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
@@ -1092,11 +1096,11 @@ export function WithFuncThisArgTypesWrappedBy<T>(source: T): WithFuncThisArgType
     return source as any;
 }*/
 // use this simpler variant for class-extensions of target-types, where the class-extension methods don't need the type-generics of the target-type
-function CreateWrapperForClassExtensions_ThisAsAny(sourceClass) {
-    return CreateWrapperForClassExtensions(sourceClass);
-}
-exports.CreateWrapperForClassExtensions_ThisAsAny = CreateWrapperForClassExtensions_ThisAsAny;
-function CreateWrapperForClassExtensions(sourceClass) {
+/*export function CreateProxyForClassExtensions_ThisAsAny<T>(sourceClass: new(...args: any[])=>T) {
+    return CreateProxyForClassExtensions<WithFuncThisArgsAsAny_Type<T>>(sourceClass as any);
+}*/
+//export function CreateProxyForClassExtensions<T>(sourceClass: new(...args: any[])=>T) {
+function CreateProxyForClassExtensions(sourceClass_prototype) {
     // proxy approach; nicer, but I don't like potential slowdown from creating new proxy each time a class-extension method is called!
     /*return (thisArg: any)=> {
         return new Proxy({}, {
@@ -1116,13 +1120,14 @@ function CreateWrapperForClassExtensions(sourceClass) {
     var e_8, _a;
     // Static proxy approach -- a bit faster since it doesn't create any functions, closures, or proxies per wrap/CE-method-call.
     //	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
+    //let proxy = {} as T;
     var proxy = {};
     //const proxy = {} as WithFuncThisArgsAsAny_Type<T>;
     var thisArgStack = [];
     var _loop_2 = function (key) {
         if (key == "constructor")
             return "continue"; // no reason to call the wrapper's constructor
-        var descriptor = Object.getOwnPropertyDescriptor(sourceClass.prototype, key);
+        var descriptor = Object.getOwnPropertyDescriptor(sourceClass_prototype, key);
         var newDescriptor = Object.assign({}, descriptor);
         if (descriptor.value instanceof Function) {
             var oldFunc_2 = descriptor.value;
@@ -1141,7 +1146,7 @@ function CreateWrapperForClassExtensions(sourceClass) {
         Object.defineProperty(proxy, key, newDescriptor);
     };
     try {
-        for (var _b = __values(Object.getOwnPropertyNames(sourceClass.prototype)), _c = _b.next(); !_c.done; _c = _b.next()) {
+        for (var _b = __values(Object.getOwnPropertyNames(sourceClass_prototype)), _c = _b.next(); !_c.done; _c = _b.next()) {
             var key = _c.value;
             _loop_2(key);
         }
@@ -1158,5 +1163,5 @@ function CreateWrapperForClassExtensions(sourceClass) {
         return proxy;
     };
 }
-exports.CreateWrapperForClassExtensions = CreateWrapperForClassExtensions;
+exports.CreateProxyForClassExtensions = CreateProxyForClassExtensions;
 //# sourceMappingURL=General.js.map

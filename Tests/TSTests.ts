@@ -1,4 +1,4 @@
-import {CE} from "../Source";
+import {CE, ArrayCEProxy} from "../Source";
 
 /*class Test1{
 	Test2() {}
@@ -17,3 +17,5 @@ class Person {
 }
 let bob = new Person();
 let bob2: Person = CE(bob).Extended({name2: "bob2"});
+
+//new ArrayCEProxy("").ForEach(a=>{});

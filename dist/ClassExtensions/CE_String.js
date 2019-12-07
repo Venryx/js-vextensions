@@ -13,10 +13,8 @@ var __values = (this && this.__values) || function(o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var CE_Array_1 = require("./CE_Array");
 var General_1 = require("../Utils/General");
-var StringCEClass = /** @class */ (function () {
-    function StringCEClass() {
-    }
-    StringCEClass.prototype.TrimStart = function () {
+exports.StringCE_funcs = {
+    TrimStart: function () {
         // fix for if called by VDF (which has a different signature)
         //if (arguments[0] instanceof Array) chars = arguments[0];
         var chars = [];
@@ -26,8 +24,8 @@ var StringCEClass = /** @class */ (function () {
         for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && CE_Array_1.ArrayCE(chars).Contains(this[iOfFirstToKeep]); iOfFirstToKeep++)
             ;
         return this.slice(iOfFirstToKeep, this.length);
-    };
-    StringCEClass.prototype.TrimEnd = function () {
+    },
+    TrimEnd: function () {
         var chars = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             chars[_i] = arguments[_i];
@@ -35,11 +33,11 @@ var StringCEClass = /** @class */ (function () {
         for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && CE_Array_1.ArrayCE(chars).Contains(this[iOfLastToKeep]); iOfLastToKeep--)
             ;
         return this.substr(0, iOfLastToKeep + 1);
-    };
-    StringCEClass.prototype.Contains = function (str, startIndex) {
+    },
+    Contains: function (str, startIndex) {
         return this.indexOf(str, startIndex) !== -1;
-    };
-    StringCEClass.prototype.hashCode = function () {
+    },
+    hashCode: function () {
         var hash = 0;
         for (var i = 0; i < this.length; i++) {
             var char = this.charCodeAt(i);
@@ -47,8 +45,8 @@ var StringCEClass = /** @class */ (function () {
             hash |= 0; // convert to 32-bit integer
         }
         return hash;
-    };
-    StringCEClass.prototype.Matches = function (strOrRegex) {
+    },
+    Matches: function (strOrRegex) {
         if (typeof strOrRegex == "string") {
             var str = strOrRegex;
             var result_1 = [];
@@ -72,7 +70,7 @@ var StringCEClass = /** @class */ (function () {
             result.push(match);
         }
         return result;
-    };
+    },
     /*matches_group(regex, /*o:*#/ groupIndex) {
         if (!regex.global)
             throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
@@ -85,7 +83,7 @@ var StringCEClass = /** @class */ (function () {
         return matches;
     }*/
     /** indexX is 0-based */
-    StringCEClass.prototype.IndexOf_X = function (str, indexX) {
+    IndexOf_X: function (str, indexX) {
         var currentPos = -1;
         for (var i = 0; i <= indexX; i++) {
             var subIndex = this.indexOf(str, currentPos + 1);
@@ -94,9 +92,9 @@ var StringCEClass = /** @class */ (function () {
             currentPos = subIndex;
         }
         return currentPos;
-    };
+    },
     /** indexFromLastX is 0-based */
-    StringCEClass.prototype.IndexOf_XFromLast = function (str, indexFromLastX) {
+    IndexOf_XFromLast: function (str, indexFromLastX) {
         var currentPos = (this.length - str.length) + 1; // index just after the last-index-where-match-could-occur
         for (var i = 0; i <= indexFromLastX; i++) {
             var subIndex = this.lastIndexOf(str, currentPos - 1);
@@ -105,8 +103,8 @@ var StringCEClass = /** @class */ (function () {
             currentPos = subIndex;
         }
         return currentPos;
-    };
-    StringCEClass.prototype.IndexOfAny = function () {
+    },
+    IndexOfAny: function () {
         var e_1, _a;
         var strings = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -129,8 +127,8 @@ var StringCEClass = /** @class */ (function () {
             finally { if (e_1) throw e_1.error; }
         }
         return lowestIndex;
-    };
-    StringCEClass.prototype.LastIndexOfAny = function () {
+    },
+    LastIndexOfAny: function () {
         var e_2, _a;
         var strings = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -153,33 +151,33 @@ var StringCEClass = /** @class */ (function () {
             finally { if (e_2) throw e_2.error; }
         }
         return highestIndex;
-    };
-    StringCEClass.prototype.StartsWithAny = function () {
+    },
+    StartsWithAny: function () {
         var _this = this;
         var strings = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             strings[_i] = arguments[_i];
         }
         return CE_Array_1.ArrayCE(strings).Any(function (str) { return _this.startsWith(str); });
-    };
-    StringCEClass.prototype.EndsWithAny = function () {
+    },
+    EndsWithAny: function () {
         var _this = this;
         var strings = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             strings[_i] = arguments[_i];
         }
         return CE_Array_1.ArrayCE(strings).Any(function (str) { return _this.endsWith(str); });
-    };
-    StringCEClass.prototype.ContainsAny = function () {
+    },
+    ContainsAny: function () {
         var _this = this;
         var strings = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             strings[_i] = arguments[_i];
         }
         return CE_Array_1.ArrayCE(strings).Any(function (str) { return exports.StringCE(_this).Contains(str); });
-    };
+    },
     /** Separator-strings must be escaped. (they're passed into a regular-expression) */
-    StringCEClass.prototype.SplitByAny = function () {
+    SplitByAny: function () {
         var separators = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             separators[_i] = arguments[_i];
@@ -191,28 +189,28 @@ var StringCEClass = /** @class */ (function () {
         return this.split(splitStr);*/
         var regex = new RegExp(separators.map(function (a) { return "\\" + a; }).join("|"));
         return this.split(regex);
-    };
-    StringCEClass.prototype.SplitAt = function (index, includeCharAtIndex) {
+    },
+    SplitAt: function (index, includeCharAtIndex) {
         if (includeCharAtIndex === void 0) { includeCharAtIndex = false; }
         if (index == -1) // if no split-index, pass source-string as part2 (makes more sense for paths and such)
             return ["", this];
         var part1 = this.substr(0, index);
         var part2 = includeCharAtIndex ? this.substr(index) : this.substr(index + 1);
         return [part1, part2];
-    };
-    StringCEClass.prototype.Splice = function (index, removeCount, insert) {
+    },
+    Splice: function (index, removeCount, insert) {
         return this.slice(0, index) + insert + this.slice(index + Math.abs(removeCount));
-    };
-    StringCEClass.prototype.Indent = function (indentCount) {
+    },
+    Indent: function (indentCount) {
         var indentStr = "\t".repeat(indentCount);
         return this.replace(/^|(\n)/g, "$1" + indentStr);
-    };
-    StringCEClass.prototype.KeepAtMost = function (maxLength, moreMarkerStr) {
+    },
+    KeepAtMost: function (maxLength, moreMarkerStr) {
         if (moreMarkerStr === void 0) { moreMarkerStr = "..."; }
         if (this.length <= maxLength)
             return this;
         return this.substr(0, maxLength - moreMarkerStr.length) + moreMarkerStr;
-    };
+    },
     // for firebase entry keys
     /*interface String { readonly KeyToInt: number; }
     String.prototype._AddGetter_Inline = function KeyToInt() {
@@ -223,10 +221,10 @@ var StringCEClass = /** @class */ (function () {
         return "e" + this;
     }*/
     /** Creates a function from "func", setting its name to the "this" string's value. */
-    StringCEClass.prototype.Func = function (func) {
+    Func: function (func) {
         func.SetName(this);
         return func;
-    };
+    },
     // special; creates a function with the given name, but also caches it per caller-line,
     //   so every call from that line returns the same function instance
     // REMOVED, because: we need to create new funcs to capture new closure values
@@ -247,7 +245,7 @@ var StringCEClass = /** @class */ (function () {
      * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
      * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
      */
-    StringCEClass.prototype.AsMultiline = function (desiredIndent, removeLineStr) {
+    AsMultiline: function (desiredIndent, removeLineStr) {
         if (desiredIndent === void 0) { desiredIndent = null; }
         if (removeLineStr === void 0) { removeLineStr = "@RL"; }
         var result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
@@ -265,17 +263,15 @@ var StringCEClass = /** @class */ (function () {
             }
         }
         return result;
-    };
-    StringCEClass.prototype.Substring = function (start, end) {
+    },
+    Substring: function (start, end) {
         if (end < 0)
             end = this.length + end;
         return this.substring(start, end);
-    };
-    StringCEClass.prototype.ToInt = function () { return parseInt(Number(this) + ""); };
-    StringCEClass.prototype.ToFloat = function () { return Number(this); };
-    return StringCEClass;
-}());
-exports.StringCEClass = StringCEClass;
-exports.StringCE = General_1.CreateWrapperForClassExtensions_ThisAsAny(StringCEClass);
-exports.StringCES = General_1.WithFuncsStandalone(StringCEClass.prototype);
+    },
+    ToInt: function () { return parseInt(Number(this) + ""); },
+    ToFloat: function () { return Number(this); },
+};
+exports.StringCE = General_1.CreateProxyForClassExtensions(exports.StringCE_funcs);
+exports.StringCES = General_1.WithFuncsStandalone(exports.StringCE_funcs);
 //# sourceMappingURL=CE_String.js.map

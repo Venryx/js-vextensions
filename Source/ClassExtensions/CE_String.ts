@@ -1,22 +1,22 @@
 import {ArrayCE} from "./CE_Array";
-import {CreateWrapperForClassExtensions, WithFuncsStandalone, CreateWrapperForClassExtensions_ThisAsAny} from "../Utils/General";
+import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
 
-export class StringCEClass {
+export const StringCE_funcs = {
 	TrimStart(this: String, ...chars: string[]) {
 		// fix for if called by VDF (which has a different signature)
 		//if (arguments[0] instanceof Array) chars = arguments[0];
 
 		for (var iOfFirstToKeep = 0; iOfFirstToKeep < this.length && ArrayCE(chars).Contains(this[iOfFirstToKeep]); iOfFirstToKeep++);
 		return this.slice(iOfFirstToKeep, this.length);
-	}
+	},
 	TrimEnd(this: String, ...chars: string[]) {
 		for (var iOfLastToKeep = this.length - 1; iOfLastToKeep >= 0 && ArrayCE(chars).Contains(this[iOfLastToKeep]); iOfLastToKeep--);
 		return this.substr(0, iOfLastToKeep + 1);
-	}
+	},
 
 	Contains(this: String, str: string, startIndex?: number) {
 		return this.indexOf(str, startIndex) !== -1;
-	}
+	},
 	hashCode(this: String) {
 		var hash = 0;
 		for (var i = 0; i < this.length; i++) {
@@ -25,7 +25,7 @@ export class StringCEClass {
 			hash |= 0; // convert to 32-bit integer
 		}
 		return hash;
-	}
+	},
 	Matches(this: String, strOrRegex: string | RegExp) {
 		if (typeof strOrRegex == "string") {
 			let str = strOrRegex;
@@ -51,7 +51,7 @@ export class StringCEClass {
 			result.push(match);
 		}
 		return result as any;
-	}
+	},
 	/*matches_group(regex, /*o:*#/ groupIndex) {
 		if (!regex.global)
 			throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
@@ -73,7 +73,7 @@ export class StringCEClass {
 			currentPos = subIndex;
 		}
 		return currentPos;
-	}
+	},
 	/** indexFromLastX is 0-based */
 	IndexOf_XFromLast(this: String, str: string, indexFromLastX: number) {
 		var currentPos = (this.length - str.length) + 1; // index just after the last-index-where-match-could-occur
@@ -84,7 +84,7 @@ export class StringCEClass {
 			currentPos = subIndex;
 		}
 		return currentPos;
-	}
+	},
 	IndexOfAny(this: String, ...strings: string[]) {
 		var lowestIndex = -1;
 		for (let str of strings) {
@@ -93,7 +93,7 @@ export class StringCEClass {
 				lowestIndex = indexOfChar;
 		}
 		return lowestIndex;
-	}
+	},
 	LastIndexOfAny(this: String, ...strings: string[]) {
 		var highestIndex = -1;
 		for (let str of strings) {
@@ -102,16 +102,16 @@ export class StringCEClass {
 				highestIndex = indexOfChar;
 		}
 		return highestIndex;
-	}
+	},
 	StartsWithAny(this: String, ...strings: string[]) {
 		return ArrayCE(strings).Any(str=>this.startsWith(str));
-	}
+	},
 	EndsWithAny(this: String, ...strings: string[]) {
 		return ArrayCE(strings).Any(str=>this.endsWith(str));
-	}
+	},
 	ContainsAny(this: String, ...strings: string[]) {
 		return ArrayCE(strings).Any(str=>StringCE(this).Contains(str as string));
-	}
+	},
 	/** Separator-strings must be escaped. (they're passed into a regular-expression) */
 	SplitByAny(this: String, ...separators: string[]) {
 		/*var splitStr = "/";
@@ -121,25 +121,25 @@ export class StringCEClass {
 		return this.split(splitStr);*/
 		let regex = new RegExp(separators.map(a=>`\\${a}`).join("|"));
 		return this.split(regex);
-	}
+	},
 	SplitAt(this: String, index: number, includeCharAtIndex = false) {
 		if (index == -1) // if no split-index, pass source-string as part2 (makes more sense for paths and such)
 			return ["", this] as [string, string];
 		let part1 = this.substr(0, index);
 		let part2 = includeCharAtIndex ? this.substr(index) : this.substr(index + 1);
 		return [part1, part2] as [string, string];
-	}
+	},
 	Splice(this: String, index: number, removeCount: number, insert: string) {
 		return this.slice(0, index) + insert + this.slice(index + Math.abs(removeCount));
-	}
+	},
 	Indent(this: String, indentCount: number) {
 		var indentStr = "\t".repeat(indentCount);
 		return this.replace(/^|(\n)/g, "$1" + indentStr);
-	}
+	},
 	KeepAtMost(this: String, maxLength: number, moreMarkerStr = "...") {
 		if (this.length <= maxLength) return this;
 		return this.substr(0, maxLength - moreMarkerStr.length) + moreMarkerStr;
-	}
+	},
 
 	// for firebase entry keys
 	/*interface String { readonly KeyToInt: number; }
@@ -155,7 +155,7 @@ export class StringCEClass {
 	Func(func) {
 		func.SetName(this);
 		return func;
-	}
+	},
 
 	// special; creates a function with the given name, but also caches it per caller-line,
 	//   so every call from that line returns the same function instance
@@ -194,16 +194,17 @@ export class StringCEClass {
 			}
 		}
 		return result;
-	}
+	},
 
 	Substring(this: String, start: number, end: number) {
 		if (end < 0)
 			end = this.length + end;
 		return this.substring(start, end);
-	}
+	},
 
-	ToInt() { return parseInt(Number(this)+""); }
-	ToFloat() { return Number(this); }
+	ToInt() { return parseInt(Number(this)+""); },
+	ToFloat() { return Number(this); },
 }
-export const StringCE = CreateWrapperForClassExtensions_ThisAsAny(StringCEClass);
-export const StringCES = WithFuncsStandalone(StringCEClass.prototype);
+export type StringCEProxy = String & typeof StringCE_funcs;
+export const StringCE = CreateProxyForClassExtensions(StringCE_funcs);
+export const StringCES = WithFuncsStandalone(StringCE_funcs);
