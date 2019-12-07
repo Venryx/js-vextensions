@@ -11,6 +11,7 @@ export declare type MapLike<V> = {
 };
 export declare type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
 export declare type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
+export declare type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
 export declare const specialKeys: string[];
 export declare const ObjectCE_funcs: {
     /** Helps you do stuff like this:
@@ -29,24 +30,24 @@ export declare const ObjectCE_funcs: {
     Extended<T_2, T2>(this: T_2, x: T2): TargetTFor<T_2> & T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
-        <T_3, Result>(this: T_3, pathGetterFunc: (self: T_3) => Result, resultIfNull?: any): Result;
+        <T_3, Result>(this: T_3, pathGetterFunc: (self: TargetTFor<T_3>) => Result, resultIfNull?: any): Result;
     };
-    VAct<T_4>(this: T_4, func: (self: T_4) => any): T_4;
+    VAct<T_4>(this: T_4, func: (self: TargetTFor<T_4>) => any): TargetTFor<T_4>;
     As<T_5>(type: new (..._: any[]) => T_5): T_5;
     Strip(): any;
     Including(...keys: string[]): {};
     Excluding(...keys: string[]): any;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
-        <K, V>(this: MapLike<V>, excludeSpecialKeys?: boolean | 1): {
+        <K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
             index: number;
-            key: string;
+            key: K;
             keyNum?: number;
             value: V;
         }[];
-        <K_1, V_1>(this: Map<K_1, V_1>, excludeSpecialKeys?: boolean | 1): {
+        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>, excludeSpecialKeys?: boolean | 1): {
             index: number;
-            key: K_1;
+            key: string;
             keyNum?: number;
             value: V_1;
         }[];
@@ -56,21 +57,14 @@ export declare const ObjectCE_funcs: {
             keyNum?: number;
             value: V_2;
         }[];
-        (excludeSpecialKeys?: boolean | 1): {
-            index: number;
-            key: string;
-            keyNum?: number;
-            value: any;
-        }[];
     };
     VKeys: {
-        (this: MapLike<any>, excludeSpecialKeys?: boolean | 1): string[];
-        <K_3>(this: Map<K_3, any>, excludeSpecialKeys?: boolean | 1): K_3[];
+        <K_3>(this: XOrWrapped<Map<K_3, any>>, excludeSpecialKeys?: boolean | 1): K_3[];
+        (this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
         <K_4 = string>(excludeSpecialKeys?: boolean | 1): K_4[];
-        (excludeSpecialKeys?: boolean | 1): string[];
     };
     VValues: {
-        <V_3>(this: MapOrMapLike<V_3>, excludeSpecialKeys?: boolean | 1): V_3[];
+        <V_3>(this: XOrWrapped<MapOrMapLike<V_3>>, excludeSpecialKeys?: boolean | 1): V_3[];
         <V_4 = any>(excludeSpecialKeys?: boolean | 1): V_4[];
     };
     Sym(symbolName: string): any;
@@ -97,24 +91,24 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     Extended<T_2, T2>(this: T_2, x: T2): TargetTFor<T_2> & T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
-        <T_3, Result>(this: T_3, pathGetterFunc: (self: T_3) => Result, resultIfNull?: any): Result;
+        <T_3, Result>(this: T_3, pathGetterFunc: (self: TargetTFor<T_3>) => Result, resultIfNull?: any): Result;
     };
-    VAct<T_4>(this: T_4, func: (self: T_4) => any): T_4;
+    VAct<T_4>(this: T_4, func: (self: TargetTFor<T_4>) => any): TargetTFor<T_4>;
     As<T_5>(type: new (..._: any[]) => T_5): T_5;
     Strip(): any;
     Including(...keys: string[]): {};
     Excluding(...keys: string[]): any;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
-        <K, V>(this: MapLike<V>, excludeSpecialKeys?: boolean | 1): {
+        <K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
             index: number;
-            key: string;
+            key: K;
             keyNum?: number;
             value: V;
         }[];
-        <K_1, V_1>(this: Map<K_1, V_1>, excludeSpecialKeys?: boolean | 1): {
+        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>, excludeSpecialKeys?: boolean | 1): {
             index: number;
-            key: K_1;
+            key: string;
             keyNum?: number;
             value: V_1;
         }[];
@@ -124,21 +118,14 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
             keyNum?: number;
             value: V_2;
         }[];
-        (excludeSpecialKeys?: boolean | 1): {
-            index: number;
-            key: string;
-            keyNum?: number;
-            value: any;
-        }[];
     };
     VKeys: {
-        (this: MapLike<any>, excludeSpecialKeys?: boolean | 1): string[];
-        <K_3>(this: Map<K_3, any>, excludeSpecialKeys?: boolean | 1): K_3[];
+        <K_3>(this: XOrWrapped<Map<K_3, any>>, excludeSpecialKeys?: boolean | 1): K_3[];
+        (this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
         <K_4 = string>(excludeSpecialKeys?: boolean | 1): K_4[];
-        (excludeSpecialKeys?: boolean | 1): string[];
     };
     VValues: {
-        <V_3>(this: MapOrMapLike<V_3>, excludeSpecialKeys?: boolean | 1): V_3[];
+        <V_3>(this: XOrWrapped<MapOrMapLike<V_3>>, excludeSpecialKeys?: boolean | 1): V_3[];
         <V_4 = any>(excludeSpecialKeys?: boolean | 1): V_4[];
     };
     Sym(symbolName: string): any;

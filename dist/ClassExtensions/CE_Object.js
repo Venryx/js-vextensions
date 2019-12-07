@@ -32,7 +32,6 @@ var General_1 = require("../Utils/General");
 var CE_Array_1 = require("./CE_Array");
 var Types_1 = require("../Utils/Types");
 var CE_Others_1 = require("./CE_Others");
-//export type XOrWrapped<T> = T | ObjectCEProxy<T>;*/
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
     [P in keyof Source]:
         Source[P] extends (this: infer ThisArgType, ...args)=>any ? (this: XOrWrapped<ThisArgType>, ...args: Parameters<Source[P]>)=>ReturnType<Source[P]> :
@@ -287,6 +286,7 @@ exports.ObjectCE_funcs = {
     Pairs: (function (excludeSpecialKeys) {
         var e_3, _a;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
+        var a = exports.ObjectCE(new Map()).VKeys();
         var result = [];
         var i = 0;
         var keys = _this instanceof Map ? Array.from(_this.keys()) : Object.keys(_this);

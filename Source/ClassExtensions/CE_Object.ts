@@ -18,7 +18,7 @@ export type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
 
 //export type TargetTFor<T> = T extends ObjectCEProxy<infer TargetT> ? TargetT : T;
 export type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
-//export type XOrWrapped<T> = T | ObjectCEProxy<T>;*/
+export type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
 
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
 	[P in keyof Source]:
@@ -175,14 +175,14 @@ export const ObjectCE_funcs = {
 
 	SafeGet: <{
 		(path: string, resultIfNull?: any): any;
-		<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
+		<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
 	}>((pathOrPathGetterFunc: string | Function, resultIfNull?: any)=> {
 		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
 	}),
-	VAct<T>(this: T, func: (self: T)=>any): T {
+	VAct<T>(this: T, func: (self: TargetTFor<T>)=>any): TargetTFor<T> {
 		func.call(this, this);
-		return this as T;
+		return this as any;
 	},
 
 	As<T>(type: new(..._)=>T) {
@@ -243,12 +243,13 @@ export const ObjectCE_funcs = {
 		return result;
 	},*/
 	Pairs: <{
-		<K, V>(this: MapLike<V>, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
-		<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+		<K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+		<K, V>(this: XOrWrapped<MapLike<V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
 		<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
 		//<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
-		(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
+		//(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
 	}>((excludeSpecialKeys: boolean | 1 = false)=> {
+		let a = ObjectCE(new Map<number, any>()).VKeys();
 		var result = [];
 		var i = 0;
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -262,11 +263,11 @@ export const ObjectCE_funcs = {
 	}),
 
 	VKeys: <{
-		(this: MapLike<any>, excludeSpecialKeys?: boolean | 1): string[];
-		<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
+		<K>(this: XOrWrapped<Map<K, any>>, excludeSpecialKeys?: boolean | 1): K[];
+		(this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
 		<K = string>(excludeSpecialKeys?: boolean | 1): K[];
 		//(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
-		(excludeSpecialKeys?: boolean | 1): string[]; // generics-less version (needed for some ts edge-cases)
+		//(excludeSpecialKeys?: boolean | 1): string[]; // generics-less version (needed for some ts edge-cases)
 	}>((excludeSpecialKeys: boolean | 1 = false)=> {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -275,7 +276,7 @@ export const ObjectCE_funcs = {
 	}),
 
 	VValues: <{
-		<V>(this: MapOrMapLike<V>, excludeSpecialKeys?: boolean | 1): V[];
+		<V>(this: XOrWrapped<MapOrMapLike<V>>, excludeSpecialKeys?: boolean | 1): V[];
 		<V = any>(excludeSpecialKeys?: boolean | 1): V[];
 		//(excludeSpecialKeys?: boolean): any[];
 		//(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
