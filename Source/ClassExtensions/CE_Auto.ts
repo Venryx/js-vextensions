@@ -37,7 +37,6 @@ export function CE<T>(obj: Array<T>): ArrayCEProxy<T>;
 export function CE(obj: Element): ElementCEProxy;
 // base object
 export function CE<T extends Object>(obj: T): ObjectCEProxy<T>;
-//export function CE<T extends Object>(obj: T): WithFuncThisArgsAsXOrWrapped_Type<ObjectCEProxy<T>>;
 export function CE(obj, checkForUncommonDerived = false) {
 	// first, try to get class-extension func based on direct constructor name (most common case)
 	let typeName = obj.constructor ? obj.constructor.name : null;

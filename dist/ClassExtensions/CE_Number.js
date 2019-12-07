@@ -19,6 +19,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CE_String_1 = require("./CE_String");
 var General_1 = require("../Utils/General");
 var Types_1 = require("../Utils/Types");
+// Note: Since JS coerces number primitives to the Number class when a property-access is attempted (https://javascriptrefined.io/the-wrapper-object-400311b29151)...
+// ...calling the functions below using, eg. "(3).WrapToRange" *should* make the "this" variable be a Number class within the WrapToRange function.
+// However, this is not the case! -- at least when I try it in the Chrome console, with the actual Webpack-added function. (if I add a function with the exact same source using the console, it is coerced to Number as expected)
+// I think it might be a Chrome optimization or something.
+// Anyway, the code below is based on how it *should* work, with the "this" var always being a Number wrapper. (we use "as number" in some places below, since valueOf gets auto-called to enable the primitive math ops anyway)
 exports.NumberCE_funcs = {
     IfN1Then: function (valIfSelfIsNeg1) {
         return this == -1 ? valIfSelfIsNeg1 : this;
@@ -34,7 +39,7 @@ exports.NumberCE_funcs = {
         return number.toString() + "%";
     },
     IsMultipleOf: function (multipleOf, maxDistToBeMultiple) {
-        var valRoundedToMultiple = exports.NumberCE(this).ToPercentStr(multipleOf);
+        var valRoundedToMultiple = exports.NumberCE(this).RoundTo(multipleOf);
         var distance = exports.NumberCE(valRoundedToMultiple).Distance(this);
         return distance <= maxDistToBeMultiple;
     },

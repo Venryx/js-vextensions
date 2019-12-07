@@ -206,5 +206,5 @@ export const StringCE_funcs = {
 	ToFloat() { return Number(this); },
 }
 export type StringCEProxy = String & typeof StringCE_funcs;
-export const StringCE = CreateProxyForClassExtensions(StringCE_funcs);
+export const StringCE = CreateProxyForClassExtensions<String, StringCEProxy>(StringCE_funcs);
 export const StringCES = WithFuncsStandalone(StringCE_funcs);

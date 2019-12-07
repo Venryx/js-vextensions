@@ -419,12 +419,7 @@ export interface ArrayCEProxyInterface<T> {
 }
 export type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
 
-//export const ArrayCE = CreateProxyForClassExtensions(ArrayCEProxy);
-//export const ArrayCE = CreateProxyForClassExtensions<ArrayCEProxy<any>>(ArrayCEProxy);
-const ArrayCE_Base = CreateProxyForClassExtensions(ArrayCE_funcs);
-//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEProxy<T>>;
-export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>ArrayCEProxy<T>;
-//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsXOrWrapped_Type<ArrayCEProxy<T>>;
+export const ArrayCE = CreateProxyForClassExtensions(ArrayCE_funcs) as <T>(nextThis: T[])=>ArrayCEProxy<T>;
 export const ArrayCES = WithFuncsStandalone(ArrayCE_funcs);
 
 /*var ArrayIterator = [].entries().constructor;

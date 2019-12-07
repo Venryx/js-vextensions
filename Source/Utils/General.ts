@@ -854,7 +854,9 @@ export function WithFuncThisArgTypesWrappedBy<T>(source: T): WithFuncThisArgType
 	return CreateProxyForClassExtensions<WithFuncThisArgsAsAny_Type<T>>(sourceClass as any);
 }*/
 //export function CreateProxyForClassExtensions<T>(sourceClass: new(...args: any[])=>T) {
-export function CreateProxyForClassExtensions(sourceClass_prototype: any) {
+//export function CreateProxyForClassExtensions(sourceClass_prototype: any) {
+// old comment: we don't use this (specifying types at time of proxy-creation), as it would cause loss/simplifying of type-data for function calls
+export function CreateProxyForClassExtensions<TargetType, ProxyType>(sourceClass_prototype: any) {
 	// proxy approach; nicer, but I don't like potential slowdown from creating new proxy each time a class-extension method is called!
 	/*return (thisArg: any)=> {
 		return new Proxy({}, {
@@ -874,10 +876,10 @@ export function CreateProxyForClassExtensions(sourceClass_prototype: any) {
 
 	// Static proxy approach -- a bit faster since it doesn't create any functions, closures, or proxies per wrap/CE-method-call.
 	//	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
-	//let proxy = {} as T;
-	let proxy = {} as any;
-	//const proxy = {} as WithFuncThisArgsAsAny_Type<T>;
-	const thisArgStack = [];
+	/*let proxy = {} as any;
+	const thisArgStack = [];*/
+	let proxy = {} as ProxyType;
+	const thisArgStack = [] as TargetType[];
 	for (const key of Object.getOwnPropertyNames(sourceClass_prototype)) {
 		if (key == "constructor") continue; // no reason to call the wrapper's constructor
 		const descriptor = Object.getOwnPropertyDescriptor(sourceClass_prototype, key);
@@ -894,7 +896,8 @@ export function CreateProxyForClassExtensions(sourceClass_prototype: any) {
 		}
 		Object.defineProperty(proxy, key, newDescriptor);
 	}
-	return (nextThis: any)=> {
+	//return (nextThis: any)=> {
+	return (nextThis: TargetType)=> {
 		thisArgStack.push(nextThis);
 		return proxy;
 	};

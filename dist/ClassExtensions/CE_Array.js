@@ -647,12 +647,7 @@ exports.ArrayCE_funcs = {
         return result;
     },
 };
-//export const ArrayCE = CreateProxyForClassExtensions(ArrayCEProxy);
-//export const ArrayCE = CreateProxyForClassExtensions<ArrayCEProxy<any>>(ArrayCEProxy);
-var ArrayCE_Base = General_1.CreateProxyForClassExtensions(exports.ArrayCE_funcs);
-//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEProxy<T>>;
-exports.ArrayCE = ArrayCE_Base;
-//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsXOrWrapped_Type<ArrayCEProxy<T>>;
+exports.ArrayCE = General_1.CreateProxyForClassExtensions(exports.ArrayCE_funcs);
 exports.ArrayCES = General_1.WithFuncsStandalone(exports.ArrayCE_funcs);
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEProxy {

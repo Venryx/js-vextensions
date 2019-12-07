@@ -2,6 +2,11 @@ import {StringCE} from "./CE_String";
 import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
 import {IsNaN} from "../Utils/Types";
 
+// Note: Since JS coerces number primitives to the Number class when a property-access is attempted (https://javascriptrefined.io/the-wrapper-object-400311b29151)...
+// ...calling the functions below using, eg. "(3).WrapToRange" *should* make the "this" variable be a Number class within the WrapToRange function.
+// However, this is not the case! -- at least when I try it in the Chrome console, with the actual Webpack-added function. (if I add a function with the exact same source using the console, it is coerced to Number as expected)
+// I think it might be a Chrome optimization or something.
+// Anyway, the code below is based on how it *should* work, with the "this" var always being a Number wrapper. (we use "as number" in some places below, since valueOf gets auto-called to enable the primitive math ops anyway)
 export const NumberCE_funcs = {
 	IfN1Then(this: Number, valIfSelfIsNeg1) {
 		return this == -1 ? valIfSelfIsNeg1 : this;
@@ -20,7 +25,7 @@ export const NumberCE_funcs = {
 	},
 	
 	IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number) {
-		let valRoundedToMultiple = NumberCE(this).ToPercentStr(multipleOf);
+		let valRoundedToMultiple = NumberCE(this).RoundTo(multipleOf);
 		let distance = NumberCE(valRoundedToMultiple).Distance(this as number);
 		return distance <= maxDistToBeMultiple;
 	},
@@ -91,5 +96,5 @@ export const NumberCE_funcs = {
 	},
 }
 export type NumberCEProxy = Number & typeof NumberCE_funcs;
-export const NumberCE = CreateProxyForClassExtensions(NumberCE_funcs);
+export const NumberCE = CreateProxyForClassExtensions<Number, NumberCEProxy>(NumberCE_funcs);
 export const NumberCES = WithFuncsStandalone(NumberCE_funcs);

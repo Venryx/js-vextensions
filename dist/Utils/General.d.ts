@@ -106,4 +106,4 @@ export declare type WithFuncsStandalone_Type<T> = {
     [P in keyof T]: T[P] extends (...args: any[]) => any ? (thisArg: Object, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
 };
 export declare function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T>;
-export declare function CreateProxyForClassExtensions(sourceClass_prototype: any): (nextThis: any) => any;
+export declare function CreateProxyForClassExtensions<TargetType, ProxyType>(sourceClass_prototype: any): (nextThis: TargetType) => ProxyType;

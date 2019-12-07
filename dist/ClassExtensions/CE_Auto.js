@@ -26,7 +26,6 @@ var classExtensionMap = {
     Array: CE_Array_1.ArrayCE,
     Object: CE_Object_1.ObjectCE,
 };
-//export function CE<T extends Object>(obj: T): WithFuncThisArgsAsXOrWrapped_Type<ObjectCEProxy<T>>;
 function CE(obj, checkForUncommonDerived) {
     if (checkForUncommonDerived === void 0) { checkForUncommonDerived = false; }
     // first, try to get class-extension func based on direct constructor name (most common case)

@@ -338,8 +338,5 @@ export type ObjectCEProxy<T> = typeof ObjectCE_funcs & ObjectCEProxyInterface<T>
 
 //export const ObjectCE = WithFuncsStandalone(ObjectCEProxy.prototype);
 //export const ObjectCE = CreateProxyForClassExtensions(ObjectCEProxy);
-const ObjectCE_Base = CreateProxyForClassExtensions(ObjectCE_funcs);
-//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEProxy<T>>;
-export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>ObjectCEProxy<T>;
-//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsXOrWrapped_Type<ObjectCEProxy<T>>;
+export const ObjectCE = CreateProxyForClassExtensions(ObjectCE_funcs) as <T>(nextThis: T)=>ObjectCEProxy<T>;
 export const ObjectCES = WithFuncsStandalone(ObjectCE_funcs);

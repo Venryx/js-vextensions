@@ -73,7 +73,7 @@ export const FunctionCE_funcs = {
 	},
 };
 export type FunctionCEProxy = Function & typeof FunctionCE_funcs;
-export const FunctionCE = CreateProxyForClassExtensions(FunctionCE_funcs);
+export const FunctionCE = CreateProxyForClassExtensions<Function, FunctionCEProxy>(FunctionCE_funcs);
 export const FunctionCES = WithFuncsStandalone(FunctionCE_funcs);
 
 function isLeapYear(year) {
@@ -105,7 +105,7 @@ export const DateCE_funcs = {
 	},
 };
 export type DateCEProxy = Date & typeof DateCE_funcs;
-export const DateCE = CreateProxyForClassExtensions(DateCE_funcs);
+export const DateCE = CreateProxyForClassExtensions<Date, DateCEProxy>(DateCE_funcs);
 export const DateCES = WithFuncsStandalone(DateCE_funcs);
 
 /*export class ErrorCEProxy {

@@ -4,11 +4,11 @@ export declare const NumberCE_funcs: {
     ToPercentStr(this: Number, precision?: number): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
     RoundTo(this: Number, multiple: any): number;
-    RoundTo_Str(this: Number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): any;
+    RoundTo_Str(this: Number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: any): number;
-    FloorTo_Str(this: Number, multipleOf: any): any;
+    FloorTo_Str(this: Number, multipleOf: any): string;
     CeilingTo(this: Number, multipleOf: any): number;
-    CeilingTo_Str(this: Number, multipleOf: any): any;
+    CeilingTo_Str(this: Number, multipleOf: any): string;
     KeepAtLeast(this: Number, min: number): number;
     KeepAtMost(this: Number, max: number): number;
     KeepBetween(this: Number, min: number, max: number, allowFixMinMax?: boolean): number;
@@ -17,18 +17,18 @@ export declare const NumberCE_funcs: {
     ToPower(this: Number, power: number): number;
 };
 export declare type NumberCEProxy = Number & typeof NumberCE_funcs;
-export declare const NumberCE: (nextThis: any) => any;
+export declare const NumberCE: (nextThis: Number) => NumberCEProxy;
 export declare const NumberCES: import("../Utils/General").WithFuncsStandalone_Type<{
     IfN1Then(this: Number, valIfSelfIsNeg1: any): any;
     NaNTo(this: Number, valIfSelfIsNaN: any): any;
     ToPercentStr(this: Number, precision?: number): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
     RoundTo(this: Number, multiple: any): number;
-    RoundTo_Str(this: Number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): any;
+    RoundTo_Str(this: Number, multipleOf: any, fractionDigits?: any, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: any): number;
-    FloorTo_Str(this: Number, multipleOf: any): any;
+    FloorTo_Str(this: Number, multipleOf: any): string;
     CeilingTo(this: Number, multipleOf: any): number;
-    CeilingTo_Str(this: Number, multipleOf: any): any;
+    CeilingTo_Str(this: Number, multipleOf: any): string;
     KeepAtLeast(this: Number, min: number): number;
     KeepAtMost(this: Number, max: number): number;
     KeepBetween(this: Number, min: number, max: number, allowFixMinMax?: boolean): number;

@@ -334,9 +334,6 @@ exports.ObjectCE_funcs = {
 };
 //export const ObjectCE = WithFuncsStandalone(ObjectCEProxy.prototype);
 //export const ObjectCE = CreateProxyForClassExtensions(ObjectCEProxy);
-var ObjectCE_Base = General_1.CreateProxyForClassExtensions(exports.ObjectCE_funcs);
-//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEProxy<T>>;
-exports.ObjectCE = ObjectCE_Base;
-//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsXOrWrapped_Type<ObjectCEProxy<T>>;
+exports.ObjectCE = General_1.CreateProxyForClassExtensions(exports.ObjectCE_funcs);
 exports.ObjectCES = General_1.WithFuncsStandalone(exports.ObjectCE_funcs);
 //# sourceMappingURL=CE_Object.js.map

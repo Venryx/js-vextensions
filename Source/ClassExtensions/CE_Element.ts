@@ -43,5 +43,7 @@ export const ElementCE_funcs = {
 	},
 }
 export type ElementCEProxy = Element & typeof ElementCE_funcs;
-export const ElementCE = CreateProxyForClassExtensions(ElementCE_funcs);
+export const ElementCE = CreateProxyForClassExtensions<Element, ElementCEProxy>(ElementCE_funcs);
+// maybe make ElementCE preserve the target-type, like ObjectCE and ArrayCE do (not needed atm, since the CE-methods don't make any/much use of the target's type-data)
+//export const ElementCE = CreateProxyForClassExtensions(ElementCE_funcs) as <T>(nextThis: T)=>ElementCEProxy;
 export const ElementCES = WithFuncsStandalone(ElementCE_funcs);

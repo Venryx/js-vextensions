@@ -32,7 +32,7 @@ export declare const StringCE_funcs: {
     ToFloat(): number;
 };
 export declare type StringCEProxy = String & typeof StringCE_funcs;
-export declare const StringCE: (nextThis: any) => any;
+export declare const StringCE: (nextThis: String) => StringCEProxy;
 export declare const StringCES: import("../Utils/General").WithFuncsStandalone_Type<{
     TrimStart(this: String, ...chars: string[]): string;
     TrimEnd(this: String, ...chars: string[]): string;
