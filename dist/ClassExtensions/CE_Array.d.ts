@@ -5,7 +5,6 @@ export interface ForEachExtras {
 }
 export declare type ItemTFor<T> = T extends Array<infer ItemT> ? ItemT : T extends ArrayCEProxyInterface<infer ItemT> ? ItemT : T;
 export declare type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
-export declare function AlsoExtendsArray<T>(funcs: T): T;
 export declare const ArrayCE_funcs: {
     ForEach<T>(this: T[], func: (value: T, extras: ForEachExtras) => any): void;
     ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<void>;
@@ -28,11 +27,11 @@ export declare const ArrayCE_funcs: {
     Select<T_18, T2>(this: T_18[], selectFunc: (item: T_18, index?: number) => T2): T2[];
     SelectMany<T_19, T2_1>(this: T_19[], selectFunc: (item: T_19, index?: number) => T2_1[]): T2_1[];
     Count<T_20>(this: T_20[]): number;
-    VCount<T_21>(this: T_21[], matchFunc: (item: T_21) => boolean): any;
+    VCount<T_21>(this: T_21[], matchFunc: (item: T_21) => boolean): number;
     Clear<T_22>(this: T_22[]): void;
     First<T_23>(this: T_23[], matchFunc?: (item: T_23) => boolean): any;
     FirstOrX<T_24>(this: T_24[], matchFunc?: (item: T_24) => boolean, x?: any): any;
-    FirstWith<T_25>(this: T_25[], propName: string, propValue: any): any;
+    FirstWith<T_25>(this: T_25[], propName: string, propValue: any): unknown;
     Last<T_26>(this: T_26[], matchFunc?: any): any;
     LastOrX<T_27>(this: T_27[], matchFunc?: (item: T_27) => boolean, x?: any): any;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
@@ -45,7 +44,7 @@ export declare const ArrayCE_funcs: {
     TakeLast<T_33>(this: T_33[], count: number): any[];
     FindIndex<T_34>(this: T_34[], matchFunc: (item: T_34) => boolean): number;
     OrderBy<T_35>(this: T_35[], valFunc?: (item: any, index: number) => any): T_35[];
-    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): any;
+    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): unknown[];
     Distinct<T_37>(this: T_37[]): any[];
     Except: {
         <T_38>(this: T_38[], ...args: any[]): T_38[];
@@ -54,11 +53,11 @@ export declare const ArrayCE_funcs: {
         }, ...args: any[]): T_39[];
     };
     IfEmptyThen<T_40>(this: T_40[], valIfSelfIsEmpty: any): any;
-    Min<T_41>(this: T_41[], valFunc?: (item: T_41) => number, asNumbers?: boolean): any;
+    Min<T_41>(this: T_41[], valFunc?: (item: T_41) => number, asNumbers?: boolean): unknown;
     Max<T_42>(this: T_42[], valFunc?: (item: T_42) => number, asNumbers?: boolean): any;
     Sum<T_43 extends number>(this: T_43[]): number;
     Average<T_44 extends number>(this: T_44[]): number;
-    Median<T_45 extends number>(this: T_45[]): any;
+    Median<T_45 extends number>(this: T_45[]): number;
     Random<T_46>(this: T_46[]): T_46;
     join<T_47>(this: T_47[], separator?: string): string;
 };
@@ -89,11 +88,11 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
     Select<T_18, T2>(this: T_18[], selectFunc: (item: T_18, index?: number) => T2): T2[];
     SelectMany<T_19, T2_1>(this: T_19[], selectFunc: (item: T_19, index?: number) => T2_1[]): T2_1[];
     Count<T_20>(this: T_20[]): number;
-    VCount<T_21>(this: T_21[], matchFunc: (item: T_21) => boolean): any;
+    VCount<T_21>(this: T_21[], matchFunc: (item: T_21) => boolean): number;
     Clear<T_22>(this: T_22[]): void;
     First<T_23>(this: T_23[], matchFunc?: (item: T_23) => boolean): any;
     FirstOrX<T_24>(this: T_24[], matchFunc?: (item: T_24) => boolean, x?: any): any;
-    FirstWith<T_25>(this: T_25[], propName: string, propValue: any): any;
+    FirstWith<T_25>(this: T_25[], propName: string, propValue: any): unknown;
     Last<T_26>(this: T_26[], matchFunc?: any): any;
     LastOrX<T_27>(this: T_27[], matchFunc?: (item: T_27) => boolean, x?: any): any;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
@@ -106,7 +105,7 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
     TakeLast<T_33>(this: T_33[], count: number): any[];
     FindIndex<T_34>(this: T_34[], matchFunc: (item: T_34) => boolean): number;
     OrderBy<T_35>(this: T_35[], valFunc?: (item: any, index: number) => any): T_35[];
-    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): any;
+    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): unknown[];
     Distinct<T_37>(this: T_37[]): any[];
     Except: {
         <T_38>(this: T_38[], ...args: any[]): T_38[];
@@ -115,11 +114,11 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
         }, ...args: any[]): T_39[];
     };
     IfEmptyThen<T_40>(this: T_40[], valIfSelfIsEmpty: any): any;
-    Min<T_41>(this: T_41[], valFunc?: (item: T_41) => number, asNumbers?: boolean): any;
+    Min<T_41>(this: T_41[], valFunc?: (item: T_41) => number, asNumbers?: boolean): unknown;
     Max<T_42>(this: T_42[], valFunc?: (item: T_42) => number, asNumbers?: boolean): any;
     Sum<T_43 extends number>(this: T_43[]): number;
     Average<T_44 extends number>(this: T_44[]): number;
-    Median<T_45 extends number>(this: T_45[]): any;
+    Median<T_45 extends number>(this: T_45[]): number;
     Random<T_46>(this: T_46[]): T_46;
     join<T_47>(this: T_47[], separator?: string): string;
 }>;

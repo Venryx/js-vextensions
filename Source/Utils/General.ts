@@ -810,6 +810,7 @@ export function TransferPrototypeProps(target: Object, source: Object, descripto
 
 export type WithFuncsStandalone_Type<T> = {
 	[P in keyof T]:
+		// todo: maybe try to make this infer the type for the thisArg param, from the source-func's actual this-arg
 		T[P] extends (...args)=>any ? (thisArg: Object, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
 		T[P];
 };

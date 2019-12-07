@@ -53,7 +53,7 @@ export const ObjectCE_funcs = {
 
 	_AddFunction(name, func) {
 		//this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-		ObjectCE_Base(this)._AddItem(name, func);
+		ObjectCES._AddItem(this, name, func);
 	},
 
 	// the below helps you do stuff like this:
@@ -72,13 +72,13 @@ export const ObjectCE_funcs = {
 	// the below helps you do stuff like this:
 	//		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
 	set _AddFunction_Inline(func) {
-		ObjectCE_Base(this)._AddFunction(FunctionCE(func).GetName(), func);
+		ObjectCES._AddFunction(this, FunctionCE(func).GetName(), func);
 	},
 	set _AddGetter_Inline(func) {
-		ObjectCE_Base(this)._AddGetterSetter(FunctionCE(func).GetName(), func, null);
+		ObjectCES._AddGetterSetter(this, FunctionCE(func).GetName(), func, null);
 	},
 	set _AddSetter_Inline(func) {
-		ObjectCE_Base(this)._AddGetterSetter(FunctionCE(func).GetName(), null, func);
+		ObjectCES._AddGetterSetter(this, FunctionCE(func).GetName(), null, func);
 	},
 
 	// normal
@@ -281,7 +281,7 @@ export const ObjectCE_funcs = {
 		//(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
 	}>(function(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-		return ObjectCE_Base(this).VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
+		return ObjectCES.VKeys(this, excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 	}),
 
 	// for symbols

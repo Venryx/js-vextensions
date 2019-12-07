@@ -75,13 +75,8 @@ var Assert_1 = require("../Utils/Assert");
     T extends Array<infer ItemT> ? ItemT[] :
     T extends ArrayCEProxy<infer ItemT> ? ItemT[] :
     never;*/
-function AlsoExtendsArray(funcs) {
-    return funcs;
-}
-exports.AlsoExtendsArray = AlsoExtendsArray;
-exports.ArrayCE_funcs = AlsoExtendsArray({
+exports.ArrayCE_funcs = {
     ForEach: function (func) {
-        var self = this;
         var _loop_1 = function (i) {
             var shouldBreak = false;
             var shouldContinue = false;
@@ -93,7 +88,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
                 return "continue";
         };
         var this_1 = this;
-        for (var i = 0; i < self.length; i++) {
+        for (var i = 0; i < this.length; i++) {
             var state_1 = _loop_1(i);
             if (state_1 === "break")
                 break;
@@ -101,11 +96,10 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     ForEachAsync: function (func) {
         return __awaiter(this, void 0, void 0, function () {
-            var self, _loop_2, this_2, i, state_2;
+            var _loop_2, this_2, i, state_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        self = this;
                         _loop_2 = function (i) {
                             var shouldBreak, shouldContinue, extras;
                             return __generator(this, function (_a) {
@@ -129,7 +123,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < self.length)) return [3 /*break*/, 4];
+                        if (!(i < this.length)) return [3 /*break*/, 4];
                         return [5 /*yield**/, _loop_2(i)];
                     case 2:
                         state_2 = _a.sent();
@@ -149,8 +143,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         await Promise.all(this.map(fn));
     },*/
     Contains: function (item) {
-        var self = this;
-        return self.indexOf(item) != -1;
+        return this.indexOf(item) != -1;
     },
     ContainsAny: function () {
         var e_1, _a;
@@ -158,11 +151,10 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         for (var _i = 0; _i < arguments.length; _i++) {
             items[_i] = arguments[_i];
         }
-        var self = this;
         try {
             for (var items_1 = __values(items), items_1_1 = items_1.next(); !items_1_1.done; items_1_1 = items_1.next()) {
                 var item = items_1_1.value;
-                if (self.indexOf(item) != -1) {
+                if (this.indexOf(item) != -1) {
                     return true;
                 }
             }
@@ -188,32 +180,27 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         for (var _i = 0; _i < arguments.length; _i++) {
             newItems[_i] = arguments[_i];
         }
-        var self = this;
-        self.splice.apply(self, __spread([0, 0], newItems));
+        this.splice.apply(this, __spread([0, 0], newItems));
     },
     Add: function (item) {
-        var self = this;
-        return self.push(item);
+        return this.push(item);
     },
     CAdd: function (item) {
-        var self = this;
-        self.push(item);
-        return self;
+        this.push(item);
+        return this;
     },
     TAdd: function (item) {
-        var self = this;
-        self.push(item);
+        this.push(item);
         return item;
     },
     AddRange: function (array) {
         var e_2, _a;
-        var self = this;
         try {
             //this.push(...array);
             // use loop, since sending them all as arguments fails when there are ~10000+ items
             for (var array_1 = __values(array), array_1_1 = array_1.next(); !array_1_1.done; array_1_1 = array_1.next()) {
                 var item = array_1_1.value;
-                self.push(item);
+                this.push(item);
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -226,20 +213,18 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         return this;
     },
     Remove: function (item) {
-        var self = this;
-        var itemIndex = self.indexOf(item);
+        var itemIndex = this.indexOf(item);
         if (itemIndex == -1)
             return false;
-        self.splice(itemIndex, 1);
+        this.splice(itemIndex, 1);
         return true;
     },
     RemoveAll: function (items) {
         var e_3, _a;
-        var self = this;
         try {
             for (var items_2 = __values(items), items_2_1 = items_2.next(); !items_2_1.done; items_2_1 = items_2.next()) {
                 var item = items_2_1.value;
-                ArrayCE_Base(self).Remove(item);
+                exports.ArrayCES.Remove(this, item);
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -251,21 +236,17 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         }
     },
     RemoveAt: function (index) {
-        var self = this;
-        return self.splice(index, 1)[0];
+        return this.splice(index, 1)[0];
     },
     Insert: function (index, obj) {
-        var self = this;
-        self.splice(index, 0, obj);
+        this.splice(index, 0, obj);
     },
     SetItems: function (items) {
-        var self = this;
-        self.splice.apply(self, __spread([0, self.length], items));
-        return self;
+        this.splice.apply(this, __spread([0, this.length], items));
+        return this;
     },
     Reversed: function () {
-        var self = this;
-        var clone = self.slice(0);
+        var clone = this.slice(0);
         clone.reverse();
         return clone;
     },
@@ -274,9 +255,8 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     // ----------
     Any: function (matchFunc) {
         var e_4, _a;
-        var self = this;
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (matchFunc == null || matchFunc.call(item, item, index)) {
                     return true;
@@ -294,9 +274,8 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     All: function (matchFunc) {
         var e_5, _a;
-        var self = this;
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (!matchFunc.call(item, item, index)) {
                     return false;
@@ -314,10 +293,9 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     Where: function (matchFunc) {
         var e_6, _a;
-        var self = this;
         var result = [];
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
                     result.push(item);
@@ -335,10 +313,9 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     Select: function (selectFunc) {
         var e_7, _a;
-        var self = this;
         var result = [];
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 result.push(selectFunc.call(item, item, index));
             }
@@ -354,13 +331,12 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     SelectMany: function (selectFunc) {
         var e_8, _a;
-        var self = this;
         //return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
         var result = [];
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
-                ArrayCE_Base(result).AddRange(selectFunc.call(item, item, index));
+                exports.ArrayCES.AddRange(result, selectFunc.call(item, item, index));
             }
         }
         catch (e_8_1) { e_8 = { error: e_8_1 }; }
@@ -376,24 +352,20 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     //Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
     // needed for items to be added properly to custom classes that extend Array
     Count: function () {
-        var self = this;
-        return self.length;
+        return this.length;
     },
     VCount: function (matchFunc) {
-        var self = this;
-        return ArrayCE_Base(self).Where(matchFunc).length;
+        return exports.ArrayCES.Where(this, matchFunc).length;
     },
     Clear: function () {
-        var self = this;
         /*while (this.length > 0)
             this.pop();*/
-        self.splice(0, self.length);
+        this.splice(0, this.length);
     },
     /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
     forEach_break(...args) { return this.some(...args); } */
     First: function (matchFunc) {
-        var self = this;
-        var result = ArrayCE_Base(self).FirstOrX(matchFunc);
+        var result = exports.ArrayCES.FirstOrX(this, matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");
         }
@@ -402,10 +374,9 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     FirstOrX: function (matchFunc, x) {
         var e_9, _a;
         if (x === void 0) { x = null; }
-        var self = this;
         if (matchFunc) {
             try {
-                for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                     if (matchFunc.call(item, item, index)) {
                         return item;
@@ -420,19 +391,17 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
                 finally { if (e_9) throw e_9.error; }
             }
         }
-        else if (self.length > 0) {
-            return self[0];
+        else if (this.length > 0) {
+            return this[0];
         }
         return x;
     },
     //FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
     FirstWith: function (propName, propValue) {
-        var self = this;
-        return ArrayCE_Base(self).Where(function () { return this[propName] == propValue; })[0];
+        return exports.ArrayCES.Where(this, function () { return this[propName] == propValue; })[0];
     },
     Last: function (matchFunc) {
-        var self = this;
-        var result = ArrayCE_Base(self).LastOrX(matchFunc);
+        var result = exports.ArrayCES.LastOrX(this, matchFunc);
         if (result === undefined) {
             throw new Error("Matching item not found.");
         }
@@ -440,27 +409,24 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     LastOrX: function (matchFunc, x) {
         if (x === void 0) { x = null; }
-        var self = this;
         if (matchFunc) {
-            for (var i = self.length - 1; i >= 0; i--) {
+            for (var i = this.length - 1; i >= 0; i--) {
                 if (matchFunc.call(this[i], this[i], i)) {
                     return this[i];
                 }
             }
         }
-        else if (self.length > 0) {
-            return self[self.length - 1];
+        else if (this.length > 0) {
+            return this[this.length - 1];
         }
         return x;
     },
     XFromLast: function (x) {
-        var self = this;
-        return self[(self.length - 1) - x];
+        return this[(this.length - 1) - x];
     },
     Move: function (item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex) {
         if (newIndexAsPreRemovalIndexVSFinalIndex === void 0) { newIndexAsPreRemovalIndexVSFinalIndex = false; }
-        var self = this;
-        var oldIndex = self.indexOf(item);
+        var oldIndex = this.indexOf(item);
         /*if (oldIndex != -1) {
             this.RemoveAt(oldIndex);
             // New-index is understood to be the position-in-list to move the item to, as seen before the item started being moved.
@@ -471,17 +437,17 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         }
         this.Insert(newIndex, item);*/
         if (newIndexAsPreRemovalIndexVSFinalIndex) {
-            ArrayCE_Base(self).Insert(newIndex, item);
+            exports.ArrayCES.Insert(this, newIndex, item);
             if (oldIndex != -1) {
                 var oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-                ArrayCE_Base(self).RemoveAt(oldEntry_currentIndex);
+                exports.ArrayCES.RemoveAt(this, oldEntry_currentIndex);
             }
         }
         else {
             if (oldIndex != -1) {
-                ArrayCE_Base(self).RemoveAt(oldIndex);
+                exports.ArrayCES.RemoveAt(this, oldIndex);
             }
-            ArrayCE_Base(self).Insert(newIndex, item);
+            exports.ArrayCES.Insert(this, newIndex, item);
         }
         return oldIndex;
     },
@@ -494,10 +460,9 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     }*/
     ToMap: function (keyFunc, valFunc) {
         var e_10, _a;
-        var self = this;
         var result = {};
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 result[keyFunc(item, index)] = valFunc(item, index);
             }
@@ -512,34 +477,30 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         return result;
     },
     Skip: function (count) {
-        var self = this;
         var result = [];
-        for (var i = count; i < self.length; i++) {
-            result.push(self[i]);
+        for (var i = count; i < this.length; i++) {
+            result.push(this[i]);
         }
         return result;
     },
     Take: function (count) {
-        var self = this;
         var result = [];
-        for (var i = 0; i < count && i < self.length; i++) {
-            result.push(self[i]);
+        for (var i = 0; i < count && i < this.length; i++) {
+            result.push(this[i]);
         }
         return result;
     },
     TakeLast: function (count) {
-        var self = this;
         var result = [];
-        for (var i = 0; i < count && (self.length - 1) - i >= 0; i++) {
-            result.push(self[(self.length - 1) - i]);
+        for (var i = 0; i < count && (this.length - 1) - i >= 0; i++) {
+            result.push(this[(this.length - 1) - i]);
         }
         return result;
     },
     FindIndex: function (matchFunc) {
         var e_11, _a;
-        var self = this;
         try {
-            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
                     return index;
@@ -563,25 +524,22 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     };*/
     OrderBy: function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
-        var self = this;
         /*var temp = this.ToList();
         temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
         return temp;*/
-        return General_1.StableSort(self, function (a, b, aIndex, bIndex) { return General_1.Compare(valFunc(a, aIndex), valFunc(b, bIndex)); });
+        return General_1.StableSort(this, function (a, b, aIndex, bIndex) { return General_1.Compare(valFunc(a, aIndex), valFunc(b, bIndex)); });
     },
     OrderByDescending: function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
-        var self = this;
-        return ArrayCE_Base(self).OrderBy(function (item, index) { return -valFunc(item, index); });
+        return exports.ArrayCES.OrderBy(this, function (item, index) { return -valFunc(item, index); });
     },
     Distinct: function () {
-        var self = this;
         var result = [];
-        for (var i in self) {
-            if (!self.hasOwnProperty(i))
+        for (var i in this) {
+            if (!this.hasOwnProperty(i))
                 continue;
-            if (!ArrayCE_Base(result).Contains(self[i])) {
-                result.push(self[i]);
+            if (!exports.ArrayCES.Contains(result, this[i])) {
+                result.push(this[i]);
             }
         }
         return result;
@@ -592,17 +550,17 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        var excludeItems, excludeEachOnlyOnce = true;
-        if (args[0] instanceof Array)
-            _a = __read(args, 2), excludeItems = _a[0], excludeEachOnlyOnce = _a[1];
+        var opt, excludeItems;
+        if (args[0] && "excludeEachOnlyOnce" in args[0])
+            _a = __read(args, 2), opt = _a[0], excludeItems = _a[1];
         else
             excludeItems = args;
-        if (excludeEachOnlyOnce) {
+        if (opt.excludeEachOnlyOnce) {
             var result = this.slice();
             try {
                 for (var excludeItems_1 = __values(excludeItems), excludeItems_1_1 = excludeItems_1.next(); !excludeItems_1_1.done; excludeItems_1_1 = excludeItems_1.next()) {
                     var excludeItem = excludeItems_1_1.value;
-                    ArrayCE_Base(result).Remove(excludeItem);
+                    exports.ArrayCES.Remove(result, excludeItem);
                 }
             }
             catch (e_12_1) { e_12 = { error: e_12_1 }; }
@@ -614,81 +572,73 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
             }
             return result;
         }
-        return ArrayCE_Base(this).filter(function (a) { return !excludeItems.Contains(a); });
+        return this.filter(function (a) { return !exports.ArrayCES.Contains(excludeItems, a); });
     }),
     IfEmptyThen: function (valIfSelfIsEmpty) {
-        var self = this;
-        return self.length == 0 ? valIfSelfIsEmpty : this;
+        return this.length == 0 ? valIfSelfIsEmpty : this;
     },
     //JoinUsing(separator) { return this.join(separator);};
     Min: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
-        var self = this;
         if (asNumbers) {
             /*let values = valFunc ? this.map(valFunc) : this;
             return Math.min(...values);*/
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.min.apply(Math, __spread(this));
         }
-        return ArrayCE_Base(ArrayCE_Base(self).OrderBy(valFunc)).FirstOrX();
+        return exports.ArrayCES.OrderBy(this, valFunc)[0];
     },
     Max: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
-        var self = this;
         if (asNumbers) {
             /*let values = valFunc ? this.map(valFunc) : this;
             return Math.max(...values);*/
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.max.apply(Math, __spread(this));
         }
-        return ArrayCE_Base(ArrayCE_Base(self).OrderBy(valFunc)).LastOrX();
+        return exports.ArrayCES.LastOrX(exports.ArrayCES.OrderBy(this, valFunc));
     },
     Sum: function () {
         var e_13, _a;
-        var self = this;
         var total = 0;
         try {
-            for (var self_1 = __values(self), self_1_1 = self_1.next(); !self_1_1.done; self_1_1 = self_1.next()) {
-                var item = self_1_1.value;
+            for (var _b = __values(this), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var item = _c.value;
                 total += item;
             }
         }
         catch (e_13_1) { e_13 = { error: e_13_1 }; }
         finally {
             try {
-                if (self_1_1 && !self_1_1.done && (_a = self_1.return)) _a.call(self_1);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_13) throw e_13.error; }
         }
         return total;
     },
     Average: function () {
-        var self = this;
-        var total = ArrayCE_Base(self).Sum();
-        return total / self.length;
+        var total = exports.ArrayCES.Sum(this);
+        return total / this.length;
     },
     Median: function () {
-        var self = this;
-        var ordered = ArrayCE_Base(self).OrderBy(function (a) { return a; });
-        if (self.length % 2 == 0) { // if even number of elements, average two middlest ones
-            return ordered[(self.length / 2) - 1] + ordered[self.length / 2];
+        var ordered = exports.ArrayCES.OrderBy(this, function (a) { return a; });
+        if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
+            return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
         }
-        return ordered[self.length / 2]; // otherwise, return the exactly-middle one
+        return ordered[this.length / 2]; // otherwise, return the exactly-middle one
     },
     Random: function () {
-        var self = this;
-        var index = Math.floor(Math.random() * self.length);
+        var index = Math.floor(Math.random() * this.length);
         return this[index];
     },
     //oldJoin: [].join,
     join: function (separator) {
         if (separator === void 0) { separator = ","; }
-        var self = this;
-        if (self.length == 0)
+        if (this.length == 0)
             return "";
         //let result = "" + this[0];
         var result = this[0] != null ? "" + this[0] : ""; // to match behavior of native join
-        for (var i = 1, len = self.length; i < len; i++) {
+        for (var i = 1, len = this.length; i < len; i++) {
             result += separator;
             result += this[i] != null ? "" + this[i] : "";
         }
@@ -696,7 +646,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         if (oldResult != result) debugger;*/
         return result;
     },
-});
+};
 //export const ArrayCE = CreateProxyForClassExtensions(ArrayCEProxy);
 //export const ArrayCE = CreateProxyForClassExtensions<ArrayCEProxy<any>>(ArrayCEProxy);
 var ArrayCE_Base = General_1.CreateProxyForClassExtensions(exports.ArrayCE_funcs);

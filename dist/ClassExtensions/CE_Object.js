@@ -63,7 +63,7 @@ exports.ObjectCE_funcs = {
     },
     _AddFunction: function (name, func) {
         //this._AddItem(func.name || func.toString().match(/^function\s*([^\s(]+)/)[1], func);
-        ObjectCE_Base(this)._AddItem(name, func);
+        exports.ObjectCES._AddItem(this, name, func);
     },
     // the below helps you do stuff like this:
     //		Array.prototype._AddGetterSetter("AddX", null, function(value) { this.push(value); }); [].AddX = "newItem";
@@ -83,13 +83,13 @@ exports.ObjectCE_funcs = {
     // the below helps you do stuff like this:
     //		Array.prototype._AddFunction_Inline = function AddX(value) { this.push(value); }; [].AddX = "newItem";
     set _AddFunction_Inline(func) {
-        ObjectCE_Base(this)._AddFunction(CE_Others_1.FunctionCE(func).GetName(), func);
+        exports.ObjectCES._AddFunction(this, CE_Others_1.FunctionCE(func).GetName(), func);
     },
     set _AddGetter_Inline(func) {
-        ObjectCE_Base(this)._AddGetterSetter(CE_Others_1.FunctionCE(func).GetName(), func, null);
+        exports.ObjectCES._AddGetterSetter(this, CE_Others_1.FunctionCE(func).GetName(), func, null);
     },
     set _AddSetter_Inline(func) {
-        ObjectCE_Base(this)._AddGetterSetter(CE_Others_1.FunctionCE(func).GetName(), null, func);
+        exports.ObjectCES._AddGetterSetter(this, CE_Others_1.FunctionCE(func).GetName(), null, func);
     },
     // normal
     // ==========
@@ -321,7 +321,7 @@ exports.ObjectCE_funcs = {
         var _this = this;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-        return ObjectCE_Base(this).VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
+        return exports.ObjectCES.VKeys(this, excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
     }),
     // for symbols
     /*Pairs_Sym() {
