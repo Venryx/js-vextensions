@@ -38,6 +38,7 @@ export function CE<T>(obj: Array<T>): ArrayCEClass<T>;
 export function CE(obj: Element): WithFuncThisArgsAsAny_Type<ElementCEClass>;
 // base object
 export function CE<T extends Object>(obj: T): ObjectCEClass<T>;
+//export function CE<T extends Object>(obj: T): WithFuncThisArgsAsXOrWrapped_Type<ObjectCEClass<T>>;
 export function CE(obj, checkForUncommonDerived = false) {
 	// first, try to get class-extension func based on direct constructor name (most common case)
 	let typeName = obj.constructor ? obj.constructor.name : null;

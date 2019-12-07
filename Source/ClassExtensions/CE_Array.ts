@@ -463,6 +463,7 @@ export class ArrayCEClass<ItemT> {
 const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 //export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
 export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>ArrayCEClass<T>;
+//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsXOrWrapped_Type<ArrayCEClass<T>>;
 export const ArrayCES = WithFuncsStandalone(ArrayCEClass.prototype);
 
 /*var ArrayIterator = [].entries().constructor;

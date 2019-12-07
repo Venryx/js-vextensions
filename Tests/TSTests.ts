@@ -11,3 +11,9 @@ let vals: number[] = CE(obj).VValues();
 
 let arr = [] as string[];
 let numbers: number[] = CE(arr).Select(a=>a.length);
+
+class Person {
+	name: string;
+}
+let bob = new Person();
+let bob2: Person = CE(bob).Extended({name2: "bob2"});

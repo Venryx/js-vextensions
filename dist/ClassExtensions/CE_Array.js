@@ -705,6 +705,7 @@ exports.ArrayCEClass = ArrayCEClass;
 var ArrayCE_Base = General_1.CreateWrapperForClassExtensions(ArrayCEClass);
 //export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
 exports.ArrayCE = ArrayCE_Base;
+//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsXOrWrapped_Type<ArrayCEClass<T>>;
 exports.ArrayCES = General_1.WithFuncsStandalone(ArrayCEClass.prototype);
 /*var ArrayIterator = [].entries().constructor;
 export class ArrayIteratorCEClass {

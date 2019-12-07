@@ -1080,20 +1080,17 @@ function WithFuncsStandalone(source) {
 }
 exports.WithFuncsStandalone = WithFuncsStandalone;
 function WithFuncThisArgsAsAny(source) {
-    /*let result = {} as any;
-    for (let [key, oldVal] of Object.entries(source)) {
-        if (oldVal instanceof Function) {
-            result[key] = (thisArg, ...callArgs)=> {
-                return oldVal.apply(thisArg, callArgs);
-            };
-        } else {
-            result[key] = oldVal;
-        }
-    }
-    return result;*/
     return source;
 }
 exports.WithFuncThisArgsAsAny = WithFuncThisArgsAsAny;
+/*export type WithFuncThisArgTypesWrappedBy_Type<T> = {
+    [P in keyof T]:
+        T[P] extends (this: infer T2, ...args)=>any ? (this: T<T2>, ...args: Parameters<T[P]>)=>ReturnType<T[P]> :
+        T[P];
+};
+export function WithFuncThisArgTypesWrappedBy<T>(source: T): WithFuncThisArgTypesWrappedBy_Type<T> {
+    return source as any;
+}*/
 // use this simpler variant for class-extensions of target-types, where the class-extension methods don't need the type-generics of the target-type
 function CreateWrapperForClassExtensions_ThisAsAny(sourceClass) {
     return CreateWrapperForClassExtensions(sourceClass);

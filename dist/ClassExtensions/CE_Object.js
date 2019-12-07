@@ -31,6 +31,14 @@ var General_1 = require("../Utils/General");
 var CE_Array_1 = require("./CE_Array");
 var Types_1 = require("../Utils/Types");
 var CE_Others_1 = require("./CE_Others");
+/*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
+    [P in keyof Source]:
+        Source[P] extends (this: infer ThisArgType, ...args)=>any ? (this: XOrWrapped<ThisArgType>, ...args: Parameters<Source[P]>)=>ReturnType<Source[P]> :
+        Source[P];
+};
+export function WithFuncThisArgsAsXOrWrapped<Source>(source: Source): WithFuncThisArgsAsXOrWrapped_Type<Source> {
+    return source as any;
+}*/
 exports.specialKeys = ["_", "_key", "_id"];
 var ObjectCEClass = /** @class */ (function () {
     function ObjectCEClass() {
@@ -125,7 +133,6 @@ var ObjectCEClass = /** @class */ (function () {
         }
         return this;
     };
-    //VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
     ObjectCEClass.prototype.VSet = function () {
         var _a, _b;
         var _this = this;
@@ -164,6 +171,11 @@ var ObjectCEClass = /** @class */ (function () {
         return this;
     };
     ObjectCEClass.prototype.Extended = function (x) {
+        // maybe temp; explicit unwrapping, to fix odd "instantiation is excessively deep" ts-error (when calling .Extended from user project)
+        /*Extended<T, T2>(this: T, x: T2): T & T2;
+        Extended<T, T2>(this: ObjectCEClass<T>, x: T2): T & T2;
+        Extended(x: any) {*/
+        //Extended<T, T2>(this: ObjectCEClass<T> | T, x: T2): T & T2 {
         var result = this instanceof Array ? [] : {};
         for (var key in this) {
             if (!this.hasOwnProperty(key))
@@ -260,7 +272,6 @@ var ObjectCEClass = /** @class */ (function () {
         }
         return false;
     };
-    //Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
     ObjectCEClass.prototype.Pairs = function (excludeSpecialKeys) {
         var e_3, _a;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
@@ -287,7 +298,6 @@ var ObjectCEClass = /** @class */ (function () {
         }
         return result;
     };
-    //VKeys(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
     ObjectCEClass.prototype.VKeys = function (excludeSpecialKeys) {
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
@@ -297,6 +307,7 @@ var ObjectCEClass = /** @class */ (function () {
         return keys;
     };
     //interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
+    //VValues(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
     ObjectCEClass.prototype.VValues = function (excludeSpecialKeys) {
         var _this = this;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
@@ -311,7 +322,6 @@ var ObjectCEClass = /** @class */ (function () {
         var symbol = symbols.find(function (a) { return a.toString() == "Symbol(" + symbolName + ")"; });
         return this[symbol];
     };
-    ;
     return ObjectCEClass;
 }());
 exports.ObjectCEClass = ObjectCEClass;
@@ -320,5 +330,6 @@ exports.ObjectCEClass = ObjectCEClass;
 var ObjectCE_Base = General_1.CreateWrapperForClassExtensions(ObjectCEClass);
 //export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
 exports.ObjectCE = ObjectCE_Base;
+//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsXOrWrapped_Type<ObjectCEClass<T>>;
 exports.ObjectCES = General_1.WithFuncsStandalone(ObjectCEClass.prototype);
 //# sourceMappingURL=CE_Object.js.map
