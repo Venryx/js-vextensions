@@ -30,7 +30,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
 var CE_Array_1 = require("./CE_Array");
 var Types_1 = require("../Utils/Types");
-var Assert_1 = require("../Utils/Assert");
 var CE_Others_1 = require("./CE_Others");
 exports.specialKeys = ["_", "_key", "_id"];
 var ObjectCEClass = /** @class */ (function () {
@@ -126,6 +125,7 @@ var ObjectCEClass = /** @class */ (function () {
         }
         return this;
     };
+    //VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
     ObjectCEClass.prototype.VSet = function () {
         var _a, _b;
         var _this = this;
@@ -260,6 +260,7 @@ var ObjectCEClass = /** @class */ (function () {
         }
         return false;
     };
+    //Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
     ObjectCEClass.prototype.Pairs = function (excludeSpecialKeys) {
         var e_3, _a;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
@@ -286,6 +287,7 @@ var ObjectCEClass = /** @class */ (function () {
         }
         return result;
     };
+    //VKeys(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
     ObjectCEClass.prototype.VKeys = function (excludeSpecialKeys) {
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
@@ -310,56 +312,13 @@ var ObjectCEClass = /** @class */ (function () {
         return this[symbol];
     };
     ;
-    // this is a total hack : P -- fixes typescript-es2017 "TypeError: [module].default is not a constructor" issue
-    /*Object.prototype._AddGetterSetter("default", function() {
-        return this;
-    }, function(value) {
-        /*delete this.default;
-        this.default = value;*#/
-        Object.defineProperty(this, "default", {configurable: true, enumerable: false, value});
-    });*/
-    // Object[FakeArray]
-    // ==========
-    ObjectCEClass.prototype.FA_Select = function (selectFunc) {
-        Assert_1.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
-        /*var result = this instanceof List ? new List(this.itemType) : [];
-        for (let [index, item] of this.entries())
-            result.Add(selectFunc.call(item, item, index));
-        return result;*/
-        return exports.ObjectCE(this).VValues(true).map(selectFunc);
-    };
-    ;
-    ObjectCEClass.prototype.FA_RemoveAt = function (index) {
-        Assert_1.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
-        if (!(index in this))
-            return;
-        // remove target entry
-        delete this[index];
-        // move all the later entries down one index
-        for (var i = index + 1; i in this; i++) {
-            this[i - 1] = this[i];
-        }
-        delete this[i - 1]; // remove the extra copy of the last-item 
-    };
-    ;
-    ObjectCEClass.prototype.FA_Add = function (item) {
-        Assert_1.Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
-        for (var openIndex = 0; openIndex in this; openIndex++)
-            ;
-        this[openIndex] = item;
-    };
-    ;
     return ObjectCEClass;
 }());
 exports.ObjectCEClass = ObjectCEClass;
 //export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
 var ObjectCE_Base = General_1.CreateWrapperForClassExtensions(ObjectCEClass);
+//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
 exports.ObjectCE = ObjectCE_Base;
 exports.ObjectCES = General_1.WithFuncsStandalone(ObjectCEClass.prototype);
-/*class Test1{
-    Test2() {}
-}
-ObjectCE(new Test1()).VSet({}).Test2
-ObjectCE(new Object()).Pairs()[0].key;*/ 
 //# sourceMappingURL=CE_Object.js.map

@@ -69,17 +69,18 @@ var __spread = (this && this.__spread) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
 var Assert_1 = require("../Utils/Assert");
-/*// since JS doesn't have basic "foreach" system
-ForEach(func) {
-    for (var i in this) {
-        func.call(this[i], this[i], i); // call, having the item be "this", as well as the first argument
-    }
-};*/
+//type ArrayLike_Unwrap<T> = ThisFor<XOrWrapped<T>>;
+//type ArrayLike_Unwrap<T> =
+/*type Unwrapped<T> =
+    T extends Array<infer ItemT> ? ItemT[] :
+    T extends ArrayCEClass<infer ItemT> ? ItemT[] :
+    never;*/
 var ArrayCEClass = /** @class */ (function () {
     function ArrayCEClass() {
         this.oldJoin = [].join;
     }
     ArrayCEClass.prototype.ForEach = function (func) {
+        var self = this;
         var _loop_1 = function (i) {
             var shouldBreak = false;
             var shouldContinue = false;
@@ -91,7 +92,7 @@ var ArrayCEClass = /** @class */ (function () {
                 return "continue";
         };
         var this_1 = this;
-        for (var i = 0; i < this.length; i++) {
+        for (var i = 0; i < self.length; i++) {
             var state_1 = _loop_1(i);
             if (state_1 === "break")
                 break;
@@ -99,10 +100,11 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.ForEachAsync = function (func) {
         return __awaiter(this, void 0, void 0, function () {
-            var _loop_2, this_2, i, state_2;
+            var self, _loop_2, this_2, i, state_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        self = this;
                         _loop_2 = function (i) {
                             var shouldBreak, shouldContinue, extras;
                             return __generator(this, function (_a) {
@@ -126,7 +128,7 @@ var ArrayCEClass = /** @class */ (function () {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < this.length)) return [3 /*break*/, 4];
+                        if (!(i < self.length)) return [3 /*break*/, 4];
                         return [5 /*yield**/, _loop_2(i)];
                     case 2:
                         state_2 = _a.sent();
@@ -145,7 +147,10 @@ var ArrayCEClass = /** @class */ (function () {
     Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {
         await Promise.all(this.map(fn));
     }*/
-    ArrayCEClass.prototype.Contains = function (item) { return this.indexOf(item) != -1; };
+    ArrayCEClass.prototype.Contains = function (item) {
+        var self = this;
+        return self.indexOf(item) != -1;
+    };
     ;
     ArrayCEClass.prototype.ContainsAny = function () {
         var e_1, _a;
@@ -153,10 +158,11 @@ var ArrayCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             items[_i] = arguments[_i];
         }
+        var self = this;
         try {
             for (var items_1 = __values(items), items_1_1 = items_1.next(); !items_1_1.done; items_1_1 = items_1.next()) {
                 var item = items_1_1.value;
-                if (this.indexOf(item) != -1) {
+                if (self.indexOf(item) != -1) {
                     return true;
                 }
             }
@@ -182,19 +188,32 @@ var ArrayCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             newItems[_i] = arguments[_i];
         }
-        this.splice.apply(this, __spread([0, 0], newItems));
+        var self = this;
+        self.splice.apply(self, __spread([0, 0], newItems));
     };
-    ArrayCEClass.prototype.Add = function (item) { return this.push(item); };
-    ArrayCEClass.prototype.CAdd = function (item) { this.push(item); return this; }; // CAdd = ChainAdd
-    ArrayCEClass.prototype.TAdd = function (item) { this.push(item); return item; }; // TAdd = TransparentAdd
+    ArrayCEClass.prototype.Add = function (item) {
+        var self = this;
+        return self.push(item);
+    };
+    ArrayCEClass.prototype.CAdd = function (item) {
+        var self = this;
+        self.push(item);
+        return self;
+    };
+    ArrayCEClass.prototype.TAdd = function (item) {
+        var self = this;
+        self.push(item);
+        return item;
+    };
     ArrayCEClass.prototype.AddRange = function (array) {
         var e_2, _a;
+        var self = this;
         try {
             //this.push(...array);
             // use loop, since sending them all as arguments fails when there are ~10000+ items
             for (var array_1 = __values(array), array_1_1 = array_1.next(); !array_1_1.done; array_1_1 = array_1.next()) {
                 var item = array_1_1.value;
-                this.push(item);
+                self.push(item);
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -207,18 +226,20 @@ var ArrayCEClass = /** @class */ (function () {
         return this;
     };
     ArrayCEClass.prototype.Remove = function (item) {
-        var itemIndex = this.indexOf(item);
+        var self = this;
+        var itemIndex = self.indexOf(item);
         if (itemIndex == -1)
             return false;
-        this.splice(itemIndex, 1);
+        self.splice(itemIndex, 1);
         return true;
     };
     ArrayCEClass.prototype.RemoveAll = function (items) {
         var e_3, _a;
+        var self = this;
         try {
             for (var items_2 = __values(items), items_2_1 = items_2.next(); !items_2_1.done; items_2_1 = items_2.next()) {
                 var item = items_2_1.value;
-                exports.ArrayCE(this).Remove(item);
+                exports.ArrayCE(self).Remove(item);
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -229,14 +250,22 @@ var ArrayCEClass = /** @class */ (function () {
             finally { if (e_3) throw e_3.error; }
         }
     };
-    ArrayCEClass.prototype.RemoveAt = function (index) { return this.splice(index, 1)[0]; };
-    ArrayCEClass.prototype.Insert = function (index, obj) { this.splice(index, 0, obj); };
+    ArrayCEClass.prototype.RemoveAt = function (index) {
+        var self = this;
+        return self.splice(index, 1)[0];
+    };
+    ArrayCEClass.prototype.Insert = function (index, obj) {
+        var self = this;
+        self.splice(index, 0, obj);
+    };
     ArrayCEClass.prototype.SetItems = function (items) {
-        this.splice.apply(this, __spread([0, this.length], items));
-        return this;
+        var self = this;
+        self.splice.apply(self, __spread([0, self.length], items));
+        return self;
     };
     ArrayCEClass.prototype.Reversed = function () {
-        var clone = this.slice(0);
+        var self = this;
+        var clone = self.slice(0);
         clone.reverse();
         return clone;
     };
@@ -245,8 +274,9 @@ var ArrayCEClass = /** @class */ (function () {
     // ----------
     ArrayCEClass.prototype.Any = function (matchFunc) {
         var e_4, _a;
+        var self = this;
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (matchFunc == null || matchFunc.call(item, item, index)) {
                     return true;
@@ -264,8 +294,9 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.All = function (matchFunc) {
         var e_5, _a;
+        var self = this;
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (!matchFunc.call(item, item, index)) {
                     return false;
@@ -283,9 +314,10 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.Where = function (matchFunc) {
         var e_6, _a;
+        var self = this;
         var result = [];
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
                     result.push(item);
@@ -303,9 +335,10 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.Select = function (selectFunc) {
         var e_7, _a;
+        var self = this;
         var result = [];
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 result.push(selectFunc.call(item, item, index));
             }
@@ -321,10 +354,11 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.SelectMany = function (selectFunc) {
         var e_8, _a;
+        var self = this;
         //return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
         var result = [];
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 exports.ArrayCE(result).AddRange(selectFunc.call(item, item, index));
             }
@@ -340,18 +374,27 @@ var ArrayCEClass = /** @class */ (function () {
     };
     //Count(matchFunc) { return this.Where(matchFunc).length; };
     //Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
-    ArrayCEClass.prototype.Count = function () { return this.length; };
-    ; // needed for items to be added properly to custom classes that extend Array
-    ArrayCEClass.prototype.VCount = function (matchFunc) { return exports.ArrayCE(this).Where(matchFunc).length; };
+    // needed for items to be added properly to custom classes that extend Array
+    ArrayCEClass.prototype.Count = function () {
+        var self = this;
+        return self.length;
+    };
+    ;
+    ArrayCEClass.prototype.VCount = function (matchFunc) {
+        var self = this;
+        return exports.ArrayCE(self).Where(matchFunc).length;
+    };
     ArrayCEClass.prototype.Clear = function () {
+        var self = this;
         /*while (this.length > 0)
             this.pop();*/
-        this.splice(0, this.length);
+        self.splice(0, self.length);
     };
     /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
     forEach_break(...args) { return this.some(...args); } */
     ArrayCEClass.prototype.First = function (matchFunc) {
-        var result = exports.ArrayCE(this).FirstOrX(matchFunc);
+        var self = this;
+        var result = exports.ArrayCE(self).FirstOrX(matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");
         }
@@ -360,9 +403,10 @@ var ArrayCEClass = /** @class */ (function () {
     ArrayCEClass.prototype.FirstOrX = function (matchFunc, x) {
         var e_9, _a;
         if (x === void 0) { x = null; }
+        var self = this;
         if (matchFunc) {
             try {
-                for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                     if (matchFunc.call(item, item, index)) {
                         return item;
@@ -377,15 +421,19 @@ var ArrayCEClass = /** @class */ (function () {
                 finally { if (e_9) throw e_9.error; }
             }
         }
-        else if (this.length > 0) {
-            return this[0];
+        else if (self.length > 0) {
+            return self[0];
         }
         return x;
     };
     //FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-    ArrayCEClass.prototype.FirstWith = function (propName, propValue) { return exports.ArrayCE(this).Where(function () { return this[propName] == propValue; })[0]; };
+    ArrayCEClass.prototype.FirstWith = function (propName, propValue) {
+        var self = this;
+        return exports.ArrayCE(self).Where(function () { return this[propName] == propValue; })[0];
+    };
     ArrayCEClass.prototype.Last = function (matchFunc) {
-        var result = exports.ArrayCE(this).LastOrX(matchFunc);
+        var self = this;
+        var result = exports.ArrayCE(self).LastOrX(matchFunc);
         if (result === undefined) {
             throw new Error("Matching item not found.");
         }
@@ -393,22 +441,27 @@ var ArrayCEClass = /** @class */ (function () {
     };
     ArrayCEClass.prototype.LastOrX = function (matchFunc, x) {
         if (x === void 0) { x = null; }
+        var self = this;
         if (matchFunc) {
-            for (var i = this.length - 1; i >= 0; i--) {
+            for (var i = self.length - 1; i >= 0; i--) {
                 if (matchFunc.call(this[i], this[i], i)) {
                     return this[i];
                 }
             }
         }
-        else if (this.length > 0) {
-            return this[this.length - 1];
+        else if (self.length > 0) {
+            return self[self.length - 1];
         }
         return x;
     };
-    ArrayCEClass.prototype.XFromLast = function (x) { return this[(this.length - 1) - x]; };
+    ArrayCEClass.prototype.XFromLast = function (x) {
+        var self = this;
+        return self[(self.length - 1) - x];
+    };
     ArrayCEClass.prototype.Move = function (item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex) {
         if (newIndexAsPreRemovalIndexVSFinalIndex === void 0) { newIndexAsPreRemovalIndexVSFinalIndex = false; }
-        var oldIndex = this.indexOf(item);
+        var self = this;
+        var oldIndex = self.indexOf(item);
         /*if (oldIndex != -1) {
             this.RemoveAt(oldIndex);
             // New-index is understood to be the position-in-list to move the item to, as seen before the item started being moved.
@@ -419,24 +472,21 @@ var ArrayCEClass = /** @class */ (function () {
         }
         this.Insert(newIndex, item);*/
         if (newIndexAsPreRemovalIndexVSFinalIndex) {
-            exports.ArrayCE(this).Insert(newIndex, item);
+            exports.ArrayCE(self).Insert(newIndex, item);
             if (oldIndex != -1) {
                 var oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-                exports.ArrayCE(this).RemoveAt(oldEntry_currentIndex);
+                exports.ArrayCE(self).RemoveAt(oldEntry_currentIndex);
             }
         }
         else {
             if (oldIndex != -1) {
-                exports.ArrayCE(this).RemoveAt(oldIndex);
+                exports.ArrayCE(self).RemoveAt(oldIndex);
             }
-            exports.ArrayCE(this).Insert(newIndex, item);
+            exports.ArrayCE(self).Insert(newIndex, item);
         }
         return oldIndex;
     };
-    ArrayCEClass.prototype.ToList = function (itemType) {
-        if (itemType === void 0) { itemType = null; }
-        return [].concat(this);
-    };
+    //ToList<T>(this: ArrayLike<T>, itemType = null) { return [].concat(this); }
     /*ToDictionary(keyFunc, valFunc) {
         var result = new Dictionary();
         for (var i in this)
@@ -445,9 +495,10 @@ var ArrayCEClass = /** @class */ (function () {
     }*/
     ArrayCEClass.prototype.ToMap = function (keyFunc, valFunc) {
         var e_10, _a;
+        var self = this;
         var result = {};
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 result[keyFunc(item, index)] = valFunc(item, index);
             }
@@ -462,30 +513,34 @@ var ArrayCEClass = /** @class */ (function () {
         return result;
     };
     ArrayCEClass.prototype.Skip = function (count) {
+        var self = this;
         var result = [];
-        for (var i = count; i < this.length; i++) {
-            result.push(this[i]);
+        for (var i = count; i < self.length; i++) {
+            result.push(self[i]);
         }
         return result;
     };
     ArrayCEClass.prototype.Take = function (count) {
+        var self = this;
         var result = [];
-        for (var i = 0; i < count && i < this.length; i++) {
-            result.push(this[i]);
+        for (var i = 0; i < count && i < self.length; i++) {
+            result.push(self[i]);
         }
         return result;
     };
     ArrayCEClass.prototype.TakeLast = function (count) {
+        var self = this;
         var result = [];
-        for (var i = 0; i < count && (this.length - 1) - i >= 0; i++) {
-            result.push(this[(this.length - 1) - i]);
+        for (var i = 0; i < count && (self.length - 1) - i >= 0; i++) {
+            result.push(self[(self.length - 1) - i]);
         }
         return result;
     };
     ArrayCEClass.prototype.FindIndex = function (matchFunc) {
         var e_11, _a;
+        var self = this;
         try {
-            for (var _b = __values(this.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
                 if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
                     return index;
@@ -509,22 +564,25 @@ var ArrayCEClass = /** @class */ (function () {
     };*/
     ArrayCEClass.prototype.OrderBy = function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
+        var self = this;
         /*var temp = this.ToList();
         temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
         return temp;*/
-        return General_1.StableSort(this, function (a, b, aIndex, bIndex) { return General_1.Compare(valFunc(a, aIndex), valFunc(b, bIndex)); });
+        return General_1.StableSort(self, function (a, b, aIndex, bIndex) { return General_1.Compare(valFunc(a, aIndex), valFunc(b, bIndex)); });
     };
     ArrayCEClass.prototype.OrderByDescending = function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
-        return exports.ArrayCE(this).OrderBy(function (item, index) { return -valFunc(item, index); });
+        var self = this;
+        return exports.ArrayCE(self).OrderBy(function (item, index) { return -valFunc(item, index); });
     };
     ArrayCEClass.prototype.Distinct = function () {
+        var self = this;
         var result = [];
-        for (var i in this) {
-            if (!this.hasOwnProperty(i))
+        for (var i in self) {
+            if (!self.hasOwnProperty(i))
                 continue;
-            if (!exports.ArrayCE(result).Contains(this[i])) {
-                result.push(this[i]);
+            if (!exports.ArrayCE(result).Contains(self[i])) {
+                result.push(self[i]);
             }
         }
         return result;
@@ -535,13 +593,14 @@ var ArrayCEClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        var self = this;
         var excludeItems, excludeEachOnlyOnce = true;
         if (args[0] instanceof Array)
             _a = __read(args, 2), excludeItems = _a[0], excludeEachOnlyOnce = _a[1];
         else
             excludeItems = args;
         if (excludeEachOnlyOnce) {
-            var result = this.slice();
+            var result = self.slice();
             try {
                 for (var excludeItems_1 = __values(excludeItems), excludeItems_1_1 = excludeItems_1.next(); !excludeItems_1_1.done; excludeItems_1_1 = excludeItems_1.next()) {
                     var excludeItem = excludeItems_1_1.value;
@@ -557,72 +616,80 @@ var ArrayCEClass = /** @class */ (function () {
             }
             return result;
         }
-        return exports.ArrayCE(this).Where(function (a) { return !excludeItems.Contains(a); });
+        return exports.ArrayCE(self).Where(function (a) { return !excludeItems.Contains(a); });
     };
     ArrayCEClass.prototype.IfEmptyThen = function (valIfSelfIsEmpty) {
-        return this.length == 0 ? valIfSelfIsEmpty : this;
+        var self = this;
+        return self.length == 0 ? valIfSelfIsEmpty : this;
     };
     //JoinUsing(separator) { return this.join(separator);};
     ArrayCEClass.prototype.Min = function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
+        var self = this;
         if (asNumbers) {
             /*let values = valFunc ? this.map(valFunc) : this;
             return Math.min(...values);*/
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.min.apply(Math, __spread(this));
         }
-        return exports.ArrayCE(exports.ArrayCE(this).OrderBy(valFunc)).FirstOrX();
+        return exports.ArrayCE(exports.ArrayCE(self).OrderBy(valFunc)).FirstOrX();
     };
     ArrayCEClass.prototype.Max = function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
+        var self = this;
         if (asNumbers) {
             /*let values = valFunc ? this.map(valFunc) : this;
             return Math.max(...values);*/
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.max.apply(Math, __spread(this));
         }
-        return exports.ArrayCE(exports.ArrayCE(this).OrderBy(valFunc)).LastOrX();
+        return exports.ArrayCE(exports.ArrayCE(self).OrderBy(valFunc)).LastOrX();
     };
     ArrayCEClass.prototype.Sum = function () {
         var e_13, _a;
+        var self = this;
         var total = 0;
         try {
-            for (var _b = __values(this), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var item = _c.value;
+            for (var self_1 = __values(self), self_1_1 = self_1.next(); !self_1_1.done; self_1_1 = self_1.next()) {
+                var item = self_1_1.value;
                 total += item;
             }
         }
         catch (e_13_1) { e_13 = { error: e_13_1 }; }
         finally {
             try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                if (self_1_1 && !self_1_1.done && (_a = self_1.return)) _a.call(self_1);
             }
             finally { if (e_13) throw e_13.error; }
         }
         return total;
     };
     ArrayCEClass.prototype.Average = function () {
-        var total = exports.ArrayCE(this).Sum();
-        return total / this.length;
+        var self = this;
+        var total = exports.ArrayCE(self).Sum();
+        return total / self.length;
     };
     ArrayCEClass.prototype.Median = function () {
-        var ordered = exports.ArrayCE(this).OrderBy(function (a) { return a; });
-        if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
-            return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
+        var self = this;
+        var ordered = exports.ArrayCE(self).OrderBy(function (a) { return a; });
+        if (self.length % 2 == 0) { // if even number of elements, average two middlest ones
+            return ordered[(self.length / 2) - 1] + ordered[self.length / 2];
         }
-        return ordered[this.length / 2]; // otherwise, return the exactly-middle one
+        return ordered[self.length / 2]; // otherwise, return the exactly-middle one
     };
     ArrayCEClass.prototype.Random = function () {
-        var index = Math.floor(Math.random() * this.length);
+        var self = this;
+        var index = Math.floor(Math.random() * self.length);
         return this[index];
     };
     ArrayCEClass.prototype.join = function (separator) {
         if (separator === void 0) { separator = ","; }
-        if (this.length == 0)
+        var self = this;
+        if (self.length == 0)
             return "";
         //let result = "" + this[0];
         var result = this[0] != null ? "" + this[0] : ""; // to match behavior of native join
-        for (var i = 1, len = this.length; i < len; i++) {
+        for (var i = 1, len = self.length; i < len; i++) {
             result += separator;
             result += this[i] != null ? "" + this[i] : "";
         }
@@ -636,6 +703,7 @@ exports.ArrayCEClass = ArrayCEClass;
 //export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 var ArrayCE_Base = General_1.CreateWrapperForClassExtensions(ArrayCEClass);
+//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
 exports.ArrayCE = ArrayCE_Base;
 exports.ArrayCES = General_1.WithFuncsStandalone(ArrayCEClass.prototype);
 /*var ArrayIterator = [].entries().constructor;

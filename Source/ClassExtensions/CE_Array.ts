@@ -1,4 +1,4 @@
-import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type, WithFuncsStandalone} from "../Utils/General";
+import {StableSort, Compare, CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 import {Assert} from "../Utils/Assert";
 
 export interface ForEachExtras {
@@ -14,9 +14,24 @@ ForEach(func) {
 	}
 };*/
 
-export class ArrayCEClass<T> {
-	ForEach(this: T[], func: (value: T, extras: ForEachExtras)=>any) {
-		for (let i = 0; i < this.length; i++) {
+export type ItemTFor<T> =
+	T extends Array<infer ItemT> ? ItemT :
+	T extends ArrayCEClass<infer ItemT> ? ItemT :
+	T;
+//type XOrWrapped<T> = T | ArrayCEClass<T>;
+export type ArrayLike<T> = Array<T> | ArrayCEClass<T>;
+
+//type ArrayLike_Unwrap<T> = ThisFor<XOrWrapped<T>>;
+//type ArrayLike_Unwrap<T> =
+/*type Unwrapped<T> =
+	T extends Array<infer ItemT> ? ItemT[] :
+	T extends ArrayCEClass<infer ItemT> ? ItemT[] :
+	never;*/
+
+export class ArrayCEClass<ItemT> {
+	ForEach<T>(this: ArrayLike<T>, func: (value: T, extras: ForEachExtras)=>any) {
+		const self = this as T[];
+		for (let i = 0; i < self.length; i++) {
 			let shouldBreak = false;
 			let shouldContinue = false;
 			let extras = {index: i, Break: ()=>shouldBreak = true, Continue: ()=>shouldContinue = true};
@@ -26,8 +41,9 @@ export class ArrayCEClass<T> {
 		}
 	}
 
-	async ForEachAsync(this: T[], func: (value: T, extras: ForEachExtras)=>any) {
-		for (let i = 0; i < this.length; i++) {
+	async ForEachAsync<T>(this: ArrayLike<T>, func: (value: T, extras: ForEachExtras)=>any) {
+		const self = this as T[];
+		for (let i = 0; i < self.length; i++) {
 			let shouldBreak = false;
 			let shouldContinue = false;
 			let extras = {index: i, Break: ()=>shouldBreak = true, Continue: ()=>shouldContinue = true};
@@ -41,11 +57,15 @@ export class ArrayCEClass<T> {
 		await Promise.all(this.map(fn));
 	}*/
 
-	Contains(this: T[], item: T) { return this.indexOf(item) != -1; };
-	ContainsAny(this: T[], ...items: T[]) {
-		for (let item of items) {
-			if (this.indexOf(item) != -1) {
-					return true;
+	Contains<T>(this: ArrayLike<T>, item: T) {
+		const self = this as T[];
+		return self.indexOf(item) != -1;
+	};
+	ContainsAny<T>(this: ArrayLike<T>, ...items: T[]) {
+		const self = this as T[];
+		for (const item of items) {
+			if (self.indexOf(item) != -1) {
+				return true;
 			}
 		}
 		return false;
@@ -59,39 +79,63 @@ export class ArrayCEClass<T> {
 		return result;
 	};*/
 
-	Prepend(this: T[], ...newItems: T[]) { this.splice(0, 0, ...newItems); }
-	Add(this: T[], item: T) { return this.push(item); }
-	CAdd(this: T[], item: T) { this.push(item); return this; } // CAdd = ChainAdd
-	TAdd(this: T[], item: T) { this.push(item); return item; } // TAdd = TransparentAdd
-	AddRange(this: T[], array: T[]) {
+	Prepend<T>(this: ArrayLike<T>, ...newItems: T[]) {
+		const self = this as T[];
+		self.splice(0, 0, ...newItems);
+	}
+	Add<T>(this: ArrayLike<T>, item: T) {
+		const self = this as T[];
+		return self.push(item);
+	}
+	CAdd<T>(this: ArrayLike<T>, item: T) { // CAdd = ChainAdd
+		const self = this as T[];
+		self.push(item);
+		return self;
+	}
+	TAdd<T>(this: ArrayLike<T>, item: T) { // TAdd = TransparentAdd
+		const self = this as T[];
+		self.push(item); return item;
+	}
+	AddRange<T>(this: ArrayLike<T>, array: T[]) {
+		const self = this as T[];
 		//this.push(...array);
 		// use loop, since sending them all as arguments fails when there are ~10000+ items
-		for (let item of array) {
-			this.push(item);
+		for (const item of array) {
+			self.push(item);
 		}
 		return this;
 	}
-	Remove(this: T[], item: T) {
-		var itemIndex = this.indexOf(item);
+	Remove<T>(this: ArrayLike<T>, item: T) {
+		const self = this as T[];
+		var itemIndex = self.indexOf(item);
 		if (itemIndex == -1) return false;
 
-		this.splice(itemIndex, 1);
+		self.splice(itemIndex, 1);
 		return true;
 	}
-	RemoveAll(this: T[], items: T[]) {
+	RemoveAll<T>(this: ArrayLike<T>, items: T[]) {
+		const self = this as T[];
 		for (let item of items) {
-			ArrayCE(this).Remove(item);
+			ArrayCE(self).Remove(item);
 		}
 	}
-	RemoveAt(this: T[], index: number) { return this.splice(index, 1)[0]; }
-	Insert(this: T[], index: number, obj: T) { this.splice(index, 0, obj); }
-	SetItems(this: T[], items: T[]) {
-		this.splice(0, this.length, ...items);
-		return this;
+	RemoveAt<T>(this: ArrayLike<T>, index: number) {
+		const self = this as T[];
+		return self.splice(index, 1)[0];
+	}
+	Insert<T>(this: ArrayLike<T>, index: number, obj: T) {
+		const self = this as T[];
+		self.splice(index, 0, obj);
+	}
+	SetItems<T>(this: ArrayLike<T>, items: T[]) {
+		const self = this as T[];
+		self.splice(0, self.length, ...items);
+		return self;
 	}
 
-	Reversed(this: T[]) { 
-		var clone = this.slice(0);
+	Reversed<T>(this: ArrayLike<T>) { 
+		const self = this as T[];
+		var clone = self.slice(0);
 		clone.reverse();
 		return clone;
 	}
@@ -101,103 +145,127 @@ export class ArrayCEClass<T> {
 	// Linq replacements
 	// ----------
 
-	Any(this: T[], matchFunc: (item: T, index?: number)=>boolean) {
-		for (let [index, item] of this.entries()) {
+	Any<T>(this: ArrayLike<T>, matchFunc: (item: T, index?: number)=>boolean): boolean {
+		const self = this as T[];
+		for (let [index, item] of self.entries()) {
 			if (matchFunc == null || matchFunc.call(item, item, index)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	All(this: T[], matchFunc: (item: T, index?: number)=>boolean) {
-		for (let [index, item] of this.entries()) {
+	All<T>(this: ArrayLike<T>, matchFunc: (item: T, index?: number)=>boolean): boolean {
+		const self = this as T[];
+		for (let [index, item] of self.entries()) {
 			if (!matchFunc.call(item, item, index)) {
 					return false;
 			}
 		}
 		return true;
 	}
-	Where(this: T[], matchFunc: (item: T, index?: number)=>boolean) {
+	Where<T>(this: ArrayLike<T>, matchFunc: (item: T, index?: number)=>boolean): T[] {
+		const self = this as T[];
 		var result = [];
-		for (let [index, item] of this.entries()) {
+		for (let [index, item] of self.entries()) {
 			if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
 				result.push(item);
 			}
 		}
 		return result;
 	}
-	Select<T2>(this: T[], selectFunc: (item: T, index?: number)=>T2) {
+	Select<T, T2>(this: ArrayLike<T>, selectFunc: (item: T, index?: number)=>T2): T2[] {
+		const self = this as T[];
 		var result = [];
-		for (let [index, item] of this.entries()) {
+		for (let [index, item] of self.entries()) {
 			result.push(selectFunc.call(item, item, index));
 		}
 		return result;
 	}
-	SelectMany<T2>(this: T[], selectFunc: (item: T, index?: number)=>T2) {
+	SelectMany<T, T2>(this: ArrayLike<T>, selectFunc: (item: T, index?: number)=>T2[]): T2[] {
+		const self = this as T[];
 		//return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
 		var result = [];
-		for (let [index, item] of this.entries()) {
+		for (let [index, item] of self.entries()) {
 			ArrayCE(result).AddRange(selectFunc.call(item, item, index));
 		}
 		return result;
 	}
 	//Count(matchFunc) { return this.Where(matchFunc).length; };
 	//Count(matchFunc) { return this.Where(matchFunc).length; }; // needed for items to be added properly to custom classes that extend Array
-	Count(this: T[]) { return this.length; }; // needed for items to be added properly to custom classes that extend Array
-	VCount(this: T[], matchFunc: (item: T)=>boolean) { return ArrayCE(this).Where(matchFunc).length; }
-	Clear(this: T[]) {
+	// needed for items to be added properly to custom classes that extend Array
+	Count<T>(this: ArrayLike<T>) {
+		const self = this as T[];
+		return self.length;
+	};
+	VCount<T>(this: ArrayLike<T>, matchFunc: (item: T)=>boolean) {
+		const self = this as T[];
+		return ArrayCE(self).Where(matchFunc).length;
+	}
+	Clear<T>(this: ArrayLike<T>) {
+		const self = this as T[];
 		/*while (this.length > 0)
 			this.pop();*/
-		this.splice(0, this.length);
+		self.splice(0, self.length);
 	}
 
 	/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
 	forEach_break(...args) { return this.some(...args); } */
 
-	First(this: T[], matchFunc?: (item: T)=>boolean) {
-		var result = ArrayCE(this).FirstOrX(matchFunc);
+	First<T>(this: ArrayLike<T>, matchFunc?: (item: T)=>boolean) {
+		const self = this as T[];
+		var result = ArrayCE(self).FirstOrX(matchFunc);
 		if (result == null) {
 			throw new Error("Matching item not found.");
 		}
 		return result;
 	}
-	FirstOrX(this: T[], matchFunc?: (item: T)=>boolean, x = null) {
+	FirstOrX<T>(this: ArrayLike<T>, matchFunc?: (item: T)=>boolean, x = null) {
+		const self = this as T[];
 		if (matchFunc) {
-			for (let [index, item] of this.entries()) {
+			for (let [index, item] of self.entries()) {
 				if (matchFunc.call(item, item, index)) {
 					return item;
 				}
 			}
-		} else if (this.length > 0) {
-			return this[0];
+		} else if (self.length > 0) {
+			return self[0];
 		}
 		return x;
 	}
 	//FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-	FirstWith(this: T[], propName: string, propValue: any) { return ArrayCE(this).Where(function() { return this[propName] == propValue; })[0]; }
-	Last(this: T[], matchFunc?) {
-		var result = ArrayCE(this).LastOrX(matchFunc);
+	FirstWith<T>(this: ArrayLike<T>, propName: string, propValue: any) {
+		const self = this as T[];
+		return ArrayCE(self).Where(function() { return this[propName] == propValue; })[0];
+	}
+	Last<T>(this: ArrayLike<T>, matchFunc?) {
+		const self = this as T[];
+		var result = ArrayCE(self).LastOrX(matchFunc);
 		if (result === undefined) {
 			throw new Error("Matching item not found.");
 		}
 		return result;
 	}
-	LastOrX(this: T[], matchFunc?: (item: T)=>boolean, x = null) {
+	LastOrX<T>(this: ArrayLike<T>, matchFunc?: (item: T)=>boolean, x = null) {
+		const self = this as T[];
 		if (matchFunc) {
-			for (var i = this.length - 1; i >= 0; i--) {
+			for (var i = self.length - 1; i >= 0; i--) {
 				if (matchFunc.call(this[i], this[i], i)) {
 					return this[i];
 				}
 			}
-		} else if (this.length > 0) {
-			return this[this.length - 1];
+		} else if (self.length > 0) {
+			return self[self.length - 1];
 		}
 		return x;
 	}
-	XFromLast(this: T[], x: number) { return this[(this.length - 1) - x]; }
+	XFromLast<T>(this: ArrayLike<T>, x: number) {
+		const self = this as T[];
+		return self[(self.length - 1) - x];
+	}
 
-	Move(this: T[], item: T, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex = false) {
-		var oldIndex = this.indexOf(item);
+	Move<T>(this: ArrayLike<T>, item: T, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex = false) {
+		const self = this as T[];
+		var oldIndex = self.indexOf(item);
 
 		/*if (oldIndex != -1) {
 			this.RemoveAt(oldIndex);
@@ -210,58 +278,63 @@ export class ArrayCEClass<T> {
 		this.Insert(newIndex, item);*/
 
 		if (newIndexAsPreRemovalIndexVSFinalIndex) {
-			ArrayCE(this).Insert(newIndex, item);
+			ArrayCE(self).Insert(newIndex, item);
 			if (oldIndex != -1) {
 				let oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-				ArrayCE(this).RemoveAt(oldEntry_currentIndex);
+				ArrayCE(self).RemoveAt(oldEntry_currentIndex);
 			}
 		} else {
 			if (oldIndex != -1) {
-				ArrayCE(this).RemoveAt(oldIndex);
+				ArrayCE(self).RemoveAt(oldIndex);
 			}
-			ArrayCE(this).Insert(newIndex, item);
+			ArrayCE(self).Insert(newIndex, item);
 		}
 
 		return oldIndex;
 	}
 
-	ToList(this: T[], itemType = null) { return [].concat(this); }
+	//ToList<T>(this: ArrayLike<T>, itemType = null) { return [].concat(this); }
 	/*ToDictionary(keyFunc, valFunc) {
 		var result = new Dictionary();
 		for (var i in this)
 			result.Add(keyFunc(this[i]), valFunc(this[i]));
 		return result;
 	}*/
-	ToMap<Value>(this: T[], keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>Value): {[key: string]: Value} {
+	ToMap<T, Value>(this: ArrayLike<T>, keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>Value): {[key: string]: Value} {
+		const self = this as T[];
 		var result = {};
-		for (let [index, item] of this.entries()) {
+		for (let [index, item] of self.entries()) {
 			result[keyFunc(item, index)] = valFunc(item, index);
 		}
 		return result;
 	}
-	Skip(this: T[], count: number) {
+	Skip<T>(this: ArrayLike<T>, count: number) {
+		const self = this as T[];
 		var result = [];
-		for (var i = count; i < this.length; i++) {
-			result.push(this[i]);
+		for (let i = count; i < self.length; i++) {
+			result.push(self[i]);
 		}
 		return result;
 	}
-	Take(this: T[], count: number) {
+	Take<T>(this: ArrayLike<T>, count: number) {
+		const self = this as T[];
 		var result = [];
-		for (var i = 0; i < count && i < this.length; i++) {
-			result.push(this[i]);
+		for (let i = 0; i < count && i < self.length; i++) {
+			result.push(self[i]);
 		}
 		return result;
 	}
-	TakeLast(this: T[], count: number) {
+	TakeLast<T>(this: ArrayLike<T>, count: number) {
+		const self = this as T[];
 		var result = [];
-		for (var i = 0; i < count && (this.length - 1) - i >= 0; i++) {
-			result.push(this[(this.length - 1) - i]);
+		for (var i = 0; i < count && (self.length - 1) - i >= 0; i++) {
+			result.push(self[(self.length - 1) - i]);
 		}
 		return result;
 	}
-	FindIndex(this: T[], matchFunc: (item: T)=>boolean) {
-		for (let [index, item] of this.entries()) {
+	FindIndex<T>(this: ArrayLike<T>, matchFunc: (item: T)=>boolean) {
+		const self = this as T[];
+		for (let [index, item] of self.entries()) {
 			if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
 				return index;
 			}
@@ -274,95 +347,107 @@ export class ArrayCEClass<T> {
 					return index;
 		return -1;
 	};*/
-	OrderBy(this: T[], valFunc = (item, index: number)=>item) {
+	OrderBy<T>(this: ArrayLike<T>, valFunc = (item, index: number)=>item) {
+		const self = this as T[];
 		/*var temp = this.ToList();
 		temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
 		return temp;*/
-		return StableSort(this, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
+		return StableSort(self, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 	}
-	OrderByDescending(this: T[], valFunc = (item, index: number)=>item) {
-		return ArrayCE(this).OrderBy((item, index)=>-valFunc(item, index));
+	OrderByDescending<T>(this: ArrayLike<T>, valFunc = (item, index: number)=>item) {
+		const self = this as T[];
+		return ArrayCE(self).OrderBy((item, index)=>-valFunc(item, index));
 	}
 
-	Distinct(this: T[]) {
+	Distinct<T>(this: ArrayLike<T>) {
+		const self = this as T[];
 		const result = [];
-		for (const i in this) {
-			if (!this.hasOwnProperty(i)) continue;
-			if (!ArrayCE(result).Contains(this[i])) {
-				result.push(this[i]);
+		for (const i in self) {
+			if (!self.hasOwnProperty(i)) continue;
+			if (!ArrayCE(result).Contains(self[i])) {
+				result.push(self[i]);
 			}
 		}
 		return result;
 	}
-	Except(this: T[], ...args: any[]) {
+	Except<T>(this: ArrayLike<T>, ...args: any[]) {
+		const self = this as T[];
 		let excludeItems, excludeEachOnlyOnce = true;
 		if (args[0] instanceof Array) [excludeItems, excludeEachOnlyOnce] = args;
 		else excludeItems = args;
 
 		if (excludeEachOnlyOnce) {
-			let result = this.slice();
-			for (let excludeItem of excludeItems) {
+			const result = self.slice();
+			for (const excludeItem of excludeItems) {
 				ArrayCE(result).Remove(excludeItem);
 			}
 			return result;
 		}
-		return ArrayCE(this).Where(a=>!excludeItems.Contains(a));
+		return ArrayCE(self).Where(a=>!excludeItems.Contains(a));
 	}
 
-	IfEmptyThen(this: T[], valIfSelfIsEmpty: any) {
-		return this.length == 0 ? valIfSelfIsEmpty : this;
+	IfEmptyThen<T>(this: ArrayLike<T>, valIfSelfIsEmpty: any) {
+		const self = this as T[];
+		return self.length == 0 ? valIfSelfIsEmpty : this;
 	}
 
 	//JoinUsing(separator) { return this.join(separator);};
-	Min(this: T[], valFunc?: (item: T)=>number, asNumbers = false) {
+	Min<T>(this: ArrayLike<T>, valFunc?: (item: T)=>number, asNumbers = false) {
+		const self = this as T[];
 		if (asNumbers) {
 			/*let values = valFunc ? this.map(valFunc) : this;
 			return Math.min(...values);*/
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 			return Math.min(...this as any as number[]);
 		}
-		return ArrayCE(ArrayCE(this).OrderBy(valFunc)).FirstOrX();
+		return ArrayCE(ArrayCE(self).OrderBy(valFunc)).FirstOrX();
 	}
-	Max(this: T[], valFunc?: (item: T)=>number, asNumbers = false) {
+	Max<T>(this: ArrayLike<T>, valFunc?: (item: T)=>number, asNumbers = false) {
+		const self = this as T[];
 		if (asNumbers) {
 			/*let values = valFunc ? this.map(valFunc) : this;
 			return Math.max(...values);*/
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 			return Math.max(...this as any as number[]);
 		}
-		return ArrayCE(ArrayCE(this).OrderBy(valFunc)).LastOrX();
+		return ArrayCE(ArrayCE(self).OrderBy(valFunc)).LastOrX();
 	}
-	Sum(this: number[]) {
+	Sum<T extends number>(this: ArrayLike<T>) {
+		const self = this as T[];
 		var total = 0;
-		for (let item of this) {
+		for (let item of self) {
 			total += item as any as number;
 		}
 		return total;
 	}
-	Average(this: number[]) {
-		var total = ArrayCE(this).Sum();
-		return total / this.length;
+	Average<T extends number>(this: ArrayLike<T>) {
+		const self = this as T[];
+		var total = ArrayCE(self).Sum();
+		return total / self.length;
 	}
-	Median(this: number[]) {
-		var ordered = ArrayCE(this).OrderBy(a=>a);
-		if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
-			return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
+	Median<T extends number>(this: ArrayLike<T>) {
+		const self = this as T[];
+		var ordered = ArrayCE(self).OrderBy(a=>a);
+		if (self.length % 2 == 0) { // if even number of elements, average two middlest ones
+			return ordered[(self.length / 2) - 1] + ordered[self.length / 2];
 		}
-		return ordered[this.length / 2]; // otherwise, return the exactly-middle one
+		return ordered[self.length / 2]; // otherwise, return the exactly-middle one
 	}
 
-	Random(this: T[]) {
-		let index = Math.floor(Math.random() * this.length);
+	Random<T>(this: ArrayLike<T>) {
+		const self = this as T[];
+		let index = Math.floor(Math.random() * self.length);
 		return this[index];
 	}
 
 	oldJoin = [].join;
-	join(this: T[], separator = ",") {
-		if (this.length == 0) return "";
+	join<T>(this: ArrayLike<T>, separator = ",") {
+		const self = this as T[];
+		if (self.length == 0) return "";
 		
 		//let result = "" + this[0];
 		let result = this[0] != null ? ""+this[0] : ""; // to match behavior of native join
-		for (var i = 1, len = this.length; i < len; i++) {
+		for (var i = 1, len = self.length; i < len; i++) {
 			result += separator;
 			result += this[i] != null ? ""+this[i] : "";
 		}
@@ -376,7 +461,8 @@ export class ArrayCEClass<T> {
 //export const ArrayCE = CreateWrapperForClassExtensions(ArrayCEClass);
 //export const ArrayCE = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
 const ArrayCE_Base = CreateWrapperForClassExtensions<ArrayCEClass<any>>(ArrayCEClass);
-export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
+//export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>WithFuncThisArgsAsAny_Type<ArrayCEClass<T>>;
+export const ArrayCE = ArrayCE_Base as any as <T>(nextThis: T[])=>ArrayCEClass<T>;
 export const ArrayCES = WithFuncsStandalone(ArrayCEClass.prototype);
 
 /*var ArrayIterator = [].entries().constructor;

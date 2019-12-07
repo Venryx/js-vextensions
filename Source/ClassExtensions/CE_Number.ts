@@ -1,5 +1,5 @@
 import {StringCE} from "./CE_String";
-import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone, CreateWrapperForClassExtensions_ThisAsAny} from "../Utils/General";
 import {IsNaN} from "../Utils/Types";
 
 export class NumberCEClass {
@@ -90,5 +90,5 @@ export class NumberCEClass {
 		return Math.pow(this as number, power);
 	}
 }
-export const NumberCE = CreateWrapperForClassExtensions(NumberCEClass);
+export const NumberCE = CreateWrapperForClassExtensions_ThisAsAny(NumberCEClass);
 export const NumberCES = WithFuncsStandalone(NumberCEClass.prototype);

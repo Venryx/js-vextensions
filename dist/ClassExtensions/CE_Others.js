@@ -78,7 +78,7 @@ var FunctionCEClass = /** @class */ (function () {
     return FunctionCEClass;
 }());
 exports.FunctionCEClass = FunctionCEClass;
-exports.FunctionCE = General_1.CreateWrapperForClassExtensions(FunctionCEClass);
+exports.FunctionCE = General_1.CreateWrapperForClassExtensions_ThisAsAny(FunctionCEClass);
 exports.FunctionCES = General_1.WithFuncsStandalone(FunctionCEClass.prototype);
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
@@ -115,7 +115,7 @@ var DateCEClass = /** @class */ (function () {
     return DateCEClass;
 }());
 exports.DateCEClass = DateCEClass;
-exports.DateCE = General_1.CreateWrapperForClassExtensions(DateCEClass);
+exports.DateCE = General_1.CreateWrapperForClassExtensions_ThisAsAny(DateCEClass);
 exports.DateCES = General_1.WithFuncsStandalone(DateCEClass.prototype);
 /*export class ErrorCEClass {
     get Stack() {

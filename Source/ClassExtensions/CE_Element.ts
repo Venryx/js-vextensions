@@ -1,4 +1,4 @@
-import {CreateWrapperForClassExtensions, WithFuncsStandalone} from "../Utils/General";
+import {CreateWrapperForClassExtensions, WithFuncsStandalone, CreateWrapperForClassExtensions_ThisAsAny} from "../Utils/General";
 
 export class ElementCEClass {
 	GetParents(this: Element, topDown = false) {
@@ -42,5 +42,5 @@ export class ElementCEClass {
 		return Array.from(this.querySelectorAll(queryStr)) as HTMLElement[];
 	}
 }
-export const ElementCE = CreateWrapperForClassExtensions(ElementCEClass);
+export const ElementCE = CreateWrapperForClassExtensions_ThisAsAny(ElementCEClass);
 export const ElementCES = WithFuncsStandalone(ElementCEClass.prototype);

@@ -1,4 +1,4 @@
-import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, WithFuncThisArgsAsAny_Type, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
+import {DeepGet, Clone, WithFuncsStandalone, CreateWrapperForClassExtensions, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
 import {ArrayCE} from "./CE_Array";
 import {IsNaN} from "../Utils/Types";
 import {Assert} from "../Utils/Assert";
@@ -11,8 +11,16 @@ export interface VSet_Options {
 	deleteEmpty?: boolean;
 }
 
+/*export type MapLike<V> = {[key: number]: V} | {[key: string]: V} | Map<any, V>;
+export type MapLike_StringyKey<V> = {[key: number]: V} | {[key: string]: V} | Map<string, V>;*/
+export type MapLike<V> = {[key: number]: V} | {[key: string]: V};
+export type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
+
+export type TargetTFor<T> = T extends ObjectCEClass<infer RealThis> ? RealThis : T;
+type XOrWrapped<T> = T | ObjectCEClass<T>;
+
 export const specialKeys = ["_", "_key", "_id"];
-export class ObjectCEClass<RealThis> {
+export class ObjectCEClass<TargetT> {
 	// base
 	// ==========
 
@@ -95,9 +103,9 @@ export class ObjectCEClass<RealThis> {
 	}
 
 	// as replacement for C#'s "new MyClass() {prop = true}"
-	VSet<T>(this: T, props: any, options?: VSet_Options): T;
-	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): T;
-	VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
+	VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>;
+	VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
+	//VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
 	VSet(...args) {
 		let props, options: VSet_Options, propName: string, propValue: string;
 		if (typeof args[0] == "object") [props, options] = args;
@@ -125,7 +133,7 @@ export class ObjectCEClass<RealThis> {
 		}
 		return this as any;
 	}
-	Extended<T, T2>(this: T, x: T2): T & T2 {
+	Extended<T, T2>(this: T, x: T2): TargetTFor<T> & T2 {
 		let result: any = this instanceof Array ? [] : {};
 		for (let key in this) {
 			if (!this.hasOwnProperty(key)) continue;
@@ -146,14 +154,14 @@ export class ObjectCEClass<RealThis> {
 	//E(x) { return this.Extended(x); };
 
 	SafeGet(path: string, resultIfNull?: any): any;
-	SafeGet<T, Result>(this: T, pathGetterFunc: (self: T)=>Result, resultIfNull?: any): Result;
+	SafeGet<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
 	SafeGet(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
 		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
 	}
-	VAct<T>(this: T, func: (self: T)=>any): T {
+	VAct<T>(this: T, func: (self: T)=>any): TargetTFor<T> {
 		func.call(this, this);
-		return this;
+		return this as TargetTFor<T>;
 	}
 
 	As<T>(type: new(..._)=>T) {
@@ -214,10 +222,10 @@ export class ObjectCEClass<RealThis> {
 		}
 		return result;
 	};*/
-	Pairs<K, V>(this: {[key: number]: V} | {[key: string]: V}, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
-	Pairs<K, V>(this: Map<K, V>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
+	Pairs<K, V>(this: XOrWrapped<MapLike<V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
+	Pairs<K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
 	Pairs<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-	Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
+	//Pairs<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
 	Pairs(excludeSpecialKeys: boolean | 1 = false) {
 		var result = [];
 		var i = 0;
@@ -231,10 +239,10 @@ export class ObjectCEClass<RealThis> {
 		return result;
 	}
 
-	VKeys<K>(this: {[key: number]: any} | {[key: string]: any}, excludeSpecialKeys?: boolean | 1): string[];
-	VKeys<K>(this: Map<K, any>, excludeSpecialKeys?: boolean | 1): K[];
+	VKeys(this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
+	VKeys<K>(this: XOrWrapped<Map<K, any>>, excludeSpecialKeys?: boolean | 1): K[];
 	VKeys<K = string>(excludeSpecialKeys?: boolean | 1): K[];
-	VKeys(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
+	//VKeys(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
 	VKeys(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -242,7 +250,7 @@ export class ObjectCEClass<RealThis> {
 		return keys;
 	}
 
-	VValues<V>(this: {[key: number]: V} | {[key: string]: V} | Map<any, V>, excludeSpecialKeys?: boolean | 1): V[];
+	VValues<V>(this: XOrWrapped<MapOrMapLike<V>>, excludeSpecialKeys?: boolean | 1): V[];
 	VValues<V = any>(excludeSpecialKeys?: boolean | 1): V[];
 	//interface Object { VValues(excludeSpecialKeys?: boolean): any[]; }
 	VValues(excludeSpecialKeys: boolean | 1 = false) {
@@ -270,12 +278,12 @@ export class ObjectCEClass<RealThis> {
 
 	// Object[FakeArray]
 	// ==========
-	FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[] {
+	/*FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[] {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 		/*var result = this instanceof List ? new List(this.itemType) : [];
 		for (let [index, item] of this.entries())
 			result.Add(selectFunc.call(item, item, index));
-		return result;*/
+		return result;*#/
 		return ObjectCE(this).VValues(true).map(selectFunc);
 	};
 	FA_RemoveAt(index: number) {
@@ -293,16 +301,11 @@ export class ObjectCEClass<RealThis> {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 		for (var openIndex = 0; openIndex in this; openIndex++);
 		this[openIndex] = item;
-	};
+	};*/
 }
 //export const ObjectCE = WithFuncsStandalone(ObjectCEClass.prototype);
 //export const ObjectCE = CreateWrapperForClassExtensions(ObjectCEClass);
 const ObjectCE_Base = CreateWrapperForClassExtensions<ObjectCEClass<any>>(ObjectCEClass);
-export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
+//export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>WithFuncThisArgsAsAny_Type<ObjectCEClass<T>>;
+export const ObjectCE = ObjectCE_Base as any as <T>(nextThis: T)=>ObjectCEClass<T>;
 export const ObjectCES = WithFuncsStandalone(ObjectCEClass.prototype);
-
-/*class Test1{
-	Test2() {}
-}
-ObjectCE(new Test1()).VSet({}).Test2
-ObjectCE(new Object()).Pairs()[0].key;*/

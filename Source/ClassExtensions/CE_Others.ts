@@ -1,4 +1,4 @@
-import {WithFuncsStandalone, CreateWrapperForClassExtensions} from "../Utils/General";
+import {WithFuncsStandalone, CreateWrapperForClassExtensions, CreateWrapperForClassExtensions_ThisAsAny} from "../Utils/General";
 
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
@@ -72,7 +72,7 @@ export class FunctionCEClass {
 		return this;
 	};
 }
-export const FunctionCE = CreateWrapperForClassExtensions(FunctionCEClass);
+export const FunctionCE = CreateWrapperForClassExtensions_ThisAsAny(FunctionCEClass);
 export const FunctionCES = WithFuncsStandalone(FunctionCEClass.prototype);
 
 function isLeapYear(year) {
@@ -103,7 +103,7 @@ export class DateCEClass {
 		return new Date(this.getTime());
 	}
 }
-export const DateCE = CreateWrapperForClassExtensions(DateCEClass);
+export const DateCE = CreateWrapperForClassExtensions_ThisAsAny(DateCEClass);
 export const DateCES = WithFuncsStandalone(DateCEClass.prototype);
 
 /*export class ErrorCEClass {

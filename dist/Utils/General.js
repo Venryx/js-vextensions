@@ -1094,6 +1094,11 @@ function WithFuncThisArgsAsAny(source) {
     return source;
 }
 exports.WithFuncThisArgsAsAny = WithFuncThisArgsAsAny;
+// use this simpler variant for class-extensions of target-types, where the class-extension methods don't need the type-generics of the target-type
+function CreateWrapperForClassExtensions_ThisAsAny(sourceClass) {
+    return CreateWrapperForClassExtensions(sourceClass);
+}
+exports.CreateWrapperForClassExtensions_ThisAsAny = CreateWrapperForClassExtensions_ThisAsAny;
 function CreateWrapperForClassExtensions(sourceClass) {
     // proxy approach; nicer, but I don't like potential slowdown from creating new proxy each time a class-extension method is called!
     /*return (thisArg: any)=> {
@@ -1114,8 +1119,8 @@ function CreateWrapperForClassExtensions(sourceClass) {
     var e_8, _a;
     // Static proxy approach -- a bit faster since it doesn't create any functions, closures, or proxies per wrap/CE-method-call.
     //	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
-    //let proxy = {} as T;
     var proxy = {};
+    //const proxy = {} as WithFuncThisArgsAsAny_Type<T>;
     var thisArgStack = [];
     var _loop_2 = function (key) {
         if (key == "constructor")

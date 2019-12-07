@@ -110,5 +110,6 @@ export declare type WithFuncThisArgsAsAny_Type<T> = {
     [P in keyof T]: T[P] extends (this: any, ...args: any[]) => any ? (this: any, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];
 };
 export declare function WithFuncThisArgsAsAny<T>(source: T): WithFuncThisArgsAsAny_Type<T>;
-export declare function CreateWrapperForClassExtensions<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => WithFuncThisArgsAsAny_Type<T>;
+export declare function CreateWrapperForClassExtensions_ThisAsAny<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => WithFuncThisArgsAsAny_Type<T>;
+export declare function CreateWrapperForClassExtensions<T>(sourceClass: new (...args: any[]) => T): (nextThis: any) => T;
 export {};
