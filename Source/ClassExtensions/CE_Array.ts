@@ -16,10 +16,10 @@ ForEach(func) {
 
 export type ItemTFor<T> =
 	T extends Array<infer ItemT> ? ItemT :
-	T extends ArrayCEProxy<infer ItemT> ? ItemT : // maybe needs same fix that TargetTFor got
+	T extends ArrayCEProxyInterface<infer ItemT> ? ItemT : // maybe needs same fix that TargetTFor got
 	T;
 //type XOrWrapped<T> = T | ArrayCEProxy<T>;
-export type ArrayLike<T> = Array<T> | ArrayCEProxy<T>;
+export type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
 
 //type ArrayLike_Unwrap<T> = ThisFor<XOrWrapped<T>>;
 //type ArrayLike_Unwrap<T> =
@@ -120,7 +120,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 	RemoveAll<T>(this: T[], items: T[]) {
 		const self = this as T[];
 		for (let item of items) {
-			ArrayCE(self).Remove(item);
+			ArrayCE_Base(self).Remove(item);
 		}
 	},
 	RemoveAt<T>(this: T[], index: number) {
@@ -190,7 +190,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 		//return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
 		var result = [];
 		for (let [index, item] of self.entries()) {
-			ArrayCE(result).AddRange(selectFunc.call(item, item, index));
+			ArrayCE_Base(result).AddRange(selectFunc.call(item, item, index));
 		}
 		return result;
 	},
@@ -203,7 +203,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 	},
 	VCount<T>(this: T[], matchFunc: (item: T)=>boolean) {
 		const self = this as T[];
-		return ArrayCE(self).Where(matchFunc).length;
+		return ArrayCE_Base(self).Where(matchFunc).length;
 	},
 	Clear<T>(this: T[]) {
 		const self = this as T[];
@@ -217,7 +217,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 
 	First<T>(this: T[], matchFunc?: (item: T)=>boolean) {
 		const self = this as T[];
-		var result = ArrayCE(self).FirstOrX(matchFunc);
+		var result = ArrayCE_Base(self).FirstOrX(matchFunc);
 		if (result == null) {
 			throw new Error("Matching item not found.");
 		}
@@ -239,11 +239,11 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 	//FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
 	FirstWith<T>(this: T[], propName: string, propValue: any) {
 		const self = this as T[];
-		return ArrayCE(self).Where(function() { return this[propName] == propValue; })[0];
+		return ArrayCE_Base(self).Where(function() { return this[propName] == propValue; })[0];
 	},
 	Last<T>(this: T[], matchFunc?) {
 		const self = this as T[];
-		var result = ArrayCE(self).LastOrX(matchFunc);
+		var result = ArrayCE_Base(self).LastOrX(matchFunc);
 		if (result === undefined) {
 			throw new Error("Matching item not found.");
 		}
@@ -282,16 +282,16 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 		this.Insert(newIndex, item);*/
 
 		if (newIndexAsPreRemovalIndexVSFinalIndex) {
-			ArrayCE(self).Insert(newIndex, item);
+			ArrayCE_Base(self).Insert(newIndex, item);
 			if (oldIndex != -1) {
 				let oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-				ArrayCE(self).RemoveAt(oldEntry_currentIndex);
+				ArrayCE_Base(self).RemoveAt(oldEntry_currentIndex);
 			}
 		} else {
 			if (oldIndex != -1) {
-				ArrayCE(self).RemoveAt(oldIndex);
+				ArrayCE_Base(self).RemoveAt(oldIndex);
 			}
-			ArrayCE(self).Insert(newIndex, item);
+			ArrayCE_Base(self).Insert(newIndex, item);
 		}
 
 		return oldIndex;
@@ -360,7 +360,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 	},
 	OrderByDescending<T>(this: T[], valFunc = (item, index: number)=>item) {
 		const self = this as T[];
-		return ArrayCE(self).OrderBy((item, index)=>-valFunc(item, index));
+		return ArrayCE_Base(self).OrderBy((item, index)=>-valFunc(item, index));
 	},
 
 	Distinct<T>(this: T[]) {
@@ -368,27 +368,29 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 		const result = [];
 		for (const i in self) {
 			if (!self.hasOwnProperty(i)) continue;
-			if (!ArrayCE(result).Contains(self[i])) {
+			if (!ArrayCE_Base(result).Contains(self[i])) {
 				result.push(self[i]);
 			}
 		}
 		return result;
 	},
-	Except<T>(this: T[], ...args: any[]) {
-		const self = this as T[];
+	Except: <{
+		<T>(this: T[], ...args: any[]): T[];
+		<T>(this: T[], options: {excludeEachOnlyOnce: boolean}, ...args: any[]): T[];
+	}>(function(...args: any[]) {
 		let excludeItems, excludeEachOnlyOnce = true;
 		if (args[0] instanceof Array) [excludeItems, excludeEachOnlyOnce] = args;
 		else excludeItems = args;
 
 		if (excludeEachOnlyOnce) {
-			const result = self.slice();
+			const result = this.slice();
 			for (const excludeItem of excludeItems) {
-				ArrayCE(result).Remove(excludeItem);
+				ArrayCE_Base(result).Remove(excludeItem);
 			}
 			return result;
 		}
-		return ArrayCE(self).Where(a=>!excludeItems.Contains(a));
-	},
+		return ArrayCE_Base(this).filter(a=>!excludeItems.Contains(a));
+	}),
 
 	IfEmptyThen<T>(this: T[], valIfSelfIsEmpty: any) {
 		const self = this as T[];
@@ -404,7 +406,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 			return Math.min(...this as any as number[]);
 		}
-		return ArrayCE(ArrayCE(self).OrderBy(valFunc)).FirstOrX();
+		return ArrayCE_Base(ArrayCE_Base(self).OrderBy(valFunc)).FirstOrX();
 	},
 	Max<T>(this: T[], valFunc?: (item: T)=>number, asNumbers = false) {
 		const self = this as T[];
@@ -414,7 +416,7 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
 			return Math.max(...this as any as number[]);
 		}
-		return ArrayCE(ArrayCE(self).OrderBy(valFunc)).LastOrX();
+		return ArrayCE_Base(ArrayCE_Base(self).OrderBy(valFunc)).LastOrX();
 	},
 	Sum<T extends number>(this: T[]) {
 		const self = this as T[];
@@ -426,12 +428,12 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 	},
 	Average<T extends number>(this: T[]) {
 		const self = this as T[];
-		var total = ArrayCE(self).Sum();
+		var total = ArrayCE_Base(self).Sum();
 		return total / self.length;
 	},
 	Median<T extends number>(this: T[]) {
 		const self = this as T[];
-		var ordered = ArrayCE(self).OrderBy(a=>a);
+		var ordered = ArrayCE_Base(self).OrderBy(a=>a);
 		if (self.length % 2 == 0) { // if even number of elements, average two middlest ones
 			return ordered[(self.length / 2) - 1] + ordered[self.length / 2];
 		}
@@ -462,8 +464,10 @@ export const ArrayCE_funcs = AlsoExtendsArray({
 		return result;
 	},
 });
-export type Array_WithCEFuncs<T> = Array<T> & typeof ArrayCE_funcs;
-export interface ArrayCEProxy<T> extends Array_WithCEFuncs<T> {}
+export interface ArrayCEProxyInterface<T> {
+	_magicTypeMarker: T; // this makes type-script "carry" the type-data of an ArrayCEProxy, within this proxy type (which therefore doesn't cause recursion issues from ItemTFor and such) 
+}
+export type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
 
 //export const ArrayCE = CreateProxyForClassExtensions(ArrayCEProxy);
 //export const ArrayCE = CreateProxyForClassExtensions<ArrayCEProxy<any>>(ArrayCEProxy);

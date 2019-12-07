@@ -20,7 +20,7 @@ Setup:
 type __ = typeof import("../node_modules/js-vextensions/Helpers/@ApplyCETypes"); // type import approach C (recommended)
 
 // To actually add the methods to the class-prototype chain (so it works at runtime)
-import "js-vextensions/Helpers/@ApplyCECode";
+import "js-vextensions/Helpers/@ApplyCECode.js";
 ```
 
 Usage:

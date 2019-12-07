@@ -239,7 +239,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         try {
             for (var items_2 = __values(items), items_2_1 = items_2.next(); !items_2_1.done; items_2_1 = items_2.next()) {
                 var item = items_2_1.value;
-                exports.ArrayCE(self).Remove(item);
+                ArrayCE_Base(self).Remove(item);
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -360,7 +360,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         try {
             for (var _b = __values(self.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = __read(_c.value, 2), index = _d[0], item = _d[1];
-                exports.ArrayCE(result).AddRange(selectFunc.call(item, item, index));
+                ArrayCE_Base(result).AddRange(selectFunc.call(item, item, index));
             }
         }
         catch (e_8_1) { e_8 = { error: e_8_1 }; }
@@ -381,7 +381,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     VCount: function (matchFunc) {
         var self = this;
-        return exports.ArrayCE(self).Where(matchFunc).length;
+        return ArrayCE_Base(self).Where(matchFunc).length;
     },
     Clear: function () {
         var self = this;
@@ -393,7 +393,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     forEach_break(...args) { return this.some(...args); } */
     First: function (matchFunc) {
         var self = this;
-        var result = exports.ArrayCE(self).FirstOrX(matchFunc);
+        var result = ArrayCE_Base(self).FirstOrX(matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");
         }
@@ -428,11 +428,11 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     //FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
     FirstWith: function (propName, propValue) {
         var self = this;
-        return exports.ArrayCE(self).Where(function () { return this[propName] == propValue; })[0];
+        return ArrayCE_Base(self).Where(function () { return this[propName] == propValue; })[0];
     },
     Last: function (matchFunc) {
         var self = this;
-        var result = exports.ArrayCE(self).LastOrX(matchFunc);
+        var result = ArrayCE_Base(self).LastOrX(matchFunc);
         if (result === undefined) {
             throw new Error("Matching item not found.");
         }
@@ -471,17 +471,17 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         }
         this.Insert(newIndex, item);*/
         if (newIndexAsPreRemovalIndexVSFinalIndex) {
-            exports.ArrayCE(self).Insert(newIndex, item);
+            ArrayCE_Base(self).Insert(newIndex, item);
             if (oldIndex != -1) {
                 var oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
-                exports.ArrayCE(self).RemoveAt(oldEntry_currentIndex);
+                ArrayCE_Base(self).RemoveAt(oldEntry_currentIndex);
             }
         }
         else {
             if (oldIndex != -1) {
-                exports.ArrayCE(self).RemoveAt(oldIndex);
+                ArrayCE_Base(self).RemoveAt(oldIndex);
             }
-            exports.ArrayCE(self).Insert(newIndex, item);
+            ArrayCE_Base(self).Insert(newIndex, item);
         }
         return oldIndex;
     },
@@ -572,7 +572,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     OrderByDescending: function (valFunc) {
         if (valFunc === void 0) { valFunc = function (item, index) { return item; }; }
         var self = this;
-        return exports.ArrayCE(self).OrderBy(function (item, index) { return -valFunc(item, index); });
+        return ArrayCE_Base(self).OrderBy(function (item, index) { return -valFunc(item, index); });
     },
     Distinct: function () {
         var self = this;
@@ -580,30 +580,29 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
         for (var i in self) {
             if (!self.hasOwnProperty(i))
                 continue;
-            if (!exports.ArrayCE(result).Contains(self[i])) {
+            if (!ArrayCE_Base(result).Contains(self[i])) {
                 result.push(self[i]);
             }
         }
         return result;
     },
-    Except: function () {
+    Except: (function () {
         var _a, e_12, _b;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        var self = this;
         var excludeItems, excludeEachOnlyOnce = true;
         if (args[0] instanceof Array)
             _a = __read(args, 2), excludeItems = _a[0], excludeEachOnlyOnce = _a[1];
         else
             excludeItems = args;
         if (excludeEachOnlyOnce) {
-            var result = self.slice();
+            var result = this.slice();
             try {
                 for (var excludeItems_1 = __values(excludeItems), excludeItems_1_1 = excludeItems_1.next(); !excludeItems_1_1.done; excludeItems_1_1 = excludeItems_1.next()) {
                     var excludeItem = excludeItems_1_1.value;
-                    exports.ArrayCE(result).Remove(excludeItem);
+                    ArrayCE_Base(result).Remove(excludeItem);
                 }
             }
             catch (e_12_1) { e_12 = { error: e_12_1 }; }
@@ -615,8 +614,8 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
             }
             return result;
         }
-        return exports.ArrayCE(self).Where(function (a) { return !excludeItems.Contains(a); });
-    },
+        return ArrayCE_Base(this).filter(function (a) { return !excludeItems.Contains(a); });
+    }),
     IfEmptyThen: function (valIfSelfIsEmpty) {
         var self = this;
         return self.length == 0 ? valIfSelfIsEmpty : this;
@@ -631,7 +630,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.min.apply(Math, __spread(this));
         }
-        return exports.ArrayCE(exports.ArrayCE(self).OrderBy(valFunc)).FirstOrX();
+        return ArrayCE_Base(ArrayCE_Base(self).OrderBy(valFunc)).FirstOrX();
     },
     Max: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
@@ -642,7 +641,7 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.max.apply(Math, __spread(this));
         }
-        return exports.ArrayCE(exports.ArrayCE(self).OrderBy(valFunc)).LastOrX();
+        return ArrayCE_Base(ArrayCE_Base(self).OrderBy(valFunc)).LastOrX();
     },
     Sum: function () {
         var e_13, _a;
@@ -665,12 +664,12 @@ exports.ArrayCE_funcs = AlsoExtendsArray({
     },
     Average: function () {
         var self = this;
-        var total = exports.ArrayCE(self).Sum();
+        var total = ArrayCE_Base(self).Sum();
         return total / self.length;
     },
     Median: function () {
         var self = this;
-        var ordered = exports.ArrayCE(self).OrderBy(function (a) { return a; });
+        var ordered = ArrayCE_Base(self).OrderBy(function (a) { return a; });
         if (self.length % 2 == 0) { // if even number of elements, average two middlest ones
             return ordered[(self.length / 2) - 1] + ordered[self.length / 2];
         }

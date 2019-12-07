@@ -26,7 +26,6 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
 var CE_Array_1 = require("./CE_Array");
@@ -126,6 +125,7 @@ exports.ObjectCE_funcs = {
     VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
     VSet: (function () {
         var _a, _b;
+        var _this = this;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
@@ -158,7 +158,7 @@ exports.ObjectCE_funcs = {
         else {
             SetProp(propName, propValue);
         }
-        return _this;
+        return this;
     }),
     Extended: function (x) {
         // maybe temp; explicit unwrapping, to fix odd "instantiation is excessively deep" ts-error (when calling .Extended from user project)
@@ -188,7 +188,7 @@ exports.ObjectCE_funcs = {
     //E(x) { return this.Extended(x); };
     SafeGet: (function (pathOrPathGetterFunc, resultIfNull) {
         var pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : General_1.ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
-        return General_1.DeepGet(_this, pathSegments, resultIfNull);
+        return General_1.DeepGet(this, pathSegments, resultIfNull);
     }),
     VAct: function (func) {
         func.call(this, this);
@@ -286,16 +286,15 @@ exports.ObjectCE_funcs = {
     Pairs: (function (excludeSpecialKeys) {
         var e_3, _a;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
-        var a = exports.ObjectCE(new Map()).VKeys();
         var result = [];
         var i = 0;
-        var keys = _this instanceof Map ? Array.from(_this.keys()) : Object.keys(_this);
+        var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         try {
             for (var keys_3 = __values(keys), keys_3_1 = keys_3.next(); !keys_3_1.done; keys_3_1 = keys_3.next()) {
                 var key = keys_3_1.value;
                 if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id"))
                     continue;
-                var entry = { index: i++, key: key, keyNum: Number(key), value: _this instanceof Map ? _this.get(key) : _this[key] };
+                var entry = { index: i++, key: key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
                 if (Types_1.IsNaN(entry.keyNum))
                     delete entry.keyNum;
                 result.push(entry);
@@ -313,15 +312,16 @@ exports.ObjectCE_funcs = {
     VKeys: (function (excludeSpecialKeys) {
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
-        var keys = _this instanceof Map ? Array.from(_this.keys()) : Object.keys(_this);
+        var keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         if (excludeSpecialKeys)
             keys = CE_Array_1.ArrayCE(keys).Except(exports.specialKeys);
         return keys;
     }),
     VValues: (function (excludeSpecialKeys) {
+        var _this = this;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-        return ObjectCE_Base(_this).VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
+        return ObjectCE_Base(this).VKeys(excludeSpecialKeys).map(function (key) { return _this instanceof Map ? _this.get(key) : _this[key]; });
     }),
     // for symbols
     /*Pairs_Sym() {

@@ -121,7 +121,7 @@ export const ObjectCE_funcs = {
 		<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
 		//VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
 		<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
-	}>((...args)=> {
+	}>(function(...args) {
 		let props, options: VSet_Options, propName: string, propValue: string;
 		if (typeof args[0] == "object") [props, options] = args;
 		else [propName, propValue, options] = args;
@@ -176,7 +176,7 @@ export const ObjectCE_funcs = {
 	SafeGet: <{
 		(path: string, resultIfNull?: any): any;
 		<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
-	}>((pathOrPathGetterFunc: string | Function, resultIfNull?: any)=> {
+	}>(function(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
 		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
 	}),
@@ -248,8 +248,7 @@ export const ObjectCE_funcs = {
 		<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
 		//<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
 		//(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
-	}>((excludeSpecialKeys: boolean | 1 = false)=> {
-		let a = ObjectCE(new Map<number, any>()).VKeys();
+	}>(function(excludeSpecialKeys: boolean | 1 = false) {
 		var result = [];
 		var i = 0;
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
@@ -268,9 +267,9 @@ export const ObjectCE_funcs = {
 		<K = string>(excludeSpecialKeys?: boolean | 1): K[];
 		//(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
 		//(excludeSpecialKeys?: boolean | 1): string[]; // generics-less version (needed for some ts edge-cases)
-	}>((excludeSpecialKeys: boolean | 1 = false)=> {
+	}>(function(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
-		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+		let keys = this instanceof Map ? Array.from((this as Map<any, any>).keys()) : Object.keys(this);
 		if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
 		return keys;
 	}),
@@ -280,7 +279,7 @@ export const ObjectCE_funcs = {
 		<V = any>(excludeSpecialKeys?: boolean | 1): V[];
 		//(excludeSpecialKeys?: boolean): any[];
 		//(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
-	}>((excludeSpecialKeys: boolean | 1 = false)=> {
+	}>(function(excludeSpecialKeys: boolean | 1 = false) {
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
 		return ObjectCE_Base(this).VKeys(excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 	}),
