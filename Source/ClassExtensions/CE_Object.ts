@@ -279,7 +279,7 @@ export const ObjectCE_funcs = {
 		<V = any>(excludeSpecialKeys?: boolean | 1): V[];
 		//(excludeSpecialKeys?: boolean): any[];
 		//(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
-	}>(function(excludeSpecialKeys: boolean | 1 = false) {
+	}>(function(excludeSpecialKeys: boolean | 1 = false): any[] { // explicit return type needed here fsr, else breaks type-data output for funcs object
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
 		return ObjectCES.VKeys(this, excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 	}),
