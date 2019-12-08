@@ -1,10 +1,10 @@
 export declare class BridgeMessage {
     constructor(initialData?: Partial<BridgeMessage>);
-    functionCall_callID?: number;
-    functionCall_name?: string;
-    functionCall_args?: any[];
-    callback_callID?: number;
-    callback_result?: any;
+    callFunction_name?: string;
+    callFunction_args?: any[];
+    callFunction_callbackID?: number;
+    callCallback_id?: number;
+    callCallback_args?: any[];
 }
 export declare type Bridge_Options = {
     receiveChannelMessageFunc_addImmediately?: boolean;
@@ -30,9 +30,14 @@ export declare class Bridge {
     RegisterFunction(name: string, func: Function): void;
     UnregisterFunction(name: string): void;
     OnReceiveFunctionCall(bridgeMessage: BridgeMessage): Promise<void>;
-    CallInternal(funcName: string, ...args: any[]): Promise<any>;
+    Local_CallFunc(funcName: string, ...args: any[]): Promise<any>;
     OnReceiveCallback(bridgeMessage: BridgeMessage): void;
-    lastCallID: number;
-    callCallbacks: {};
+    Local_CallCallback(callbackID: number, callbackArgs: any[]): void;
+    lastCallbackID: number;
+    callbacks: {};
+    RegisterCallback(callback: Function): number;
+    SerializeFuncsIn(argTree: Object): void;
+    DeserializeFuncsIn(argTree: Object): void;
     Call(funcName: string, ...args: any[]): Promise<unknown>;
+    CallCallback(callbackID: number, ...args: any[]): void;
 }
