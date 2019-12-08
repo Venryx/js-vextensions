@@ -1,12 +1,14 @@
-import {TransferPrototypeProps} from "../Dist";
-import {ArrayCE_funcs} from "../Dist/ClassExtensions/CE_Array";
-import {ElementCE_funcs} from "../Dist/ClassExtensions/CE_Element";
-import {NumberCE_funcs} from "../Dist/ClassExtensions/CE_Number";
-import {ObjectCE_funcs} from "../Dist/ClassExtensions/CE_Object";
-import {DateCE_funcs, FunctionCE_funcs} from "../Dist/ClassExtensions/CE_Others";
-import {StringCE_funcs} from "../Dist/ClassExtensions/CE_String";
+// @ts-check
 
-export function ClassExtensions_ApplyCode() {
+const {TransferPrototypeProps} = require("../Dist");
+const {ArrayCE_funcs} = require("../Dist/ClassExtensions/CE_Array");
+const {ElementCE_funcs} = require("../Dist/ClassExtensions/CE_Element");
+const {NumberCE_funcs} = require("../Dist/ClassExtensions/CE_Number");
+const {ObjectCE_funcs} = require("../Dist/ClassExtensions/CE_Object");
+const {DateCE_funcs, FunctionCE_funcs} = require("../Dist/ClassExtensions/CE_Others");
+const {StringCE_funcs} = require("../Dist/ClassExtensions/CE_String");
+
+function ClassExtensions_ApplyCode() {
 	TransferPrototypeProps(Array.prototype, ArrayCE_funcs, {}, {configurable: true, enumerable: false});
 	if (typeof Element != "undefined") {
 		TransferPrototypeProps(Element.prototype, ElementCE_funcs, {}, {configurable: true, enumerable: false});
