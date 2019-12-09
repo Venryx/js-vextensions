@@ -1,12 +1,14 @@
 {
   "name": "js-vextensions",
-  "version": "0.0.43",
   "description": "Extensions for Javascript, by Venryx.",
+  "version": "0.0.43",
   "main": "Dist/index.js",
   "typings": "Dist/index.d.ts",
-  "scripts": {
-    "dev": "tsc --watch",
-    "dist": "tsc"
+  "license": "MIT",
+  "author": {
+    "name": "Venryx",
+    "email": "venryx@gmail.com",
+    "url": "http://venryx.com"
   },
   "repository": {
     "type": "git",
@@ -15,16 +17,10 @@
   "keywords": [
     "javascript"
   ],
-  "author": {
-    "name": "Venryx",
-    "email": "venryx@gmail.com",
-    "url": "http://venryx.com"
+  "scripts": {
+    "dev": "tsc --watch",
+    "dist": "tsc"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Venryx/js-vextensions/issues"
-  },
-  "homepage": "https://github.com/Venryx/js-vextensions",
   "devDependencies": {
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
