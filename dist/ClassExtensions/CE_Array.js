@@ -246,7 +246,7 @@ exports.ArrayCE_funcs = {
         return this;
     },
     Reversed: function () {
-        var clone = this.slice(0);
+        var clone = this.slice();
         clone.reverse();
         return clone;
     },
@@ -580,8 +580,9 @@ exports.ArrayCE_funcs = {
     //JoinUsing(separator) { return this.join(separator);};
     Min: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
+        // only set asNumbers to true if providing a number[] array
         if (asNumbers) {
-            /*let values = valFunc ? this.map(valFunc) : this;
+            /*const values = valFunc ? this.map(valFunc) : this;
             return Math.min(...values);*/
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.min.apply(Math, __spread(this));
@@ -590,8 +591,9 @@ exports.ArrayCE_funcs = {
     },
     Max: function (valFunc, asNumbers) {
         if (asNumbers === void 0) { asNumbers = false; }
+        // only set asNumbers to true if providing a number[] array
         if (asNumbers) {
-            /*let values = valFunc ? this.map(valFunc) : this;
+            /*const values = valFunc ? this.map(valFunc) : this;
             return Math.max(...values);*/
             Assert_1.Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
             return Math.max.apply(Math, __spread(this));
@@ -632,7 +634,7 @@ exports.ArrayCE_funcs = {
         return this[index];
     },
     //oldJoin: [].join,
-    join: function (separator) {
+    Join: function (separator) {
         if (separator === void 0) { separator = ","; }
         if (this.length == 0)
             return "";

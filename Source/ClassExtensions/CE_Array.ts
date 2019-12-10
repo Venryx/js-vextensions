@@ -81,14 +81,15 @@ export const ArrayCE_funcs = {
 	Add<T>(this: T[], item: T) {
 		return this.push(item);
 	},
-	CAdd<T>(this: T[], item: T) { // CAdd = ChainAdd
+	CAdd<T>(this: T[], item: T): T[] { // CAdd = ChainAdd
 		this.push(item);
 		return this;
 	},
-	TAdd<T>(this: T[], item: T) { // TAdd = TransparentAdd
-		this.push(item); return item;
+	TAdd<T>(this: T[], item: T): T { // TAdd = TransparentAdd
+		this.push(item);
+		return item;
 	},
-	AddRange<T>(this: T[], array: T[]) {
+	AddRange<T>(this: T[], array: T[]): T[] {
 		//this.push(...array);
 		// use loop, since sending them all as arguments fails when there are ~10000+ items
 		for (const item of array) {
@@ -96,7 +97,7 @@ export const ArrayCE_funcs = {
 		}
 		return this;
 	},
-	Remove<T>(this: T[], item: T) {
+	Remove<T>(this: T[], item: T): boolean {
 		var itemIndex = this.indexOf(item);
 		if (itemIndex == -1) return false;
 
@@ -108,19 +109,19 @@ export const ArrayCE_funcs = {
 			ArrayCES.Remove(this, item);
 		}
 	},
-	RemoveAt<T>(this: T[], index: number) {
+	RemoveAt<T>(this: T[], index: number): T {
 		return this.splice(index, 1)[0];
 	},
 	Insert<T>(this: T[], index: number, obj: T) {
 		this.splice(index, 0, obj);
 	},
-	SetItems<T>(this: T[], items: T[]) {
+	SetItems<T>(this: T[], items: T[]): T[] {
 		this.splice(0, this.length, ...items);
 		return this;
 	},
 
-	Reversed<T>(this: T[]) { 
-		var clone = this.slice(0);
+	Reversed<T>(this: T[]): T[] { 
+		var clone = this.slice();
 		clone.reverse();
 		return clone;
 	},
@@ -188,14 +189,14 @@ export const ArrayCE_funcs = {
 	/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
 	forEach_break(...args) { return this.some(...args); } */
 
-	First<T>(this: T[], matchFunc?: (item: T)=>boolean) {
-		var result = ArrayCES.FirstOrX(this, matchFunc);
+	First<T>(this: T[], matchFunc?: (item: T)=>boolean): T {
+		var result = ArrayCES.FirstOrX(this, matchFunc) as T;
 		if (result == null) {
 			throw new Error("Matching item not found.");
 		}
 		return result;
 	},
-	FirstOrX<T>(this: T[], matchFunc?: (item: T)=>boolean, x = null) {
+	FirstOrX<T>(this: T[], matchFunc?: (item: T)=>boolean, x = null): T {
 		if (matchFunc) {
 			for (let [index, item] of this.entries()) {
 				if (matchFunc.call(item, item, index)) {
@@ -208,17 +209,17 @@ export const ArrayCE_funcs = {
 		return x;
 	},
 	//FirstWithPropValue(propName, propValue) { return this.Where(function() { return this[propName] == propValue; })[0]; };
-	FirstWith<T>(this: T[], propName: string, propValue: any) {
-		return ArrayCES.Where(this, function() { return this[propName] == propValue; })[0];
+	FirstWith<T>(this: T[], propName: string, propValue: any): T {
+		return ArrayCES.Where(this, function() { return this[propName] == propValue; })[0] as T;
 	},
-	Last<T>(this: T[], matchFunc?) {
-		var result = ArrayCES.LastOrX(this, matchFunc);
+	Last<T>(this: T[], matchFunc?: (item: T)=>boolean): T {
+		var result = ArrayCES.LastOrX(this, matchFunc) as T;
 		if (result === undefined) {
 			throw new Error("Matching item not found.");
 		}
 		return result;
 	},
-	LastOrX<T>(this: T[], matchFunc?: (item: T)=>boolean, x = null) {
+	LastOrX<T>(this: T[], matchFunc?: (item: T)=>boolean, x = null): T {
 		if (matchFunc) {
 			for (var i = this.length - 1; i >= 0; i--) {
 				if (matchFunc.call(this[i], this[i], i)) {
@@ -230,11 +231,11 @@ export const ArrayCE_funcs = {
 		}
 		return x;
 	},
-	XFromLast<T>(this: T[], x: number) {
+	XFromLast<T>(this: T[], x: number): T {
 		return this[(this.length - 1) - x];
 	},
 
-	Move<T>(this: T[], item: T, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex = false) {
+	Move<T>(this: T[], item: T, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex = false): number {
 		var oldIndex = this.indexOf(item);
 
 		/*if (oldIndex != -1) {
@@ -277,28 +278,28 @@ export const ArrayCE_funcs = {
 		}
 		return result;
 	},
-	Skip<T>(this: T[], count: number) {
+	Skip<T>(this: T[], count: number): T[] {
 		var result = [];
 		for (let i = count; i < this.length; i++) {
 			result.push(this[i]);
 		}
 		return result;
 	},
-	Take<T>(this: T[], count: number) {
+	Take<T>(this: T[], count: number): T[] {
 		var result = [];
 		for (let i = 0; i < count && i < this.length; i++) {
 			result.push(this[i]);
 		}
 		return result;
 	},
-	TakeLast<T>(this: T[], count: number) {
+	TakeLast<T>(this: T[], count: number): T[] {
 		var result = [];
 		for (var i = 0; i < count && (this.length - 1) - i >= 0; i++) {
 			result.push(this[(this.length - 1) - i]);
 		}
 		return result;
 	},
-	FindIndex<T>(this: T[], matchFunc: (item: T)=>boolean) {
+	FindIndex<T>(this: T[], matchFunc: (item: T)=>boolean): number {
 		for (let [index, item] of this.entries()) {
 			if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
 				return index;
@@ -312,17 +313,17 @@ export const ArrayCE_funcs = {
 					return index;
 		return -1;
 	};*/
-	OrderBy<T>(this: T[], valFunc = (item, index: number)=>item) {
+	OrderBy<T>(this: T[], valFunc = (item, index: number)=>item): T[] {
 		/*var temp = this.ToList();
 		temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
 		return temp;*/
 		return StableSort(this, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 	},
-	OrderByDescending<T>(this: T[], valFunc = (item, index: number)=>item) {
-		return ArrayCES.OrderBy(this, (item, index)=>-valFunc(item, index));
+	OrderByDescending<T>(this: T[], valFunc = (item, index: number)=>item): T[] {
+		return ArrayCES.OrderBy(this, (item, index)=>-valFunc(item, index)) as T[];
 	},
 
-	Distinct<T>(this: T[]) {
+	Distinct<T>(this: T[]): T[] {
 		const result = [];
 		for (const i in this) {
 			if (!this.hasOwnProperty(i)) continue;
@@ -350,41 +351,43 @@ export const ArrayCE_funcs = {
 		return this.filter(a=>!ArrayCES.Contains(excludeItems, a));
 	}),
 
-	IfEmptyThen<T>(this: T[], valIfSelfIsEmpty: any) {
+	IfEmptyThen<T, T2>(this: T[], valIfSelfIsEmpty: T2): T[] | T2 {
 		return this.length == 0 ? valIfSelfIsEmpty : this;
 	},
 
 	//JoinUsing(separator) { return this.join(separator);};
-	Min<T>(this: T[], valFunc?: (item: T)=>number, asNumbers = false) {
+	Min<T>(this: T[], valFunc?: (item: T)=>number, asNumbers = false): T {
+		// only set asNumbers to true if providing a number[] array
 		if (asNumbers) {
-			/*let values = valFunc ? this.map(valFunc) : this;
+			/*const values = valFunc ? this.map(valFunc) : this;
 			return Math.min(...values);*/
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
-			return Math.min(...this as any as number[]);
+			return Math.min(...this as any as number[]) as any;
 		}
-		return ArrayCES.OrderBy(this, valFunc)[0];
+		return ArrayCES.OrderBy(this, valFunc)[0] as T;
 	},
-	Max<T>(this: T[], valFunc?: (item: T)=>number, asNumbers = false) {
+	Max<T>(this: T[], valFunc?: (item: T)=>number, asNumbers = false): T {
+		// only set asNumbers to true if providing a number[] array
 		if (asNumbers) {
-			/*let values = valFunc ? this.map(valFunc) : this;
+			/*const values = valFunc ? this.map(valFunc) : this;
 			return Math.max(...values);*/
 			Assert(valFunc == null, "Cannot use valFunc if asNumbers is set to true.");
-			return Math.max(...this as any as number[]);
+			return Math.max(...this as any as number[]) as any;
 		}
-		return ArrayCES.LastOrX(ArrayCES.OrderBy(this, valFunc));
+		return ArrayCES.LastOrX(ArrayCES.OrderBy(this, valFunc)) as T;
 	},
 	Sum<T extends number>(this: T[]) {
 		let total = 0;
-		for (let item of this) {
-			total += item as any as number;
+		for (const item of this) {
+			total += item;
 		}
 		return total;
 	},
-	Average<T extends number>(this: T[]) {
+	Average<T extends number>(this: T[]): number {
 		const total = ArrayCES.Sum(this);
 		return total / this.length;
 	},
-	Median<T extends number>(this: T[]) {
+	Median<T extends number>(this: T[]): number {
 		const ordered = ArrayCES.OrderBy(this, a=>a) as number[];
 		if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
 			return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
@@ -392,13 +395,13 @@ export const ArrayCE_funcs = {
 		return ordered[this.length / 2]; // otherwise, return the exactly-middle one
 	},
 
-	Random<T>(this: T[]) {
+	Random<T>(this: T[]): T {
 		let index = Math.floor(Math.random() * this.length);
 		return this[index];
 	},
 
 	//oldJoin: [].join,
-	join<T>(this: T[], separator = ",") {
+	Join<T>(this: T[], separator = ",") {
 		if (this.length == 0) return "";
 		
 		//let result = "" + this[0];
