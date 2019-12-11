@@ -1,7 +1,7 @@
 {
   "name": "js-vextensions",
   "description": "Extensions for Javascript, by Venryx.",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "main": "Dist/index.js",
   "typings": "Dist/index.d.ts",
   "license": "MIT",
