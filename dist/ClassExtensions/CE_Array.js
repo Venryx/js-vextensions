@@ -555,7 +555,7 @@ exports.ArrayCE_funcs = {
             _a = __read(args, 2), opt = _a[0], excludeItems = _a[1];
         else
             excludeItems = args;
-        if (opt.excludeEachOnlyOnce) {
+        if (opt && opt.excludeEachOnlyOnce) {
             var result = this.slice();
             try {
                 for (var excludeItems_1 = __values(excludeItems), excludeItems_1_1 = excludeItems_1.next(); !excludeItems_1_1.done; excludeItems_1_1 = excludeItems_1.next()) {

@@ -341,7 +341,7 @@ export const ArrayCE_funcs = {
 		if (args[0] && "excludeEachOnlyOnce" in args[0]) [opt, excludeItems] = args;
 		else excludeItems = args;
 
-		if (opt.excludeEachOnlyOnce) {
+		if (opt && opt.excludeEachOnlyOnce) {
 			const result = this.slice();
 			for (const excludeItem of excludeItems) {
 				ArrayCES.Remove(result, excludeItem);
