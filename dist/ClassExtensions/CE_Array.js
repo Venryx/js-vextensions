@@ -69,12 +69,26 @@ var __spread = (this && this.__spread) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
 var Assert_1 = require("../Utils/Assert");
-//type ArrayLike_Unwrap<T> = ThisFor<XOrWrapped<T>>;
-//type ArrayLike_Unwrap<T> =
-/*type Unwrapped<T> =
-    T extends Array<infer ItemT> ? ItemT[] :
-    T extends ArrayCEProxy<infer ItemT> ? ItemT[] :
-    never;*/
+var ForEachControlOp = /** @class */ (function () {
+    function ForEachControlOp(type, returnValue) {
+        this.type = type;
+        this.returnValue = returnValue;
+    }
+    return ForEachControlOp;
+}());
+exports.ForEachControlOp = ForEachControlOp;
+function Break() {
+    return new ForEachControlOp("break");
+}
+exports.Break = Break;
+function Continue() {
+    return new ForEachControlOp("continue");
+}
+exports.Continue = Continue;
+function Return(returnVal) {
+    return new ForEachControlOp("return", returnVal);
+}
+exports.Return = Return;
 exports.ArrayCE_funcs = {
     /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
     forEach_break(...args) { return this.some(...args); } */
@@ -88,57 +102,61 @@ exports.ArrayCE_funcs = {
         }
     }*/
     ForEach: function (func) {
-        var result;
-        var shouldBreak = false, shouldContinue = false, shouldReturn = false;
         var extras = {
+            array: this,
             index: null,
-            Break: function () { shouldBreak = true; },
-            Continue: function () { shouldContinue = true; },
-            Return: function (val) { result = val; shouldBreak = true; }
+            controlOp: null,
+            Break: function () { extras.controlOp = new ForEachControlOp("break"); },
+            Continue: function () { extras.controlOp = new ForEachControlOp("continue"); },
+            Return: function (returnVal) { extras.controlOp = new ForEachControlOp("return", returnVal); }
         };
         for (var i = 0; i < this.length; i++) {
             extras.index = i;
-            shouldBreak = false;
-            shouldContinue = false;
-            func(this[i], extras);
-            if (shouldBreak)
-                break;
-            if (shouldContinue)
-                continue;
-            if (shouldReturn)
-                return result;
+            extras.controlOp = null;
+            var subResult = func(this[i], i, extras);
+            var controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
+            if (controlOp) {
+                if (subResult.type == "break")
+                    break;
+                if (subResult.type == "continue")
+                    continue;
+                if (subResult.type == "return")
+                    return subResult.returnValue;
+            }
         }
     },
     ForEachAsync: function (func) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, shouldBreak, shouldContinue, shouldReturn, extras, i;
+            var extras, i, subResult, controlOp;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        shouldBreak = false, shouldContinue = false, shouldReturn = false;
                         extras = {
+                            array: this,
                             index: null,
-                            Break: function () { shouldBreak = true; },
-                            Continue: function () { shouldContinue = true; },
-                            Return: function (val) { result = val; shouldBreak = true; }
+                            controlOp: null,
+                            Break: function () { extras.controlOp = new ForEachControlOp("break"); },
+                            Continue: function () { extras.controlOp = new ForEachControlOp("continue"); },
+                            Return: function (returnVal) { extras.controlOp = new ForEachControlOp("return", returnVal); }
                         };
                         i = 0;
                         _a.label = 1;
                     case 1:
                         if (!(i < this.length)) return [3 /*break*/, 4];
                         extras.index = i;
-                        shouldBreak = false;
-                        shouldContinue = false;
-                        shouldReturn = false;
+                        extras.controlOp = null;
                         return [4 /*yield*/, func(this[i], extras)];
                     case 2:
-                        _a.sent();
-                        if (shouldBreak)
-                            return [3 /*break*/, 4];
-                        if (shouldContinue)
-                            return [3 /*break*/, 3];
-                        if (shouldReturn)
-                            return [2 /*return*/, result];
+                        subResult = _a.sent();
+                        controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
+                        if (controlOp) {
+                            if (subResult.type == "break")
+                                return [3 /*break*/, 4];
+                            if (subResult.type == "continue")
+                                return [3 /*break*/, 3];
+                            if (subResult.type == "return")
+                                return [2 /*return*/, subResult.returnValue];
+                        }
                         _a.label = 3;
                     case 3:
                         i++;

@@ -112,21 +112,23 @@ exports.ObjectCE_funcs = {
     Extend: function (x, copyNonEnumerable) {
         var e_1, _a;
         if (copyNonEnumerable === void 0) { copyNonEnumerable = true; }
-        try {
-            for (var _b = __values(Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var key = _c.value;
-                //if (!x.hasOwnProperty(key)) continue;
-                var value = x[key];
-                //if (value !== undefined)
-                this[key] = value;
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
+        if (x != null) {
             try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                for (var _b = __values(Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var key = _c.value;
+                    //if (!x.hasOwnProperty(key)) continue;
+                    var value = x[key];
+                    //if (value !== undefined)
+                    this[key] = value;
+                }
             }
-            finally { if (e_1) throw e_1.error; }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
         }
         return this;
     },

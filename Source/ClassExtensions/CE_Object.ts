@@ -103,12 +103,14 @@ export const ObjectCE_funcs = {
 		return this;
 	};*/
 
-	Extend(x, copyNonEnumerable = true) {
-		for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
-			//if (!x.hasOwnProperty(key)) continue;
-			var value = x[key];
-			//if (value !== undefined)
-			this[key] = value;
+	Extend(x: any, copyNonEnumerable = true) {
+		if (x != null) {
+			for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
+				//if (!x.hasOwnProperty(key)) continue;
+				var value = x[key];
+				//if (value !== undefined)
+				this[key] = value;
+			}
 		}
 		return this;
 	},

@@ -28,6 +28,25 @@ export type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
 	T extends ArrayCEProxy<infer ItemT> ? ItemT[] :
 	never;*/
 
+/*export const ForEach_helpers = {
+	BreakSym: Symbol("Break"),
+	ContinueSym: Symbol("Continue"),
+	Return: Symbol("Return"),
+}*/
+export type ForEachControlOpType = "break" | "continue" | "return";
+export class ForEachControlOp {
+	constructor(public type: ForEachControlOpType, public returnValue?: any) {}
+}
+export function Break() {
+	return new ForEachControlOp("break");
+}
+export function Continue() {
+	return new ForEachControlOp("continue");
+}
+export function Return(returnVal: any) {
+	return new ForEachControlOp("return", returnVal);
+}
+
 export const ArrayCE_funcs = {
 	/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
 	forEach_break(...args) { return this.some(...args); } */
@@ -40,43 +59,47 @@ export const ArrayCE_funcs = {
 			else if (subResult !== undefined) return subResult;
 		}
 	}*/
-	ForEach<T>(this: Array<T>, func: (value: T, extras: ForEachExtras)=>any) {
-		let result;
-		let shouldBreak = false, shouldContinue = false, shouldReturn = false;
+	ForEach<T>(this: Array<T>, func: (value: T, index: number, extras: ForEachExtras)=>any) {
 		let extras = {
+			array: this,
 			index: null as number,
-			Break() { shouldBreak = true; },
-			Continue() { shouldContinue = true; },
-			Return(val: any) { result = val; shouldBreak = true; }
+			controlOp: null as ForEachControlOp,
+			Break() { extras.controlOp = new ForEachControlOp("break"); },
+			Continue() { extras.controlOp = new ForEachControlOp("continue"); },
+			Return(returnVal: any) { extras.controlOp = new ForEachControlOp("return", returnVal); }
 		};
 		for (let i = 0; i < this.length; i++) {
 			extras.index = i;
-			shouldBreak = false;
-			shouldContinue = false;
-			func(this[i], extras);
-			if (shouldBreak) break;
-			if (shouldContinue) continue;
-			if (shouldReturn) return result;
+			extras.controlOp = null;
+			let subResult = func(this[i], i, extras);
+			let controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
+			if (controlOp) {
+				if (subResult.type == "break") break;
+				if (subResult.type == "continue") continue;
+				if (subResult.type == "return") return subResult.returnValue;
+			}
 		}
 	},
 	async ForEachAsync<T>(this: T[], func: (value: T, extras: ForEachExtras)=>any) {
-		let result;
-		let shouldBreak = false, shouldContinue = false, shouldReturn = false;
 		let extras = {
+			array: this,
 			index: null as number,
-			Break() { shouldBreak = true; },
-			Continue() { shouldContinue = true; },
-			Return(val: any) { result = val; shouldBreak = true; }
+			controlOp: null as ForEachControlOp,
+			Break() { extras.controlOp = new ForEachControlOp("break"); },
+			Continue() { extras.controlOp = new ForEachControlOp("continue"); },
+			Return(returnVal: any) { extras.controlOp = new ForEachControlOp("return", returnVal); }
 		};
 		for (let i = 0; i < this.length; i++) {
 			extras.index = i;
-			shouldBreak = false; shouldContinue = false; shouldReturn = false;
-			await func(this[i], extras);
-			if (shouldBreak) break;
-			if (shouldContinue) continue;
-			if (shouldReturn) return result;
+			extras.controlOp = null;
+			let subResult = await func(this[i], extras);
+			let controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
+			if (controlOp) {
+				if (subResult.type == "break") break;
+				if (subResult.type == "continue") continue;
+				if (subResult.type == "return") return subResult.returnValue;
+			}
 		}
-		//return result;
 	},
 	/*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }
 	Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {

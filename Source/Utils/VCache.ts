@@ -1,5 +1,6 @@
 import {Assert} from "./Assert";
 import {ShallowEquals} from "./General";
+import {ArrayCE, Continue} from "../ClassExtensions/CE_Array";
 
 export class Storage<T2, T3> {
 	lastDynamicProps: T2;
@@ -46,13 +47,11 @@ export function CachedTransform<T, T2, T3>(
 
 export function CombineDynamicPropMaps(...maps) {
 	var result = {};
-	for (const [mapIndex, map] of maps.entries()) {
-		/*for (const key in map) {
-			if (!map.hasOwnProperty(key)) continue;*/
-		//Object.keys(map).forEach(key=> {
-		for (const key of Object.keys(map)) {
+	ArrayCE(maps).ForEach((map, mapIndex)=> {
+		if (map == null) return Continue();
+		Object.keys(map).forEach(key=> {
 			result[mapIndex + "_" + key] = map[key];
-		}
-	}
+		});
+	});
 	return result;
 }
