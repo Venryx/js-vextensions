@@ -1,4 +1,15 @@
 "use strict";
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -14,17 +25,6 @@ var __read = (this && this.__read) || function (o, n) {
         finally { if (e) throw e.error; }
     }
     return ar;
-};
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var General_1 = require("../Utils/General");
@@ -109,13 +109,24 @@ exports.ObjectCE_funcs = {
         }
         return this;
     };*/
-    Extend: function (x) {
-        for (var key in x) {
-            if (!x.hasOwnProperty(key))
-                continue;
-            var value = x[key];
-            //if (value !== undefined)
-            this[key] = value;
+    Extend: function (x, copyNonEnumerable) {
+        var e_1, _a;
+        if (copyNonEnumerable === void 0) { copyNonEnumerable = true; }
+        try {
+            for (var _b = __values(Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var key = _c.value;
+                //if (!x.hasOwnProperty(key)) continue;
+                var value = x[key];
+                //if (value !== undefined)
+                this[key] = value;
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_1) throw e_1.error; }
         }
         return this;
     },
@@ -124,35 +135,46 @@ exports.ObjectCE_funcs = {
     //VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
     VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
     VSet: (function () {
-        var _a, _b;
+        var _a, _b, e_2, _c;
         var _this = this;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        var props, options, propName, propValue;
+        var props, opt, propName, propValue;
         if (typeof args[0] == "object")
-            _a = __read(args, 2), props = _a[0], options = _a[1];
+            _a = __read(args, 2), props = _a[0], opt = _a[1];
         else
-            _b = __read(args, 3), propName = _b[0], propValue = _b[1], options = _b[2];
-        options = options || {};
+            _b = __read(args, 3), propName = _b[0], propValue = _b[1], opt = _b[2];
+        opt = opt || {};
+        var copyNonEnumerable = opt.copyNonEnumerable != null ? opt.copyNonEnumerable : true;
         var SetProp = function (name, value) {
-            if (value === General_1.DEL || (value === undefined && options.deleteUndefined) || (value === null && options.deleteNull) || (value === "" && options.deleteEmpty)) {
+            if (value === General_1.DEL || (value === undefined && opt.deleteUndefined) || (value === null && opt.deleteNull) || (value === "" && opt.deleteEmpty)) {
                 delete _this[name];
                 return;
             }
-            if (options.prop) {
-                Object.defineProperty(_this, name, Object.assign({ configurable: true }, options.prop, { value: value }));
+            if (opt.prop) {
+                Object.defineProperty(_this, name, Object.assign({ configurable: true }, opt.prop, { value: value }));
             }
             else {
                 _this[name] = value;
             }
         };
         if (props) {
-            for (var key in props) {
-                if (!props.hasOwnProperty(key))
-                    continue;
-                SetProp(key, props[key]);
+            try {
+                /*for (let key in props) {
+                    if (!props.hasOwnProperty(key)) continue;*/
+                for (var _d = __values(Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](props)), _e = _d.next(); !_e.done; _e = _d.next()) {
+                    var key = _e.value;
+                    SetProp(key, props[key]);
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_e && !_e.done && (_c = _d.return)) _c.call(_d);
+                }
+                finally { if (e_2) throw e_2.error; }
             }
         }
         else {
@@ -160,23 +182,36 @@ exports.ObjectCE_funcs = {
         }
         return this;
     }),
-    Extended: function (x) {
-        // maybe temp; explicit unwrapping, to fix odd "instantiation is excessively deep" ts-error (when calling .Extended from user project)
-        /*Extended<T, T2>(this: T, x: T2): T & T2;
-        Extended<T, T2>(this: ObjectCEProxy<T>, x: T2): T & T2;
-        Extended(x: any) {*/
-        //Extended<T, T2>(this: ObjectCEProxy<T> | T, x: T2): T & T2 {
+    Extended: function (x, copyNonEnumerable) {
+        var e_3, _a, e_4, _b;
+        if (copyNonEnumerable === void 0) { copyNonEnumerable = true; }
         var result = this instanceof Array ? [] : {};
-        for (var key in this) {
-            if (!this.hasOwnProperty(key))
-                continue;
-            result[key] = this[key];
+        try {
+            for (var _c = __values(Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var key = _d.value;
+                result[key] = this[key];
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+            }
+            finally { if (e_3) throw e_3.error; }
         }
         if (x) {
-            for (var key in x) {
-                if (!x.hasOwnProperty(key))
-                    continue;
-                result[key] = x[key];
+            try {
+                for (var _e = __values(Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)), _f = _e.next(); !_f.done; _f = _e.next()) {
+                    var key = _f.value;
+                    result[key] = x[key];
+                }
+            }
+            catch (e_4_1) { e_4 = { error: e_4_1 }; }
+            finally {
+                try {
+                    if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
+                }
+                finally { if (e_4) throw e_4.error; }
             }
         }
         return result;
@@ -203,7 +238,7 @@ exports.ObjectCE_funcs = {
         return this;
     },
     Including: function () {
-        var e_1, _a;
+        var e_5, _a;
         var keys = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             keys[_i] = arguments[_i];
@@ -218,17 +253,17 @@ exports.ObjectCE_funcs = {
                 result[key] = this[key];
             }
         }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        catch (e_5_1) { e_5 = { error: e_5_1 }; }
         finally {
             try {
                 if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
             }
-            finally { if (e_1) throw e_1.error; }
+            finally { if (e_5) throw e_5.error; }
         }
         return result;
     },
     Excluding: function () {
-        var e_2, _a;
+        var e_6, _a;
         var keys = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             keys[_i] = arguments[_i];
@@ -241,12 +276,12 @@ exports.ObjectCE_funcs = {
                 delete result[key];
             }
         }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        catch (e_6_1) { e_6 = { error: e_6_1 }; }
         finally {
             try {
                 if (keys_2_1 && !keys_2_1.done && (_a = keys_2.return)) _a.call(keys_2);
             }
-            finally { if (e_2) throw e_2.error; }
+            finally { if (e_6) throw e_6.error; }
         }
         return result;
     },
@@ -284,7 +319,7 @@ exports.ObjectCE_funcs = {
         return result;
     },*/
     Pairs: (function (excludeSpecialKeys) {
-        var e_3, _a;
+        var e_7, _a;
         if (excludeSpecialKeys === void 0) { excludeSpecialKeys = false; }
         var result = [];
         var i = 0;
@@ -300,12 +335,12 @@ exports.ObjectCE_funcs = {
                 result.push(entry);
             }
         }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        catch (e_7_1) { e_7 = { error: e_7_1 }; }
         finally {
             try {
                 if (keys_3_1 && !keys_3_1.done && (_a = keys_3.return)) _a.call(keys_3);
             }
-            finally { if (e_3) throw e_3.error; }
+            finally { if (e_7) throw e_7.error; }
         }
         return result;
     }),

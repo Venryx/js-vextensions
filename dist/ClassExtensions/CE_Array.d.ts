@@ -6,8 +6,8 @@ export interface ForEachExtras {
 export declare type ItemTFor<T> = T extends Array<infer ItemT> ? ItemT : T extends ArrayCEProxyInterface<infer ItemT> ? ItemT : T;
 export declare type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
 export declare const ArrayCE_funcs: {
-    ForEach<T>(this: T[], func: (value: T, extras: ForEachExtras) => any): void;
-    ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<void>;
+    ForEach<T>(this: T[], func: (value: T, extras: ForEachExtras) => any): any;
+    ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<any>;
     Contains<T_2>(this: T_2[], item: T_2): boolean;
     ContainsAny<T_3>(this: T_3[], ...items: T_3[]): boolean;
     Prepend<T_4>(this: T_4[], ...newItems: T_4[]): void;
@@ -67,8 +67,8 @@ export interface ArrayCEProxyInterface<T> {
 export declare type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
 export declare const ArrayCE: <T>(nextThis: T[]) => ArrayCEProxy<T>;
 export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Type<{
-    ForEach<T>(this: T[], func: (value: T, extras: ForEachExtras) => any): void;
-    ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<void>;
+    ForEach<T>(this: T[], func: (value: T, extras: ForEachExtras) => any): any;
+    ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<any>;
     Contains<T_2>(this: T_2[], item: T_2): boolean;
     ContainsAny<T_3>(this: T_3[], ...items: T_3[]): boolean;
     Prepend<T_4>(this: T_4[], ...newItems: T_4[]): void;

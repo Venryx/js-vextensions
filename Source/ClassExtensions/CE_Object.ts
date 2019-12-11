@@ -9,6 +9,7 @@ export interface VSet_Options {
 	deleteUndefined?: boolean;
 	deleteNull?: boolean;
 	deleteEmpty?: boolean;
+	copyNonEnumerable?: boolean;
 }
 
 /*export type MapLike<V> = {[key: number]: V} | {[key: string]: V} | Map<any, V>;
@@ -102,9 +103,9 @@ export const ObjectCE_funcs = {
 		return this;
 	};*/
 
-	Extend(x) {
-		for (var key in x) {
-			if (!x.hasOwnProperty(key)) continue;
+	Extend(x, copyNonEnumerable = true) {
+		for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
+			//if (!x.hasOwnProperty(key)) continue;
 			var value = x[key];
 			//if (value !== undefined)
 			this[key] = value;
@@ -118,29 +119,31 @@ export const ObjectCE_funcs = {
 	VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
 	VSet: <{
 		// as replacement for C#'s "new MyClass() {prop = true}"
-		<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
+		<T>(this: T, propName: string, propValue, opt?: VSet_Options): TargetTFor<T>;
 		//VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
-		<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
+		<T>(this: T, props: any, opt?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
 	}>(function(...args) {
-		let props, options: VSet_Options, propName: string, propValue: string;
-		if (typeof args[0] == "object") [props, options] = args;
-		else [propName, propValue, options] = args;
-		options = options || {};
+		let props, opt: VSet_Options, propName: string, propValue: string;
+		if (typeof args[0] == "object") [props, opt] = args;
+		else [propName, propValue, opt] = args;
+		opt = opt || {};
+		let copyNonEnumerable = opt.copyNonEnumerable != null ? opt.copyNonEnumerable : true;
 
 		const SetProp = (name, value)=> {
-			if (value === DEL || (value === undefined && options.deleteUndefined) || (value === null && options.deleteNull) || (value === "" && options.deleteEmpty)) {
+			if (value === DEL || (value === undefined && opt.deleteUndefined) || (value === null && opt.deleteNull) || (value === "" && opt.deleteEmpty)) {
 				delete this[name];
 				return;
 			}
-			if (options.prop) {
-				Object.defineProperty(this, name, Object.assign({configurable: true}, options.prop, {value}));
+			if (opt.prop) {
+				Object.defineProperty(this, name, Object.assign({configurable: true}, opt.prop, {value}));
 			} else {
 				this[name] = value;
 			}
 		};
 		if (props) {
-			for (let key in props) {
-				if (!props.hasOwnProperty(key)) continue;
+			/*for (let key in props) {
+				if (!props.hasOwnProperty(key)) continue;*/
+			for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](props)) {
 				SetProp(key, props[key]);
 			}
 		} else {
@@ -148,20 +151,13 @@ export const ObjectCE_funcs = {
 		}
 		return this as any;
 	}),
-	Extended<T, T2>(this: T, x: T2): TargetTFor<T> & T2 {
-	// maybe temp; explicit unwrapping, to fix odd "instantiation is excessively deep" ts-error (when calling .Extended from user project)
-	/*Extended<T, T2>(this: T, x: T2): T & T2;
-	Extended<T, T2>(this: ObjectCEProxy<T>, x: T2): T & T2;
-	Extended(x: any) {*/
-	//Extended<T, T2>(this: ObjectCEProxy<T> | T, x: T2): T & T2 {
+	Extended<T, T2>(this: T, x: T2, copyNonEnumerable = true): TargetTFor<T> & T2 {
 		let result: any = this instanceof Array ? [] : {};
-		for (let key in this as any) {
-			if (!this.hasOwnProperty(key)) continue;
+		for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)) {
 			result[key] = this[key];
 		}
 		if (x) {
-			for (let key in x) {
-				if (!x.hasOwnProperty(key)) continue;
+			for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
 				result[key] = x[key];
 			}
 		}

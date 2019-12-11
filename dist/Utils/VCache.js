@@ -68,26 +68,37 @@ function CachedTransform(transformType, staticProps, dynamicProps, transformFunc
 }
 exports.CachedTransform = CachedTransform;
 function CombineDynamicPropMaps() {
-    var e_1, _a;
+    var e_1, _a, e_2, _b;
     var maps = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         maps[_i] = arguments[_i];
     }
     var result = {};
     try {
-        for (var _b = __values(maps.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
-            var _d = __read(_c.value, 2), mapIndex = _d[0], map = _d[1];
-            for (var key in map) {
-                if (!map.hasOwnProperty(key))
-                    continue;
-                result[mapIndex + "_" + key] = map[key];
+        for (var _c = __values(maps.entries()), _d = _c.next(); !_d.done; _d = _c.next()) {
+            var _e = __read(_d.value, 2), mapIndex = _e[0], map = _e[1];
+            try {
+                /*for (const key in map) {
+                    if (!map.hasOwnProperty(key)) continue;*/
+                //Object.keys(map).forEach(key=> {
+                for (var _f = (e_2 = void 0, __values(Object.keys(map))), _g = _f.next(); !_g.done; _g = _f.next()) {
+                    var key = _g.value;
+                    result[mapIndex + "_" + key] = map[key];
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_g && !_g.done && (_b = _f.return)) _b.call(_f);
+                }
+                finally { if (e_2) throw e_2.error; }
             }
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }
     finally {
         try {
-            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
         }
         finally { if (e_1) throw e_1.error; }
     }

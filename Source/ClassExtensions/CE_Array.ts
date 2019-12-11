@@ -29,26 +29,54 @@ export type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
 	never;*/
 
 export const ArrayCE_funcs = {
+	/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
+	forEach_break(...args) { return this.some(...args); } */
+	/*ForEach<T, T2>(this: T[], func: (item: T, index: number, array: T[])=>T2): T2 {
+		//this.forEach((item, index, array)=> {
+		for (const [index, item] of this.entries()) {
+			let subResult = func(item, index, this);
+			if (subResult == "break") break;
+			else if (subResult == "continue") continue;
+			else if (subResult !== undefined) return subResult;
+		}
+	}*/
 	ForEach<T>(this: Array<T>, func: (value: T, extras: ForEachExtras)=>any) {
+		let result;
+		let shouldBreak = false, shouldContinue = false, shouldReturn = false;
+		let extras = {
+			index: null as number,
+			Break() { shouldBreak = true; },
+			Continue() { shouldContinue = true; },
+			Return(val: any) { result = val; shouldBreak = true; }
+		};
 		for (let i = 0; i < this.length; i++) {
-			let shouldBreak = false;
-			let shouldContinue = false;
-			let extras = {index: i, Break: ()=>shouldBreak = true, Continue: ()=>shouldContinue = true};
+			extras.index = i;
+			shouldBreak = false;
+			shouldContinue = false;
 			func(this[i], extras);
 			if (shouldBreak) break;
 			if (shouldContinue) continue;
+			if (shouldReturn) return result;
 		}
 	},
-
 	async ForEachAsync<T>(this: T[], func: (value: T, extras: ForEachExtras)=>any) {
+		let result;
+		let shouldBreak = false, shouldContinue = false, shouldReturn = false;
+		let extras = {
+			index: null as number,
+			Break() { shouldBreak = true; },
+			Continue() { shouldContinue = true; },
+			Return(val: any) { result = val; shouldBreak = true; }
+		};
 		for (let i = 0; i < this.length; i++) {
-			let shouldBreak = false;
-			let shouldContinue = false;
-			let extras = {index: i, Break: ()=>shouldBreak = true, Continue: ()=>shouldContinue = true};
+			extras.index = i;
+			shouldBreak = false; shouldContinue = false; shouldReturn = false;
 			await func(this[i], extras);
 			if (shouldBreak) break;
 			if (shouldContinue) continue;
+			if (shouldReturn) return result;
 		}
+		//return result;
 	},
 	/*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }
 	Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {
@@ -186,9 +214,6 @@ export const ArrayCE_funcs = {
 		this.splice(0, this.length);
 	},
 
-	/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
-	forEach_break(...args) { return this.some(...args); } */
-
 	First<T>(this: T[], matchFunc?: (item: T)=>boolean): T {
 		var result = ArrayCES.FirstOrX(this, matchFunc) as T;
 		if (result == null) {
@@ -325,8 +350,9 @@ export const ArrayCE_funcs = {
 
 	Distinct<T>(this: T[]): T[] {
 		const result = [];
-		for (const i in this) {
-			if (!this.hasOwnProperty(i)) continue;
+		/*for (const i in this) {
+			if (!this.hasOwnProperty(i)) continue;*/
+		for (let i = 0; i < this.length; i++) {
 			if (!ArrayCES.Contains(result, this[i])) {
 				result.push(this[i]);
 			}

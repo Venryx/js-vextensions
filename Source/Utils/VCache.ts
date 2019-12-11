@@ -47,8 +47,10 @@ export function CachedTransform<T, T2, T3>(
 export function CombineDynamicPropMaps(...maps) {
 	var result = {};
 	for (const [mapIndex, map] of maps.entries()) {
-		for (const key in map) {
-			if (!map.hasOwnProperty(key)) continue;
+		/*for (const key in map) {
+			if (!map.hasOwnProperty(key)) continue;*/
+		//Object.keys(map).forEach(key=> {
+		for (const key of Object.keys(map)) {
 			result[mapIndex + "_" + key] = map[key];
 		}
 	}

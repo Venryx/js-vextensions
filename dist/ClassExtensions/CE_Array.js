@@ -76,59 +76,69 @@ var Assert_1 = require("../Utils/Assert");
     T extends ArrayCEProxy<infer ItemT> ? ItemT[] :
     never;*/
 exports.ArrayCE_funcs = {
+    /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
+    forEach_break(...args) { return this.some(...args); } */
+    /*ForEach<T, T2>(this: T[], func: (item: T, index: number, array: T[])=>T2): T2 {
+        //this.forEach((item, index, array)=> {
+        for (const [index, item] of this.entries()) {
+            let subResult = func(item, index, this);
+            if (subResult == "break") break;
+            else if (subResult == "continue") continue;
+            else if (subResult !== undefined) return subResult;
+        }
+    }*/
     ForEach: function (func) {
-        var _loop_1 = function (i) {
-            var shouldBreak = false;
-            var shouldContinue = false;
-            var extras = { index: i, Break: function () { return shouldBreak = true; }, Continue: function () { return shouldContinue = true; } };
-            func(this_1[i], extras);
-            if (shouldBreak)
-                return "break";
-            if (shouldContinue)
-                return "continue";
+        var result;
+        var shouldBreak = false, shouldContinue = false, shouldReturn = false;
+        var extras = {
+            index: null,
+            Break: function () { shouldBreak = true; },
+            Continue: function () { shouldContinue = true; },
+            Return: function (val) { result = val; shouldBreak = true; }
         };
-        var this_1 = this;
         for (var i = 0; i < this.length; i++) {
-            var state_1 = _loop_1(i);
-            if (state_1 === "break")
+            extras.index = i;
+            shouldBreak = false;
+            shouldContinue = false;
+            func(this[i], extras);
+            if (shouldBreak)
                 break;
+            if (shouldContinue)
+                continue;
+            if (shouldReturn)
+                return result;
         }
     },
     ForEachAsync: function (func) {
         return __awaiter(this, void 0, void 0, function () {
-            var _loop_2, this_2, i, state_2;
+            var result, shouldBreak, shouldContinue, shouldReturn, extras, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _loop_2 = function (i) {
-                            var shouldBreak, shouldContinue, extras;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        shouldBreak = false;
-                                        shouldContinue = false;
-                                        extras = { index: i, Break: function () { return shouldBreak = true; }, Continue: function () { return shouldContinue = true; } };
-                                        return [4 /*yield*/, func(this_2[i], extras)];
-                                    case 1:
-                                        _a.sent();
-                                        if (shouldBreak)
-                                            return [2 /*return*/, "break"];
-                                        if (shouldContinue)
-                                            return [2 /*return*/, "continue"];
-                                        return [2 /*return*/];
-                                }
-                            });
+                        shouldBreak = false, shouldContinue = false, shouldReturn = false;
+                        extras = {
+                            index: null,
+                            Break: function () { shouldBreak = true; },
+                            Continue: function () { shouldContinue = true; },
+                            Return: function (val) { result = val; shouldBreak = true; }
                         };
-                        this_2 = this;
                         i = 0;
                         _a.label = 1;
                     case 1:
                         if (!(i < this.length)) return [3 /*break*/, 4];
-                        return [5 /*yield**/, _loop_2(i)];
+                        extras.index = i;
+                        shouldBreak = false;
+                        shouldContinue = false;
+                        shouldReturn = false;
+                        return [4 /*yield*/, func(this[i], extras)];
                     case 2:
-                        state_2 = _a.sent();
-                        if (state_2 === "break")
+                        _a.sent();
+                        if (shouldBreak)
                             return [3 /*break*/, 4];
+                        if (shouldContinue)
+                            return [3 /*break*/, 3];
+                        if (shouldReturn)
+                            return [2 /*return*/, result];
                         _a.label = 3;
                     case 3:
                         i++;
@@ -362,8 +372,6 @@ exports.ArrayCE_funcs = {
             this.pop();*/
         this.splice(0, this.length);
     },
-    /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
-    forEach_break(...args) { return this.some(...args); } */
     First: function (matchFunc) {
         var result = exports.ArrayCES.FirstOrX(this, matchFunc);
         if (result == null) {
@@ -535,9 +543,9 @@ exports.ArrayCE_funcs = {
     },
     Distinct: function () {
         var result = [];
-        for (var i in this) {
-            if (!this.hasOwnProperty(i))
-                continue;
+        /*for (const i in this) {
+            if (!this.hasOwnProperty(i)) continue;*/
+        for (var i = 0; i < this.length; i++) {
             if (!exports.ArrayCES.Contains(result, this[i])) {
                 result.push(this[i]);
             }

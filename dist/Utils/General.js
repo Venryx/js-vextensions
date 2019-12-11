@@ -692,21 +692,32 @@ var TreeNode = /** @class */ (function () {
 }());
 exports.TreeNode = TreeNode;
 function GetTreeNodesInObjTree(obj, includeRootNode, _ancestorNodes) {
+    var e_4, _a;
     if (includeRootNode === void 0) { includeRootNode = false; }
     if (_ancestorNodes === void 0) { _ancestorNodes = []; }
     __1.Assert(_ancestorNodes.length <= 300, "Cannot traverse more than 300 levels into object tree. (probably circular)");
     var result = [];
     if (includeRootNode)
         result.push(new TreeNode([], { _root: obj }, "_root"));
-    for (var key in obj) {
-        if (!obj.hasOwnProperty(key))
-            continue;
-        var value = obj[key];
-        var currentNode = new TreeNode(_ancestorNodes, obj, key);
-        result.push(currentNode);
-        if (typeof value == "object") {
-            __1.ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+    try {
+        /*for (let key in obj) {
+            if (!obj.hasOwnProperty(key)) continue;*/
+        for (var _b = __values(Object.keys(obj)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var key = _c.value;
+            var value = obj[key];
+            var currentNode = new TreeNode(_ancestorNodes, obj, key);
+            result.push(currentNode);
+            if (typeof value == "object") {
+                __1.ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+            }
         }
+    }
+    catch (e_4_1) { e_4 = { error: e_4_1 }; }
+    finally {
+        try {
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+        }
+        finally { if (e_4) throw e_4.error; }
     }
     return result;
 }
@@ -767,7 +778,7 @@ function ConvertPathGetterFuncToPropChain(pathGetterFunc) {
 exports.ConvertPathGetterFuncToPropChain = ConvertPathGetterFuncToPropChain;
 /** @param sepChar Default: "/" */
 function DeepGet(obj, pathOrPathSegments, resultIfNull, sepChar) {
-    var e_4, _a;
+    var e_5, _a;
     if (resultIfNull === void 0) { resultIfNull = null; }
     if (sepChar === void 0) { sepChar = "/"; }
     var pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
@@ -780,12 +791,12 @@ function DeepGet(obj, pathOrPathSegments, resultIfNull, sepChar) {
             result = result[pathNode];
         }
     }
-    catch (e_4_1) { e_4 = { error: e_4_1 }; }
+    catch (e_5_1) { e_5 = { error: e_5_1 }; }
     finally {
         try {
             if (pathSegments_1_1 && !pathSegments_1_1.done && (_a = pathSegments_1.return)) _a.call(pathSegments_1);
         }
-        finally { if (e_4) throw e_4.error; }
+        finally { if (e_5) throw e_5.error; }
     }
     if (result == null)
         return resultIfNull;
@@ -893,8 +904,8 @@ exports.FindDOMAll = FindDOMAll;
 function WaitTillDataPathIsSet(dataPath) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-        var dataPathParts, currentParent, dataPathParts_1, dataPathParts_1_1, part, e_5_1;
-        var e_5, _a;
+        var dataPathParts, currentParent, dataPathParts_1, dataPathParts_1_1, part, e_6_1;
+        var e_6, _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -923,14 +934,14 @@ function WaitTillDataPathIsSet(dataPath) {
                     return [3 /*break*/, 2];
                 case 7: return [3 /*break*/, 10];
                 case 8:
-                    e_5_1 = _b.sent();
-                    e_5 = { error: e_5_1 };
+                    e_6_1 = _b.sent();
+                    e_6 = { error: e_6_1 };
                     return [3 /*break*/, 10];
                 case 9:
                     try {
                         if (dataPathParts_1_1 && !dataPathParts_1_1.done && (_a = dataPathParts_1.return)) _a.call(dataPathParts_1);
                     }
-                    finally { if (e_5) throw e_5.error; }
+                    finally { if (e_6) throw e_6.error; }
                     return [7 /*endfinally*/];
                 case 10:
                     resolve();
@@ -1025,7 +1036,7 @@ function StartUpload() {
 }
 exports.StartUpload = StartUpload;
 function TransferPrototypeProps(target, source, descriptorBase, descriptorOverride) {
-    var e_6, _a;
+    var e_7, _a;
     try {
         for (var _b = __values(Object.entries(Object.getOwnPropertyDescriptors(source))), _c = _b.next(); !_c.done; _c = _b.next()) {
             var _d = __read(_c.value, 2), name_1 = _d[0], descriptor = _d[1];
@@ -1034,17 +1045,17 @@ function TransferPrototypeProps(target, source, descriptorBase, descriptorOverri
             Object.defineProperty(target, name_1, Object.assign({}, descriptorBase, descriptor, descriptorOverride));
         }
     }
-    catch (e_6_1) { e_6 = { error: e_6_1 }; }
+    catch (e_7_1) { e_7 = { error: e_7_1 }; }
     finally {
         try {
             if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
         }
-        finally { if (e_6) throw e_6.error; }
+        finally { if (e_7) throw e_7.error; }
     }
 }
 exports.TransferPrototypeProps = TransferPrototypeProps;
 function WithFuncsStandalone(source) {
-    var e_7, _a;
+    var e_8, _a;
     var result = {};
     var _loop_1 = function (key) {
         if (key == "constructor")
@@ -1069,12 +1080,12 @@ function WithFuncsStandalone(source) {
             _loop_1(key);
         }
     }
-    catch (e_7_1) { e_7 = { error: e_7_1 }; }
+    catch (e_8_1) { e_8 = { error: e_8_1 }; }
     finally {
         try {
             if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
         }
-        finally { if (e_7) throw e_7.error; }
+        finally { if (e_8) throw e_8.error; }
     }
     return result;
 }
@@ -1119,7 +1130,7 @@ function CreateProxyForClassExtensions(sourceClass_prototype) {
         //}) as T;
         }) as WithFuncThisArgsAsAny_Type<T>;
     };*/
-    var e_8, _a;
+    var e_9, _a;
     // Static proxy approach -- a bit faster since it doesn't create any functions, closures, or proxies per wrap/CE-method-call.
     //	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
     /*let proxy = {} as any;
@@ -1153,12 +1164,12 @@ function CreateProxyForClassExtensions(sourceClass_prototype) {
             _loop_2(key);
         }
     }
-    catch (e_8_1) { e_8 = { error: e_8_1 }; }
+    catch (e_9_1) { e_9 = { error: e_9_1 }; }
     finally {
         try {
             if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
         }
-        finally { if (e_8) throw e_8.error; }
+        finally { if (e_9) throw e_9.error; }
     }
     //return (nextThis: any)=> {
     return function (nextThis) {

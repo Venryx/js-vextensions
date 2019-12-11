@@ -542,8 +542,9 @@ export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _anc
 	let result = [] as TreeNode[];
 	if (includeRootNode)
 		result.push(new TreeNode([], {_root: obj}, "_root"));
-	for (let key in obj) {
-		if (!obj.hasOwnProperty(key)) continue;
+	/*for (let key in obj) {
+		if (!obj.hasOwnProperty(key)) continue;*/
+	for (const key of Object.keys(obj)) {
 		let value = obj[key];
 		let currentNode = new TreeNode(_ancestorNodes, obj, key);
 		result.push(currentNode);
