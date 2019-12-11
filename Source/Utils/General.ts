@@ -1,4 +1,4 @@
-import {IsPrimitive, IsString} from "./Types";
+import {IsPrimitive, IsString, IsObject} from "./Types";
 import {Assert, ArrayCE, NumberCE, ObjectCE, StringCE} from "..";
 
 declare var global;
@@ -548,7 +548,7 @@ export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _anc
 		let value = obj[key];
 		let currentNode = new TreeNode(_ancestorNodes, obj, key);
 		result.push(currentNode);
-		if (typeof value == "object") {
+		if (value != null && IsObject(value)) {
 			ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
 		}
 	}
@@ -568,11 +568,13 @@ export function GetTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, 
 	let descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
 	let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
 	var result = [];
-	if (includeRootNode)
+	if (includeRootNode) {
 		result.push(new TreeNode([], {_root: treeRoot}, "_root"));
+	}
 	result.push(childTreeNode);
-	if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
+	if (descendantPathNodes.length > 1) { // if the path goes deeper than the current child-tree-node
 		result.push(...GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, ArrayCE(descendantPathNodes).Skip(1).join("/"), false, _ancestorNodes.concat(childTreeNode)));
+	}
 	return result;
 }
 /*export function GetTreeNodesInPath_WithRoot(treeRoot, path: string) {

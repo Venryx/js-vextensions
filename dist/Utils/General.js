@@ -707,7 +707,7 @@ function GetTreeNodesInObjTree(obj, includeRootNode, _ancestorNodes) {
             var value = obj[key];
             var currentNode = new TreeNode(_ancestorNodes, obj, key);
             result.push(currentNode);
-            if (typeof value == "object") {
+            if (value != null && Types_1.IsObject(value)) {
                 __1.ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
             }
         }
@@ -736,12 +736,14 @@ function GetTreeNodesInPath(treeRoot, pathNodesOrStr, includeRootNode, _ancestor
     var descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
     var childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
     var result = [];
-    if (includeRootNode)
+    if (includeRootNode) {
         result.push(new TreeNode([], { _root: treeRoot }, "_root"));
+    }
     result.push(childTreeNode);
-    if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
+    if (descendantPathNodes.length > 1) { // if the path goes deeper than the current child-tree-node
         result.push.apply(// if the path goes deeper than the current child-tree-node
         result, __spread(GetTreeNodesInPath(childTreeNode ? childTreeNode.Value : null, __1.ArrayCE(descendantPathNodes).Skip(1).join("/"), false, _ancestorNodes.concat(childTreeNode))));
+    }
     return result;
 }
 exports.GetTreeNodesInPath = GetTreeNodesInPath;
