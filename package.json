@@ -3,6 +3,7 @@
   "description": "Extensions for Javascript, by Venryx.",
   "version": "0.0.52",
   "main": "Dist/index.js",
+  "type": "module",
   "typings": "Dist/index.d.ts",
   "license": "MIT",
   "author": {
