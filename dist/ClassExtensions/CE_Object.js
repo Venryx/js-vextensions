@@ -170,9 +170,15 @@ export const ObjectCE_funcs = {
     },
     Excluding(...keys) {
         //var result = Clone(this); // doesn't work with funcs
-        var result = Object.assign(this instanceof Array ? [] : {}, this);
+        /*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
         for (let key of keys) {
             delete result[key];
+        }*/
+        var result = this instanceof Array ? [] : {};
+        for (let key of Object.keys(this)) {
+            if (ArrayCE(keys).Contains(key))
+                continue;
+            result[key] = this[key];
         }
         return result;
     },

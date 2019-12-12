@@ -37,7 +37,7 @@ export declare const ObjectCE_funcs: {
     As<T_5>(type: new (..._: any[]) => T_5): T_5;
     Strip(): any;
     Including(...keys: string[]): {};
-    Excluding(...keys: string[]): any;
+    Excluding(...keys: string[]): {};
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
@@ -98,7 +98,7 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     As<T_5>(type: new (..._: any[]) => T_5): T_5;
     Strip(): any;
     Including(...keys: string[]): {};
-    Excluding(...keys: string[]): any;
+    Excluding(...keys: string[]): {};
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
