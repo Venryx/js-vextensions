@@ -805,8 +805,10 @@ export function StartUpload(): Promise<string | ArrayBuffer> {
 }
 
 export function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor) {
-	for (let [name, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(source))) {
+	//for (let [name, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(source))) {
+	for (let name of Object.getOwnPropertyNames(source)) {
 		if (name == "constructor") continue;
+		let descriptor = Object.getOwnPropertyDescriptor(source, name);
 		Object.defineProperty(target, name, Object.assign({}, descriptorBase, descriptor, descriptorOverride));
 	}
 }

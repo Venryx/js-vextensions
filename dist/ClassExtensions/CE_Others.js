@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var General_1 = require("../Utils/General");
+import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General";
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
 1) Define the functions as class methods, and create a typescript extractor that creates versions of those methods, with an added first parameter that is used as the this-arg.
@@ -31,18 +29,18 @@ declare global {
     interface String extends exports1 {}
 }
 "".Test2("", 5);*/
-exports.FunctionCE_funcs = {
-    GetName: function () {
+export const FunctionCE_funcs = {
+    GetName() {
         //return this.name_fake || this.name || this.toString().match(/^function\s*([^\s(]+)/)[1];
         //return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
         return this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
     },
-    SetName: function (name) {
+    SetName(name) {
         //this["name_fake"] = name;
         Object.defineProperty(this, "name", { value: name, configurable: true }); // can only set func.name using Object.defineProperty
         return this;
     },
-    AddTag: function (tag) {
+    AddTag(tag) {
         if (this["tags"] == null)
             this["tags"] = [];
         this["tags"].push(tag);
@@ -60,51 +58,47 @@ exports.FunctionCE_funcs = {
         var func = V.Slice(arguments).Last();
         func.AddTags.apply(func, tags);
     };*/
-    GetTags: function (type) {
-        return (this["tags"] || []).Where(function (a) { return type == null || a instanceof type; });
+    GetTags(type) {
+        return (this["tags"] || []).Where(a => type == null || a instanceof type);
     },
     //AsStr(...args) { return require("../../V/V").Multiline(this, ...args); };
     //AsStr(useExtraPreprocessing) { return require("../../V/V").Multiline(this, useExtraPreprocessing); };
-    RunThenReturn: function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
+    RunThenReturn(...args) {
         this.apply(null, args);
         return this;
     },
 };
-exports.FunctionCE = General_1.CreateProxyForClassExtensions(exports.FunctionCE_funcs);
-exports.FunctionCES = General_1.WithFuncsStandalone(exports.FunctionCE_funcs);
+export const FunctionCE = CreateProxyForClassExtensions(FunctionCE_funcs);
+export const FunctionCES = WithFuncsStandalone(FunctionCE_funcs);
 function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
 function getDaysInMonth(year, month) {
     return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
-exports.DateCE_funcs = {
+export const DateCE_funcs = {
     get MonthDate() {
         return new Date(this.getFullYear(), this.getMonth(), 1);
     },
-    IsLeapYear: function () {
+    IsLeapYear() {
         return isLeapYear(this.getFullYear());
     },
-    GetDaysInMonth: function () {
+    GetDaysInMonth() {
         return getDaysInMonth(this.getFullYear(), this.getMonth());
     },
-    AddMonths: function (value) {
+    AddMonths(value) {
         var n = this.getDate();
         this.setDate(1);
         this.setMonth(this.getMonth() + value);
-        this.setDate(Math.min(n, exports.DateCE(this).GetDaysInMonth()));
+        this.setDate(Math.min(n, DateCE(this).GetDaysInMonth()));
         return this;
     },
-    Clone: function () {
+    Clone() {
         return new Date(this.getTime());
     },
 };
-exports.DateCE = General_1.CreateProxyForClassExtensions(exports.DateCE_funcs);
-exports.DateCES = General_1.WithFuncsStandalone(exports.DateCE_funcs);
+export const DateCE = CreateProxyForClassExtensions(DateCE_funcs);
+export const DateCES = WithFuncsStandalone(DateCE_funcs);
 /*export class ErrorCEProxy {
     get Stack() {
         // this causes the full stack-trace to be attached to the Error object (in Chrome)

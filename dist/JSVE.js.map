@@ -1,1 +1,1 @@
-{"version":3,"file":"JSVE.js","sourceRoot":"","sources":["../Source/JSVE.ts"],"names":[],"mappings":";;AAAA;IAAA;IAEA,CAAC;IADO,YAAO,GAAG,OAAO,CAAC,GAAG,CAAC;IAC9B,WAAC;CAAA,AAFD,IAEC;AAFY,oBAAI"}
+{"version":3,"file":"JSVE.js","sourceRoot":"","sources":["../Source/JSVE.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,IAAI;;AACT,YAAO,GAAG,OAAO,CAAC,GAAG,CAAC"}

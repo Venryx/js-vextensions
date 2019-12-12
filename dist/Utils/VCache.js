@@ -1,22 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var General_1 = require("./General");
-var CE_Array_1 = require("../ClassExtensions/CE_Array");
-var Storage = /** @class */ (function () {
-    function Storage() {
+import { ShallowEquals } from "./General";
+import { ArrayCE, Continue } from "../ClassExtensions/CE_Array";
+export class Storage {
+    constructor() {
         this.resultUpdateCount = 0;
     }
-    return Storage;
-}());
-exports.Storage = Storage;
-exports.storages = {};
-function GetStorageForCachedTransform(transformType, staticProps) {
+}
+export let storages = {};
+export function GetStorageForCachedTransform(transformType, staticProps) {
     //let storageKey = transformType + "|" + JSON.stringify(staticProps);
-    var storageKey = transformType + "|" + staticProps.join("|");
-    var storage = exports.storages[storageKey] || (exports.storages[storageKey] = new Storage());
+    let storageKey = transformType + "|" + staticProps.join("|");
+    let storage = storages[storageKey] || (storages[storageKey] = new Storage());
     return storage;
 }
-exports.GetStorageForCachedTransform = GetStorageForCachedTransform;
 /**
  * Basically, by wrapping code in this function, you're saying:
  *		"Do not re-evaluate the code below unless the dynamic-props have changed since the last time we were here."
@@ -27,10 +22,10 @@ exports.GetStorageForCachedTransform = GetStorageForCachedTransform;
  * @param transformFunc The data-transformer. Whenever a dynamic-prop changes, this will be called, and the new result will be cached.
  */
 //export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
-function CachedTransform(transformType, staticProps, dynamicProps, transformFunc) {
+export function CachedTransform(transformType, staticProps, dynamicProps, transformFunc) {
     //Assert(dynamicProps != null);
-    var storage = GetStorageForCachedTransform(transformType, staticProps);
-    if (!General_1.ShallowEquals(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
+    let storage = GetStorageForCachedTransform(transformType, staticProps);
+    if (!ShallowEquals(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
         /*MaybeLog(a=>a.cacheUpdates,
             ()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
         storage.lastDynamicProps = dynamicProps;
@@ -40,21 +35,15 @@ function CachedTransform(transformType, staticProps, dynamicProps, transformFunc
     }
     return storage.lastResult;
 }
-exports.CachedTransform = CachedTransform;
-function CombineDynamicPropMaps() {
-    var maps = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        maps[_i] = arguments[_i];
-    }
+export function CombineDynamicPropMaps(...maps) {
     var result = {};
-    CE_Array_1.ArrayCE(maps).ForEach(function (map, mapIndex) {
+    ArrayCE(maps).ForEach((map, mapIndex) => {
         if (map == null)
-            return CE_Array_1.Continue();
-        Object.keys(map).forEach(function (key) {
+            return Continue();
+        Object.keys(map).forEach(key => {
             result[mapIndex + "_" + key] = map[key];
         });
     });
     return result;
 }
-exports.CombineDynamicPropMaps = CombineDynamicPropMaps;
 //# sourceMappingURL=VCache.js.map

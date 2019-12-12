@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var General_1 = require("../Utils/General");
-exports.ElementCE_funcs = {
-    GetParents: function (topDown) {
-        if (topDown === void 0) { topDown = false; }
-        var result = [];
-        var currentParent = this.parentElement;
+import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General";
+export const ElementCE_funcs = {
+    GetParents(topDown = false) {
+        let result = [];
+        let currentParent = this.parentElement;
         while (currentParent) {
             result.push(currentParent);
             currentParent = currentParent.parentElement;
@@ -14,9 +11,8 @@ exports.ElementCE_funcs = {
             result.reverse();
         return result;
     },
-    GetSelfAndParents: function (topDown) {
-        if (topDown === void 0) { topDown = false; }
-        var result = exports.ElementCE(this).GetParents(topDown);
+    GetSelfAndParents(topDown = false) {
+        let result = ElementCE(this).GetParents(topDown);
         return topDown ? result.concat([this]) : [this].concat(result);
     },
     /*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
@@ -30,23 +26,23 @@ exports.ElementCE_funcs = {
         }
         return $found.first(); // Return first match of the collection
     }*/
-    QuerySelector_BreadthFirst: function (selector) {
-        var currentLayerElements = Array.from(this.childNodes);
+    QuerySelector_BreadthFirst(selector) {
+        let currentLayerElements = Array.from(this.childNodes);
         while (currentLayerElements.length) {
-            var firstMatchInLayer = currentLayerElements.find(function (a) { return a["matches"] && a["matches"](selector); });
+            let firstMatchInLayer = currentLayerElements.find(a => a["matches"] && a["matches"](selector));
             if (firstMatchInLayer)
                 return firstMatchInLayer;
             //currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
-            currentLayerElements = currentLayerElements.reduce(function (acc, item) { return acc.concat(Array.from(item.childNodes)); }, []);
+            currentLayerElements = currentLayerElements.reduce((acc, item) => acc.concat(Array.from(item.childNodes)), []);
         }
         return null;
     },
-    $: function (queryStr) {
+    $(queryStr) {
         return Array.from(this.querySelectorAll(queryStr));
     },
 };
-exports.ElementCE = General_1.CreateProxyForClassExtensions(exports.ElementCE_funcs);
+export const ElementCE = CreateProxyForClassExtensions(ElementCE_funcs);
 // maybe make ElementCE preserve the target-type, like ObjectCE and ArrayCE do (not needed atm, since the CE-methods don't make any/much use of the target's type-data)
 //export const ElementCE = CreateProxyForClassExtensions(ElementCE_funcs) as <T>(nextThis: T)=>ElementCEProxy;
-exports.ElementCES = General_1.WithFuncsStandalone(exports.ElementCE_funcs);
+export const ElementCES = WithFuncsStandalone(ElementCE_funcs);
 //# sourceMappingURL=CE_Element.js.map

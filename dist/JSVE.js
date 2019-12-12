@@ -1,10 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var JSVE = /** @class */ (function () {
-    function JSVE() {
-    }
-    JSVE.logFunc = console.log;
-    return JSVE;
-}());
-exports.JSVE = JSVE;
+export class JSVE {
+}
+JSVE.logFunc = console.log;
 //# sourceMappingURL=JSVE.js.map
