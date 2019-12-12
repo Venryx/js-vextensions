@@ -45,7 +45,6 @@ export const ObjectCE_funcs = {
 
 		Object.defineProperty(this, name, {
 			configurable: true, // for some reason, we get an error otherwise in non-dev mode (same for below)
-			enumerable: false,
 			value: value
 		});
 		/*if (this[name] == null)
@@ -64,7 +63,7 @@ export const ObjectCE_funcs = {
 		if (name in this) delete this[name];
 		if (name in this) return; // workaround for some properties not being deleted
 	
-		let info = {configurable: true, enumerable: false} as PropertyDescriptor;
+		let info = {configurable: true} as PropertyDescriptor;
 		if (getter) info.get = getter;
 		if (setter) info.set = setter;
 		Object.defineProperty(this, name, info);

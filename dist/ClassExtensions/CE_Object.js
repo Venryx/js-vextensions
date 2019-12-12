@@ -55,7 +55,6 @@ exports.ObjectCE_funcs = {
             return; // workaround for some properties not being deleted
         Object.defineProperty(this, name, {
             configurable: true,
-            enumerable: false,
             value: value
         });
         /*if (this[name] == null)
@@ -73,7 +72,7 @@ exports.ObjectCE_funcs = {
             delete this[name];
         if (name in this)
             return; // workaround for some properties not being deleted
-        var info = { configurable: true, enumerable: false };
+        var info = { configurable: true };
         if (getter)
             info.get = getter;
         if (setter)

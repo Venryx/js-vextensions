@@ -40,7 +40,7 @@ export const FunctionCE_funcs = {
 	},
 	SetName(this: Function, name: string) {
 		//this["name_fake"] = name;
-		Object.defineProperty(this, "name", name); // can only set func.name using Object.defineProperty
+		Object.defineProperty(this, "name", {value: name, configurable: true}); // can only set func.name using Object.defineProperty
 		return this;
 	},
 
