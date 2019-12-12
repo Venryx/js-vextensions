@@ -1,6 +1,6 @@
 export declare const FunctionCE_funcs: {
     GetName(this: Function): string;
-    SetName(this: Function, val: any): Function;
+    SetName(this: Function, name: string): Function;
     AddTag(this: Function, tag: any): Function;
     GetTags(this: Function, type?: any): any;
     RunThenReturn(this: Function, ...args: any[]): Function;
@@ -9,7 +9,7 @@ export declare type FunctionCEProxy = Function & typeof FunctionCE_funcs;
 export declare const FunctionCE: (nextThis: Function) => FunctionCEProxy;
 export declare const FunctionCES: import("../Utils/General").WithFuncsStandalone_Type<{
     GetName(this: Function): string;
-    SetName(this: Function, val: any): Function;
+    SetName(this: Function, name: string): Function;
     AddTag(this: Function, tag: any): Function;
     GetTags(this: Function, type?: any): any;
     RunThenReturn(this: Function, ...args: any[]): Function;

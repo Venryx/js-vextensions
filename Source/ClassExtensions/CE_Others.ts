@@ -38,7 +38,7 @@ export const FunctionCE_funcs = {
 		//return this["name_fake"] || this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
 		return this.name || (this.toString().match(/^function\s*([^\s(]+)/) || [])[1];
 	},
-	SetName(this: Function, val) {
+	SetName(this: Function, name: string) {
 		//this["name_fake"] = name;
 		Object.defineProperty(this, "name", name); // can only set func.name using Object.defineProperty
 		return this;
