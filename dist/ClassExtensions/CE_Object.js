@@ -1,6 +1,6 @@
 import { DeepGet, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL } from "../Utils/General";
 import { ArrayCE } from "./CE_Array";
-import { IsNaN } from "../Utils/Types";
+import { IsNaN, IsObject } from "../Utils/Types";
 import { FunctionCE } from "./CE_Others";
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
     [P in keyof Source]:
@@ -95,7 +95,7 @@ export const ObjectCE_funcs = {
     VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
     VSet: (function (...args) {
         let props, opt, propName, propValue;
-        if (typeof args[0] == "object")
+        if (IsObject(args[0]))
             [props, opt] = args;
         else
             [propName, propValue, opt] = args;

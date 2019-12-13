@@ -1,6 +1,6 @@
 import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
 import {ArrayCE, ArrayCE_funcs} from "./CE_Array";
-import {IsNaN} from "../Utils/Types";
+import {IsNaN, IsObject} from "../Utils/Types";
 import {Assert} from "../Utils/Assert";
 import {FunctionCE} from "./CE_Others";
 
@@ -125,7 +125,7 @@ export const ObjectCE_funcs = {
 		<T>(this: T, props: any, opt?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
 	}>(function(...args) {
 		let props, opt: VSet_Options, propName: string, propValue: string;
-		if (typeof args[0] == "object") [props, opt] = args;
+		if (IsObject(args[0])) [props, opt] = args;
 		else [propName, propValue, opt] = args;
 		opt = opt || {};
 		let copyNonEnumerable = opt.copyNonEnumerable != null ? opt.copyNonEnumerable : true;

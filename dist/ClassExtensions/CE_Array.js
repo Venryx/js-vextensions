@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone } from "../Utils/General";
 import { Assert } from "../Utils/Assert";
+import { IsObject } from "../Utils/Types";
 export class ForEachControlOp {
     constructor(type, returnValue) {
         this.type = type;
@@ -358,7 +359,7 @@ export const ArrayCE_funcs = {
     },
     Except: (function (...args) {
         let opt, excludeItems;
-        if (args[0] && "excludeEachOnlyOnce" in args[0])
+        if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0])
             [opt, excludeItems] = args;
         else
             excludeItems = args;

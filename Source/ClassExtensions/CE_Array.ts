@@ -1,5 +1,6 @@
 import {StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone} from "../Utils/General";
 import {Assert} from "../Utils/Assert";
+import {IsObject} from "../Utils/Types";
 
 export interface ForEachExtras {
 	index: number;
@@ -387,7 +388,7 @@ export const ArrayCE_funcs = {
 		<T>(this: T[], options: {excludeEachOnlyOnce: boolean}, ...args: any[]): T[];
 	}>(function(...args: any[]) {
 		let opt: {excludeEachOnlyOnce: boolean}, excludeItems: any[];
-		if (args[0] && "excludeEachOnlyOnce" in args[0]) [opt, excludeItems] = args;
+		if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0]) [opt, excludeItems] = args;
 		else excludeItems = args;
 
 		if (opt && opt.excludeEachOnlyOnce) {
