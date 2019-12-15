@@ -669,43 +669,56 @@ export function WaitTillPropertyIsSet(obj, prop) {
         });
     });
 }
-export var CapScheme;
-(function (CapScheme) {
-    /** examplePropNameWithDuoWord */ CapScheme[CapScheme["PropName"] = 0] = "PropName";
-    /** Example Title With Duo-Word */ CapScheme[CapScheme["Title"] = 1] = "Title";
-    /** Example sentence with duo-word */ CapScheme[CapScheme["Sentence"] = 2] = "Sentence";
-})(CapScheme || (CapScheme = {}));
-export function ChangeCapitalization(text, fromScheme, toScheme) {
+/*export enum CapScheme {
+    /** examplePropNameWithDuoWord *#/ PropName,
+    /** Example Title With Duo-Word *#/ Title,
+    /** Example sentence with duo-word *#/ Sentence,
+}
+export function ChangeCapitalization(text: string, fromScheme: CapScheme, toScheme: CapScheme) {
     let inStandardScheme = ConvertFromSchemeXToStandardScheme(text, fromScheme);
     return ConvertFromStandardSchemeToSchemeX(inStandardScheme, toScheme);
 }
+
 // "standard scheme" is currently CapitalizeScheme.Sentence
-function ConvertFromSchemeXToStandardScheme(text, fromScheme) {
+function ConvertFromSchemeXToStandardScheme(text: string, fromScheme: CapScheme) {
     if (fromScheme == CapScheme.PropName) {
         // demo string: somePropName
         return text
             // somePropName -> some prop name
-            .replace(/[A-Z]/g, a => " " + a.toLowerCase())
+            .replace(/[A-Z]/g, a=>" " + a.toLowerCase())
             // some prop name -> Some prop name
-            .replace(/^./, a => a.toUpperCase());
-    }
-    else if (fromScheme == CapScheme.Title) {
+            .replace(/^./, a=>a.toUpperCase());
+    } else if (fromScheme == CapScheme.Title) {
         Assert(false, "Not yet implemented.");
-    }
-    else if (fromScheme == CapScheme.Sentence) {
+    } else if (fromScheme == CapScheme.Sentence) {
         return text;
     }
 }
-function ConvertFromStandardSchemeToSchemeX(text, toScheme) {
+function ConvertFromStandardSchemeToSchemeX(text: string, toScheme: CapScheme) {
     if (toScheme == CapScheme.PropName) {
         Assert(false, "Not yet implemented.");
-    }
-    else if (toScheme == CapScheme.Title) {
+    } else if (toScheme == CapScheme.Title) {
         Assert(false, "Not yet implemented.");
-    }
-    else if (toScheme == CapScheme.Sentence) {
+    } else if (toScheme == CapScheme.Sentence) {
         return text;
     }
+}*/
+export class StringModifiers {
+    constructor() {
+        /** somePropName -> some prop name */
+        this.lowerUpper_to_lowerSpaceLower = false;
+        /** some prop name -> Some prop name */
+        this.firstLower_to_upper = false;
+    }
+}
+export function ModifyString(text, modifiers) {
+    modifiers = E(new StringModifiers(), modifiers);
+    let result = text;
+    if (modifiers.lowerUpper_to_lowerSpaceLower)
+        result = result.replace(/[A-Z]/g, a => " " + a.toLowerCase());
+    if (modifiers.firstLower_to_upper)
+        result = result.replace(/^./, a => a.toUpperCase());
+    return result;
 }
 export function StartDownload(content, filename, dataTypeStr = "data:application/octet-stream,", encodeContentAsURIComp = true) {
     var link = document.createElement("a");

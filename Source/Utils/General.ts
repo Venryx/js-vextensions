@@ -736,10 +736,10 @@ export function WaitTillPropertyIsSet(obj: Object, prop: string) {
 	});
 }
 
-export enum CapScheme {
-	/** examplePropNameWithDuoWord */ PropName,
-	/** Example Title With Duo-Word */ Title,
-	/** Example sentence with duo-word */ Sentence,
+/*export enum CapScheme {
+	/** examplePropNameWithDuoWord *#/ PropName,
+	/** Example Title With Duo-Word *#/ Title,
+	/** Example sentence with duo-word *#/ Sentence,
 }
 export function ChangeCapitalization(text: string, fromScheme: CapScheme, toScheme: CapScheme) {
 	let inStandardScheme = ConvertFromSchemeXToStandardScheme(text, fromScheme);
@@ -769,6 +769,20 @@ function ConvertFromStandardSchemeToSchemeX(text: string, toScheme: CapScheme) {
 	} else if (toScheme == CapScheme.Sentence) {
 		return text;
 	}
+}*/
+
+export class StringModifiers {
+	/** somePropName -> some prop name */
+	lowerUpper_to_lowerSpaceLower = false;
+	/** some prop name -> Some prop name */
+	firstLower_to_upper = false;
+}
+export function ModifyString(text: string, modifiers: Partial<StringModifiers>) {
+	modifiers = E(new StringModifiers(), modifiers);
+	let result = text;
+	if (modifiers.lowerUpper_to_lowerSpaceLower) result = result.replace(/[A-Z]/g, a=>" " + a.toLowerCase());
+	if (modifiers.firstLower_to_upper) result = result.replace(/^./, a=>a.toUpperCase());
+	return result;
 }
 
 export function StartDownload(content: string, filename: string, dataTypeStr = "data:application/octet-stream,", encodeContentAsURIComp = true) {

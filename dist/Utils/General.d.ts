@@ -93,12 +93,13 @@ export declare function FindDOM(selector: string): Element;
 export declare function FindDOMAll(selector: string): Element[];
 export declare function WaitTillDataPathIsSet(dataPath: string): Promise<unknown>;
 export declare function WaitTillPropertyIsSet(obj: Object, prop: string): Promise<unknown>;
-export declare enum CapScheme {
-    /** examplePropNameWithDuoWord */ PropName = 0,
-    /** Example Title With Duo-Word */ Title = 1,
-    /** Example sentence with duo-word */ Sentence = 2
+export declare class StringModifiers {
+    /** somePropName -> some prop name */
+    lowerUpper_to_lowerSpaceLower: boolean;
+    /** some prop name -> Some prop name */
+    firstLower_to_upper: boolean;
 }
-export declare function ChangeCapitalization(text: string, fromScheme: CapScheme, toScheme: CapScheme): string;
+export declare function ModifyString(text: string, modifiers: Partial<StringModifiers>): string;
 export declare function StartDownload(content: string, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 export declare function StartUpload(): Promise<string | ArrayBuffer>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;
