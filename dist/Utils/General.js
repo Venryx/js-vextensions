@@ -41,7 +41,7 @@ export function E(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e
         Object.assign(result, extend);
     }
     // if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
-    if (emptyObj && result.VKeys().length == 0) {
+    if (emptyObj && ObjectCE(result).VKeys().length == 0) {
         return emptyObj;
     }
     return result;
