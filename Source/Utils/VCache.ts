@@ -1,6 +1,6 @@
 import {Assert} from "./Assert";
 import {ShallowEquals} from "./General";
-import {ArrayCE, Continue} from "../ClassExtensions/CE_Array";
+import {ArrayCE} from "../ClassExtensions/CE_Array";
 
 export class Storage<T2, T3> {
 	lastDynamicProps: T2;
@@ -48,7 +48,7 @@ export function CachedTransform<T, T2, T3>(
 export function CombineDynamicPropMaps(...maps) {
 	var result = {};
 	ArrayCE(maps).ForEach((map, mapIndex)=> {
-		if (map == null) return Continue();
+		if (map == null) return "continue";
 		Object.keys(map).forEach(key=> {
 			result[mapIndex + "_" + key] = map[key];
 		});

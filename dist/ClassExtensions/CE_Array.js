@@ -10,80 +10,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone } from "../Utils/General";
 import { Assert } from "../Utils/Assert";
 import { IsObject } from "../Utils/Types";
-export class ForEachControlOp {
-    constructor(type, returnValue) {
-        this.type = type;
-        this.returnValue = returnValue;
-    }
-}
-export function Break() {
-    return new ForEachControlOp("break");
-}
-export function Continue() {
-    return new ForEachControlOp("continue");
-}
-export function Return(returnVal) {
-    return new ForEachControlOp("return", returnVal);
-}
 export const ArrayCE_funcs = {
-    /* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
-    forEach_break(...args) { return this.some(...args); } */
-    /*ForEach<T, T2>(this: T[], func: (item: T, index: number, array: T[])=>T2): T2 {
-        //this.forEach((item, index, array)=> {
-        for (const [index, item] of this.entries()) {
-            let subResult = func(item, index, this);
-            if (subResult == "break") break;
-            else if (subResult == "continue") continue;
-            else if (subResult !== undefined) return subResult;
-        }
-    }*/
     ForEach(func) {
-        let extras = {
-            array: this,
-            index: null,
-            controlOp: null,
-            Break() { extras.controlOp = new ForEachControlOp("break"); },
-            Continue() { extras.controlOp = new ForEachControlOp("continue"); },
-            Return(returnVal) { extras.controlOp = new ForEachControlOp("return", returnVal); }
-        };
         for (let i = 0; i < this.length; i++) {
-            extras.index = i;
-            extras.controlOp = null;
-            let subResult = func(this[i], i, extras);
-            let controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
-            if (controlOp) {
-                if (subResult.type == "break")
-                    break;
-                if (subResult.type == "continue")
-                    continue;
-                if (subResult.type == "return")
-                    return subResult.returnValue;
-            }
+            const controlOp = func(this[i], i, this);
+            if (controlOp == "break")
+                break;
+            if (controlOp == "continue")
+                continue;
+            if (controlOp instanceof Array)
+                return controlOp[1];
         }
     },
     ForEachAsync(func) {
         return __awaiter(this, void 0, void 0, function* () {
-            let extras = {
-                array: this,
-                index: null,
-                controlOp: null,
-                Break() { extras.controlOp = new ForEachControlOp("break"); },
-                Continue() { extras.controlOp = new ForEachControlOp("continue"); },
-                Return(returnVal) { extras.controlOp = new ForEachControlOp("return", returnVal); }
-            };
             for (let i = 0; i < this.length; i++) {
-                extras.index = i;
-                extras.controlOp = null;
-                let subResult = yield func(this[i], extras);
-                let controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
-                if (controlOp) {
-                    if (subResult.type == "break")
-                        break;
-                    if (subResult.type == "continue")
-                        continue;
-                    if (subResult.type == "return")
-                        return subResult.returnValue;
-                }
+                const controlOp = yield func(this[i], i, this);
+                if (controlOp == "break")
+                    break;
+                if (controlOp == "continue")
+                    continue;
+                if (controlOp instanceof Array)
+                    return controlOp[1];
             }
         });
     },

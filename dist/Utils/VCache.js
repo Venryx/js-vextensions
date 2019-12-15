@@ -1,5 +1,5 @@
 import { ShallowEquals } from "./General";
-import { ArrayCE, Continue } from "../ClassExtensions/CE_Array";
+import { ArrayCE } from "../ClassExtensions/CE_Array";
 export class Storage {
     constructor() {
         this.resultUpdateCount = 0;
@@ -39,7 +39,7 @@ export function CombineDynamicPropMaps(...maps) {
     var result = {};
     ArrayCE(maps).ForEach((map, mapIndex) => {
         if (map == null)
-            return Continue();
+            return "continue";
         Object.keys(map).forEach(key => {
             result[mapIndex + "_" + key] = map[key];
         });

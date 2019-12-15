@@ -2,12 +2,6 @@ import {StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone}
 import {Assert} from "../Utils/Assert";
 import {IsObject} from "../Utils/Types";
 
-export interface ForEachExtras {
-	index: number;
-	Break: ()=>void;
-	Continue: ()=>void;
-}
-
 /*// since JS doesn't have basic "foreach" system
 ForEach(func) {
 	for (var i in this) {
@@ -29,77 +23,24 @@ export type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
 	T extends ArrayCEProxy<infer ItemT> ? ItemT[] :
 	never;*/
 
-/*export const ForEach_helpers = {
-	BreakSym: Symbol("Break"),
-	ContinueSym: Symbol("Continue"),
-	Return: Symbol("Return"),
-}*/
-export type ForEachControlOpType = "break" | "continue" | "return";
-export class ForEachControlOp {
-	constructor(public type: ForEachControlOpType, public returnValue?: any) {}
-}
-export function Break() {
-	return new ForEachControlOp("break");
-}
-export function Continue() {
-	return new ForEachControlOp("continue");
-}
-export function Return(returnVal: any) {
-	return new ForEachControlOp("return", returnVal);
-}
+export type LoopControlOp<Result> = "break" | "continue" | ["return", Result];
+export type LoopFunc<T, Result> = (value: T, index: number, array: T[])=>LoopControlOp<Result>;
 
 export const ArrayCE_funcs = {
-	/* interface Array<T> { /** Same as forEach, except breaks the loop when "true" is returned. *#/ forEach_break(callbackfn: (value: any, index: number, array: any[]) => boolean, thisArg?: any); }
-	forEach_break(...args) { return this.some(...args); } */
-	/*ForEach<T, T2>(this: T[], func: (item: T, index: number, array: T[])=>T2): T2 {
-		//this.forEach((item, index, array)=> {
-		for (const [index, item] of this.entries()) {
-			let subResult = func(item, index, this);
-			if (subResult == "break") break;
-			else if (subResult == "continue") continue;
-			else if (subResult !== undefined) return subResult;
-		}
-	}*/
-	ForEach<T>(this: Array<T>, func: (value: T, index: number, extras: ForEachExtras)=>any) {
-		let extras = {
-			array: this,
-			index: null as number,
-			controlOp: null as ForEachControlOp,
-			Break() { extras.controlOp = new ForEachControlOp("break"); },
-			Continue() { extras.controlOp = new ForEachControlOp("continue"); },
-			Return(returnVal: any) { extras.controlOp = new ForEachControlOp("return", returnVal); }
-		};
+	ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result {
 		for (let i = 0; i < this.length; i++) {
-			extras.index = i;
-			extras.controlOp = null;
-			let subResult = func(this[i], i, extras);
-			let controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
-			if (controlOp) {
-				if (subResult.type == "break") break;
-				if (subResult.type == "continue") continue;
-				if (subResult.type == "return") return subResult.returnValue;
-			}
+			const controlOp = func(this[i], i, this);
+			if (controlOp == "break") break;
+			if (controlOp == "continue") continue;
+			if (controlOp instanceof Array) return controlOp[1];
 		}
 	},
-	async ForEachAsync<T>(this: T[], func: (value: T, extras: ForEachExtras)=>any) {
-		let extras = {
-			array: this,
-			index: null as number,
-			controlOp: null as ForEachControlOp,
-			Break() { extras.controlOp = new ForEachControlOp("break"); },
-			Continue() { extras.controlOp = new ForEachControlOp("continue"); },
-			Return(returnVal: any) { extras.controlOp = new ForEachControlOp("return", returnVal); }
-		};
+	async ForEachAsync<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Promise<Result> {
 		for (let i = 0; i < this.length; i++) {
-			extras.index = i;
-			extras.controlOp = null;
-			let subResult = await func(this[i], extras);
-			let controlOp = subResult instanceof ForEachControlOp ? subResult : extras.controlOp;
-			if (controlOp) {
-				if (subResult.type == "break") break;
-				if (subResult.type == "continue") continue;
-				if (subResult.type == "return") return subResult.returnValue;
-			}
+			const controlOp = await func(this[i], i, this);
+			if (controlOp == "break") break;
+			if (controlOp == "continue") continue;
+			if (controlOp instanceof Array) return controlOp[1];
 		}
 	},
 	/*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }

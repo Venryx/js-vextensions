@@ -1,22 +1,10 @@
-export interface ForEachExtras {
-    index: number;
-    Break: () => void;
-    Continue: () => void;
-}
 export declare type ItemTFor<T> = T extends Array<infer ItemT> ? ItemT : T extends ArrayCEProxyInterface<infer ItemT> ? ItemT : T;
 export declare type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
-export declare type ForEachControlOpType = "break" | "continue" | "return";
-export declare class ForEachControlOp {
-    type: ForEachControlOpType;
-    returnValue?: any;
-    constructor(type: ForEachControlOpType, returnValue?: any);
-}
-export declare function Break(): ForEachControlOp;
-export declare function Continue(): ForEachControlOp;
-export declare function Return(returnVal: any): ForEachControlOp;
+export declare type LoopControlOp<Result> = "break" | "continue" | ["return", Result];
+export declare type LoopFunc<T, Result> = (value: T, index: number, array: T[]) => LoopControlOp<Result>;
 export declare const ArrayCE_funcs: {
-    ForEach<T>(this: T[], func: (value: T, index: number, extras: ForEachExtras) => any): any;
-    ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<any>;
+    ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result;
+    ForEachAsync<T_1, Result_1 = any>(this: T_1[], func: LoopFunc<T_1, Result_1>): Promise<Result_1>;
     Contains<T_2>(this: T_2[], item: T_2): boolean;
     ContainsAny<T_3>(this: T_3[], ...items: T_3[]): boolean;
     Prepend<T_4>(this: T_4[], ...newItems: T_4[]): void;
@@ -76,8 +64,8 @@ export interface ArrayCEProxyInterface<T> {
 export declare type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
 export declare const ArrayCE: <T>(nextThis: T[]) => ArrayCEProxy<T>;
 export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Type<{
-    ForEach<T>(this: T[], func: (value: T, index: number, extras: ForEachExtras) => any): any;
-    ForEachAsync<T_1>(this: T_1[], func: (value: T_1, extras: ForEachExtras) => any): Promise<any>;
+    ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result;
+    ForEachAsync<T_1, Result_1 = any>(this: T_1[], func: LoopFunc<T_1, Result_1>): Promise<Result_1>;
     Contains<T_2>(this: T_2[], item: T_2): boolean;
     ContainsAny<T_3>(this: T_3[], ...items: T_3[]): boolean;
     Prepend<T_4>(this: T_4[], ...newItems: T_4[]): void;
