@@ -776,12 +776,18 @@ export class StringModifiers {
 	lowerUpper_to_lowerSpaceLower = false;
 	/** some prop name -> Some prop name */
 	firstLower_to_upper = false;
+	/** some prop name -> some Prop Name */
+	spaceLower_to_spaceUpper = false;
+	/** some-prop-name -> some-Prop-Name */
+	hyphenLower_to_hyphenUpper = false;
 }
 export function ModifyString(text: string, modifiers: Partial<StringModifiers>) {
 	modifiers = E(new StringModifiers(), modifiers);
 	let result = text;
-	if (modifiers.lowerUpper_to_lowerSpaceLower) result = result.replace(/[A-Z]/g, a=>" " + a.toLowerCase());
+	if (modifiers.lowerUpper_to_lowerSpaceLower) result = result.replace(/([a-z])([A-Z])/g, (m, sub1, sub2)=>`${sub1} ${sub2.toLowerCase()}`);
 	if (modifiers.firstLower_to_upper) result = result.replace(/^./, a=>a.toUpperCase());
+	if (modifiers.spaceLower_to_spaceUpper) result = result.replace(/ ([a-z])/g, (m, sub1)=>` ${sub1.toUpperCase()}`);
+	if (modifiers.hyphenLower_to_hyphenUpper) result = result.replace(/-([a-z])/g, (m, sub1)=>`-${sub1.toUpperCase()}`);
 	return result;
 }
 

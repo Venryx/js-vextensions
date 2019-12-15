@@ -98,6 +98,10 @@ export declare class StringModifiers {
     lowerUpper_to_lowerSpaceLower: boolean;
     /** some prop name -> Some prop name */
     firstLower_to_upper: boolean;
+    /** some prop name -> some Prop Name */
+    spaceLower_to_spaceUpper: boolean;
+    /** some-prop-name -> some-Prop-Name */
+    hyphenLower_to_hyphenUpper: boolean;
 }
 export declare function ModifyString(text: string, modifiers: Partial<StringModifiers>): string;
 export declare function StartDownload(content: string, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
