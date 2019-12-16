@@ -277,7 +277,7 @@ export function AsObj(obj) {
     if (typeof obj == "object")
         return obj;
     if (obj != null)
-        return obj.Props().ToMap(a => a.name, a => a.value);
+        return ArrayCE(ObjectCE(obj).Pairs()).ToMap(a => a.key, a => a.value);
     return {};
 }
 export function AsArray(args) { return Slice(args, 0); }
@@ -384,9 +384,9 @@ export function CloneObject(obj, propMatchFunc, depth = 0) {
             return result;
         }*/
     let result = {};
-    for (let prop of obj.Props()) {
-        if (!(prop.value instanceof Function) && (propMatchFunc == null || propMatchFunc.call(obj, prop.name, prop.value)))
-            result[prop.name] = CloneObject(prop.value, propMatchFunc, depth + 1);
+    for (let pair of ObjectCE(obj).Pairs()) {
+        if (!(pair.value instanceof Function) && (propMatchFunc == null || propMatchFunc.call(obj, pair.key, pair.value)))
+            result[pair.key] = CloneObject(pair.value, propMatchFunc, depth + 1);
     }
     return result;
 }

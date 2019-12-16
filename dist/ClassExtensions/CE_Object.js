@@ -193,24 +193,6 @@ export const ObjectCE_funcs = {
         }
         return false;
     },
-    // todo: probably remove Props(), and instead just use Pairs(), since Props() sounds odd when used on arrays
-    /*declare global {
-        interface Object {
-            Props<T>(this: {[key: number]: T} | {[key: string]: T}, excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
-            Props<T>(excludeSpecialProps?: boolean): {index: number, name: string, value: T}[];
-        }
-    }
-    //interface Object { Props<ValueType>(excludeSpecialProps?: boolean): {index: number, name: string, value: ValueType}[]; }
-    Props(excludeSpecialProps = false) {
-        var result = [];
-        var i = 0;
-        for (var propName in this) {
-            if (excludeSpecialProps && (propName == "_" || propName == "_key" || propName == "_id")) continue;
-            //result.push({index: i++, key: propName, name: propName, value: this[propName]});
-            result.push({index: i++, name: propName, value: this[propName]});
-        }
-        return result;
-    },*/
     Pairs: (function (excludeSpecialKeys = false) {
         var result = [];
         var i = 0;
