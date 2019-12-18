@@ -142,10 +142,12 @@ export function ToJSON(obj, ...excludePropNames): string {
 }*/
 export function ToJSON(obj, replacerFunc?, spacing?: number): string {
 	try {
+		replacerFunc = replacerFunc || ((key, value)=>(value === undefined ? null : value));
 		return JSON.stringify(obj, replacerFunc, spacing);
 	} catch (ex) {
-		if (ex.toString() == "TypeError: Converting circular structure to JSON")
+		if (ex.toString() == "TypeError: Converting circular structure to JSON") {
 			return ToJSON_Safe.apply(this, arguments);
+		}
 		throw ex;
 	}
 }
