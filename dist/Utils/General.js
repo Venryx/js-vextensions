@@ -126,8 +126,8 @@ export class ToJSON_Advanced_Options {
     constructor() {
         this.keysToIgnore = [];
         this.stringifyUndefinedAs = null;
-        this.trimCircular = false;
-        this.trimCircular_replaceStr = "[circular/duplicate] ";
+        this.trimDuplicates = false;
+        this.trimDuplicates_replaceStr = "[circular/duplicate] ";
         this.catchErrors = false;
         this.catchErrors_replaceStr = "[converting to JSON failed]";
     }
@@ -148,11 +148,11 @@ export function ToJSON_Advanced(obj, opt) {
         var result = JSON.stringify(obj, (key, value) => {
             if (ArrayCE(opt.keysToIgnore).Contains(key))
                 return;
-            if (opt.trimCircular && typeof value == 'object' && value != null) {
-                // if circular reference found, ignore key
+            if (opt.trimDuplicates && typeof value == 'object' && value != null) {
+                // if duplicate found, ignore key (for more advanced, see: flatted, json-stringify-safe, etc.)
                 if (cache.has(value)) {
                     //foundDuplicates = true;
-                    return opt.trimCircular_replaceStr;
+                    return opt.trimDuplicates_replaceStr;
                 }
                 cache.add(value);
             }

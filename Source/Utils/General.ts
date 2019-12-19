@@ -139,8 +139,8 @@ export function ToJSON(obj, replacerFunc?: (this: any, key: string, value: any)=
 export class ToJSON_Advanced_Options {
 	keysToIgnore = [] as string[];
 	stringifyUndefinedAs = null;
-	trimCircular = false;
-	trimCircular_replaceStr = "[circular/duplicate] ";
+	trimDuplicates = false;
+	trimDuplicates_replaceStr = "[circular/duplicate] ";
 	catchErrors = false;
 	catchErrors_replaceStr = "[converting to JSON failed]";
 	addSpacesAt: AddSpacesAt_Options;
@@ -159,11 +159,11 @@ export function ToJSON_Advanced(obj, opt?: Partial<ToJSON_Advanced_Options>) {
 	try {
 		var result = JSON.stringify(obj, (key, value)=> {
 			if (ArrayCE(opt.keysToIgnore).Contains(key)) return;
-			if (opt.trimCircular && typeof value == 'object' && value != null) {
-				// if circular reference found, ignore key
+			if (opt.trimDuplicates && typeof value == 'object' && value != null) {
+				// if duplicate found, ignore key (for more advanced, see: flatted, json-stringify-safe, etc.)
 				if (cache.has(value)) {
 					//foundDuplicates = true;
-					return opt.trimCircular_replaceStr;
+					return opt.trimDuplicates_replaceStr;
 				}
 				cache.add(value);
 			}

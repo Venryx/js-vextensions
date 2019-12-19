@@ -21,8 +21,8 @@ export declare function ToJSON(obj: any, replacerFunc?: (this: any, key: string,
 export declare class ToJSON_Advanced_Options {
     keysToIgnore: string[];
     stringifyUndefinedAs: any;
-    trimCircular: boolean;
-    trimCircular_replaceStr: string;
+    trimDuplicates: boolean;
+    trimDuplicates_replaceStr: string;
     catchErrors: boolean;
     catchErrors_replaceStr: string;
     addSpacesAt: AddSpacesAt_Options;
