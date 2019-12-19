@@ -122,81 +122,76 @@ export function CopyText(text) {
 // object-Json
 export function FromJSON(json: string) { return JSON.parse(json); }
 
-/*declare global { function ToJSON(obj, ...excludePropNames): string; } g.Extend({ToJSON});
-export function ToJSON(obj, ...excludePropNames): string {
-	try {
-		if (arguments.length > 1) {
-			return JSON.stringify(obj, function(key, value) {
-				if (excludePropNames.Contains(key))
-					return;
-				return value;
-			});
-		}
-		return JSON.stringify(obj);
+/*export function ToJSON(obj, replacerFunc?: (this: any, key: string, value: any)=>any, spacing?: number, stringifyUndefinedAs = null): string {
+	if (stringifyUndefinedAs !== undefined) {
+		Assert(replacerFunc == null, "Cannot supply replacerFunc if stringifyUndefinedAs is !== undefined.");
+		replacerFunc = (key, value)=> {
+			if (value === undefined) return stringifyUndefinedAs;
+			return value;
+		};
 	}
-	catch (ex) {
-		if (ex.toString() == "TypeError: Converting circular structure to JSON")
-			return ToJSON_Safe.apply(this, arguments);
-		throw ex;
-	}
+	return JSON.stringify(obj, replacerFunc, spacing);
 }*/
-export function ToJSON(obj, replacerFunc?, spacing?: number): string {
-	try {
-		replacerFunc = replacerFunc || ((key, value)=>(value === undefined ? null : value));
-		return JSON.stringify(obj, replacerFunc, spacing);
-	} catch (ex) {
-		if (ex.toString() == "TypeError: Converting circular structure to JSON") {
-			return ToJSON_Safe.apply(this, arguments);
-		}
-		throw ex;
-	}
+export function ToJSON(obj, replacerFunc?: (this: any, key: string, value: any)=>any, spacing?: number): string {
+	return JSON.stringify(obj, replacerFunc, spacing);
 }
 
-export class ToJSON_WithSpaces_Options {
+export class ToJSON_Advanced_Options {
+	keysToIgnore = [] as string[];
+	stringifyUndefinedAs = null;
+	trimCircular = false;
+	trimCircular_replaceStr = "[circular/duplicate] ";
+	catchErrors = false;
+	catchErrors_replaceStr = "[converting to JSON failed]";
+	addSpacesAt: AddSpacesAt_Options;
+}
+export class AddSpacesAt_Options {
 	insideObjectBraces = false;
 	insideArrayBrackets = false;
 	betweenPropsOrItems = true;
 	betweenPropNameAndValue = true;
 }
-export function ToJSON_WithSpaces(obj, options?: Partial<ToJSON_WithSpaces_Options>) {
-	options = E(new ToJSON_WithSpaces_Options(), options);
+export function ToJSON_Advanced(obj, opt?: Partial<ToJSON_Advanced_Options>) {
+	opt = E(new ToJSON_Advanced_Options(), opt);
 
-	let result = JSON.stringify(obj, null, 1); // stringify, with line-breaks and indents
-	result = result.replace(/^ +/gm, " "); // remove all but the first space for each line
-	result = result.replace(/\n/g, ""); // remove line-breaks
-	if (!options.insideObjectBraces) result = result.replace(/{ /g, "{").replace(/ }/g, "}");
-	if (!options.insideArrayBrackets) result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
-	if (!options.betweenPropsOrItems) result = result.replace(/, /g, ",");
-	if (!options.betweenPropNameAndValue) result = result.replace(/": /g, `":`);
-	return result;
-}
-
-export function ToJSON_Safe(obj, ...excludePropNames) {
-	var cache = [];
-	var foundDuplicates = false;
-	var result = JSON.stringify(obj, function(key, value) {
-		if (ArrayCE(excludePropNames).Contains(key)) return;
-		if (typeof value == 'object' && value !== null) {
-			// if circular reference found, discard key
-			if (cache.indexOf(value) !== -1) {
-				foundDuplicates = true;
-				return;
-			}
-			cache.push(value); // store value in our cache
-		}
-		return value;
-	});
-	//cache = null; // enable garbage collection
-	if (foundDuplicates)
-		result = "[was circular]" + result;
-	return result;
-}
-
-export function ToJSON_Try(...args) {
+	let cache = new Set();
+	//let foundDuplicates = false;
 	try {
-		return ToJSON.apply(this, args);
-	} catch (ex) {}
-	return "[converting to JSON failed]";
+		var result = JSON.stringify(obj, (key, value)=> {
+			if (ArrayCE(opt.keysToIgnore).Contains(key)) return;
+			if (opt.trimCircular && typeof value == 'object' && value != null) {
+				// if circular reference found, ignore key
+				if (cache.has(value)) {
+					//foundDuplicates = true;
+					return opt.trimCircular_replaceStr;
+				}
+				cache.add(value);
+			}
+			if (value === undefined && opt.stringifyUndefinedAs !== undefined) {
+				return opt.stringifyUndefinedAs;
+			}
+			return value;
+		}, opt.addSpacesAt != null ? 1 : null);
+	} catch (ex) {
+		if (opt.catchErrors) {
+			return opt.catchErrors_replaceStr;
+		}
+		throw ex;
+	}
+
+	if (opt.addSpacesAt) {
+		result = result.replace(/^ +/gm, " "); // remove all but the first space for each line
+		result = result.replace(/\n/g, ""); // remove line-breaks
+		if (!opt.addSpacesAt.insideObjectBraces) result = result.replace(/{ /g, "{").replace(/ }/g, "}");
+		if (!opt.addSpacesAt.insideArrayBrackets) result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
+		if (!opt.addSpacesAt.betweenPropsOrItems) result = result.replace(/, /g, ",");
+		if (!opt.addSpacesAt.betweenPropNameAndValue) result = result.replace(/": /g, `":`);
+	}
+	//cache = null; // enable garbage collection
+	/*if (opt.trimCircular && foundDuplicates) {
+		result = opt.trimCircular_replaceStr + result;
+	}*/
+	return result;
 }
 
 export function Clone(obj, keepPrototype = false as boolean) {
