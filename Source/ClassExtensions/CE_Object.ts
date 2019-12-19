@@ -191,16 +191,18 @@ export const ObjectCE_funcs = {
 		return this;
 	},
 
-	Including(...keys: string[]) {
+	//Including(...keys: string[]) {
+	Including<T, Keys extends (keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
 		var result = this instanceof Array ? [] : {};
 		for (let key of keys) {
 			//if (!this.hasOwnProperty(key)) continue;
 			if (!(key in this)) continue; // we include the value, even if from prototype (user wouldn't list in keys array if didn't want it)
-			result[key] = this[key];
+			result[key as any] = this[key as any];
 		}
-		return result;
+		return result as any;
 	},
-	Excluding(...keys: string[]) {
+	//Excluding(...keys: string[]) {
+	Excluding<T, Keys extends (keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
 		//var result = Clone(this); // doesn't work with funcs
 		/*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
 		for (let key of keys) {
@@ -208,10 +210,10 @@ export const ObjectCE_funcs = {
 		}*/
 		var result = this instanceof Array ? [] : {};
 		for (let key of Object.keys(this)) {
-			if (ArrayCE(keys).Contains(key)) continue;
+			if (ArrayCE(keys).Contains(key as any)) continue;
 			result[key] = this[key];
 		}
-		return result;
+		return result as any;
 	},
 
 	IsOneOf(...values: any[]): boolean {

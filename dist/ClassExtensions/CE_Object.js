@@ -158,6 +158,7 @@ export const ObjectCE_funcs = {
         Object.setPrototypeOf(this, Object.getPrototypeOf({}));
         return this;
     },
+    //Including(...keys: string[]) {
     Including(...keys) {
         var result = this instanceof Array ? [] : {};
         for (let key of keys) {
@@ -168,6 +169,7 @@ export const ObjectCE_funcs = {
         }
         return result;
     },
+    //Excluding(...keys: string[]) {
     Excluding(...keys) {
         //var result = Clone(this); // doesn't work with funcs
         /*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
