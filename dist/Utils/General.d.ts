@@ -108,7 +108,7 @@ export declare class StringModifiers {
     hyphenLower_to_hyphenUpper: boolean;
 }
 export declare function ModifyString(text: string, modifiers: Partial<StringModifiers>): string;
-export declare function StartDownload(content: string, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
+export declare function StartDownload(content: string | Blob, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 export declare function StartUpload(): Promise<string | ArrayBuffer>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;
 export declare type WithFuncsStandalone_Type<T> = {

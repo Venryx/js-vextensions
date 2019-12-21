@@ -697,7 +697,13 @@ export function StartDownload(content, filename, dataTypeStr = "data:application
     var link = document.createElement("a");
     Object.assign(link.style, { display: "none" });
     link.innerText = "Save to disk";
-    link.setAttribute("href", dataTypeStr + (encodeContentAsURIComp ? encodeURIComponent(content) : content));
+    if (content instanceof Blob) {
+        // todo: make sure this works correctly, even for different data-types (since data-type args are ignored if Blob supplied)
+        link.setAttribute("href", URL.createObjectURL(content));
+    }
+    else {
+        link.setAttribute("href", dataTypeStr + (encodeContentAsURIComp ? encodeURIComponent(content) : content));
+    }
     link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
