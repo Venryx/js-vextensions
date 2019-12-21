@@ -51,13 +51,12 @@ export declare class IDProvider {
     GetID(): number;
 }
 export declare const nl = "\n";
-export declare function AsObj(obj: any): any;
 export declare function AsArray(args: any): any;
 export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
-export declare function Compare(a: any, b: any, caseSensitive?: boolean): 1 | 0 | -1;
+export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
 export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
 export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;
 export declare function GetXToY(minX: any, maxY: any, interval?: number): any[];
@@ -98,8 +97,6 @@ export declare function GetErrorMessagesUnderElement(element: any): any[];
 export declare const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
 export declare function FindDOM(selector: string): Element;
 export declare function FindDOMAll(selector: string): Element[];
-export declare function WaitTillDataPathIsSet(dataPath: string): Promise<unknown>;
-export declare function WaitTillPropertyIsSet(obj: Object, prop: string): Promise<unknown>;
 export declare class StringModifiers {
     /** somePropName -> some prop name */
     lowerUpper_to_lowerSpaceLower: boolean;

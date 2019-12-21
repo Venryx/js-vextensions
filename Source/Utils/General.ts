@@ -298,11 +298,11 @@ export class IDProvider {
 
 export const nl = "\n";
 
-export function AsObj(obj: any) { 
+/*export function AsObj(obj: any) { 
 	if (typeof obj == "object") return obj;
 	if (obj != null) return ArrayCE(ObjectCE(obj).Pairs()).ToMap(a=>a.key, a=>a.value);
 	return {};
-}
+}*/
 
 export function AsArray(args) { return Slice(args, 0); };
 //s.ToArray = function(args) { return s.Slice(args, 0); };
@@ -708,29 +708,6 @@ export function FindDOM(selector: string) {
 }
 export function FindDOMAll(selector: string) {
 	return Array.from(document.querySelectorAll(selector));
-}
-
-export function WaitTillDataPathIsSet(dataPath: string) {
-	return new Promise(async (resolve, reject)=> {
-		let dataPathParts = dataPath.split(".");
-		let currentParent = g;
-		for (let part of dataPathParts) {
-			while (currentParent[part] == null) {
-				await WaitTillPropertyIsSet(currentParent, part);
-			}
-			currentParent = currentParent[part];
-		}
-		resolve();
-	});
-}
-export function WaitTillPropertyIsSet(obj: Object, prop: string) {
-	return new Promise((resolve, reject)=> {
-		ObjectCE(obj)._AddGetterSetter(prop, ()=>{}, value=> {
-			delete obj[prop]; // remove this hook
-			obj[prop] = value; // set to provided value
-			resolve();
-		});
-	});
 }
 
 /*export enum CapScheme {

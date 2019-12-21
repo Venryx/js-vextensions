@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { IsPrimitive, IsString, IsObject } from "./Types";
 import { Assert, ArrayCE, NumberCE, ObjectCE, StringCE } from "..";
 let g = typeof window == "object" ? window : global;
@@ -271,13 +262,11 @@ export class IDProvider {
     }
 }
 export const nl = "\n";
-export function AsObj(obj) {
-    if (typeof obj == "object")
-        return obj;
-    if (obj != null)
-        return ArrayCE(ObjectCE(obj).Pairs()).ToMap(a => a.key, a => a.value);
+/*export function AsObj(obj: any) {
+    if (typeof obj == "object") return obj;
+    if (obj != null) return ArrayCE(ObjectCE(obj).Pairs()).ToMap(a=>a.key, a=>a.value);
     return {};
-}
+}*/
 export function AsArray(args) { return Slice(args, 0); }
 ;
 //s.ToArray = function(args) { return s.Slice(args, 0); };
@@ -644,28 +633,6 @@ export function FindDOM(selector) {
 }
 export function FindDOMAll(selector) {
     return Array.from(document.querySelectorAll(selector));
-}
-export function WaitTillDataPathIsSet(dataPath) {
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-        let dataPathParts = dataPath.split(".");
-        let currentParent = g;
-        for (let part of dataPathParts) {
-            while (currentParent[part] == null) {
-                yield WaitTillPropertyIsSet(currentParent, part);
-            }
-            currentParent = currentParent[part];
-        }
-        resolve();
-    }));
-}
-export function WaitTillPropertyIsSet(obj, prop) {
-    return new Promise((resolve, reject) => {
-        ObjectCE(obj)._AddGetterSetter(prop, () => { }, value => {
-            delete obj[prop]; // remove this hook
-            obj[prop] = value; // set to provided value
-            resolve();
-        });
-    });
 }
 /*export enum CapScheme {
     /** examplePropNameWithDuoWord *#/ PropName,
