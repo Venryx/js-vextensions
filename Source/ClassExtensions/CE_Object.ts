@@ -1,4 +1,4 @@
-import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL} from "../Utils/General";
+import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT} from "../Utils/General";
 import {ArrayCE, ArrayCE_funcs} from "./CE_Array";
 import {IsNaN, IsObject} from "../Utils/Types";
 import {Assert} from "../Utils/Assert";
@@ -6,9 +6,9 @@ import {FunctionCE} from "./CE_Others";
 
 export interface VSet_Options {
 	prop?: PropertyDescriptor;
-	deleteUndefined?: boolean;
+	/*deleteUndefined?: boolean;
 	deleteNull?: boolean;
-	deleteEmpty?: boolean;
+	deleteEmpty?: boolean;*/
 	copyNonEnumerable?: boolean;
 }
 
@@ -127,11 +127,12 @@ export const ObjectCE_funcs = {
 		let props, opt: VSet_Options, propName: string, propValue: string;
 		if (IsObject(args[0])) [props, opt] = args;
 		else [propName, propValue, opt] = args;
-		opt = opt || {};
-		let copyNonEnumerable = opt.copyNonEnumerable != null ? opt.copyNonEnumerable : true;
+		opt = opt ?? {};
+		let copyNonEnumerable = opt.copyNonEnumerable ?? true;
 
 		const SetProp = (name, value)=> {
-			if (value === DEL || (value === undefined && opt.deleteUndefined) || (value === null && opt.deleteNull) || (value === "" && opt.deleteEmpty)) {
+			if (value === OMIT) return;
+			if (value === DEL) {
 				delete this[name];
 				return;
 			}

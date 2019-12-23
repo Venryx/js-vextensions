@@ -1,8 +1,5 @@
 export interface VSet_Options {
     prop?: PropertyDescriptor;
-    deleteUndefined?: boolean;
-    deleteNull?: boolean;
-    deleteEmpty?: boolean;
     copyNonEnumerable?: boolean;
 }
 export declare type MapLike<V> = {

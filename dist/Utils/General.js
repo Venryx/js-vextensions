@@ -29,7 +29,8 @@ export const emptyArray_forLoading = [];
 export function E(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20) {
     var result = {};
     for (let extend of Array.from(arguments)) {
-        Object.assign(result, extend);
+        //Object.assign(result, extend);
+        ObjectCE(result).VSet(extend); // use VSet, so that E({someKey: false ? "someValue" : DEL}) omits "someKey" entirely
     }
     // if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
     if (emptyObj && ObjectCE(result).VKeys().length == 0) {
@@ -627,7 +628,13 @@ export function GetErrorMessagesUnderElement(element) {
     //return element.querySelectorAll(":invalid").ToList().map(node=>node.validationMessage || `Invalid value.`);
     return Array.from(element.querySelectorAll(":invalid")).map(node => node.validationMessage || `Invalid value.`);
 }
-export const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+export function CreateSymbol(name) {
+    if (typeof Symbol != "undefined")
+        return Symbol(name);
+    return `FakeSymbol(${name})`;
+}
+export const OMIT = CreateSymbol("$JSVE_SYMBOL_OMIT");
+export const DEL = CreateSymbol("$JSVE_SYMBOL_DELETE");
 export function FindDOM(selector) {
     return document.querySelector(selector);
 }

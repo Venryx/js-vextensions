@@ -40,7 +40,8 @@ export function E<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18
 ):E1&E2&E3&E4&E5&E6&E7&E8&E9&E10&E11&E12&E13&E14&E15&E16&E17&E18&E19&E20 {
 	var result = {} as any;
 	for (let extend of Array.from(arguments)) {
-		Object.assign(result, extend);
+		//Object.assign(result, extend);
+		ObjectCE(result).VSet(extend); // use VSet, so that E({someKey: false ? "someValue" : DEL}) omits "someKey" entirely
 	}
 
 	// if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
@@ -701,7 +702,12 @@ export function GetErrorMessagesUnderElement(element) {
 	return Array.from(element.querySelectorAll(":invalid")).map(node=>(node as any).validationMessage || `Invalid value.`);
 }
 
-export const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+export function CreateSymbol(name: string) {
+	if (typeof Symbol != "undefined") return Symbol(name);
+	return `FakeSymbol(${name})`;
+}
+export const OMIT = CreateSymbol("$JSVE_SYMBOL_OMIT");
+export const DEL = CreateSymbol("$JSVE_SYMBOL_DELETE");
 
 export function FindDOM(selector: string) {
 	return document.querySelector(selector);

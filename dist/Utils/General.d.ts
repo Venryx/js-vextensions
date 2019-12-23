@@ -94,7 +94,9 @@ export declare function DeepSet(obj: any, pathOrPathSegments: string | (string |
 export declare function WithDeepSet(baseObj: any, pathOrPathSegments: string | (string | number)[], newValue: any, sepChar?: string): any;
 export declare function GetStackTraceStr(sourceStackTrace?: boolean): any;
 export declare function GetErrorMessagesUnderElement(element: any): any[];
-export declare const DEL = "JS_VEXTENSIONS_SPECIAL_DELETE_KEY";
+export declare function CreateSymbol(name: string): string | symbol;
+export declare const OMIT: string | symbol;
+export declare const DEL: string | symbol;
 export declare function FindDOM(selector: string): Element;
 export declare function FindDOMAll(selector: string): Element[];
 export declare class StringModifiers {

@@ -1,4 +1,4 @@
-import { DeepGet, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL } from "../Utils/General";
+import { DeepGet, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT } from "../Utils/General";
 import { ArrayCE } from "./CE_Array";
 import { IsNaN, IsObject } from "../Utils/Types";
 import { FunctionCE } from "./CE_Others";
@@ -94,15 +94,18 @@ export const ObjectCE_funcs = {
     //VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
     VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
     VSet: (function (...args) {
+        var _a;
         let props, opt, propName, propValue;
         if (IsObject(args[0]))
             [props, opt] = args;
         else
             [propName, propValue, opt] = args;
-        opt = opt || {};
-        let copyNonEnumerable = opt.copyNonEnumerable != null ? opt.copyNonEnumerable : true;
+        opt = (opt !== null && opt !== void 0 ? opt : {});
+        let copyNonEnumerable = (_a = opt.copyNonEnumerable, (_a !== null && _a !== void 0 ? _a : true));
         const SetProp = (name, value) => {
-            if (value === DEL || (value === undefined && opt.deleteUndefined) || (value === null && opt.deleteNull) || (value === "" && opt.deleteEmpty)) {
+            if (value === OMIT)
+                return;
+            if (value === DEL) {
                 delete this[name];
                 return;
             }
