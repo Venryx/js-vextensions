@@ -41,7 +41,8 @@ export function E<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18
 	var result = {} as any;
 	for (let extend of Array.from(arguments)) {
 		//Object.assign(result, extend);
-		ObjectCE(result).VSet(extend); // use VSet, so that E({someKey: false ? "someValue" : DEL}) omits "someKey" entirely
+		// use VSet, for its extra options (eg. using E({someKey: false ? "someValue" : OMIT}) to omit "someKey" entirely)
+		ObjectCE(result).VSet(extend);
 	}
 
 	// if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
@@ -580,13 +581,15 @@ export function GetTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, 
 }*/
 
 export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode)=>any, visitRootNode = false, _ancestorNodes = []) {
-	if (visitRootNode)
+	if (visitRootNode) {
 		visitFunc(new TreeNode([], {_root: treeRoot}, "_root"));
+	}
 	let descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
 	let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
 	visitFunc(childTreeNode);
-	if (descendantPathNodes.length > 1) // if the path goes deeper than the current child-tree-node
+	if (descendantPathNodes.length > 1) { // if the path goes deeper than the current child-tree-node
 		VisitTreeNodesInPath(childTreeNode.Value, ArrayCE(descendantPathNodes).Skip(1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
+	}
 	return treeRoot;
 }
 /*export function VisitTreeNodesInPath_WithRoot(treeRoot, path: string, visitFunc: (node: TreeNode)=>any) {
@@ -594,10 +597,10 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string
 	return treeRoot;
 }*/
 
+// probably todo: make this either handle, or warn about, path-getter-func's containing method-calls
 export function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function) {
 	let funcStr = pathGetterFunc.toString();
-	Assert(!funcStr.includes("["), `State-getter-func cannot contain bracket-based property-access.\n${nl
-		}For variable inclusion, use multiple segments as in: ...ToPropChain("main", "mapViews", mapID)`);
+	Assert(!funcStr.includes("["), "Path-getter-func cannot contain bracket-based property-access.");
 	/*const pathStr = funcStr.match(/return [^.]+\.(.+?);/)[1] as string;
 	//let result = pathStr.replace(/\./g, "/");
 	const result = pathStr.split(".");*/

@@ -1,6 +1,6 @@
 import { DeepGet, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT } from "../Utils/General";
 import { ArrayCE } from "./CE_Array";
-import { IsNaN, IsObject } from "../Utils/Types";
+import { IsNaN, IsString, IsSymbol } from "../Utils/Types";
 import { FunctionCE } from "./CE_Others";
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
     [P in keyof Source]:
@@ -81,65 +81,73 @@ export const ObjectCE_funcs = {
     Extend(x, copyNonEnumerable = true) {
         if (x != null) {
             for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
-                //if (!x.hasOwnProperty(key)) continue;
                 var value = x[key];
-                //if (value !== undefined)
                 this[key] = value;
             }
         }
         return this;
     },
-    // as replacement for C#'s "new MyClass() {prop = true}"
-    /*VSet<T>(this: T, propName: string, propValue, options?: VSet_Options): TargetTFor<T>;
-    //VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
-    VSet<T>(this: T, props: any, options?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)*/
-    VSet: (function (...args) {
-        var _a;
-        let props, opt, propName, propValue;
-        if (IsObject(args[0]))
-            [props, opt] = args;
-        else
-            [propName, propValue, opt] = args;
-        opt = (opt !== null && opt !== void 0 ? opt : {});
-        let copyNonEnumerable = (_a = opt.copyNonEnumerable, (_a !== null && _a !== void 0 ? _a : true));
-        const SetProp = (name, value) => {
-            if (value === OMIT)
-                return;
-            if (value === DEL) {
-                delete this[name];
-                return;
-            }
-            if (opt.prop) {
-                Object.defineProperty(this, name, Object.assign({ configurable: true }, opt.prop, { value }));
-            }
-            else {
-                this[name] = value;
-            }
-        };
-        if (props) {
-            /*for (let key in props) {
-                if (!props.hasOwnProperty(key)) continue;*/
-            for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](props)) {
-                SetProp(key, props[key]);
-            }
-        }
-        else {
-            SetProp(propName, propValue);
-        }
-        return this;
-    }),
     Extended(x, copyNonEnumerable = true) {
         let result = this instanceof Array ? [] : {};
         for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)) {
             result[key] = this[key];
         }
-        if (x) {
+        if (x != null) {
             for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
                 result[key] = x[key];
             }
         }
         return result;
     },
+    // more advanced version of ObjectCE.Extend
+    VSet: (function (...args) {
+        let props, propName, propValue, opt;
+        if (IsString(args[0]) || IsSymbol(args[0]))
+            [propName, propValue, opt] = args;
+        else
+            [props, opt] = args;
+        opt = Object.assign({}, { copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto" }, opt);
+        const SetProp = (name, descriptor, value) => {
+            if (value === OMIT)
+                return;
+            if (value === DEL) {
+                delete this[name];
+                return;
+            }
+            let isGetterSetter = descriptor && (descriptor.get != null || descriptor.set != null);
+            let asGetterSetter = isGetterSetter && opt.copyGetterSettersAs == "getterSetter";
+            // descriptorCustomized: whether the descriptor has customizations that would be lost by using a simple set-op
+            let descriptorCustomized = descriptor && (descriptor.enumerable == false || descriptor.writable == false || descriptor.configurable == false || asGetterSetter);
+            let callSetters_final = opt.callSetters == "always" || (opt.callSetters == "auto" && !descriptorCustomized);
+            if (callSetters_final) {
+                this[name] = value;
+            }
+            else {
+                // we default configurable to true, since it's the better default imo; it's more compatible -- conf:false can break "correct code", whereas conf:true at worst allows mistakes
+                Object.defineProperty(this, name, Object.assign({ configurable: true }, descriptor, { value }));
+            }
+        };
+        if (props) {
+            /*for (let key in props) {
+                if (!props.hasOwnProperty(key)) continue;*/
+            let keys = Object.getOwnPropertyNames(props);
+            if (opt.copySymbolKeys)
+                keys = keys.concat(Object.getOwnPropertySymbols(props));
+            for (const key of keys) {
+                let descriptor = Object.getOwnPropertyDescriptor(props, key);
+                if (!descriptor.enumerable && !opt.copyNonEnumerable)
+                    continue;
+                let isGetterSetter = descriptor.get || descriptor.set;
+                if (isGetterSetter && opt.copyGetterSettersAs == "ignore")
+                    continue;
+                SetProp(key, descriptor, isGetterSetter && opt.copyGetterSettersAs == "getterSetter" ? null : props[key]);
+            }
+        }
+        else {
+            SetProp(propName, opt.prop, propValue);
+        }
+        return this;
+    }),
     /*interface Object { Extended2<T>(this, x: T): T; }
     Extended2(x) {
         return this.Extended(x);

@@ -11,17 +11,9 @@ export var int = ()=>"int" as any as (new(..._)=>number);
 export var double = ()=>"double" as any as (new(..._)=>number);
 export var string = ()=>"string" as any as (new(..._)=>string);
 
-export function IsNaN(obj) { return typeof obj == "number" && obj != obj; }
 export function IsPrimitive(obj) { return IsBool(obj) || IsNumber(obj) || IsString(obj); }
 export function IsBool(obj) : obj is boolean { return typeof obj == "boolean"; } //|| obj instanceof Boolean
 export function ToBool(boolStr) { return boolStr == "true" ? true : false; }
-
-export function IsArray(obj) : obj is Array<any> { return Array.isArray(obj); } // for briefness and/or consistency
-export function IsObject(obj) : obj is Object { return typeof obj == "object"; }
-//export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
-//export function IsOfType<T>(obj, typeConstructor: new()=>T) : obj is T { return obj.constructor.name == typeConstructor.name; }
-export function IsTypeX<T>(obj: Object, typeConstructor: new(...args: any[])=>T) : obj is T { return obj instanceof typeConstructor; }
-
 export function IsNumberString(obj, allowNaN = false) { return IsString(obj) && obj.length && IsNumber(Number(obj), false, allowNaN); }
 export function IsNumber(obj, allowNumberObj = false, allowNaN = false): obj is number {
 	if (!allowNaN && IsNaN(obj)) return false;
@@ -43,16 +35,24 @@ export function IsInt(obj) : obj is number { return IsNumber(obj) && parseInt(ob
 export function ToInt(stringOrFloatVal: string | number, valIfConversionFails = NaN) { return parseInt(ToNumber(stringOrFloatVal, valIfConversionFails)+""); }
 /*export function IsFloat(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
 export function ToFloat(stringOrIntVal) { return parseFloat(stringOrIntVal); }*/
-
+export function IsNaN(obj) { return typeof obj == "number" && obj != obj; }
 export function IsString(obj, allowStringObj = false): obj is string {
 	return typeof obj == "string" || (allowStringObj && obj instanceof String);
 }
 export function ToString(val) { return "" + val; }
-
+export function IsSymbol(obj, allowSymbolObj = false): obj is symbol {
+	return typeof obj == "symbol" || (allowSymbolObj && typeof Symbol != undefined && obj instanceof Symbol);
+}
 export function IsFunction(obj) : obj is Function {
 	//return obj instanceof Function;
 	return typeof obj == "function";
 }
+
+export function IsArray(obj) : obj is Array<any> { return Array.isArray(obj); } // for briefness and/or consistency
+export function IsObject(obj) : obj is Object { return typeof obj == "object"; }
+//export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
+//export function IsOfType<T>(obj, typeConstructor: new()=>T) : obj is T { return obj.constructor.name == typeConstructor.name; }
+export function IsTypeX<T>(obj: Object, typeConstructor: new(...args: any[])=>T) : obj is T { return obj instanceof typeConstructor; }
 
 export function IsConstructor(obj) : obj is new(..._)=>any {
 	//return obj instanceof Function && obj.name;

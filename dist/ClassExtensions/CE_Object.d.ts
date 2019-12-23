@@ -1,6 +1,9 @@
 export interface VSet_Options {
     prop?: PropertyDescriptor;
     copyNonEnumerable?: boolean;
+    copySymbolKeys?: boolean;
+    copyGetterSettersAs?: "ignore" | "getterSetter" | "value";
+    callSetters?: "never" | "always" | "auto";
 }
 export declare type MapLike<V> = {
     [key: number]: V;
@@ -21,11 +24,11 @@ export declare const ObjectCE_funcs: {
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
     Extend(x: any, copyNonEnumerable?: boolean): any;
+    Extended<T, T2>(this: T, x: T2, copyNonEnumerable?: boolean): TargetTFor<T> & T2;
     VSet: {
-        <T>(this: T, propName: string, propValue: any, opt?: VSet_Options): TargetTFor<T>;
-        <T_1>(this: T_1, props: any, opt?: VSet_Options): TargetTFor<T_1>;
+        <T_1>(this: T_1, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_1>;
+        <T_2>(this: T_2, props: any, opt?: VSet_Options): TargetTFor<T_2>;
     };
-    Extended<T_2, T2>(this: T_2, x: T2, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
         <T_3, Result>(this: T_3, pathGetterFunc: (self: TargetTFor<T_3>) => Result, resultIfNull?: any): Result;
@@ -82,11 +85,11 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
     Extend(x: any, copyNonEnumerable?: boolean): any;
+    Extended<T, T2>(this: T, x: T2, copyNonEnumerable?: boolean): TargetTFor<T> & T2;
     VSet: {
-        <T>(this: T, propName: string, propValue: any, opt?: VSet_Options): TargetTFor<T>;
-        <T_1>(this: T_1, props: any, opt?: VSet_Options): TargetTFor<T_1>;
+        <T_1>(this: T_1, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_1>;
+        <T_2>(this: T_2, props: any, opt?: VSet_Options): TargetTFor<T_2>;
     };
-    Extended<T_2, T2>(this: T_2, x: T2, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
         <T_3, Result>(this: T_3, pathGetterFunc: (self: TargetTFor<T_3>) => Result, resultIfNull?: any): Result;
