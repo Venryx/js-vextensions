@@ -97,6 +97,8 @@ export declare function GetErrorMessagesUnderElement(element: any): any[];
 export declare function CreateSymbol(name: string): string | symbol;
 export declare const OMIT: string | symbol;
 export declare const DEL: string | symbol;
+export declare function OmitIfFalsy<T>(value: T): T;
+export declare function DelIfFalsy<T>(value: T): T;
 export declare function FindDOM(selector: string): Element;
 export declare function FindDOMAll(selector: string): Element[];
 export declare class StringModifiers {

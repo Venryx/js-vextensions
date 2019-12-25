@@ -712,6 +712,14 @@ export function CreateSymbol(name: string) {
 }
 export const OMIT = CreateSymbol("$JSVE_SYMBOL_OMIT");
 export const DEL = CreateSymbol("$JSVE_SYMBOL_DELETE");
+export function OmitIfFalsy<T>(value: T): T {
+	if (!value) return OMIT as any;
+	return value;
+}
+export function DelIfFalsy<T>(value: T): T {
+	if (!value) return DEL as any;
+	return value;
+}
 
 export function FindDOM(selector: string) {
 	return document.querySelector(selector);
