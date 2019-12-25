@@ -135,7 +135,7 @@ export const ArrayCE_funcs = {
 	All<T>(this: T[], matchFunc: (item: T, index?: number)=>boolean): boolean {
 		for (let [index, item] of this.entries()) {
 			if (!matchFunc.call(item, item, index)) {
-					return false;
+				return false;
 			}
 		}
 		return true;

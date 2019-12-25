@@ -105,7 +105,7 @@ export const ObjectCE_funcs = {
 		return this;
 	};*/
 
-	Extend(x: any, copyNonEnumerable = true) {
+	Extend(x: any, copyNonEnumerable = false) {
 		if (x != null) {
 			for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
 				var value = x[key];
@@ -114,7 +114,7 @@ export const ObjectCE_funcs = {
 		}
 		return this;
 	},
-	Extended<T, T2>(this: T, x: T2, copyNonEnumerable = true): TargetTFor<T> & T2 {
+	Extended<T, T2>(this: T, x: T2, copyNonEnumerable = false): TargetTFor<T> & T2 {
 		let result: any = this instanceof Array ? [] : {};
 		for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)) {
 			result[key] = this[key];

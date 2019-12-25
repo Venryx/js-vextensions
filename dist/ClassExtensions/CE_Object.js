@@ -78,7 +78,7 @@ export const ObjectCE_funcs = {
         }
         return this;
     };*/
-    Extend(x, copyNonEnumerable = true) {
+    Extend(x, copyNonEnumerable = false) {
         if (x != null) {
             for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
                 var value = x[key];
@@ -87,7 +87,7 @@ export const ObjectCE_funcs = {
         }
         return this;
     },
-    Extended(x, copyNonEnumerable = true) {
+    Extended(x, copyNonEnumerable = false) {
         let result = this instanceof Array ? [] : {};
         for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)) {
             result[key] = this[key];
