@@ -158,7 +158,9 @@ export const ObjectCE_funcs = {
 				Object.defineProperty(this, name, Object.assign({configurable: true}, descriptor, {value}));
 			}
 		};
-		if (props) {
+		if (propName) {
+			SetProp(propName, opt.prop, propValue);
+		} else if (props != null) {
 			/*for (let key in props) {
 				if (!props.hasOwnProperty(key)) continue;*/
 			let keys = Object.getOwnPropertyNames(props) as (string | symbol)[];
@@ -170,8 +172,6 @@ export const ObjectCE_funcs = {
 				if (isGetterSetter && opt.copyGetterSettersAs == "ignore") continue;
 				SetProp(key, descriptor, isGetterSetter && opt.copyGetterSettersAs == "getterSetter" ? null : props[key as any]);
 			}
-		} else {
-			SetProp(propName, opt.prop, propValue);
 		}
 		return this as any;
 	}),

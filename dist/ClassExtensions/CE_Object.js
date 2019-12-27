@@ -127,7 +127,10 @@ export const ObjectCE_funcs = {
                 Object.defineProperty(this, name, Object.assign({ configurable: true }, descriptor, { value }));
             }
         };
-        if (props) {
+        if (propName) {
+            SetProp(propName, opt.prop, propValue);
+        }
+        else if (props != null) {
             /*for (let key in props) {
                 if (!props.hasOwnProperty(key)) continue;*/
             let keys = Object.getOwnPropertyNames(props);
@@ -142,9 +145,6 @@ export const ObjectCE_funcs = {
                     continue;
                 SetProp(key, descriptor, isGetterSetter && opt.copyGetterSettersAs == "getterSetter" ? null : props[key]);
             }
-        }
-        else {
-            SetProp(propName, opt.prop, propValue);
         }
         return this;
     }),
