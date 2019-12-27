@@ -39,12 +39,12 @@ Example:
  */
 export async function AwaitTree<T>(obj: T): Promise<WithPromisesUnwrapped<T>> {
 	const keyAndPromisePairs = ObjectCE(obj).Pairs().filter((pair) => pair.value instanceof Promise);
-	const promiseResults = await Promise.all(keyAndPromisePairs.map((a) => a.value));
+	const promiseResults = await Promise.all(keyAndPromisePairs.map((a) => a.value as Promise<any>));
 
 	const result = {};
-	for (const pair of keyAndPromisePairs) {
+	for (const [index, pair] of keyAndPromisePairs.entries()) {
 		// result[pair.key] = await obj[pair.key];
-		result[pair.key] = promiseResults[pair.index];
+		result[pair.key] = promiseResults[index];
 	}
 	return result as any;
 }

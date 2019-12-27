@@ -43,9 +43,9 @@ export function AwaitTree(obj) {
         const keyAndPromisePairs = ObjectCE(obj).Pairs().filter((pair) => pair.value instanceof Promise);
         const promiseResults = yield Promise.all(keyAndPromisePairs.map((a) => a.value));
         const result = {};
-        for (const pair of keyAndPromisePairs) {
+        for (const [index, pair] of keyAndPromisePairs.entries()) {
             // result[pair.key] = await obj[pair.key];
-            result[pair.key] = promiseResults[pair.index];
+            result[pair.key] = promiseResults[index];
         }
         return result;
     });

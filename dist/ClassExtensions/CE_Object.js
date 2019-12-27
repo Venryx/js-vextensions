@@ -208,12 +208,12 @@ export const ObjectCE_funcs = {
     },
     Pairs: (function (excludeSpecialKeys = false) {
         var result = [];
-        var i = 0;
         let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
-        for (let key of keys) {
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
             if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id"))
                 continue;
-            let entry = { index: i++, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
+            let entry = { index: i, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
             if (IsNaN(entry.keyNum))
                 delete entry.keyNum;
             result.push(entry);
