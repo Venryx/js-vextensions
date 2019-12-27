@@ -1,3 +1,3 @@
 export class JSVE {
-	static logFunc = console.log;
+	//static logFunc = console.log;
 }

@@ -1,16 +1,18 @@
 import {GetStackTraceStr} from "./General";
 import {JSVE} from "../JSVE";
 
-export function Assert(condition, messageOrMessageFunc?: string | Function): condition is true {
+export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
 	if (condition) return;
 
 	var message = (messageOrMessageFunc as any) instanceof Function ? (messageOrMessageFunc as any)() : messageOrMessageFunc;
 
-	JSVE.logFunc(`Assert failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
-	console.error("Assert failed) " + message);
+	//JSVE.logFunc(`Assert failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
+	//console.error("Assert failed) " + message);
 
 	let skipError = false; // add flag which you can use to skip the error, when paused in debugger
-	debugger;
+	if (triggerDebugger) {
+		debugger;
+	}
 	if (!skipError) throw new Error("Assert failed) " + message);
 }
 export function AssertWarn(condition, messageOrMessageFunc?: string | Function) {
