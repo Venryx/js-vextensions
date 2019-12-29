@@ -1,8 +1,11 @@
 import {ToJSON} from "./General";
+import {ObjectCE} from "../ClassExtensions/CE_Object";
+import {ArrayCE} from "../ClassExtensions/CE_Array";
 
-export function GetPropsChanged(oldObj, newObj, returnNullIfSame = true, useJSONCompare = false): {key: string, oldVal: any, newVal: any}[] {
+export type PropChange = {key: string, oldVal: any, newVal: any};
+export function GetPropChanges(oldObj, newObj, returnNullIfSame = false, useJSONCompare = false): PropChange[] {
 	oldObj = oldObj || {}, newObj = newObj || {};
-	let keys = oldObj.VKeys().concat(newObj.VKeys()).Distinct();
+	let keys = ArrayCE(Object.keys(oldObj).concat(Object.keys(newObj))).Distinct();
 	let result = [];
 	for (let key of keys) {
 		let newVal_forComparison = useJSONCompare ? ToJSON(newObj[key]) : newObj[key];
