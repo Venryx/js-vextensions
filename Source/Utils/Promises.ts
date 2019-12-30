@@ -38,13 +38,15 @@ Example:
 })();
  */
 export async function AwaitTree<T>(obj: T): Promise<WithPromisesUnwrapped<T>> {
-	const keyAndPromisePairs = ObjectCE(obj).Pairs().filter((pair) => pair.value instanceof Promise);
-	const promiseResults = await Promise.all(keyAndPromisePairs.map((a) => a.value as Promise<any>));
+	const pairs = ObjectCE(obj).Pairs();
+	const awaitedResults = await Promise.all(pairs.map((pair) => {
+		let valueAsPromise = pair.value instanceof Promise ? pair.value : Promise.resolve(pair.value);
+		return valueAsPromise;
+	}));
 
 	const result = {};
-	for (const [index, pair] of keyAndPromisePairs.entries()) {
-		// result[pair.key] = await obj[pair.key];
-		result[pair.key] = promiseResults[index];
+	for (const pair of pairs) {
+		result[pair.key] = awaitedResults[pair.index];
 	}
 	return result as any;
 }

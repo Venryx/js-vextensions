@@ -40,12 +40,14 @@ Example:
  */
 export function AwaitTree(obj) {
     return __awaiter(this, void 0, void 0, function* () {
-        const keyAndPromisePairs = ObjectCE(obj).Pairs().filter((pair) => pair.value instanceof Promise);
-        const promiseResults = yield Promise.all(keyAndPromisePairs.map((a) => a.value));
+        const pairs = ObjectCE(obj).Pairs();
+        const awaitedResults = yield Promise.all(pairs.map((pair) => {
+            let valueAsPromise = pair.value instanceof Promise ? pair.value : Promise.resolve(pair.value);
+            return valueAsPromise;
+        }));
         const result = {};
-        for (const [index, pair] of keyAndPromisePairs.entries()) {
-            // result[pair.key] = await obj[pair.key];
-            result[pair.key] = promiseResults[index];
+        for (const pair of pairs) {
+            result[pair.key] = awaitedResults[pair.index];
         }
         return result;
     });
