@@ -13,7 +13,6 @@ export declare type MapLike<V> = {
 export declare type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
 export declare type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
 export declare type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
-export declare const specialKeys: string[];
 export declare const ObjectCE_funcs: {
     /** Helps you do stuff like this:
         Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
@@ -40,19 +39,19 @@ export declare const ObjectCE_funcs: {
     Excluding<T_7, Keys_1 extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys_1): Pick<T_7, Exclude<keyof T_7, Keys_1[number]>>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
-        <K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
+        <K, V>(this: XOrWrapped<Map<K, V>>): {
             index: number;
             key: K;
             keyNum?: number;
             value: V;
         }[];
-        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>, excludeSpecialKeys?: boolean | 1): {
+        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>): {
             index: number;
             key: string;
             keyNum?: number;
             value: V_1;
         }[];
-        <K_2 = string, V_2 = any>(excludeSpecialKeys?: boolean | 1): {
+        <K_2 = string, V_2 = any>(): {
             index: number;
             key: K_2;
             keyNum?: number;
@@ -60,13 +59,13 @@ export declare const ObjectCE_funcs: {
         }[];
     };
     VKeys: {
-        <K_3>(this: XOrWrapped<Map<K_3, any>>, excludeSpecialKeys?: boolean | 1): K_3[];
-        (this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
-        <K_4 = string>(excludeSpecialKeys?: boolean | 1): K_4[];
+        <K_3>(this: XOrWrapped<Map<K_3, any>>): K_3[];
+        (this: XOrWrapped<MapLike<any>>): string[];
+        <K_4 = string>(): K_4[];
     };
     VValues: {
-        <V_3>(this: XOrWrapped<MapOrMapLike<V_3>>, excludeSpecialKeys?: boolean | 1): V_3[];
-        <V_4 = any>(excludeSpecialKeys?: boolean | 1): V_4[];
+        <V_3>(this: XOrWrapped<MapOrMapLike<V_3>>): V_3[];
+        <V_4 = any>(): V_4[];
     };
     Sym(symbolName: string): any;
 };
@@ -101,19 +100,19 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     Excluding<T_7, Keys_1 extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys_1): Pick<T_7, Exclude<keyof T_7, Keys_1[number]>>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
-        <K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {
+        <K, V>(this: XOrWrapped<Map<K, V>>): {
             index: number;
             key: K;
             keyNum?: number;
             value: V;
         }[];
-        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>, excludeSpecialKeys?: boolean | 1): {
+        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>): {
             index: number;
             key: string;
             keyNum?: number;
             value: V_1;
         }[];
-        <K_2 = string, V_2 = any>(excludeSpecialKeys?: boolean | 1): {
+        <K_2 = string, V_2 = any>(): {
             index: number;
             key: K_2;
             keyNum?: number;
@@ -121,13 +120,13 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
         }[];
     };
     VKeys: {
-        <K_3>(this: XOrWrapped<Map<K_3, any>>, excludeSpecialKeys?: boolean | 1): K_3[];
-        (this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
-        <K_4 = string>(excludeSpecialKeys?: boolean | 1): K_4[];
+        <K_3>(this: XOrWrapped<Map<K_3, any>>): K_3[];
+        (this: XOrWrapped<MapLike<any>>): string[];
+        <K_4 = string>(): K_4[];
     };
     VValues: {
-        <V_3>(this: XOrWrapped<MapOrMapLike<V_3>>, excludeSpecialKeys?: boolean | 1): V_3[];
-        <V_4 = any>(excludeSpecialKeys?: boolean | 1): V_4[];
+        <V_3>(this: XOrWrapped<MapOrMapLike<V_3>>): V_3[];
+        <V_4 = any>(): V_4[];
     };
     Sym(symbolName: string): any;
 }>;

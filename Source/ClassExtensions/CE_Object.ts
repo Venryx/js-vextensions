@@ -33,7 +33,7 @@ export function WithFuncThisArgsAsXOrWrapped<Source>(source: Source): WithFuncTh
 	return source as any;
 }*/
 
-export const specialKeys = ["_", "_key", "_id"];
+//export const specialKeys = ["_", "_key", "_id"];
 export const ObjectCE_funcs = {
 	// base
 	// ==========
@@ -240,17 +240,17 @@ export const ObjectCE_funcs = {
 	},
 	
 	Pairs: <{
-		<K, V>(this: XOrWrapped<Map<K, V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-		<K, V>(this: XOrWrapped<MapLike<V>>, excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[];
-		<K = string, V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: K, keyNum?: number, value: V}[];
-		//<V = any>(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
-		//(excludeSpecialKeys?: boolean | 1): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
-	}>(function(excludeSpecialKeys: boolean | 1 = false) {
+		<K, V>(this: XOrWrapped<Map<K, V>>): {index: number, key: K, keyNum?: number, value: V}[];
+		<K, V>(this: XOrWrapped<MapLike<V>>): {index: number, key: string, keyNum?: number, value: V}[];
+		<K = string, V = any>(): {index: number, key: K, keyNum?: number, value: V}[];
+		//<V = any>(): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
+		//(): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
+	}>(function() {
 		var result = [];
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
 		for (let i = 0; i < keys.length; i++) {
 			let key = keys[i];
-			if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
+			//if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
 			let entry = {index: i, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key as any]};
 			if (IsNaN(entry.keyNum)) delete entry.keyNum;
 			result.push(entry);
@@ -259,26 +259,26 @@ export const ObjectCE_funcs = {
 	}),
 
 	VKeys: <{
-		<K>(this: XOrWrapped<Map<K, any>>, excludeSpecialKeys?: boolean | 1): K[];
-		(this: XOrWrapped<MapLike<any>>, excludeSpecialKeys?: boolean | 1): string[];
-		<K = string>(excludeSpecialKeys?: boolean | 1): K[];
-		//(excludeSpecialKeys?: boolean | 1): string[]; // last variant needs explicit strings, for generics-less ObjectCE
-		//(excludeSpecialKeys?: boolean | 1): string[]; // generics-less version (needed for some ts edge-cases)
-	}>(function(excludeSpecialKeys: boolean | 1 = false) {
-		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
+		<K>(this: XOrWrapped<Map<K, any>>): K[];
+		(this: XOrWrapped<MapLike<any>>): string[];
+		<K = string>(): K[];
+		//(): string[]; // last variant needs explicit strings, for generics-less ObjectCE
+		//(): string[]; // generics-less version (needed for some ts edge-cases)
+	}>(function() {
+		//if (excludeSpecialKeys) return this.Pairs(true).map(a=>a.key);
 		let keys = this instanceof Map ? Array.from((this as Map<any, any>).keys()) : Object.keys(this);
-		if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
+		//if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
 		return keys;
 	}),
 
 	VValues: <{
-		<V>(this: XOrWrapped<MapOrMapLike<V>>, excludeSpecialKeys?: boolean | 1): V[];
-		<V = any>(excludeSpecialKeys?: boolean | 1): V[];
-		//(excludeSpecialKeys?: boolean): any[];
-		//(excludeSpecialKeys?: boolean | 1): any[]; // generics-less version (needed for some ts edge-cases)
-	}>(function(excludeSpecialKeys: boolean | 1 = false): any[] { // explicit return type needed here fsr, else breaks type-data output for funcs object
+		<V>(this: XOrWrapped<MapOrMapLike<V>>): V[];
+		<V = any>(): V[];
+		//(): any[];
+		//(): any[]; // generics-less version (needed for some ts edge-cases)
+	}>(function(): any[] { // explicit return type needed here fsr, else breaks type-data output for funcs object
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-		return ObjectCES.VKeys(this, excludeSpecialKeys).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
+		return ObjectCES.VKeys(this).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
 	}),
 
 	// for symbols

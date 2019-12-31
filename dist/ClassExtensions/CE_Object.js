@@ -10,7 +10,7 @@ import { FunctionCE } from "./CE_Others";
 export function WithFuncThisArgsAsXOrWrapped<Source>(source: Source): WithFuncThisArgsAsXOrWrapped_Type<Source> {
     return source as any;
 }*/
-export const specialKeys = ["_", "_key", "_id"];
+//export const specialKeys = ["_", "_key", "_id"];
 export const ObjectCE_funcs = {
     // base
     // ==========
@@ -206,13 +206,12 @@ export const ObjectCE_funcs = {
         }
         return false;
     },
-    Pairs: (function (excludeSpecialKeys = false) {
+    Pairs: (function () {
         var result = [];
         let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
         for (let i = 0; i < keys.length; i++) {
             let key = keys[i];
-            if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id"))
-                continue;
+            //if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
             let entry = { index: i, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key] };
             if (IsNaN(entry.keyNum))
                 delete entry.keyNum;
@@ -220,16 +219,15 @@ export const ObjectCE_funcs = {
         }
         return result;
     }),
-    VKeys: (function (excludeSpecialKeys = false) {
-        //if (excludeSpecialKeys) return this.Props(true).map(a=>a.name);
+    VKeys: (function () {
+        //if (excludeSpecialKeys) return this.Pairs(true).map(a=>a.key);
         let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
-        if (excludeSpecialKeys)
-            keys = ArrayCE(keys).Except(specialKeys);
+        //if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
         return keys;
     }),
-    VValues: (function (excludeSpecialKeys = false) {
+    VValues: (function () {
         //if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-        return ObjectCES.VKeys(this, excludeSpecialKeys).map(key => this instanceof Map ? this.get(key) : this[key]);
+        return ObjectCES.VKeys(this).map(key => this instanceof Map ? this.get(key) : this[key]);
     }),
     // for symbols
     /*Pairs_Sym() {
