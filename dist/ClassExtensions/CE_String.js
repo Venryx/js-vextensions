@@ -25,7 +25,7 @@ export const StringCE_funcs = {
         }
         return hash;
     },
-    Matches(strOrRegex) {
+    Matches: (function (strOrRegex) {
         if (typeof strOrRegex == "string") {
             let str = strOrRegex;
             let result = [];
@@ -41,7 +41,8 @@ export const StringCE_funcs = {
         }
         let regex = strOrRegex;
         if (!regex.global) {
-            throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)"); // todo: make alternate solution, like setting flag ourselves
+            //throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
+            regex = new RegExp(regex.source, regex.flags + "g");
         }
         let result = [];
         let match;
@@ -49,7 +50,7 @@ export const StringCE_funcs = {
             result.push(match);
         }
         return result;
-    },
+    }),
     /*matches_group(regex, /*o:*#/ groupIndex) {
         if (!regex.global)
             throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");

@@ -26,7 +26,10 @@ export const StringCE_funcs = {
 		}
 		return hash;
 	},
-	Matches(this: String, strOrRegex: string | RegExp) {
+	Matches: <{
+		(str: string): {index: number}[];
+		(regex: RegExp): RegExpMatchArray[];
+	}>(function(this: String, strOrRegex: string | RegExp) {
 		if (typeof strOrRegex == "string") {
 			let str = strOrRegex;
 			let result = [] as {index: number}[];
@@ -37,12 +40,13 @@ export const StringCE_funcs = {
 				result.push({index: matchIndex});
 				lastMatchIndex = matchIndex;
 			}
-			return result as any;
+			return result;
 		}
 
 		let regex = strOrRegex;
 		if (!regex.global) {
-			throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)"); // todo: make alternate solution, like setting flag ourselves
+			//throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
+			regex = new RegExp(regex.source, regex.flags + "g");
 		}
 		
 		let result = [] as RegExpMatchArray[];
@@ -50,8 +54,8 @@ export const StringCE_funcs = {
 		while (match = regex.exec(this as string)) {
 			result.push(match);
 		}
-		return result as any;
-	},
+		return result;
+	}),
 	/*matches_group(regex, /*o:*#/ groupIndex) {
 		if (!regex.global)
 			throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
