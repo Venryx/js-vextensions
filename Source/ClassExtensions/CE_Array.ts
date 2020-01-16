@@ -325,11 +325,11 @@ export const ArrayCE_funcs = {
 		return result;
 	},
 	Except: <{
-		<T>(this: T[], ...args: T[]): T[];
-		<T>(this: T[], options: {excludeEachOnlyOnce: boolean}, ...args: T[]): T[];
+		<T>(this: T[], ...excludeItems: T[]): T[];
+		<T>(this: T[], options: {excludeEachOnlyOnce: boolean}, ...excludeItems: T[]): T[];
 	}>(function(...args: any[]) {
 		let opt: {excludeEachOnlyOnce: boolean}, excludeItems: any[];
-		if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0]) [opt, excludeItems] = args;
+		if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0]) [opt, ...excludeItems] = args;
 		else excludeItems = args;
 
 		if (opt && opt.excludeEachOnlyOnce) {

@@ -308,7 +308,7 @@ export const ArrayCE_funcs = {
     Except: (function (...args) {
         let opt, excludeItems;
         if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0])
-            [opt, excludeItems] = args;
+            [opt, ...excludeItems] = args;
         else
             excludeItems = args;
         if (opt && opt.excludeEachOnlyOnce) {

@@ -44,10 +44,10 @@ export declare const ArrayCE_funcs: {
     OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): T_36[];
     Distinct<T_37>(this: T_37[]): T_37[];
     Except: {
-        <T_38>(this: T_38[], ...args: T_38[]): T_38[];
+        <T_38>(this: T_38[], ...excludeItems: T_38[]): T_38[];
         <T_39>(this: T_39[], options: {
             excludeEachOnlyOnce: boolean;
-        }, ...args: T_39[]): T_39[];
+        }, ...excludeItems: T_39[]): T_39[];
     };
     IfEmptyThen<T_40, T2_2>(this: T_40[], valIfSelfIsEmpty: T2_2): T2_2 | T_40[];
     Min<T_41>(this: T_41[], valFunc?: (item: T_41) => number, asNumbers?: boolean): T_41;
@@ -105,10 +105,10 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
     OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): T_36[];
     Distinct<T_37>(this: T_37[]): T_37[];
     Except: {
-        <T_38>(this: T_38[], ...args: T_38[]): T_38[];
+        <T_38>(this: T_38[], ...excludeItems: T_38[]): T_38[];
         <T_39>(this: T_39[], options: {
             excludeEachOnlyOnce: boolean;
-        }, ...args: T_39[]): T_39[];
+        }, ...excludeItems: T_39[]): T_39[];
     };
     IfEmptyThen<T_40, T2_2>(this: T_40[], valIfSelfIsEmpty: T2_2): T2_2 | T_40[];
     Min<T_41>(this: T_41[], valFunc?: (item: T_41) => number, asNumbers?: boolean): T_41;
