@@ -691,29 +691,31 @@ function ConvertFromStandardSchemeToSchemeX(text: string, toScheme: CapScheme) {
         return text;
     }
 }*/
-export class StringModifiers {
-    constructor() {
-        /** somePropName -> some prop name */
-        this.lowerUpper_to_lowerSpaceLower = false;
-        /** some prop name -> Some prop name */
-        this.firstLower_to_upper = false;
-        /** some prop name -> some Prop Name */
-        this.spaceLower_to_spaceUpper = false;
-        /** some-prop-name -> some-Prop-Name */
-        this.hyphenLower_to_hyphenUpper = false;
-    }
-}
-export function ModifyString(text, modifiers) {
-    modifiers = E(new StringModifiers(), modifiers);
+// roughly ordered by average position in string at which mod would be applied
+export const stringModifiers = {
+    /** some prop name -> Some prop name */
+    startLower_to_upper: str => str.replace(/^./, a => a.toUpperCase()),
+    /** Some prop name -> some prop name */
+    startUpper_to_lower: str => str.replace(/^./, a => a.toLowerCase()),
+    // lower to upper
+    /** some prop name -> some Prop Name */
+    spaceLower_to_spaceUpper: str => str.replace(/ ([a-z])/g, (m, sub1) => ` ${sub1.toUpperCase()}`),
+    /** some-prop-name -> some-Prop-Name */
+    hyphenLower_to_hyphenUpper: str => str.replace(/-([a-z])/g, (m, sub1) => `-${sub1.toUpperCase()}`),
+    // upper to lower
+    /** somePropName -> some prop name */
+    lowerUpper_to_lowerSpaceLower: str => str.replace(/([a-z])([A-Z])/g, (m, sub1, sub2) => `${sub1} ${sub2.toLowerCase()}`),
+    /** some prop Name -> somepropName */
+    removeSpaces: str => str.replace(/ /g, (m, sub1) => ""),
+    /** some-prop-Name -> somepropName */
+    removeHyphens: str => str.replace(/-/g, (m, sub1) => ""),
+};
+export function ModifyString(text, modifiersGetter) {
     let result = text;
-    if (modifiers.lowerUpper_to_lowerSpaceLower)
-        result = result.replace(/([a-z])([A-Z])/g, (m, sub1, sub2) => `${sub1} ${sub2.toLowerCase()}`);
-    if (modifiers.firstLower_to_upper)
-        result = result.replace(/^./, a => a.toUpperCase());
-    if (modifiers.spaceLower_to_spaceUpper)
-        result = result.replace(/ ([a-z])/g, (m, sub1) => ` ${sub1.toUpperCase()}`);
-    if (modifiers.hyphenLower_to_hyphenUpper)
-        result = result.replace(/-([a-z])/g, (m, sub1) => `-${sub1.toUpperCase()}`);
+    let chosenModifiers = modifiersGetter(stringModifiers);
+    for (let mod of chosenModifiers) {
+        result = mod(result);
+    }
     return result;
 }
 export function StartDownload(content, filename, dataTypeStr = "data:application/octet-stream,", encodeContentAsURIComp = true) {

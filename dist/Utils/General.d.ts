@@ -101,17 +101,23 @@ export declare function OmitIfFalsy<T>(value: T): T;
 export declare function DelIfFalsy<T>(value: T): T;
 export declare function FindDOM(selector: string): Element;
 export declare function FindDOMAll(selector: string): Element[];
-export declare class StringModifiers {
-    /** somePropName -> some prop name */
-    lowerUpper_to_lowerSpaceLower: boolean;
+export declare const stringModifiers: {
     /** some prop name -> Some prop name */
-    firstLower_to_upper: boolean;
+    startLower_to_upper: (str: any) => any;
+    /** Some prop name -> some prop name */
+    startUpper_to_lower: (str: any) => any;
     /** some prop name -> some Prop Name */
-    spaceLower_to_spaceUpper: boolean;
+    spaceLower_to_spaceUpper: (str: any) => any;
     /** some-prop-name -> some-Prop-Name */
-    hyphenLower_to_hyphenUpper: boolean;
-}
-export declare function ModifyString(text: string, modifiers: Partial<StringModifiers>): string;
+    hyphenLower_to_hyphenUpper: (str: any) => any;
+    /** somePropName -> some prop name */
+    lowerUpper_to_lowerSpaceLower: (str: any) => any;
+    /** some prop Name -> somepropName */
+    removeSpaces: (str: any) => any;
+    /** some-prop-Name -> somepropName */
+    removeHyphens: (str: any) => any;
+};
+export declare function ModifyString(text: string, modifiersGetter: (modifierNames: typeof stringModifiers) => ((str: string) => string)[]): string;
 export declare function StartDownload(content: string | Blob, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 export declare function StartUpload(): Promise<string | ArrayBuffer>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;
