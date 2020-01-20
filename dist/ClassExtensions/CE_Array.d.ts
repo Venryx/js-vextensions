@@ -32,7 +32,7 @@ export declare const ArrayCE_funcs: {
     Last<T_26>(this: T_26[], matchFunc?: (item: T_26) => boolean): T_26;
     LastOrX<T_27>(this: T_27[], matchFunc?: (item: T_27) => boolean, x?: any): T_27;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
-    Move<T_29>(this: T_29[], item: T_29, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number;
+    Move<T_29>(this: T_29[], item: T_29, newIndex: number, removeBeforeInsert?: boolean): number;
     ToMap<T_30, Value>(this: T_30[], keyFunc: (item: T_30, index: number) => string, valFunc: (item: T_30, index: number) => Value): {
         [key: string]: Value;
     };
@@ -93,7 +93,7 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
     Last<T_26>(this: T_26[], matchFunc?: (item: T_26) => boolean): T_26;
     LastOrX<T_27>(this: T_27[], matchFunc?: (item: T_27) => boolean, x?: any): T_27;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
-    Move<T_29>(this: T_29[], item: T_29, newIndex: number, newIndexAsPreRemovalIndexVSFinalIndex?: boolean): number;
+    Move<T_29>(this: T_29[], item: T_29, newIndex: number, removeBeforeInsert?: boolean): number;
     ToMap<T_30, Value>(this: T_30[], keyFunc: (item: T_30, index: number) => string, valFunc: (item: T_30, index: number) => Value): {
         [key: string]: Value;
     };

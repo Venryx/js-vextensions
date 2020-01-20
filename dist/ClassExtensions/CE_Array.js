@@ -210,7 +210,7 @@ export const ArrayCE_funcs = {
     XFromLast(x) {
         return this[(this.length - 1) - x];
     },
-    Move(item, newIndex, newIndexAsPreRemovalIndexVSFinalIndex = false) {
+    Move(item, newIndex, /** Makes-so newIndex is the final index, even if after original/removal index. Default: true */ removeBeforeInsert = true) {
         var oldIndex = this.indexOf(item);
         /*if (oldIndex != -1) {
             this.RemoveAt(oldIndex);
@@ -221,18 +221,18 @@ export const ArrayCE_funcs = {
             }
         }
         this.Insert(newIndex, item);*/
-        if (newIndexAsPreRemovalIndexVSFinalIndex) {
+        if (removeBeforeInsert) {
+            if (oldIndex != -1) {
+                ArrayCES.RemoveAt(this, oldIndex);
+            }
+            ArrayCES.Insert(this, newIndex, item);
+        }
+        else {
             ArrayCES.Insert(this, newIndex, item);
             if (oldIndex != -1) {
                 let oldEntry_currentIndex = newIndex <= oldIndex ? oldIndex + 1 : oldIndex; // if we just inserted the new version before the old entry, fix the old-entry's index by adding 1
                 ArrayCES.RemoveAt(this, oldEntry_currentIndex);
             }
-        }
-        else {
-            if (oldIndex != -1) {
-                ArrayCES.RemoveAt(this, oldIndex);
-            }
-            ArrayCES.Insert(this, newIndex, item);
         }
         return oldIndex;
     },
