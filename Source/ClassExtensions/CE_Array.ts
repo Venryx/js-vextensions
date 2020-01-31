@@ -303,14 +303,14 @@ export const ArrayCE_funcs = {
 					return index;
 		return -1;
 	};*/
-	OrderBy<T>(this: T[], valFunc = (item, index: number)=>item): T[] {
+	OrderBy<T>(this: T[], valFunc = (item: T, index: number)=>item as any): T[] {
 		/*var temp = this.ToList();
 		temp.sort((a, b)=>V.Compare(valFunc(a), valFunc(b)));
 		return temp;*/
 		return StableSort(this, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 	},
-	OrderByDescending<T>(this: T[], valFunc = (item, index: number)=>item): T[] {
-		return ArrayCES.OrderBy(this, (item, index)=>-valFunc(item, index)) as T[];
+	OrderByDescending<T>(this: T[], valFunc = (item: T, index: number)=>item as any): T[] {
+		return ArrayCES.OrderBy(this, (item: T, index)=>-valFunc(item, index)) as T[];
 	},
 
 	Distinct<T>(this: T[]): T[] {

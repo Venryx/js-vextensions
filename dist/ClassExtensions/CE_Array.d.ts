@@ -40,8 +40,8 @@ export declare const ArrayCE_funcs: {
     Take<T_32>(this: T_32[], count: number): T_32[];
     TakeLast<T_33>(this: T_33[], count: number): T_33[];
     FindIndex<T_34>(this: T_34[], matchFunc: (item: T_34) => boolean): number;
-    OrderBy<T_35>(this: T_35[], valFunc?: (item: any, index: number) => any): T_35[];
-    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): T_36[];
+    OrderBy<T_35>(this: T_35[], valFunc?: (item: T_35, index: number) => any): T_35[];
+    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: T_36, index: number) => any): T_36[];
     Distinct<T_37>(this: T_37[]): T_37[];
     Except: {
         <T_38>(this: T_38[], ...excludeItems: T_38[]): T_38[];
@@ -101,8 +101,8 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
     Take<T_32>(this: T_32[], count: number): T_32[];
     TakeLast<T_33>(this: T_33[], count: number): T_33[];
     FindIndex<T_34>(this: T_34[], matchFunc: (item: T_34) => boolean): number;
-    OrderBy<T_35>(this: T_35[], valFunc?: (item: any, index: number) => any): T_35[];
-    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: any, index: number) => any): T_36[];
+    OrderBy<T_35>(this: T_35[], valFunc?: (item: T_35, index: number) => any): T_35[];
+    OrderByDescending<T_36>(this: T_36[], valFunc?: (item: T_36, index: number) => any): T_36[];
     Distinct<T_37>(this: T_37[]): T_37[];
     Except: {
         <T_38>(this: T_38[], ...excludeItems: T_38[]): T_38[];
