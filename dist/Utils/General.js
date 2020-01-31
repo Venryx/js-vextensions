@@ -646,8 +646,18 @@ export function OmitIfFalsy(value) {
         return OMIT;
     return value;
 }
+export function OmitIfNull(value) {
+    if (value == null)
+        return OMIT;
+    return value;
+}
 export function DelIfFalsy(value) {
     if (!value)
+        return DEL;
+    return value;
+}
+export function DelIfNull(value) {
+    if (value == null)
         return DEL;
     return value;
 }

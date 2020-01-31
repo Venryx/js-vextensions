@@ -716,8 +716,16 @@ export function OmitIfFalsy<T>(value: T): T {
 	if (!value) return OMIT as any;
 	return value;
 }
+export function OmitIfNull<T>(value: T): T {
+	if (value == null) return OMIT as any;
+	return value;
+}
 export function DelIfFalsy<T>(value: T): T {
 	if (!value) return DEL as any;
+	return value;
+}
+export function DelIfNull<T>(value: T): T {
+	if (value == null) return DEL as any;
 	return value;
 }
 
