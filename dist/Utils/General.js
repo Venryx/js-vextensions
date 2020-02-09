@@ -22,10 +22,20 @@ export function QuickIncrement(name = "default") {
     return QuickIncrement["values"][name];
 }
 QuickIncrement["values"] = [];
+// use singletons for empty-obj and empty-array (that way shallow-compare systems in react, redux, etc. work with them)
 export const emptyObj = {};
-export const eo = emptyObj; // used for (maybeNullVar || eo).prop;
+//export const eo = emptyObj as any; // used for (maybeNullVar || eo).prop;
 export const emptyArray = [];
-export const emptyArray_forLoading = [];
+export const emptyArray_forLoading = []; // like emptyArray, except signifies that the cause of the emptiness is that data is still loading
+export function IsSpecialEmptyObjOrArray(val) {
+    return IsSpecialEmptyObj(val) || IsSpecialEmptyArray(val);
+}
+export function IsSpecialEmptyObj(obj) {
+    return obj == emptyObj;
+}
+export function IsSpecialEmptyArray(array) {
+    return array == emptyArray || array == emptyArray_forLoading;
+}
 export function E(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20) {
     var result = {};
     for (let extend of Array.from(arguments)) {
