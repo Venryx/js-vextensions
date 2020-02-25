@@ -13,6 +13,8 @@ export interface VSet_Options {
 	copySymbolKeys?: boolean;
 	copyGetterSettersAs?: "ignore" | "getterSetter" | "value";
 	callSetters?: "never" | "always" | "auto";
+	/** Whether to process the string versions of OMIT and DEL as operators. (only enable for over-network pathways that are unimportant or trusted) */
+	allowStringOperators?: boolean;
 }
 
 /*export type MapLike<V> = {[key: number]: V} | {[key: string]: V} | Map<any, V>;
@@ -140,10 +142,13 @@ export const ObjectCE_funcs = {
 		opt = Object.assign({}, {copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto"} as VSet_Options, opt);
 
 		const SetProp = (name: string | symbol, descriptor: PropertyDescriptor, value: any)=> {
-			if (value === OMIT) return;
-			if (value === DEL) {
-				delete this[name];
-				return;
+			// only process operators if: 1) js-engine supports Symbols (for security), or 2) caller allows string-operators
+			if (IsSymbol(OMIT) || opt.allowStringOperators) {
+				if (value === OMIT || (opt.allowStringOperators && value == OMIT.toString())) return;
+				if (value === DEL || (opt.allowStringOperators && value == DEL.toString())) {
+					delete this[name];
+					return;
+				}
 			}
 			
 			let isGetterSetter = descriptor && (descriptor.get != null || descriptor.set != null);

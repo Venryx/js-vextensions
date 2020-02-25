@@ -17,7 +17,7 @@ export const NumberCE_funcs = {
 	},
 	
 	//RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
-	ToPercentStr(this: Number, precision?: number) {
+	ToPercentStr(this: Number, /** The number of digits after the decimal point. Example: (.12345).ToPercentStr(1) == "12.3%" */ precision?: number) {
 		let number = this as number * 100;
 		if (precision != null)
 			return number.toFixed(precision) + "%";

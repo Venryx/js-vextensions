@@ -4,6 +4,8 @@ export interface VSet_Options {
     copySymbolKeys?: boolean;
     copyGetterSettersAs?: "ignore" | "getterSetter" | "value";
     callSetters?: "never" | "always" | "auto";
+    /** Whether to process the string versions of OMIT and DEL as operators. (only enable for over-network pathways that are unimportant or trusted) */
+    allowStringOperators?: boolean;
 }
 export declare type MapLike<V> = {
     [key: number]: V;

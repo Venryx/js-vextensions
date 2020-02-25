@@ -108,11 +108,14 @@ export const ObjectCE_funcs = {
             [props, opt] = args;
         opt = Object.assign({}, { copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto" }, opt);
         const SetProp = (name, descriptor, value) => {
-            if (value === OMIT)
-                return;
-            if (value === DEL) {
-                delete this[name];
-                return;
+            // only process operators if: 1) js-engine supports Symbols (for security), or 2) caller allows string-operators
+            if (IsSymbol(OMIT) || opt.allowStringOperators) {
+                if (value === OMIT || (opt.allowStringOperators && value == OMIT.toString()))
+                    return;
+                if (value === DEL || (opt.allowStringOperators && value == DEL.toString())) {
+                    delete this[name];
+                    return;
+                }
             }
             let isGetterSetter = descriptor && (descriptor.get != null || descriptor.set != null);
             let asGetterSetter = isGetterSetter && opt.copyGetterSettersAs == "getterSetter";

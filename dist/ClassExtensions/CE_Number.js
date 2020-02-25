@@ -14,7 +14,7 @@ export const NumberCE_funcs = {
         return IsNaN(this) ? valIfSelfIsNaN : this;
     },
     //RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
-    ToPercentStr(precision) {
+    ToPercentStr(/** The number of digits after the decimal point. Example: (.12345).ToPercentStr(1) == "12.3%" */ precision) {
         let number = this * 100;
         if (precision != null)
             return number.toFixed(precision) + "%";

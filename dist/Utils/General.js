@@ -647,7 +647,9 @@ export function GetErrorMessagesUnderElement(element) {
 export function CreateSymbol(name) {
     if (typeof Symbol != "undefined")
         return Symbol(name);
-    return `FakeSymbol(${name})`;
+    //return `FakeSymbol(${name})`;
+    // match how real Symbols get stringified, so we can always do, eg. DEL.toString() to send over network, for end-points that accept it using: baseData.VSet(sentData, {allowStringOperators: true})
+    return `Symbol(${name})`;
 }
 export const OMIT = CreateSymbol("$JSVE_SYMBOL_OMIT");
 export const DEL = CreateSymbol("$JSVE_SYMBOL_DELETE");
