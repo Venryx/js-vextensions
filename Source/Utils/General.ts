@@ -44,6 +44,12 @@ export function IsSpecialEmptyObj<T>(obj: Array<T>) {
 export function IsSpecialEmptyArray<T>(array: Array<T>) {
 	return array == emptyArray || array == emptyArray_forLoading;
 }
+/** To be used with mobx-firelink (in "if null" block): undefined means still-loading, so return emptyArray_forLoading; null means data doesn't exist, so return emptyArray. */
+export function EmptyArrayFor(base: any) {
+	if (base === undefined) return emptyArray_forLoading;
+	if (base === null) return emptyArray;
+	Assert("Cannot get empty-array for base that is not null or undefined.");
+}
 
 export function E<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18,E19,E20>(
 	e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8,e9?:E9,e10?:E10,
