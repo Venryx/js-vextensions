@@ -30,7 +30,7 @@ export const NumberCE_funcs = {
 		return distance <= maxDistToBeMultiple;
 	},
 	
-	RoundTo(this: Number, multiple) {
+	RoundTo(this: Number, multiple: number) {
 		//return Math.round(this / multiple) * multiple;
 		// Don't ask me why this works, but it does, and is faster. From: http://phrogz.net/round-to-nearest-via-modulus-division
 		/*var half = multiple / 2;
@@ -41,18 +41,18 @@ export const NumberCE_funcs = {
 		let multiple_inverted = 1 / multiple;
 		return Math.round(this as number * multiple_inverted) / multiple_inverted;
 	},
-	RoundTo_Str(this: Number, multipleOf, fractionDigits = null, removeEmptyFraction = true) {
+	RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction = true) {
 		var resultValue = NumberCE(this).RoundTo(multipleOf);
-		var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
+		var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : StringCE(multipleOf.toString()).TrimStart("0").length - 1); // - 0);
 		if (removeEmptyFraction && StringCE(result).Contains(".")) {
 			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
 		}
 		return result;
 	},
-	FloorTo(this: Number, multipleOf) { return Math.floor((new Number(this) as any) / multipleOf) * multipleOf; },
-	FloorTo_Str(this: Number, multipleOf) {
+	FloorTo(this: Number, multipleOf: number) { return Math.floor((new Number(this) as any) / multipleOf) * multipleOf; },
+	FloorTo_Str(this: Number, multipleOf: number) {
 		var resultValue = NumberCE(this).FloorTo(multipleOf);
-		var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+		var result = resultValue.toFixed(StringCE(multipleOf.toString()).TrimStart("0").length); // - 1);
 		if (StringCE(result).Contains("."))
 			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
 		return result;

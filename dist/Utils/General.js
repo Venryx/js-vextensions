@@ -748,6 +748,11 @@ export function ModifyString(text, modifiersGetter) {
     }
     return result;
 }
+/**
+Downloads the given content to disk. Call must be triggered by an input event, or run from the console.
+Very large strings may fail to download directly, but can be resolved by placing in a Blob:
+StartDownload(new Blob(["someVeryLongString"]), "Backup.txt");
+*/
 export function StartDownload(content, filename, dataTypeStr = "data:application/octet-stream,", encodeContentAsURIComp = true) {
     var link = document.createElement("a");
     Object.assign(link.style, { display: "none" });

@@ -124,6 +124,11 @@ export declare const stringModifiers: {
     removeHyphens: (str: any) => any;
 };
 export declare function ModifyString(text: string, modifiersGetter: (modifierNames: typeof stringModifiers) => ((str: string) => string)[]): string;
+/**
+Downloads the given content to disk. Call must be triggered by an input event, or run from the console.
+Very large strings may fail to download directly, but can be resolved by placing in a Blob:
+StartDownload(new Blob(["someVeryLongString"]), "Backup.txt");
+*/
 export declare function StartDownload(content: string | Blob, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 export declare function StartUpload(): Promise<string | ArrayBuffer>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;

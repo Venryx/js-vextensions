@@ -35,9 +35,9 @@ export const NumberCE_funcs = {
         let multiple_inverted = 1 / multiple;
         return Math.round(this * multiple_inverted) / multiple_inverted;
     },
-    RoundTo_Str(multipleOf, fractionDigits = null, removeEmptyFraction = true) {
+    RoundTo_Str(multipleOf, fractionDigits, removeEmptyFraction = true) {
         var resultValue = NumberCE(this).RoundTo(multipleOf);
-        var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : multipleOf.toString().TrimStart("0").length - 1); // - 0);
+        var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : StringCE(multipleOf.toString()).TrimStart("0").length - 1); // - 0);
         if (removeEmptyFraction && StringCE(result).Contains(".")) {
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
         }
@@ -46,7 +46,7 @@ export const NumberCE_funcs = {
     FloorTo(multipleOf) { return Math.floor(new Number(this) / multipleOf) * multipleOf; },
     FloorTo_Str(multipleOf) {
         var resultValue = NumberCE(this).FloorTo(multipleOf);
-        var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
+        var result = resultValue.toFixed(StringCE(multipleOf.toString()).TrimStart("0").length); // - 1);
         if (StringCE(result).Contains("."))
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
         return result;
