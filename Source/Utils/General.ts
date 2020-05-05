@@ -224,6 +224,7 @@ export function Clone(obj, keepPrototype = false as boolean) {
 	return result;
 }
 
+/** Variant of Clone which preserves prototypes, non-enumerable properties, and circular links (if enabled). */
 export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
 	if (originalObject == null) return originalObject;
 
@@ -235,7 +236,7 @@ export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
 	let sourceReferences = [originalObject];
 	let targetReferences = [cloneObject];
 
-	// First in, first out
+	// first in, first out
 	let current;
 	while (current = copies.shift()) {
 		let keys = Object.getOwnPropertyNames(current.source);

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var Vector2i_1, Vector3i_1, VRect_1;
+var Vector2_1, Vector3_1, VRect_1;
 import { Global } from "./General";
 import { IsNaN, Assert, NumberCE, ObjectCE, ArrayCE } from "..";
 function IsNullOrNaN(value) {
@@ -13,7 +13,7 @@ function IsNullOrNaN(value) {
 export function IsVector2iShape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y");
 }
-let Vector2i = Vector2i_1 = class Vector2i {
+let Vector2 = Vector2_1 = class Vector2 {
     constructor(...args) {
         var x = 0, y = 0;
         if (typeof args[0] == "number")
@@ -26,8 +26,8 @@ let Vector2i = Vector2i_1 = class Vector2i {
         this.x = x;
         this.y = y;
     }
-    static get zero() { return new Vector2i_1(0, 0); }
-    static get one() { return new Vector2i_1(1, 1); }
+    static get zero() { return new Vector2_1(0, 0); }
+    static get one() { return new Vector2_1(1, 1); }
     /*@_VDFDeserialize() Deserialize(node) {
         var strParts = node.primitiveValue.split(" ");
         this.x = parseInt(strParts[0]);
@@ -36,48 +36,48 @@ let Vector2i = Vector2i_1 = class Vector2i {
     @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
     toString() { return this.x + " " + this.y; }
     Equals(other) { return other && this.toString() == other.toString(); }
-    NewX(xOrFunc) { return new Vector2i_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
-    NewY(yOrFunc) { return new Vector2i_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
+    NewX(xOrFunc) { return new Vector2_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
+    NewY(yOrFunc) { return new Vector2_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
     Plus(...args) {
         let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
-        return new Vector2i_1(this.x + x, this.y + y);
+        return new Vector2_1(this.x + x, this.y + y);
     }
     Minus(...args) {
         let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
-        return new Vector2i_1(this.x - x, this.y - y);
+        return new Vector2_1(this.x - x, this.y - y);
     }
     Times(...args) {
         var [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] :
             args.length == 1 ? [args[0], args[0]] :
                 args;
-        return new Vector2i_1(this.x * x, this.y * y);
+        return new Vector2_1(this.x * x, this.y * y);
     }
     DividedBy(...args) {
         var [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] :
             args.length == 1 ? [args[0], args[0]] :
                 args;
-        return new Vector2i_1(this.x / x, this.y / y);
+        return new Vector2_1(this.x / x, this.y / y);
     }
     DistanceTo(other) {
         return Math.sqrt(NumberCE(other.x - this.x).ToPower(2) + NumberCE(other.y - this.y).ToPower(2));
     }
 };
-Vector2i = Vector2i_1 = __decorate([
+Vector2 = Vector2_1 = __decorate([
     Global
-], Vector2i);
-export { Vector2i };
-export function IsVector3iShape(obj) {
+], Vector2);
+export { Vector2 };
+export function IsVector3Shape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("z");
 }
-let Vector3i = Vector3i_1 = class Vector3i {
+let Vector3 = Vector3_1 = class Vector3 {
     constructor(x = null, y = null, z = null) {
         Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
         this.x = x != null ? x : 0;
         this.y = y != null ? y : 0;
         this.z = z != null ? z : 0;
     }
-    static get zero() { return new Vector3i_1(0, 0, 0); }
-    static get one() { return new Vector3i_1(1, 1, 1); }
+    static get zero() { return new Vector3_1(0, 0, 0); }
+    static get one() { return new Vector3_1(1, 1, 1); }
     /*@_VDFDeserialize() Deserialize(node) {
         var strParts = node.primitiveValue.split(" ");
         this.x = parseInt(strParts[0]);
@@ -87,28 +87,28 @@ let Vector3i = Vector3i_1 = class Vector3i {
     //VDFSerialize() { return this.toString(); } //Swapped().toString(); }
     @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
     toString() { return this.x + " " + this.y + " " + this.z; }
-    NewX(xOrFunc) { return new Vector3i_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z); }
-    NewY(yOrFunc) { return new Vector3i_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
-    NewZ(zOrFunc) { return new Vector3i_1(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc); }
+    NewX(xOrFunc) { return new Vector3_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z); }
+    NewY(yOrFunc) { return new Vector3_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
+    NewZ(zOrFunc) { return new Vector3_1(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc); }
     Minus(...args) {
-        let [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
-        return new Vector3i_1(this.x - x, this.y - y, this.z - z);
+        let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+        return new Vector3_1(this.x - x, this.y - y, this.z - z);
     }
     Plus(...args) {
-        let [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
-        return new Vector3i_1(this.x + x, this.y + y, this.z + z);
+        let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+        return new Vector3_1(this.x + x, this.y + y, this.z + z);
     }
     Times(...args) {
-        var [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] :
+        var [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] :
             args.length == 1 ? [args[0], args[0], args[0]] :
                 args;
-        return new Vector3i_1(this.x * x, this.y * y, this.z * z);
+        return new Vector3_1(this.x * x, this.y * y, this.z * z);
     }
 };
-Vector3i = Vector3i_1 = __decorate([
+Vector3 = Vector3_1 = __decorate([
     Global
-], Vector3i);
-export { Vector3i };
+], Vector3);
+export { Vector3 };
 export function IsVRectShape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("width") && obj.hasOwnProperty("height");
 }
@@ -161,17 +161,17 @@ let VRect = VRect_1 = class VRect {
             this.Bottom = oldBottom;
         }
     }
-    get Position() { return new Vector2i(this.x, this.y); }
+    get Position() { return new Vector2(this.x, this.y); }
     set Position(val) {
         this.x = val.x;
         this.y = val.y;
     }
-    get Size() { return new Vector2i(this.width, this.height); }
+    get Size() { return new Vector2(this.width, this.height); }
     set Size(val) {
         this.width = val.x;
         this.height = val.y;
     }
-    get Center() { return new Vector2i(this.x + (this.width / 2), this.y + (this.height / 2)); }
+    get Center() { return new Vector2(this.x + (this.width / 2), this.y + (this.height / 2)); }
     set Center(val) {
         let offset = val.Minus(this.Center);
         this.Position = this.Position.Plus(offset);

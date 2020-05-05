@@ -5,15 +5,15 @@ function IsNullOrNaN(value: number) {
 	return value === null || IsNaN(value);
 }
 
-export type Vector2iShape = {x: number, y: number};
+export type Vector2Shape = {x: number, y: number};
 export function IsVector2iShape(obj: any): obj is {x: number, y: number} {
 	return obj.hasOwnProperty("x") && obj.hasOwnProperty("y");
 }
 
 @Global
-export class Vector2i {
-	static get zero() { return new Vector2i(0, 0); }
-	static get one() { return new Vector2i(1, 1); }
+export class Vector2 {
+	static get zero() { return new Vector2(0, 0); }
+	static get one() { return new Vector2(1, 1); }
 	
 	constructor(x?: number, y?: number);
 	constructor(pos: {x: number, y: number});
@@ -42,55 +42,55 @@ export class Vector2i {
 	toString() { return this.x + " " + this.y; }
 	Equals(other) { return other && this.toString() == other.toString(); }
 
-	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector2i(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
-	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector2i(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
+	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector2(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
+	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector2(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
 
-	Plus(other: Vector2iShape): Vector2i;
-	Plus(otherX: number, otherY: number): Vector2i;
+	Plus(other: Vector2Shape): Vector2;
+	Plus(otherX: number, otherY: number): Vector2;
 	Plus(...args) {
 		let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
-		return new Vector2i(this.x + x, this.y + y);
+		return new Vector2(this.x + x, this.y + y);
 	}
-	Minus(other: Vector2iShape): Vector2i;
-	Minus(otherX: number, otherY: number): Vector2i;
+	Minus(other: Vector2Shape): Vector2;
+	Minus(otherX: number, otherY: number): Vector2;
 	Minus(...args) {
 		let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
-		return new Vector2i(this.x - x, this.y - y);
+		return new Vector2(this.x - x, this.y - y);
 	}
 
-	Times(other: Vector2iShape): Vector2i;
-	Times(other: number): Vector2i;
-	Times(otherX: number, otherY: number): Vector2i;
+	Times(other: Vector2Shape): Vector2;
+	Times(other: number): Vector2;
+	Times(otherX: number, otherY: number): Vector2;
 	Times(...args) {
 		var [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] :
 			args.length == 1 ? [args[0], args[0]] :
 			args;
-		return new Vector2i(this.x * x, this.y * y);
+		return new Vector2(this.x * x, this.y * y);
 	}
-	DividedBy(other: Vector2i): Vector2i;
-	DividedBy(other: number): Vector2i;
-	DividedBy(otherX: number, otherY: number): Vector2i;
+	DividedBy(other: Vector2): Vector2;
+	DividedBy(other: number): Vector2;
+	DividedBy(otherX: number, otherY: number): Vector2;
 	DividedBy(...args) {
 		var [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] :
 			args.length == 1 ? [args[0], args[0]] :
 			args;
-		return new Vector2i(this.x / x, this.y / y);
+		return new Vector2(this.x / x, this.y / y);
 	}
 
-	DistanceTo(other: Vector2i) {
+	DistanceTo(other: Vector2) {
 		return Math.sqrt(NumberCE(other.x - this.x).ToPower(2) + NumberCE(other.y - this.y).ToPower(2));
 	}
 }
 
-export type Vector3iShape = {x: number, y: number, z: number};
-export function IsVector3iShape(obj: any): obj is {x: number, y: number, z: number} {
+export type Vector3Shape = {x: number, y: number, z: number};
+export function IsVector3Shape(obj: any): obj is {x: number, y: number, z: number} {
 	return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("z");
 }
 
 @Global
-export class Vector3i {
-	static get zero() { return new Vector3i(0, 0, 0); }
-	static get one() { return new Vector3i(1, 1, 1); }
+export class Vector3 {
+	static get zero() { return new Vector3(0, 0, 0); }
+	static get one() { return new Vector3(1, 1, 1); }
 
 	constructor(x = null, y = null, z = null) {
 		Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
@@ -114,30 +114,30 @@ export class Vector3i {
 	@_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
 	toString() { return this.x + " " + this.y + " " + this.z; }
 
-	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector3i(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z); }
-	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector3i(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
-	NewZ(zOrFunc: number | ((oldZ: number)=>number)) { return new Vector3i(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc); }
+	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector3(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z); }
+	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector3(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
+	NewZ(zOrFunc: number | ((oldZ: number)=>number)) { return new Vector3(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc); }
 
-	Minus(other: Vector3iShape): Vector3i;
-	Minus(otherX: number, otherY: number, otherZ: number): Vector3i;
+	Minus(other: Vector3Shape): Vector3;
+	Minus(otherX: number, otherY: number, otherZ: number): Vector3;
 	Minus(...args) {
-		let [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
-		return new Vector3i(this.x - x, this.y - y, this.z - z);
+		let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+		return new Vector3(this.x - x, this.y - y, this.z - z);
 	}
-	Plus(other: Vector3iShape): Vector3i;
-	Plus(otherX: number, otherY: number): Vector3i;
+	Plus(other: Vector3Shape): Vector3;
+	Plus(otherX: number, otherY: number): Vector3;
 	Plus(...args) {
-		let [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
-		return new Vector3i(this.x + x, this.y + y, this.z + z);
+		let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+		return new Vector3(this.x + x, this.y + y, this.z + z);
 	}
-	Times(other: Vector3iShape): Vector3i;
-	Times(other: number): Vector3i;
-	Times(otherX: number, otherY: number): Vector3i;
+	Times(other: Vector3Shape): Vector3;
+	Times(other: number): Vector3;
+	Times(otherX: number, otherY: number): Vector3;
 	Times(...args) {
-		var [x, y, z] = IsVector3iShape(args[0]) ? [args[0].x, args[0].y, args[0].z] :
+		var [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] :
 			args.length == 1 ? [args[0], args[0], args[0]] :
 			args;
-		return new Vector3i(this.x * x, this.y * y, this.z * z);
+		return new Vector3(this.x * x, this.y * y, this.z * z);
 	}
 }
 
@@ -152,7 +152,7 @@ export class VRect {
 		return new VRect(rect.left, rect.top, rect.width, rect.height, y0IsBottom);
 	}
 
-	constructor(pos: Vector2i, size: Vector2i, y0IsBottom?: boolean);
+	constructor(pos: Vector2, size: Vector2, y0IsBottom?: boolean);
 	constructor(x: number, y: number, width: number, height: number, y0IsBottom?: boolean);
 	constructor(...args) {
 		let x: number, y: number, width: number, height: number, y0IsBottom: boolean;
@@ -204,19 +204,19 @@ export class VRect {
 			this.Bottom = oldBottom;
 		}
 	}
-	get Position() { return new Vector2i(this.x, this.y); }
-	set Position(val: Vector2i) {
+	get Position() { return new Vector2(this.x, this.y); }
+	set Position(val: Vector2) {
 		this.x = val.x;
 		this.y = val.y;
 	}
-	get Size() { return new Vector2i(this.width, this.height); }
-	set Size(val: Vector2i) {
+	get Size() { return new Vector2(this.width, this.height); }
+	set Size(val: Vector2) {
 		this.width = val.x;
 		this.height = val.y;
 	}
 
-	get Center() { return new Vector2i(this.x + (this.width / 2), this.y + (this.height / 2)); }
-	set Center(val: Vector2i) {
+	get Center() { return new Vector2(this.x + (this.width / 2), this.y + (this.height / 2)); }
+	set Center(val: Vector2) {
 		let offset = val.Minus(this.Center);
 		this.Position = this.Position.Plus(offset);
 	}
@@ -254,7 +254,7 @@ export class VRect {
 	NewTop(valOrFunc: number | ((oldVal: number)=>number)) {
 		return ObjectCE(this.Clone()).VSet({Top: valOrFunc instanceof Function ? valOrFunc(this.Top) : valOrFunc});
 	}
-	NewPosition(valOrFunc: Vector2i | ((oldVal: Vector2i)=>Vector2i)) {
+	NewPosition(valOrFunc: Vector2 | ((oldVal: Vector2)=>Vector2)) {
 		return ObjectCE(this.Clone()).VSet({Position: valOrFunc instanceof Function ? valOrFunc(this.Position) : valOrFunc});
 	}
 	NewWidth(valOrFunc: number | ((oldVal: number)=>number)) {
@@ -263,7 +263,7 @@ export class VRect {
 	NewHeight(valOrFunc: number | ((oldVal: number)=>number)) {
 		return ObjectCE(this.Clone()).VSet({height: valOrFunc instanceof Function ? valOrFunc(this.height) : valOrFunc});
 	}
-	NewSize(valOrFunc: Vector2i | ((oldVal: Vector2i)=>Vector2i)) {
+	NewSize(valOrFunc: Vector2 | ((oldVal: Vector2)=>Vector2)) {
 		return ObjectCE(this.Clone()).VSet({Size: valOrFunc instanceof Function ? valOrFunc(this.Size) : valOrFunc});
 	}
 
@@ -311,12 +311,12 @@ export class VRect {
 
 @Global
 export class VBounds {
-	constructor(position: Vector3i, size: Vector3i) {
+	constructor(position: Vector3, size: Vector3) {
 		this.position = position;
 		this.size = size;
 	}
-	position: Vector3i;
-	size: Vector3i;
+	position: Vector3;
+	size: Vector3;
 
 	/*@_VDFDeserialize() Deserialize(node) {
 		var parts = node.primitiveValue.split("|");

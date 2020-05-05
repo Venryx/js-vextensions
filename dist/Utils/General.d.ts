@@ -39,6 +39,7 @@ export declare class AddSpacesAt_Options {
 }
 export declare function ToJSON_Advanced(obj: any, opt?: Partial<ToJSON_Advanced_Options>): string;
 export declare function Clone(obj: any, keepPrototype?: boolean): any;
+/** Variant of Clone which preserves prototypes, non-enumerable properties, and circular links (if enabled). */
 export declare function CloneWithPrototypes(originalObject: any, keepCircularLinks?: boolean): any;
 /**
  * Gets an array of the numbers between min and max.
