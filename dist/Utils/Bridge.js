@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { TryCall } from "./Timers";
-import { Assert, ToJSON, IsObject, IsString, FromJSON, ObjectCE, IsFunction } from "..";
+import { Assert, ToJSON, IsObject, IsString, FromJSON, ObjectCE, ArrayCE, IsFunction } from "..";
 import { GetTreeNodesInObjTree } from "./General";
 export class BridgeMessage {
     constructor(initialData) {
@@ -34,8 +34,9 @@ export class Bridge {
         this.channel_safeCallbacks = false;
         // for receiving function-calls (and callbacks) from external bridge
         // ==========
-        this.functions = {};
-        this.ignoreMissingFunctions = false;
+        this.functionMains = {};
+        this.functionExtras = {};
+        this.requireMainFuncForCalls = true;
         // callback system (for when passing a function as an argument, or awaiting the result of a remote call)
         // ==========
         this.lastCallbackID = -1;
@@ -71,13 +72,39 @@ export class Bridge {
         let channelMessage = this.channel_stringifyChannelMessageObj ? ToJSON(channelMessageObj) : channelMessageObj;
         this.sendChannelMessageFunc(channelMessage);
     }
-    RegisterFunction(name, func) {
-        if (this.functions[name])
-            throw new Error(`Cannot register the same function-name twice: "${name}"`);
-        this.functions[name] = func;
+    RegisterFunction(name, func, asMain = true) {
+        if (asMain) {
+            if (this.functionMains[name])
+                throw new Error(`Cannot register a second main-func for the same function-name: "${name}"`);
+            this.functionMains[name] = func;
+        }
+        else {
+            if (this.functionExtras[name] == null) {
+                this.functionExtras[name] = [];
+            }
+            this.functionExtras[name].push(func);
+        }
     }
-    UnregisterFunction(name) {
-        delete this.functions[name];
+    /** If `func` is left null, removes only the entry in `functionMains`. */
+    UnregisterFunction(name, func) {
+        let funcRemoved = false;
+        if (func) {
+            if (this.functionMains[name] == func) {
+                delete this.functionMains[name];
+                funcRemoved = true;
+            }
+            if (this.functionExtras[name]) {
+                ArrayCE(this.functionExtras[name]).Remove(func);
+                funcRemoved = true;
+            }
+        }
+        else {
+            if (name in this.functionMains) {
+                delete this.functionMains[name];
+                funcRemoved = true;
+            }
+        }
+        return funcRemoved;
     }
     OnReceiveFunctionCall(bridgeMessage) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -88,11 +115,20 @@ export class Bridge {
     // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
     Local_CallFunc(funcName, ...args) {
         return __awaiter(this, void 0, void 0, function* () {
-            let func = this.functions[funcName];
-            if (this.ignoreMissingFunctions && func == null)
-                return;
-            Assert(func, `Cannot find function "${funcName}".`);
-            return yield func(...args);
+            let mainFunc = this.functionMains[funcName];
+            let result;
+            if (mainFunc) {
+                result = yield mainFunc(...args);
+            }
+            else {
+                if (this.requireMainFuncForCalls) {
+                    throw new Error(`Cannot find main-func for function-call with name "${funcName}".`);
+                }
+            }
+            for (let extraFunc of this.functionExtras[funcName] || []) {
+                extraFunc(...args);
+            }
+            return result;
         });
     }
     OnReceiveCallback(bridgeMessage) {

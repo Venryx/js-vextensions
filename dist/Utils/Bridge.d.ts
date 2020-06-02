@@ -8,7 +8,7 @@ export declare class BridgeMessage {
 }
 export declare type Bridge_Options = {
     receiveChannelMessageFunc_addImmediately?: boolean;
-} & Pick<Bridge, "receiveChannelMessageFunc_adder" | "sendChannelMessageFunc"> & Partial<Pick<Bridge, "channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks" | "ignoreMissingFunctions">>;
+} & Pick<Bridge, "receiveChannelMessageFunc_adder" | "sendChannelMessageFunc"> & Partial<Pick<Bridge, "channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks" | "requireMainFuncForCalls">>;
 export declare class Bridge {
     /** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
     constructor(options: Bridge_Options);
@@ -23,12 +23,16 @@ export declare class Bridge {
     channel_safeCallbacks: boolean;
     SetUpReceiver(): void;
     SendBridgeMessage(bridgeMessage: BridgeMessage): void;
-    functions: {
+    functionMains: {
         [key: string]: Function;
     };
-    ignoreMissingFunctions: boolean;
-    RegisterFunction(name: string, func: Function): void;
-    UnregisterFunction(name: string): void;
+    functionExtras: {
+        [key: string]: Function[];
+    };
+    requireMainFuncForCalls: boolean;
+    RegisterFunction(name: string, func: Function, asMain?: boolean): void;
+    /** If `func` is left null, removes only the entry in `functionMains`. */
+    UnregisterFunction(name: string, func?: Function): boolean;
     OnReceiveFunctionCall(bridgeMessage: BridgeMessage): Promise<void>;
     Local_CallFunc(funcName: string, ...args: any[]): Promise<any>;
     OnReceiveCallback(bridgeMessage: BridgeMessage): void;
