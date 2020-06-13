@@ -13,7 +13,7 @@ export interface VSet_Options {
 	copySymbolKeys?: boolean;
 	copyGetterSettersAs?: "ignore" | "getterSetter" | "value";
 	callSetters?: "never" | "always" | "auto";
-	/** Whether to process the string versions of OMIT and DEL as operators. (only enable for over-network pathways that are unimportant or trusted) */
+	/** Whether to process the string versions of OMIT and DEL as operators. (don't enable for over-network pathways that are really important, or untrusted) */
 	allowStringOperators?: boolean;
 }
 

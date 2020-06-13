@@ -1,3 +1,4 @@
+import { ModifyString } from "./General";
 // standard types
 // ----------
 /*export class bool extends Boolean {}
@@ -92,13 +93,15 @@ export function CreateClass(baseClass, classMembers) {
  * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
  */
 export function GetEntries(enumType, nameModifierFunc) {
+    if (nameModifierFunc == "ui")
+        nameModifierFunc = name => ModifyString(name, m => [m.lowerUpper_to_lowerSpaceLower]);
     //let entryNames = Object.keys(enumType).filter(a=>a.match(/^\D/) != null);
     // valid enum values are numbers and null, so any props other than those are the name->value props we want
     /*let nameValuePairs = enumType.Pairs().filter(pair=>!IsNumberString(pair.key) && pair.key != "null");
     return nameValuePairs.map(pair=>({name: nameModifierFunc ? nameModifierFunc(pair.key) : pair.key, value: pair.value as number}));*/
     // valid enum values are numbers and null, so any keys other than those are the ones we want (they're the keys for the key->value pairs)
     let entryNames = Object.keys(enumType).filter(key => !IsNumberString(key) && key != "null");
-    return entryNames.map(name => ({ name: nameModifierFunc ? nameModifierFunc(name) : name, value: enumType[name] }));
+    return entryNames.map(name => ({ name: nameModifierFunc instanceof Function ? nameModifierFunc(name) : name, value: enumType[name] }));
 }
 export function GetValues(enumType) {
     return GetEntries(enumType).map(a => a.value);

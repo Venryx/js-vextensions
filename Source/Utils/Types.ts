@@ -1,3 +1,5 @@
+import {ModifyString} from "./General";
+
 // standard types
 // ----------
 
@@ -98,7 +100,8 @@ export function CreateClass(baseClass, classMembers) {
  * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key
  * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
  */
-export function GetEntries(enumType: Object, nameModifierFunc?: (name: string)=>string) {
+export function GetEntries(enumType: Object, nameModifierFunc?: ((name: string)=>string) | "ui") {
+	if (nameModifierFunc == "ui") nameModifierFunc = name=>ModifyString(name, m=>[m.lowerUpper_to_lowerSpaceLower]);
 	//let entryNames = Object.keys(enumType).filter(a=>a.match(/^\D/) != null);
 
 	// valid enum values are numbers and null, so any props other than those are the name->value props we want
@@ -107,7 +110,7 @@ export function GetEntries(enumType: Object, nameModifierFunc?: (name: string)=>
 
 	// valid enum values are numbers and null, so any keys other than those are the ones we want (they're the keys for the key->value pairs)
 	let entryNames = Object.keys(enumType).filter(key=>!IsNumberString(key) && key != "null");
-	return entryNames.map(name=>({name: nameModifierFunc ? nameModifierFunc(name) : name, value: enumType[name] as number}));
+	return entryNames.map(name=>({name: nameModifierFunc instanceof Function ? nameModifierFunc(name) : name, value: enumType[name] as number}));
 }
 export function GetValues<T>(enumType): T[] {
 	return GetEntries(enumType).map(a=>a.value as any as T);

@@ -30,7 +30,7 @@ export declare function IsConstructor(obj: any): obj is new (..._: any[]) => any
  * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key
  * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
  */
-export declare function GetEntries(enumType: Object, nameModifierFunc?: (name: string) => string): {
+export declare function GetEntries(enumType: Object, nameModifierFunc?: ((name: string) => string) | "ui"): {
     name: string;
     value: number;
 }[];
