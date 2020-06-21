@@ -17,6 +17,12 @@ export const NumberCE_funcs = {
 	},
 	
 	//RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
+	ToPercent(this: Number, roundTo_multiple = 1) {
+		return NumberCES.RoundTo(this as number * 100, roundTo_multiple);
+	},
+	FromPercent(this: Number) {
+		return this as number / 100;
+	},
 	ToPercentStr(this: Number, /** The number of digits after the decimal point. Example: (.12345).ToPercentStr(1) == "12.3%" */ precision?: number) {
 		let number = this as number * 100;
 		if (precision != null)
@@ -73,6 +79,12 @@ export const NumberCE_funcs = {
 	KeepAtMost(this: Number, max: number) {
 		return Math.min(max, this as number);
 	},
+	IsBetween(this: Number, min: number, max: number, allowFixMinMax = true) {
+		if (min > max && allowFixMinMax) {
+			[min, max] = [max, min];
+		}
+		return this >= min && this <= max;
+	},
 	KeepBetween(this: Number, min: number, max: number, allowFixMinMax = true) {
 		if (min > max && allowFixMinMax) {
 			[min, max] = [max, min];
@@ -88,6 +100,7 @@ export const NumberCE_funcs = {
 		while (maxOut ? val >= max : val > max) val -= size;
 		return val;
 	},
+
 	Distance(this: Number, other: number) {
 		return Math.abs(this as number - other);
 	},

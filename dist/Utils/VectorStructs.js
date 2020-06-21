@@ -236,8 +236,11 @@ let VRect = VRect_1 = class VRect {
         this.width = Math.max(oldRight, rect.x + rect.width) - this.x;
         this.height = Math.max(oldBottom, rect.y + rect.height) - this.y;
     }
-    Intersects(other) {
-        return this.Right > other.Left && this.Left < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
+    Intersects(other, countTouchAsIntersect = false) {
+        //return this.Right > other.Left && this.Left < other.Right && this.Bottom > other.Top && this.Top < other.Bottom;
+        if (countTouchAsIntersect)
+            return this.Left <= other.Right && this.Right >= other.Left && this.Top <= other.Bottom && this.Bottom >= other.Top;
+        return this.Left < other.Right && this.Right > other.Left && this.Top < other.Bottom && this.Bottom > other.Top;
     }
     /** Returns true if rect would intersect the other, when wrapped to the 2/8 potential "other-sides" of given frame/backdrop. (-x, +x, -y, +y, -x -y, -x +y, +x -y, +x +y)
      * (note that it does the checks "stupidly", ie. just checking all possible switch-side variants, without checking if "switched side" version is actually on or even near the actual frame/backdrop) */
