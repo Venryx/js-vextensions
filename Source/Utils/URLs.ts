@@ -1,5 +1,7 @@
 import {E, Assert, StringCE, NumberCE} from "..";
 
+// Note: It's fine to use `window` instead of `g` in the below, since it fails outside of browsers anyway.
+
 export function ToAbsoluteUrl(url: string) {
 	 // Handle absolute URLs (with protocol-relative prefix)
 	// Example: //domain.com/file.png
@@ -25,9 +27,9 @@ export function ToAbsoluteUrl(url: string) {
 	return base + url;
 }
 export function JumpToHash(hashStr: string) {
-    var url = location.href; // Save down the URL without hash.
-    location.href = "#" + hashStr; // Go to the target element.
-    history.replaceState(null, null, url); // Don't like hashes. Changing it back.
+	var url = location.href; // Save down the URL without hash.
+	location.href = "#" + hashStr; // Go to the target element.
+	history.replaceState(null, null, url); // Don't like hashes. Changing it back.
 	//document.getElementById(hashStr).scrollIntoView(); //Even IE6 supports this
 }
 

@@ -1,4 +1,5 @@
 import {Assert, IsNumber, NumberCE, ArrayCE} from "..";
+import {g} from "./@Internal";
 
 export class TimerContext {
 	static default = new TimerContext();
@@ -59,8 +60,8 @@ export function WaitXThenRun(delayInMS: number, func: (...args: any[])=>void, ..
 	Assert(delayInMS <= maxTimeoutLength, `Cannot wait for longer than ${maxTimeoutLength} ms. (use WaitUntilXThenRun, if a long-delay is needed)`);
 	// setTimeout can take really long on Chrome mobile (eg. while scrolling), for some reason (like, 1.5 seconds)
 	// on desktop, setImmediate is better as well, since it takes ~0ms instead of 1-15ms
-	if (delayInMS == 0 && window["setImmediate"]) {
-		return window["setImmediate"](func, ...args) as any; // same as below
+	if (delayInMS == 0 && g.setImmediate) {
+		return g.setImmediate(func, ...args) as any; // same as below
 	}
 	return setTimeout(func, delayInMS, ...args) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 }

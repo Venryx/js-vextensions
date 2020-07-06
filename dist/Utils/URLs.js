@@ -1,4 +1,5 @@
 import { E, Assert, StringCE, NumberCE } from "..";
+// Note: It's fine to use `window` instead of `g` in the below, since it fails outside of browsers anyway.
 export function ToAbsoluteUrl(url) {
     // Handle absolute URLs (with protocol-relative prefix)
     // Example: //domain.com/file.png

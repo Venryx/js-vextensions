@@ -1,6 +1,6 @@
 import { IsPrimitive, IsString, IsObject } from "./Types";
 import { Assert, ArrayCE, NumberCE, ObjectCE, StringCE } from "..";
-let g = typeof window == "object" ? window : global;
+import { g } from "./@Internal";
 if (Number.MIN_SAFE_INTEGER == null) {
     Number.MIN_SAFE_INTEGER = -9007199254740991;
 }
