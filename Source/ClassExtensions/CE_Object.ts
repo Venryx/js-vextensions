@@ -150,12 +150,19 @@ export const ObjectCE_funcs = {
 			let asGetterSetter = isGetterSetter && opt.copyGetterSettersAs == "getterSetter";
 			// descriptorCustomized: whether the descriptor has customizations that would be lost by using a simple set-op
 			let descriptorCustomized = descriptor && (descriptor.enumerable == false || descriptor.writable == false || descriptor.configurable == false || asGetterSetter);
-			let callSetters_final = opt.callSetters == "always" || (opt.callSetters == "auto" && !descriptorCustomized);
-			if (callSetters_final) {
+			let useSimpleSet_final = opt.callSetters == "always" || (opt.callSetters == "auto" && !descriptorCustomized);
+			if (useSimpleSet_final) {
 				this[name] = value;
 			} else {
 				// we default configurable to true, since it's the better default imo; it's more compatible -- conf:false can break "correct code", whereas conf:true at worst allows mistakes
-				Object.defineProperty(this, name, Object.assign({configurable: true}, descriptor, {value}));
+				const finalDescriptor = Object.assign({configurable: true}, descriptor);
+				// if placing a value (rather than copying a getter-setter), clear get/set fields, and set value field 
+				if (!asGetterSetter) {
+					delete finalDescriptor.get;
+					delete finalDescriptor.set;
+					finalDescriptor.value = value;
+				}
+				Object.defineProperty(this, name, finalDescriptor);
 			}
 		};
 		if (propName) {
@@ -168,9 +175,10 @@ export const ObjectCE_funcs = {
 			for (const key of keys) {
 				let descriptor = Object.getOwnPropertyDescriptor(props, key);
 				if (!descriptor.enumerable && !opt.copyNonEnumerable) continue;
-				let isGetterSetter = descriptor.get || descriptor.set;
-				if (isGetterSetter && opt.copyGetterSettersAs == "ignore") continue;
-				SetProp(key, descriptor, isGetterSetter && opt.copyGetterSettersAs == "getterSetter" ? null : props[key as any]);
+				let isGetterSetter = descriptor.get != null || descriptor.set != null;
+				if (isGetterSetter && opt.copyGetterSettersAs == "ignore") continue; // for "ignore" case: short-circuit, so we don't even call getter
+				const value = !isGetterSetter || opt.copyGetterSettersAs == "value" ? props[key as any] : undefined;
+				SetProp(key, descriptor, value);
 			}
 		}
 		return this as any;
