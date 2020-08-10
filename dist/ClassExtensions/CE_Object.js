@@ -62,22 +62,15 @@ export const ObjectCE_funcs = {
     },
     // normal
     // ==========
-    //Object.prototype._AddSetter_Inline = function ExtendWith_Inline(value) { this.ExtendWith(value); };
-    //ExtendWith(value) { $.extend(this, value); };
-    /*GetItem_SetToXIfNull(itemName, /*;optional:*#/ defaultValue) {
-        if (!this[itemName])
-            this[itemName] = defaultValue;
-        return this[itemName];
-    };*/
-    // must also do it on window/global, for some reason
-    /*g.Extend = function(x) {
-        for (var name in x) {
-            var value = x[name];
-            //if (value !== undefined)
-            this[name] = value;
-        }
-        return this;
-    };*/
+    /* Helper for if you want the result of calling x.SomeMethod(), but you also need access to the x-var for one of its arguments. */
+    VGet(func) {
+        return func.call(this, this);
+    },
+    SafeGet: (function (pathOrPathGetterFunc, resultIfNull) {
+        let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
+        return DeepGet(this, pathSegments, resultIfNull);
+    }),
+    // todo: maybe remove/merge these
     Extend(x, copyNonEnumerable = false) {
         if (x != null) {
             for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
@@ -150,15 +143,6 @@ export const ObjectCE_funcs = {
             }
         }
         return this;
-    }),
-    /*interface Object { Extended2<T>(this, x: T): T; }
-    Extended2(x) {
-        return this.Extended(x);
-    };*/
-    //E(x) { return this.Extended(x); };
-    SafeGet: (function (pathOrPathGetterFunc, resultIfNull) {
-        let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
-        return DeepGet(this, pathSegments, resultIfNull);
     }),
     VAct(func) {
         func.call(this, this);

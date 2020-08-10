@@ -24,21 +24,22 @@ export declare const ObjectCE_funcs: {
     _AddFunction_Inline: any;
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
-    Extend(x: any, copyNonEnumerable?: boolean): any;
-    Extended<T, T2>(this: T, x: T2, copyNonEnumerable?: boolean): TargetTFor<T> & T2;
-    VSet: {
-        <T_1>(this: T_1, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_1>;
-        <T_2>(this: T_2, props: any, opt?: VSet_Options): TargetTFor<T_2>;
-    };
+    VGet<T, T2>(this: T, func: (self: TargetTFor<T>) => T2): T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
-        <T_3, Result>(this: T_3, pathGetterFunc: (self: TargetTFor<T_3>) => Result, resultIfNull?: any): Result;
+        <T_1, Result>(this: T_1, pathGetterFunc: (self: TargetTFor<T_1>) => Result, resultIfNull?: any): Result;
     };
-    VAct<T_4>(this: T_4, func: (self: TargetTFor<T_4>) => any): TargetTFor<T_4>;
-    As<T_5>(type: new (..._: any[]) => T_5): T_5;
+    Extend(x: any, copyNonEnumerable?: boolean): any;
+    Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
+    VSet: {
+        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_3>;
+        <T_4>(this: T_4, props: any, opt?: VSet_Options): TargetTFor<T_4>;
+    };
+    VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
+    As<T_6>(type: new (..._: any[]) => T_6): T_6;
     Strip(): any;
-    Including<T_6, Keys extends (keyof T_6)[] = any>(this: XOrWrapped<T_6>, ...keys: Keys): Pick<T_6, Keys[number]>;
-    Excluding<T_7, Keys_1 extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys_1): Pick<T_7, Exclude<keyof T_7, Keys_1[number]>>;
+    Including<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
+    Excluding<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Pick<T_8, Exclude<keyof T_8, Keys_1[number]>>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K, V>(this: XOrWrapped<Map<K, V>>): {
@@ -85,21 +86,22 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     _AddFunction_Inline: any;
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
-    Extend(x: any, copyNonEnumerable?: boolean): any;
-    Extended<T, T2>(this: T, x: T2, copyNonEnumerable?: boolean): TargetTFor<T> & T2;
-    VSet: {
-        <T_1>(this: T_1, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_1>;
-        <T_2>(this: T_2, props: any, opt?: VSet_Options): TargetTFor<T_2>;
-    };
+    VGet<T, T2>(this: T, func: (self: TargetTFor<T>) => T2): T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
-        <T_3, Result>(this: T_3, pathGetterFunc: (self: TargetTFor<T_3>) => Result, resultIfNull?: any): Result;
+        <T_1, Result>(this: T_1, pathGetterFunc: (self: TargetTFor<T_1>) => Result, resultIfNull?: any): Result;
     };
-    VAct<T_4>(this: T_4, func: (self: TargetTFor<T_4>) => any): TargetTFor<T_4>;
-    As<T_5>(type: new (..._: any[]) => T_5): T_5;
+    Extend(x: any, copyNonEnumerable?: boolean): any;
+    Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
+    VSet: {
+        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_3>;
+        <T_4>(this: T_4, props: any, opt?: VSet_Options): TargetTFor<T_4>;
+    };
+    VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
+    As<T_6>(type: new (..._: any[]) => T_6): T_6;
     Strip(): any;
-    Including<T_6, Keys extends (keyof T_6)[] = any>(this: XOrWrapped<T_6>, ...keys: Keys): Pick<T_6, Keys[number]>;
-    Excluding<T_7, Keys_1 extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys_1): Pick<T_7, Exclude<keyof T_7, Keys_1[number]>>;
+    Including<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
+    Excluding<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Pick<T_8, Exclude<keyof T_8, Keys_1[number]>>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K, V>(this: XOrWrapped<Map<K, V>>): {

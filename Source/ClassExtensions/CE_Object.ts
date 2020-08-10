@@ -89,24 +89,19 @@ export const ObjectCE_funcs = {
 	// normal
 	// ==========
 
-	//Object.prototype._AddSetter_Inline = function ExtendWith_Inline(value) { this.ExtendWith(value); };
-	//ExtendWith(value) { $.extend(this, value); };
-	/*GetItem_SetToXIfNull(itemName, /*;optional:*#/ defaultValue) {
-		if (!this[itemName])
-			this[itemName] = defaultValue;
-		return this[itemName];
-	};*/
+	/* Helper for if you want the result of calling x.SomeMethod(), but you also need access to the x-var for one of its arguments. */
+	VGet<T, T2>(this: T, func: (self: TargetTFor<T>)=>T2): T2 {
+		return func.call(this, this);
+	},
+	SafeGet: <{
+		(path: string, resultIfNull?: any): any;
+		<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
+	}>(function(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
+		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
+		return DeepGet(this, pathSegments, resultIfNull);
+	}),
 
-	// must also do it on window/global, for some reason
-	/*g.Extend = function(x) {
-		for (var name in x) {
-			var value = x[name];
-			//if (value !== undefined)
-			this[name] = value;
-		}
-		return this;
-	};*/
-
+	// todo: maybe remove/merge these
 	Extend(x: any, copyNonEnumerable = false) {
 		if (x != null) {
 			for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
@@ -179,19 +174,6 @@ export const ObjectCE_funcs = {
 			}
 		}
 		return this as any;
-	}),
-	/*interface Object { Extended2<T>(this, x: T): T; }
-	Extended2(x) {
-		return this.Extended(x);
-	};*/
-	//E(x) { return this.Extended(x); };
-
-	SafeGet: <{
-		(path: string, resultIfNull?: any): any;
-		<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
-	}>(function(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
-		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
-		return DeepGet(this, pathSegments, resultIfNull);
 	}),
 	VAct<T>(this: T, func: (self: TargetTFor<T>)=>any): TargetTFor<T> {
 		func.call(this, this);
