@@ -24,10 +24,10 @@ export type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
 	never;*/
 
 export type LoopControlOp<Result> = "break" | "continue" | ["return", Result];
-export type LoopFunc<T, Result> = (value: T, index: number, array: T[])=>LoopControlOp<Result>;
+export type LoopFunc<T, Result> = (value: T, index: number, array: T[])=>LoopControlOp<Result>|undefined;
 
 export const ArrayCE_funcs = {
-	ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result {
+	ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result|undefined {
 		for (let i = 0; i < this.length; i++) {
 			const controlOp = func(this[i], i, this);
 			if (controlOp == "break") break;
@@ -35,7 +35,7 @@ export const ArrayCE_funcs = {
 			if (controlOp instanceof Array) return controlOp[1];
 		}
 	},
-	async ForEachAsync<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Promise<Result> {
+	async ForEachAsync<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Promise<Result|undefined> {
 		for (let i = 0; i < this.length; i++) {
 			const controlOp = await func(this[i], i, this);
 			if (controlOp == "break") break;
@@ -124,7 +124,7 @@ export const ArrayCE_funcs = {
 	// Linq replacements
 	// ----------
 
-	Any<T>(this: T[], matchFunc: (item: T, index?: number)=>boolean): boolean {
+	Any<T>(this: T[], matchFunc: (item: T, index: number)=>boolean): boolean {
 		for (let [index, item] of this.entries()) {
 			if (matchFunc == null || matchFunc.call(item, item, index)) {
 				return true;
@@ -132,7 +132,7 @@ export const ArrayCE_funcs = {
 		}
 		return false;
 	},
-	All<T>(this: T[], matchFunc: (item: T, index?: number)=>boolean): boolean {
+	All<T>(this: T[], matchFunc: (item: T, index: number)=>boolean): boolean {
 		for (let [index, item] of this.entries()) {
 			if (!matchFunc.call(item, item, index)) {
 				return false;
@@ -140,8 +140,8 @@ export const ArrayCE_funcs = {
 		}
 		return true;
 	},
-	Where<T>(this: T[], matchFunc: (item: T, index?: number)=>boolean): T[] {
-		var result = [];
+	Where<T>(this: T[], matchFunc: (item: T, index: number)=>boolean): T[] {
+		var result: T[] = [];
 		for (let [index, item] of this.entries()) {
 			if (matchFunc.call(item, item, index)) { // call, having the item be "this", as well as the first argument
 				result.push(item);
@@ -149,14 +149,14 @@ export const ArrayCE_funcs = {
 		}
 		return result;
 	},
-	Select<T, T2>(this: T[], selectFunc: (item: T, index?: number)=>T2): T2[] {
-		var result = [];
+	Select<T, T2>(this: T[], selectFunc: (item: T, index: number)=>T2): T2[] {
+		var result: T2[] = [];
 		for (let [index, item] of this.entries()) {
 			result.push(selectFunc.call(item, item, index));
 		}
 		return result;
 	},
-	SelectMany<T, T2>(this: T[], selectFunc: (item: T, index?: number)=>T2[]): T2[] {
+	SelectMany<T, T2>(this: T[], selectFunc: (item: T, index: number)=>T2[]): T2[] {
 		//return [...this.entries()].reduce((acc, [index, item])=>acc.concat(selectFunc.call(item, item, index)), []);
 		var result = [];
 		for (let [index, item] of this.entries()) {
@@ -186,7 +186,7 @@ export const ArrayCE_funcs = {
 		}
 		return result;
 	},
-	FirstOrX<T>(this: T[], matchFunc?: (item: T)=>boolean, x = null): T {
+	FirstOrX<T, X>(this: T[], matchFunc?: (item: T)=>boolean, x?: X): T|X|undefined {
 		if (matchFunc) {
 			for (let [index, item] of this.entries()) {
 				if (matchFunc.call(item, item, index)) {
@@ -209,7 +209,7 @@ export const ArrayCE_funcs = {
 		}
 		return result;
 	},
-	LastOrX<T>(this: T[], matchFunc?: (item: T)=>boolean, x = null): T {
+	LastOrX<T, X>(this: T[], matchFunc?: (item: T)=>boolean, x?: X): T|X|undefined {
 		if (matchFunc) {
 			for (var i = this.length - 1; i >= 0; i--) {
 				if (matchFunc.call(this[i], this[i], i)) {
@@ -269,21 +269,21 @@ export const ArrayCE_funcs = {
 		return result;
 	},
 	Skip<T>(this: T[], count: number): T[] {
-		var result = [];
+		var result: T[] = [];
 		for (let i = count; i < this.length; i++) {
 			result.push(this[i]);
 		}
 		return result;
 	},
 	Take<T>(this: T[], count: number): T[] {
-		var result = [];
+		var result: T[] = [];
 		for (let i = 0; i < count && i < this.length; i++) {
 			result.push(this[i]);
 		}
 		return result;
 	},
 	TakeLast<T>(this: T[], count: number): T[] {
-		var result = [];
+		var result: T[] = [];
 		for (var i = 0; i < count && (this.length - 1) - i >= 0; i++) {
 			result.push(this[(this.length - 1) - i]);
 		}
@@ -314,7 +314,7 @@ export const ArrayCE_funcs = {
 	},
 
 	Distinct<T>(this: T[]): T[] {
-		const result = [];
+		const result: T[] = [];
 		/*for (const i in this) {
 			if (!this.hasOwnProperty(i)) continue;*/
 		for (let i = 0; i < this.length; i++) {
@@ -328,11 +328,11 @@ export const ArrayCE_funcs = {
 		<T>(this: T[], ...excludeItems: T[]): T[];
 		<T>(this: T[], options: {excludeEachOnlyOnce: boolean}, ...excludeItems: T[]): T[];
 	}>(function(...args: any[]) {
-		let opt: {excludeEachOnlyOnce: boolean}, excludeItems: any[];
+		let opt: {excludeEachOnlyOnce: boolean}|undefined, excludeItems: any[];
 		if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0]) [opt, ...excludeItems] = args;
 		else excludeItems = args;
 
-		if (opt && opt.excludeEachOnlyOnce) {
+		if (opt?.excludeEachOnlyOnce) {
 			const result = this.slice();
 			for (const excludeItem of excludeItems) {
 				ArrayCES.Remove(result, excludeItem);

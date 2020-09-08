@@ -49,7 +49,7 @@ export declare function IsVector3Shape(obj: any): obj is {
 export declare class Vector3 {
     static get zero(): Vector3;
     static get one(): Vector3;
-    constructor(x?: any, y?: any, z?: any);
+    constructor(x?: number, y?: number, z?: number);
     x: number;
     y: number;
     z: number;

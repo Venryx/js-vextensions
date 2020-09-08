@@ -70,7 +70,7 @@ export function IsVector3Shape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("z");
 }
 let Vector3 = Vector3_1 = class Vector3 {
-    constructor(x = null, y = null, z = null) {
+    constructor(x, y, z) {
         Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
         this.x = x != null ? x : 0;
         this.y = y != null ? y : 0;

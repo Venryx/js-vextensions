@@ -33,7 +33,7 @@ export const ElementCE_funcs = {
 			let firstMatchInLayer = currentLayerElements.find(a=>a["matches"] && a["matches"](selector));
 			if (firstMatchInLayer) return firstMatchInLayer as HTMLElement;
 			//currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
-			currentLayerElements = currentLayerElements.reduce((acc, item)=>acc.concat(Array.from(item.childNodes)), []);
+			currentLayerElements = currentLayerElements.reduce((acc, item)=>acc.concat(Array.from(item.childNodes)), [] as ChildNode[]);
 		}
 		return null;
 	},

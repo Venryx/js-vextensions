@@ -170,7 +170,7 @@ export const ArrayCE_funcs = {
         }
         return result;
     },
-    FirstOrX(matchFunc, x = null) {
+    FirstOrX(matchFunc, x) {
         if (matchFunc) {
             for (let [index, item] of this.entries()) {
                 if (matchFunc.call(item, item, index)) {
@@ -194,7 +194,7 @@ export const ArrayCE_funcs = {
         }
         return result;
     },
-    LastOrX(matchFunc, x = null) {
+    LastOrX(matchFunc, x) {
         if (matchFunc) {
             for (var i = this.length - 1; i >= 0; i--) {
                 if (matchFunc.call(this[i], this[i], i)) {
@@ -306,12 +306,13 @@ export const ArrayCE_funcs = {
         return result;
     },
     Except: (function (...args) {
+        var _a;
         let opt, excludeItems;
         if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0])
             [opt, ...excludeItems] = args;
         else
             excludeItems = args;
-        if (opt && opt.excludeEachOnlyOnce) {
+        if ((_a = opt) === null || _a === void 0 ? void 0 : _a.excludeEachOnlyOnce) {
             const result = this.slice();
             for (const excludeItem of excludeItems) {
                 ArrayCES.Remove(result, excludeItem);

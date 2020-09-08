@@ -1,7 +1,7 @@
 import {Global} from "./General";
 import {IsNaN, Assert, NumberCE, ObjectCE, ArrayCE} from "..";
 
-function IsNullOrNaN(value: number) {
+function IsNullOrNaN(value: number|null|undefined) {
 	return value === null || IsNaN(value);
 }
 
@@ -92,7 +92,7 @@ export class Vector3 {
 	static get zero() { return new Vector3(0, 0, 0); }
 	static get one() { return new Vector3(1, 1, 1); }
 
-	constructor(x = null, y = null, z = null) {
+	constructor(x?: number, y?: number, z?: number) {
 		Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
 		
 		this.x = x != null ? x : 0;
@@ -295,12 +295,12 @@ export class VRect {
 		let variantsToCompare: VRect[] = [this];
 		if (options.xWrappedBy) {
 			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
-				return [base, base.NewX(x=>x - options.xWrappedBy), base.NewX(x=>x + options.xWrappedBy)];
+				return [base, base.NewX(x=>x - options.xWrappedBy!), base.NewX(x=>x + options.xWrappedBy!)];
 			}));
 		}
 		if (options.yWrappedBy) {
 			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
-				return [base, base.NewY(y=>y - options.yWrappedBy), base.NewY(y=>y + options.yWrappedBy)];
+				return [base, base.NewY(y=>y - options.yWrappedBy!), base.NewY(y=>y + options.yWrappedBy!)];
 			}))
 		}
 		return ArrayCE(variantsToCompare).Any(a=>a.Intersects(other));

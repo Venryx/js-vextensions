@@ -3,10 +3,10 @@ export declare const NumberCE_funcs: {
     NaNTo(this: Number, valIfSelfIsNaN: any): any;
     ToPercent(this: Number, roundTo_multiple?: number): number;
     FromPercent(this: Number): number;
-    ToPercentStr(this: Number, precision?: number): string;
+    ToPercentStr(this: Number, precision?: number | undefined): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
     RoundTo(this: Number, multiple: number): number;
-    RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
+    RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number | undefined, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: number): number;
     FloorTo_Str(this: Number, multipleOf: number): string;
     CeilingTo(this: Number, multipleOf: any): number;
@@ -26,10 +26,10 @@ export declare const NumberCES: import("../Utils/General").WithFuncsStandalone_T
     NaNTo(this: Number, valIfSelfIsNaN: any): any;
     ToPercent(this: Number, roundTo_multiple?: number): number;
     FromPercent(this: Number): number;
-    ToPercentStr(this: Number, precision?: number): string;
+    ToPercentStr(this: Number, precision?: number | undefined): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
     RoundTo(this: Number, multiple: number): number;
-    RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
+    RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number | undefined, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: number): number;
     FloorTo_Str(this: Number, multipleOf: number): string;
     CeilingTo(this: Number, multipleOf: any): number;

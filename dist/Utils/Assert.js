@@ -1,7 +1,7 @@
 import { GetStackTraceStr } from "./General";
 export function Assert(condition, messageOrMessageFunc, triggerDebugger = true) {
     if (condition)
-        return;
+        return undefined;
     var message = messageOrMessageFunc instanceof Function ? messageOrMessageFunc() : messageOrMessageFunc;
     //JSVE.logFunc(`Assert failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
     //console.error("Assert failed) " + message);
@@ -11,6 +11,7 @@ export function Assert(condition, messageOrMessageFunc, triggerDebugger = true) 
     }
     if (!skipError)
         throw new Error("Assert failed) " + message);
+    return undefined;
 }
 export function AssertWarn(condition, messageOrMessageFunc) {
     if (condition)

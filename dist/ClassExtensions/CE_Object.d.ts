@@ -15,6 +15,12 @@ export declare type MapLike<V> = {
 export declare type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
 export declare type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
 export declare type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
+export declare type Pair<K, V> = {
+    index: number;
+    key: K;
+    keyNum?: number;
+    value: V;
+};
 export declare const ObjectCE_funcs: {
     /** Helps you do stuff like this:
         Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
@@ -32,8 +38,8 @@ export declare const ObjectCE_funcs: {
     Extend(x: any, copyNonEnumerable?: boolean): any;
     Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
     VSet: {
-        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_3>;
-        <T_4>(this: T_4, props: any, opt?: VSet_Options): TargetTFor<T_4>;
+        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options | undefined): TargetTFor<T_3>;
+        <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
     };
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
     As<T_6>(type: new (..._: any[]) => T_6): T_6;
@@ -42,24 +48,9 @@ export declare const ObjectCE_funcs: {
     Excluding<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Pick<T_8, Exclude<keyof T_8, Keys_1[number]>>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
-        <K, V>(this: XOrWrapped<Map<K, V>>): {
-            index: number;
-            key: K;
-            keyNum?: number;
-            value: V;
-        }[];
-        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>): {
-            index: number;
-            key: string;
-            keyNum?: number;
-            value: V_1;
-        }[];
-        <K_2 = string, V_2 = any>(): {
-            index: number;
-            key: K_2;
-            keyNum?: number;
-            value: V_2;
-        }[];
+        <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
+        <K_1 = string, V_1 = any>(this: XOrWrapped<MapLike<V_1>>): Pair<K_1, V_1>[];
+        <K_2 = string, V_2 = any>(): Pair<K_2, V_2>[];
     };
     VKeys: {
         <K_3>(this: XOrWrapped<Map<K_3, any>>): K_3[];
@@ -94,8 +85,8 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     Extend(x: any, copyNonEnumerable?: boolean): any;
     Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
     VSet: {
-        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T_3>;
-        <T_4>(this: T_4, props: any, opt?: VSet_Options): TargetTFor<T_4>;
+        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options | undefined): TargetTFor<T_3>;
+        <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
     };
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
     As<T_6>(type: new (..._: any[]) => T_6): T_6;
@@ -104,24 +95,9 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     Excluding<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Pick<T_8, Exclude<keyof T_8, Keys_1[number]>>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
-        <K, V>(this: XOrWrapped<Map<K, V>>): {
-            index: number;
-            key: K;
-            keyNum?: number;
-            value: V;
-        }[];
-        <K_1, V_1>(this: XOrWrapped<MapLike<V_1>>): {
-            index: number;
-            key: string;
-            keyNum?: number;
-            value: V_1;
-        }[];
-        <K_2 = string, V_2 = any>(): {
-            index: number;
-            key: K_2;
-            keyNum?: number;
-            value: V_2;
-        }[];
+        <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
+        <K_1 = string, V_1 = any>(this: XOrWrapped<MapLike<V_1>>): Pair<K_1, V_1>[];
+        <K_2 = string, V_2 = any>(): Pair<K_2, V_2>[];
     };
     VKeys: {
         <K_3>(this: XOrWrapped<Map<K_3, any>>): K_3[];

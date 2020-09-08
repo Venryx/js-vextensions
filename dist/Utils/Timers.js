@@ -27,11 +27,12 @@ TimerContext.default_autoAddAll = false;
 export function TryCall(func, ...args) {
     //if (!(func instanceof Function)) return;
     if (typeof func != "function")
-        return;
+        return undefined; // ts should catch, so check is here for invalid data
     try {
         return func.apply(this, args);
     }
     catch (ex) { }
+    return undefined;
 }
 export function TryCall_OnX(obj, func, ...args) {
     if (typeof func != "function")
@@ -126,7 +127,7 @@ export class Timer {
     get NextTickFuncOverdue() {
         return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
     }
-    Start(initialDelayOverride = null) {
+    Start(initialDelayOverride) {
         // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
         if (this.IsRunning)
             this.Stop();
@@ -168,8 +169,8 @@ export class Timer {
     Stop() {
         clearInterval(this.timerID);
         //this.startTime = null;
-        this.nextTickTime = null;
-        this.nextTickFunc = null;
+        this.nextTickTime = undefined;
+        this.nextTickFunc = undefined;
         this.timerID = -1;
         this.callCount_thisRun = 0;
     }
@@ -181,11 +182,13 @@ export class TimerS extends Timer {
 }
 var funcLastScheduledRunTimes = {};
 export function BufferAction(...args) {
+    var _a;
+    var key = "[default]", minInterval, func;
     if (args.length == 2)
-        var [minInterval, func] = args, key = null;
-    else if (args.length == 3)
-        var [key, minInterval, func] = args;
-    var lastScheduledRunTime = funcLastScheduledRunTimes[key] || 0;
+        [minInterval, func] = args;
+    else /*if (args.length == 3)*/
+        [key, minInterval, func] = args;
+    var lastScheduledRunTime = (_a = funcLastScheduledRunTimes[key], (_a !== null && _a !== void 0 ? _a : 0));
     var now = new Date().getTime();
     var timeSinceLast = now - lastScheduledRunTime;
     if (timeSinceLast >= minInterval) { // if we've waited enough since last run, run right now

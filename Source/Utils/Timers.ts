@@ -18,7 +18,7 @@ export class TimerContext {
 	ManuallyTriggerOverdueTimers() {
 		for (let timer of this.timers) {
 			if (timer.NextTickFuncOverdue) {
-				timer.nextTickFunc();
+				timer.nextTickFunc!();
 			}
 		}
 	}
@@ -29,10 +29,11 @@ export class TimerContext {
 
 export function TryCall<T>(func: (..._)=>T, ...args): T {
 	//if (!(func instanceof Function)) return;
-	if (typeof func != "function") return;
+	if (typeof func != "function") return undefined as any; // ts should catch, so check is here for invalid data
 	try {
 		return func.apply(this, args);
 	} catch (ex) {}
+	return undefined as any;
 }
 export function TryCall_OnX(obj, func, ...args) {
 	if (typeof func != "function") return;
@@ -75,12 +76,12 @@ export function WaitUntilXThenRun(targetDateTimeInMS: number, func: (...args: an
 	}
 }
 
-export function SleepAsync(timeMS) {
+export function SleepAsync(timeMS): Promise<void> {
 	return new Promise((resolve, reject)=> {
 		WaitXThenRun(timeMS, resolve);
 	});
 }
-export function SleepAsyncUntil(targetDateTimeInMS: number) {
+export function SleepAsyncUntil(targetDateTimeInMS: number): Promise<void> {
 	return new Promise((resolve, reject)=> {
 		WaitUntilXThenRun(targetDateTimeInMS, resolve);
 	});
@@ -135,15 +136,15 @@ export class Timer {
 	timerID = -1;
 	get IsRunning() { return this.timerID != -1; }
 
-	nextTickTime: number;
-	nextTickFunc: Function; // used by the TimerContext.ManuallyTriggerOverdueTimers() function
+	nextTickTime: number|undefined;
+	nextTickFunc: Function|undefined; // used by the TimerContext.ManuallyTriggerOverdueTimers() function
 	get NextTickFuncOverdue() {
 		return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
 	}
 	
 	callCount_thisRun = 0;
 	callCount_total = 0;
-	Start(initialDelayOverride: number = null) {
+	Start(initialDelayOverride?: number) {
 		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
 		if (this.IsRunning) this.Stop();
 		this.startTime = Date.now();
@@ -184,8 +185,8 @@ export class Timer {
 	Stop() {
 		clearInterval(this.timerID);
 		//this.startTime = null;
-		this.nextTickTime = null;
-		this.nextTickFunc = null;
+		this.nextTickTime = undefined;
+		this.nextTickFunc = undefined;
 		this.timerID = -1;
 		this.callCount_thisRun = 0;
 	}
@@ -204,10 +205,11 @@ export function BufferAction(minInterval: number, func: Function);
  * Else, schedule next-run to occur as soon as the minInterval is passed. */
 export function BufferAction(key: string, minInterval: number, func: Function);
 export function BufferAction(...args) {
-	if (args.length == 2) var [minInterval, func] = args, key = null;
-	else if (args.length == 3) var [key, minInterval, func] = args;
+	var key: string = "[default]", minInterval: number, func: Function; 
+	if (args.length == 2) [minInterval, func] = args;
+	else /*if (args.length == 3)*/ [key, minInterval, func] = args;
 
-    var lastScheduledRunTime = funcLastScheduledRunTimes[key] || 0;
+    var lastScheduledRunTime = funcLastScheduledRunTimes[key] ?? 0;
     var now = new Date().getTime();
     var timeSinceLast = now - lastScheduledRunTime;
     if (timeSinceLast >= minInterval) { // if we've waited enough since last run, run right now
@@ -218,7 +220,7 @@ export function BufferAction(...args) {
 		if (!waitingForNextRunAlready) { // else, if we're not already waiting for next-run, schedule next-run
 			var nextRunTime = lastScheduledRunTime + minInterval;
 			var timeTillNextRun = nextRunTime - now;
-			WaitXThenRun(timeTillNextRun, func);
+			WaitXThenRun(timeTillNextRun, func as any);
 			funcLastScheduledRunTimes[key] = nextRunTime;
 		}
 	}

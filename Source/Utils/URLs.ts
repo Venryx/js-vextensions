@@ -23,13 +23,13 @@ export function ToAbsoluteUrl(url: string) {
 
 	// Handle relative URLs
 	// Example: file.png
-	var base = window.location.href.match(/(.*\/)/)[0];
+	var base = window.location.href.match(/(.*\/)/)![0];
 	return base + url;
 }
 export function JumpToHash(hashStr: string) {
 	var url = location.href; // Save down the URL without hash.
 	location.href = "#" + hashStr; // Go to the target element.
-	history.replaceState(null, null, url); // Don't like hashes. Changing it back.
+	history.replaceState(null, null as any, url); // Don't like hashes. Changing it back.
 	//document.getElementById(hashStr).scrollIntoView(); //Even IE6 supports this
 }
 

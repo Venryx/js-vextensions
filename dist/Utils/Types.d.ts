@@ -5,7 +5,7 @@ export declare var string: () => new (..._: any[]) => string;
 export declare function IsPrimitive(obj: any): boolean;
 export declare function IsBool(obj: any): obj is boolean;
 export declare function ToBool(boolStr: any): boolean;
-export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean;
+export declare function IsNumberString(obj: any, allowNaN?: boolean): boolean | 0;
 export declare function IsNumber(obj: any, allowNumberObj?: boolean, allowNaN?: boolean): obj is number;
 /** Basically the same as Number(...), accepting numbers, and converting number-strings of these forms:
 1) "010" -> 10 [ES5+], 8 [<ES5]

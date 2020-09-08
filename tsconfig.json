@@ -10,13 +10,15 @@
 		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true, // doesn't modify output, *or* own import code (it's just for type-checking)
 		//"esModuleInterop": true, // doesn't modify output, only code for the stuff we import
-		"alwaysStrict": true,
 		"outDir": "Dist",
 		"declaration": true,
 		"declarationDir": "Dist",
 
 		"lib": ["es2015", "dom"],
-		"downlevelIteration": true
+		"downlevelIteration": true,
+
+		"alwaysStrict": true,
+		"strictNullChecks": true
 	},
 	"include": [
 		"Typings/**/*.d.ts",

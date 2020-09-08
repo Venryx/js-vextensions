@@ -169,8 +169,8 @@ export class AddSpacesAt_Options {
 	betweenPropsOrItems = true;
 	betweenPropNameAndValue = true;
 }
-export function ToJSON_Advanced(obj, opt?: Partial<ToJSON_Advanced_Options>) {
-	opt = E(new ToJSON_Advanced_Options(), opt);
+export function ToJSON_Advanced(obj, options?: Partial<ToJSON_Advanced_Options>) {
+	const opt = E(new ToJSON_Advanced_Options(), options);
 
 	let cache = new Set();
 	//let foundDuplicates = false;
@@ -189,7 +189,7 @@ export function ToJSON_Advanced(obj, opt?: Partial<ToJSON_Advanced_Options>) {
 				return opt.stringifyUndefinedAs;
 			}
 			return value;
-		}, opt.addSpacesAt != null ? 1 : null);
+		}, opt.addSpacesAt != null ? 1 : undefined);
 	} catch (ex) {
 		if (opt.catchErrors) {
 			return opt.catchErrors_replaceStr;
@@ -241,7 +241,7 @@ export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
 
 		for (let propertyIndex = 0; propertyIndex < keys.length; propertyIndex++) {
 			// Save the source's descriptor
-			let descriptor = Object.getOwnPropertyDescriptor(current.source, keys[propertyIndex]);
+			let descriptor = Object.getOwnPropertyDescriptor(current.source, keys[propertyIndex])!;
 
 			if (!descriptor.value || typeof descriptor.value !== 'object') {
 				Object.defineProperty(current.target, keys[propertyIndex], descriptor);
@@ -401,14 +401,14 @@ export function GetPercentFromXToY(start: number, end: number, val: number, keep
 }
 
 export function GetXToY(minX, maxY, interval = 1) {
-	var result = [];
+	var result: number[] = [];
 	for (var val = minX; val <= maxY; val += interval) {
 		result.push(val);
 	}
 	return result;
 }
 export function GetXToYOut(minX, maxOutY, interval = 1) {
-	var result = [];
+	var result: number[] = [];
 	for (var val = minX; val < maxOutY; val += interval) {
 		result.push(val);
 	}
@@ -436,7 +436,7 @@ export function CloneObject(obj, propMatchFunc?: Function, depth = 0) {
 		let result = {};
 	for (let pair of ObjectCE(obj).Pairs()) {
 		if (!(pair.value instanceof Function) && (propMatchFunc == null || propMatchFunc.call(obj, pair.key, pair.value)))
-			result[pair.key] = CloneObject(pair.value, propMatchFunc, depth + 1);
+			result[pair.key as any] = CloneObject(pair.value, propMatchFunc, depth + 1);
 	}
 	return result;
 }
@@ -552,7 +552,7 @@ export class TreeNode {
 		this.obj[this.prop] = newVal;
 	}
 }
-export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _ancestorNodes = []) {
+export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _ancestorNodes: TreeNode[] = []) {
 	Assert(_ancestorNodes.length <= 300, "Cannot traverse more than 300 levels into object tree. (probably circular)");
 
 	let result = [] as TreeNode[];
@@ -580,10 +580,10 @@ export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _anc
 	return {...treeRoot, [currentPathNode]: currentPathNode_newValue};
 }*/
 
-export function GetTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, includeRootNode = false, _ancestorNodes = []) {
+export function GetTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, includeRootNode = false, _ancestorNodes: TreeNode[] = []) {
 	let descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
 	let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
-	var result = [];
+	var result: TreeNode[] = [];
 	if (includeRootNode) {
 		result.push(new TreeNode([], {_root: treeRoot}, "_root"));
 	}
@@ -597,7 +597,7 @@ export function GetTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, 
 	return GetTreeNodesInPath({root: treeRoot}, "root/" + path).Skip(1);
 }*/
 
-export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode)=>any, visitRootNode = false, _ancestorNodes = []) {
+export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode)=>any, visitRootNode = false, _ancestorNodes: TreeNode[] = []) {
 	if (visitRootNode) {
 		visitFunc(new TreeNode([], {_root: treeRoot}, "_root"));
 	}
@@ -623,12 +623,12 @@ export function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function) {
 	const result = pathStr.split(".");*/
 
 	let parts = funcStr.split(".").slice(1); // remove first segment, since it's just the "return xxx." part
-	parts[parts.length - 1] = parts[parts.length - 1].match(/^([a-zA-Z0-9_$]+)/)[1]; // remove semicolon (or whatever else) at the end
+	parts[parts.length - 1] = parts[parts.length - 1].match(/^([a-zA-Z0-9_$]+)/)![1]; // remove semicolon (or whatever else) at the end
 	return parts;
 }
 
 /** @param sepChar Default: "/" */
-export function DeepGet<T>(obj, pathOrPathSegments: string | (string | number)[], resultIfNull: T = null, sepChar = "/"): T {
+export function DeepGet<T>(obj, pathOrPathSegments: string | (string | number)[], resultIfNull: T|null = null, sepChar = "/"): T|null {
 	let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
 	let result = obj;
 	for (let pathNode of pathSegments) {
@@ -695,7 +695,7 @@ export function WithDeepSet(baseObj, pathOrPathSegments: string | (string | numb
 export function GetStackTraceStr(sourceStackTrace?: boolean);
 //@((()=> { if (g.onclick == null) g.onclick = ()=>console.log(V.GetStackTraceStr()); }) as any)
 export function GetStackTraceStr(...args) {
-	var stackTrace: string, sourceStackTrace = true;
+	var stackTrace: string|null = null, sourceStackTrace = true;
 	if (IsString(args[0])) [stackTrace, sourceStackTrace] = args;
 	else [sourceStackTrace] = args;
 
@@ -709,7 +709,7 @@ export function GetStackTraceStr(...args) {
 		(Error as any).stackTraceLimit = Infinity;
 
 		let fakeError = new Error();
-		stackTrace = fakeError.stack;
+		stackTrace = fakeError.stack!;
 		
 		(Error as any).stackTraceLimit = oldStackLimit;
 	}
@@ -847,14 +847,14 @@ export function StartUpload(): Promise<string | ArrayBuffer> {
 		fileInput.type = "file";
 		fileInput.style.display = "none";
 		fileInput.onchange = e=> {
-			var file = e.target["files"][0];
+			var file = e.target!["files"][0];
 			if (!file) return;
 
 			var reader = new FileReader();
 			reader.onload = e=> {
-				var contents = e.target["result"];
+				var contents = e.target!["result"];
 				//Assert(typeof contents == "string")
-				resolve(contents);
+				resolve(contents!);
 			};
 			reader.readAsText(file);
 		};
@@ -882,7 +882,7 @@ export function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T> {
 	let result = {} as any;
 	for (const key of Object.getOwnPropertyNames(source)) {
 		if (key == "constructor") continue; // no reason to call the wrapper's constructor
-		const descriptor = Object.getOwnPropertyDescriptor(source, key);
+		const descriptor = Object.getOwnPropertyDescriptor(source, key)!;
 		const newDescriptor = Object.assign({}, descriptor);
 		if (descriptor.value instanceof Function) {
 			const oldFunc = descriptor.value as Function;
@@ -946,7 +946,7 @@ export function CreateProxyForClassExtensions<TargetType, ProxyType>(sourceClass
 	const thisArgStack = [] as TargetType[];
 	for (const key of Object.getOwnPropertyNames(sourceClass_prototype)) {
 		if (key == "constructor") continue; // no reason to call the wrapper's constructor
-		const descriptor = Object.getOwnPropertyDescriptor(sourceClass_prototype, key);
+		const descriptor = Object.getOwnPropertyDescriptor(sourceClass_prototype, key)!;
 		const newDescriptor = Object.assign({}, descriptor);
 		if (descriptor.value instanceof Function) {
 			const oldFunc = descriptor.value as Function;

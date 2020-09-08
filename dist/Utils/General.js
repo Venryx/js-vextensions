@@ -153,8 +153,8 @@ export class AddSpacesAt_Options {
         this.betweenPropNameAndValue = true;
     }
 }
-export function ToJSON_Advanced(obj, opt) {
-    opt = E(new ToJSON_Advanced_Options(), opt);
+export function ToJSON_Advanced(obj, options) {
+    const opt = E(new ToJSON_Advanced_Options(), options);
     let cache = new Set();
     //let foundDuplicates = false;
     try {
@@ -173,7 +173,7 @@ export function ToJSON_Advanced(obj, opt) {
                 return opt.stringifyUndefinedAs;
             }
             return value;
-        }, opt.addSpacesAt != null ? 1 : null);
+        }, opt.addSpacesAt != null ? 1 : undefined);
     }
     catch (ex) {
         if (opt.catchErrors) {
@@ -631,7 +631,7 @@ export function WithDeepSet(baseObj, pathOrPathSegments, newValue, sepChar = "/"
 }
 //@((()=> { if (g.onclick == null) g.onclick = ()=>console.log(V.GetStackTraceStr()); }) as any)
 export function GetStackTraceStr(...args) {
-    var stackTrace, sourceStackTrace = true;
+    var stackTrace = null, sourceStackTrace = true;
     if (IsString(args[0]))
         [stackTrace, sourceStackTrace] = args;
     else

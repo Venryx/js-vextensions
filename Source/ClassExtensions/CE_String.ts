@@ -182,7 +182,7 @@ export const StringCE_funcs = {
 	 * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
 	 * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
 	 */
-	AsMultiline(this: String, desiredIndent: number = null, removeLineStr = "@RL") {
+	AsMultiline(this: String, desiredIndent?: number, removeLineStr = "@RL") {
 		let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
 		if (desiredIndent != null) {
 			let firstLineIndent = (result.match(/^\t+/) || [""])[0].length;

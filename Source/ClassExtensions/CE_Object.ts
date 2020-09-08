@@ -26,6 +26,8 @@ export type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
 export type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
 export type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
 
+export type Pair<K, V> = {index: number, key: K, keyNum?: number, value: V};
+
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
 	[P in keyof Source]:
 		Source[P] extends (this: infer ThisArgType, ...args)=>any ? (this: XOrWrapped<ThisArgType>, ...args: Parameters<Source[P]>)=>ReturnType<Source[P]> :
@@ -127,16 +129,16 @@ export const ObjectCE_funcs = {
 	// more advanced version of ObjectCE.Extend
 	VSet: <{
 		// as replacement for C#'s "new MyClass() {prop = true}"
-		<T>(this: T, propName: string | symbol, propValue: any, opt?: VSet_Options): TargetTFor<T>;
+		<T>(this: T, propName: string | symbol, propValue: any|undefined, opt?: VSet_Options): TargetTFor<T>;
 		//VSet<T extends RealThis>(this: T, props: any, options?: VSet_Options): T; // variant for ObjectCE(obj).X calls (those types only uses the last declaration, and they need "extend RealThis" since we any-ify the this-param)
 		<T>(this: T, props: any, opt?: VSet_Options): TargetTFor<T>; // this one needs to be last (best override for the CE(...) wrapper, and it can only extract the last one)
 	}>(function(...args) {
-		let props, propName: string | symbol, propValue: string, opt: VSet_Options;
+		let props, propName: string|symbol|undefined, propValue: string|undefined, opt: VSet_Options;
 		if (IsString(args[0]) || IsSymbol(args[0])) [propName, propValue, opt] = args;
 		else [props, opt] = args;
 		opt = Object.assign({}, {copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto"} as VSet_Options, opt);
 
-		const SetProp = (name: string | symbol, descriptor: PropertyDescriptor, value: any)=> {
+		const SetProp = (name: string | symbol, descriptor: PropertyDescriptor|undefined, value: any)=> {
 			// only process operators if: 1) js-engine supports Symbols (for security), or 2) caller allows string-operators
 			if (IsSymbol(OMIT) || opt.allowStringOperators) {
 				if (value === OMIT || (opt.allowStringOperators && value == OMIT.toString())) return;
@@ -173,7 +175,7 @@ export const ObjectCE_funcs = {
 			let keys = Object.getOwnPropertyNames(props) as (string | symbol)[];
 			if (opt.copySymbolKeys) keys = keys.concat(Object.getOwnPropertySymbols(props));
 			for (const key of keys) {
-				let descriptor = Object.getOwnPropertyDescriptor(props, key);
+				let descriptor = Object.getOwnPropertyDescriptor(props, key)!;
 				if (!descriptor.enumerable && !opt.copyNonEnumerable) continue;
 				let isGetterSetter = descriptor.get != null || descriptor.set != null;
 				if (isGetterSetter && opt.copyGetterSettersAs == "ignore") continue; // for "ignore" case: short-circuit, so we don't even call getter
@@ -235,13 +237,13 @@ export const ObjectCE_funcs = {
 	},
 	
 	Pairs: <{
-		<K, V>(this: XOrWrapped<Map<K, V>>): {index: number, key: K, keyNum?: number, value: V}[];
-		<K, V>(this: XOrWrapped<MapLike<V>>): {index: number, key: string, keyNum?: number, value: V}[];
-		<K = string, V = any>(): {index: number, key: K, keyNum?: number, value: V}[];
+		<K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
+		<K = string, V = any>(this: XOrWrapped<MapLike<V>>): Pair<K, V>[];
+		<K = string, V = any>(): Pair<K, V>[];
 		//<V = any>(): {index: number, key: string, keyNum?: number, value: V}[]; // last variant needs explicit strings, for generics-less ObjectCE
 		//(): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
 	}>(function() {
-		var result = [];
+		var result: Pair<any, any>[] = [];
 		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
 		for (let i = 0; i < keys.length; i++) {
 			let key = keys[i];
@@ -281,7 +283,7 @@ export const ObjectCE_funcs = {
 	};*/
 	Sym(symbolName: string) {
 		let symbols = Object.getOwnPropertySymbols(this);
-		let symbol = symbols.find(a=>a.toString() == `Symbol(${symbolName})`);
+		let symbol = symbols.find(a=>a.toString() == `Symbol(${symbolName})`)!;
 		return this[symbol];
 	},
 
@@ -296,7 +298,7 @@ export const ObjectCE_funcs = {
 
 	// Object[FakeArray]
 	// ==========
-	/*FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index?: number)=>T2): T2[] {
+	/*FA_Select<T, T2>(this: {[key: number]: T} | {[key: string]: T}, selectFunc?: (item: T, index: number)=>T2): T2[] {
 		Assert(!(this instanceof Array), "Cannot call FakeArray methods on a real array!");
 		/*var result = this instanceof List ? new List(this.itemType) : [];
 		for (let [index, item] of this.entries())

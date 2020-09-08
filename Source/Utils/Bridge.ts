@@ -112,8 +112,8 @@ export class Bridge {
 	}
 
 	async OnReceiveFunctionCall(bridgeMessage: BridgeMessage) {
-		let result = await this.Local_CallFunc(bridgeMessage.callFunction_name, ...bridgeMessage.callFunction_args);
-		this.CallCallback(bridgeMessage.callFunction_callbackID, result);
+		let result = await this.Local_CallFunc(bridgeMessage.callFunction_name!, ...bridgeMessage.callFunction_args!);
+		this.CallCallback(bridgeMessage.callFunction_callbackID!, result);
 	}
 	// we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
 	async Local_CallFunc(funcName: string, ...args: any[]) {
@@ -135,7 +135,7 @@ export class Bridge {
 	}
 
 	OnReceiveCallback(bridgeMessage: BridgeMessage) {
-		this.Local_CallCallback(bridgeMessage.callCallback_id, bridgeMessage.callCallback_args);
+		this.Local_CallCallback(bridgeMessage.callCallback_id!, bridgeMessage.callCallback_args!);
 	}
 	Local_CallCallback(callbackID: number, callbackArgs: any[]) {
 		let callback = this.callbacks[callbackID];

@@ -2,7 +2,7 @@ import {GetStackTraceStr} from "./General";
 import {JSVE} from "../JSVE";
 
 export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
-	if (condition) return;
+	if (condition) return undefined as any;
 
 	var message = (messageOrMessageFunc as any) instanceof Function ? (messageOrMessageFunc as any)() : messageOrMessageFunc;
 
@@ -14,6 +14,7 @@ export function Assert(condition, messageOrMessageFunc?: string | Function, trig
 		debugger;
 	}
 	if (!skipError) throw new Error("Assert failed) " + message);
+	return undefined as any;
 }
 export function AssertWarn(condition, messageOrMessageFunc?: string | Function) {
 	if (condition) return;
