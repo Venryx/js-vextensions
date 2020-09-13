@@ -27,10 +27,10 @@ export declare const ArrayCE_funcs: {
     VCount<T_21>(this: T_21[], matchFunc: (item: T_21) => boolean): number;
     Clear<T_22>(this: T_22[]): void;
     First<T_23>(this: T_23[], matchFunc?: ((item: T_23) => boolean) | undefined): T_23;
-    FirstOrX<T_24, X>(this: T_24[], matchFunc?: ((item: T_24) => boolean) | undefined, x?: X | undefined): T_24 | X | undefined;
+    FirstOrX<T_24, X = T_24>(this: T_24[], matchFunc?: ((item: T_24) => boolean) | undefined, x?: X | undefined): T_24 | X | undefined;
     FirstWith<T_25>(this: T_25[], propName: string, propValue: any): T_25;
     Last<T_26>(this: T_26[], matchFunc?: ((item: T_26) => boolean) | undefined): T_26;
-    LastOrX<T_27, X_1>(this: T_27[], matchFunc?: ((item: T_27) => boolean) | undefined, x?: X_1 | undefined): T_27 | X_1 | undefined;
+    LastOrX<T_27, X_1 = T_27>(this: T_27[], matchFunc?: ((item: T_27) => boolean) | undefined, x?: X_1 | undefined): T_27 | X_1 | undefined;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
     Move<T_29>(this: T_29[], item: T_29, newIndex: number, removeBeforeInsert?: boolean): number;
     ToMap<T_30, Value>(this: T_30[], keyFunc: (item: T_30, index: number) => string, valFunc: (item: T_30, index: number) => Value): {
@@ -88,10 +88,10 @@ export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Ty
     VCount<T_21>(this: T_21[], matchFunc: (item: T_21) => boolean): number;
     Clear<T_22>(this: T_22[]): void;
     First<T_23>(this: T_23[], matchFunc?: ((item: T_23) => boolean) | undefined): T_23;
-    FirstOrX<T_24, X>(this: T_24[], matchFunc?: ((item: T_24) => boolean) | undefined, x?: X | undefined): T_24 | X | undefined;
+    FirstOrX<T_24, X = T_24>(this: T_24[], matchFunc?: ((item: T_24) => boolean) | undefined, x?: X | undefined): T_24 | X | undefined;
     FirstWith<T_25>(this: T_25[], propName: string, propValue: any): T_25;
     Last<T_26>(this: T_26[], matchFunc?: ((item: T_26) => boolean) | undefined): T_26;
-    LastOrX<T_27, X_1>(this: T_27[], matchFunc?: ((item: T_27) => boolean) | undefined, x?: X_1 | undefined): T_27 | X_1 | undefined;
+    LastOrX<T_27, X_1 = T_27>(this: T_27[], matchFunc?: ((item: T_27) => boolean) | undefined, x?: X_1 | undefined): T_27 | X_1 | undefined;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
     Move<T_29>(this: T_29[], item: T_29, newIndex: number, removeBeforeInsert?: boolean): number;
     ToMap<T_30, Value>(this: T_30[], keyFunc: (item: T_30, index: number) => string, valFunc: (item: T_30, index: number) => Value): {

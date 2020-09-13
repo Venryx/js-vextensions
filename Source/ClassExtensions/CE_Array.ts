@@ -186,7 +186,7 @@ export const ArrayCE_funcs = {
 		}
 		return result;
 	},
-	FirstOrX<T, X>(this: T[], matchFunc?: (item: T)=>boolean, x?: X): T|X|undefined {
+	FirstOrX<T, X = T>(this: T[], matchFunc?: (item: T)=>boolean, x?: X): T|X|undefined {
 		if (matchFunc) {
 			for (let [index, item] of this.entries()) {
 				if (matchFunc.call(item, item, index)) {
@@ -209,7 +209,7 @@ export const ArrayCE_funcs = {
 		}
 		return result;
 	},
-	LastOrX<T, X>(this: T[], matchFunc?: (item: T)=>boolean, x?: X): T|X|undefined {
+	LastOrX<T, X = T>(this: T[], matchFunc?: (item: T)=>boolean, x?: X): T|X|undefined {
 		if (matchFunc) {
 			for (var i = this.length - 1; i >= 0; i--) {
 				if (matchFunc.call(this[i], this[i], i)) {
