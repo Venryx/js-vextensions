@@ -25,15 +25,24 @@ export function IsNumber(obj, allowNumberObj = false, allowNaN = false) {
 Does *not* convert values of these forms (instead returns valIfConversionFails -- by default NaN):
 4) null -> ?
 5) "" -> ?*/
-export function ToNumber(stringOrFloatVal, valIfConversionFails = NaN) {
+// Why do we choose NaN as the valIfConversionFails? Because it's "safer" than null -- it infects results of math ops, so root issues easier to notice.
+export function ToNumber(stringOrFloatVal, valIfConversionFails = NaN, allowParseNaN = false) {
     if (!IsString(stringOrFloatVal) && !IsNumber(stringOrFloatVal))
         return valIfConversionFails;
     if (IsString(stringOrFloatVal) && stringOrFloatVal.length == 0)
         return valIfConversionFails;
-    return Number(stringOrFloatVal);
+    const result = Number(stringOrFloatVal);
+    if (IsNaN(result) && !allowParseNaN)
+        return valIfConversionFails;
+    return result;
 }
 export function IsInt(obj) { return IsNumber(obj) && parseInt(obj) == obj; }
-export function ToInt(stringOrFloatVal, valIfConversionFails = NaN) { return parseInt(ToNumber(stringOrFloatVal, valIfConversionFails) + ""); }
+export function ToInt(stringOrFloatVal, valIfConversionFails = NaN, allowParseNaN = false) {
+    const result = parseInt(ToNumber(stringOrFloatVal, valIfConversionFails) + "");
+    if (IsNaN(result) && !allowParseNaN)
+        return valIfConversionFails;
+    return result;
+}
 /*export function IsFloat(obj) : obj is number { return typeof obj == "number" && parseFloat(obj as any) != parseInt(obj as any); }
 export function ToFloat(stringOrIntVal) { return parseFloat(stringOrIntVal); }*/
 export function IsNaN(obj) { return typeof obj == "number" && obj != obj; }
