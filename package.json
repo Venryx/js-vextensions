@@ -1,7 +1,7 @@
 {
   "name": "js-vextensions",
   "description": "Extensions for Javascript, by Venryx.",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "main": "Dist/index.js",
   "type": "module",
   "typings": "Dist/index.d.ts",
