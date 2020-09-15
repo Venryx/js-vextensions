@@ -29,7 +29,7 @@ Does *not* convert values of these forms (instead returns valIfConversionFails -
 4) null -> ?
 5) "" -> ?*/
 // Why do we choose NaN as the valIfConversionFails? Because it's "safer" than null -- it infects results of math ops, so root issues easier to notice.
-export function ToNumber(stringOrFloatVal: string | number, valIfConversionFails = NaN, allowParseNaN = false) {
+export function ToNumber(stringOrFloatVal: string|number|undefined|null, valIfConversionFails = NaN, allowParseNaN = false) {
 	if (!IsString(stringOrFloatVal) && !IsNumber(stringOrFloatVal)) return valIfConversionFails;
 	if (IsString(stringOrFloatVal) && stringOrFloatVal.length == 0) return valIfConversionFails;
 	const result = Number(stringOrFloatVal);
@@ -37,7 +37,7 @@ export function ToNumber(stringOrFloatVal: string | number, valIfConversionFails
 	return result;
 }
 export function IsInt(obj): obj is number { return IsNumber(obj) && parseInt(obj as any) == obj; }
-export function ToInt(stringOrFloatVal: string | number, valIfConversionFails = NaN, allowParseNaN = false) {
+export function ToInt(stringOrFloatVal: string|number|undefined|null, valIfConversionFails = NaN, allowParseNaN = false) {
 	const result = parseInt(ToNumber(stringOrFloatVal, valIfConversionFails)+"");
 	if (IsNaN(result) && !allowParseNaN) return valIfConversionFails;
 	return result;

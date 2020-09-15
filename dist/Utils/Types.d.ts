@@ -14,9 +14,9 @@ export declare function IsNumber(obj: any, allowNumberObj?: boolean, allowNaN?: 
 Does *not* convert values of these forms (instead returns valIfConversionFails -- by default NaN):
 4) null -> ?
 5) "" -> ?*/
-export declare function ToNumber(stringOrFloatVal: string | number, valIfConversionFails?: number, allowParseNaN?: boolean): number;
+export declare function ToNumber(stringOrFloatVal: string | number | undefined | null, valIfConversionFails?: number, allowParseNaN?: boolean): number;
 export declare function IsInt(obj: any): obj is number;
-export declare function ToInt(stringOrFloatVal: string | number, valIfConversionFails?: number, allowParseNaN?: boolean): number;
+export declare function ToInt(stringOrFloatVal: string | number | undefined | null, valIfConversionFails?: number, allowParseNaN?: boolean): number;
 export declare function IsNaN(obj: any): boolean;
 export declare function IsString(obj: any, allowStringObj?: boolean): obj is string;
 export declare function ToString(val: any): string;
