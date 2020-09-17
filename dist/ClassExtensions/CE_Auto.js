@@ -43,7 +43,7 @@ export function CE(obj, checkForUncommonDerived = false) {
         if (IsArray(obj))
             return ArrayCE(obj);
     }
-    if (obj instanceof Element)
+    if (typeof Element != "undefined" && obj instanceof Element)
         return ElementCE(obj);
     /*if (IsObject(obj)) return ObjectCE(obj);
     throw new Error(`Could not find class-extension helper for type "${obj.constructor ? obj.constructor.name : "n/a"}".`);*/
