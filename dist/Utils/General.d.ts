@@ -138,3 +138,25 @@ export declare type WithFuncsStandalone_Type<T> = {
 };
 export declare function WithFuncsStandalone<T>(source: T): WithFuncsStandalone_Type<T>;
 export declare function CreateProxyForClassExtensions<TargetType, ProxyType>(sourceClass_prototype: any): (nextThis: TargetType) => ProxyType;
+export declare const RemoveCircularLinks_specialTypeHandlers: ({
+    type: SetConstructor;
+    keys: (a: any) => any;
+    get: (a: any, key: any) => any;
+    delete: (a: any, key: any) => any;
+} | {
+    type: MapConstructor;
+    keys: (a: any) => any;
+    get: (a: any, key: any) => any;
+    delete: (a: any, key: any) => any;
+})[];
+export declare function RemoveCircularLinks(node: any, specialTypeHandlers?: ({
+    type: SetConstructor;
+    keys: (a: any) => any;
+    get: (a: any, key: any) => any;
+    delete: (a: any, key: any) => any;
+} | {
+    type: MapConstructor;
+    keys: (a: any) => any;
+    get: (a: any, key: any) => any;
+    delete: (a: any, key: any) => any;
+})[], nodeStack_set?: Set<any>): void;

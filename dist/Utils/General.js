@@ -886,4 +886,43 @@ export function CreateProxyForClassExtensions(sourceClass_prototype) {
         return proxy;
     };
 }
+/*export class SpecialTypeHandler<T> {
+    constructor(initialData: Partial<SpecialTypeHandler<T>>) {
+        //ObjectCE(this).VSet(initialData);
+        Object.assign(this, initialData);
+    }
+    type: new()=>T;
+    keys: (a: T)=>IterableIterator<any>;
+    get: (a: T, key: string)=>any;
+    delete: (a: T, key: string)=>any;
+}
+export const RemoveCircularLinks_specialTypeHandlers: SpecialTypeHandler<any>[] = [
+    // Set and Map are included by default, since JSON.stringify tries (and fails) to serialize them by default
+    new SpecialTypeHandler({type: Set, keys: a=>a.keys(), get: (a, key)=>key, delete: (a, key)=>a.delete(key)}),
+    new SpecialTypeHandler({type: Map, keys: a=>a.keys(), get: (a, key)=>a.get(key), delete: (a, key)=>a.set(key, undefined)}),
+];*/
+export const RemoveCircularLinks_specialTypeHandlers = [
+    // Set and Map are included by default, since JSON.stringify tries (and fails) to serialize them by default
+    { type: Set, keys: a => a.keys(), get: (a, key) => key, delete: (a, key) => a.delete(key) },
+    { type: Map, keys: a => a.keys(), get: (a, key) => a.get(key), delete: (a, key) => a.set(key, undefined) },
+];
+export function RemoveCircularLinks(node, specialTypeHandlers = RemoveCircularLinks_specialTypeHandlers, nodeStack_set = new Set()) {
+    nodeStack_set.add(node);
+    const specialHandler = specialTypeHandlers.find(a => node instanceof a.type);
+    for (const key of specialHandler ? specialHandler.keys(node) : Object.keys(node)) {
+        const value = specialHandler ? specialHandler.get(node, key) : node[key];
+        // if the value is already part of visited-stack, delete the value (and don't tunnel into it)
+        if (nodeStack_set.has(value)) {
+            if (specialHandler)
+                specialHandler.delete(node, key);
+            else
+                node[key] = undefined;
+        }
+        // else, tunnel into it, looking for circular-links at deeper levels
+        else if (typeof value == "object" && value != null) {
+            RemoveCircularLinks(value, specialTypeHandlers, nodeStack_set);
+        }
+    }
+    nodeStack_set.delete(node);
+}
 //# sourceMappingURL=General.js.map
