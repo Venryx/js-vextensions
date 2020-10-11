@@ -32,6 +32,9 @@ export type Bridge_Options = {receiveChannelMessageFunc_addImmediately?: boolean
 	channel_safeCallbacks? = false;
 }*/
 
+// todo: make this class a lot more safe against attacks.
+// * eg. assuming MITM attack on channel, make sure no actions can be triggered outside of what the bridge-instance creator (as regular library user) has knowingly exposed
+
 export class Bridge {
 	/** Don't worry about having to discard some calls before receiveTextFunc receives it. We automatically discard entries that aren't valid bridge-messages. */
 	constructor(options: Bridge_Options) {
