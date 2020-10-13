@@ -4,6 +4,7 @@ export declare function JumpToHash(hashStr: string): void;
 export declare function GetCurrentURLString(): string;
 export declare function GetUrlParts(url?: string): [string, string, string, string];
 export declare class VURL {
+    /** Note that this url-parser is not quite as robust as the native URL class, so some edge-cases may be misparsed. (using "VURL.Parse(new URL(urlStr).toString())" may improve reliability) */
     static Parse(urlStr: string, useCurrentDomainIfMissing?: boolean, allowQuestionMarkAsVarSep?: boolean): VURL;
     static FromLocationObject(location: {
         pathname?: string;

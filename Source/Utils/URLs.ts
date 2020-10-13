@@ -1,4 +1,5 @@
 import {E, Assert, StringCE, NumberCE} from "..";
+import {AssertWarn} from "./Assert";
 
 // Note: It's fine to use `window` instead of `g` in the below, since it fails outside of browsers anyway.
 
@@ -84,9 +85,11 @@ function GetUrlVars(url?: string, allowQuestionMarkAsVarSep = true) {
 }*/
 
 export class VURL {
+	/** Note that this url-parser is not quite as robust as the native URL class, so some edge-cases may be misparsed. (using "VURL.Parse(new URL(urlStr).toString())" may improve reliability) */
 	static Parse(urlStr: string, useCurrentDomainIfMissing = true, allowQuestionMarkAsVarSep = true) {
-		if (useCurrentDomainIfMissing && !urlStr.startsWith("http"))
+		if (useCurrentDomainIfMissing && !urlStr.startsWith("http")) {
 			urlStr = window.location.origin + (urlStr.startsWith("/") ? "" : "/") + urlStr;
+		}
 		
 		let [domainStr, pathStr, varsStr, hashStr] = GetUrlParts(urlStr);
 		let queryVarsMap = GetUrlVars(urlStr, allowQuestionMarkAsVarSep);
@@ -117,6 +120,10 @@ export class VURL {
 	}
 
 	constructor(domain = "", pathNodes = [] as string[], queryVars = [] as QueryVar[], hash = "") {
+		//AssertWarn(domain.match(/^[A-Za-z-:./]+$/) != null, "Domain seems to contain")
+		if (domain.includes("?") || domain.includes("#")) {
+			Assert(false, "Domain contains invalid characters. Did you mean to call VURL.Parse?");
+		}
 		this.domain = domain;
 		this.pathNodes = pathNodes;
 		this.queryVars = queryVars;

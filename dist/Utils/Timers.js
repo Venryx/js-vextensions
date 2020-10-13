@@ -166,8 +166,10 @@ export class Timer {
         }
         return this; // enable chaining, for SetContext() call
     }
+    /** Clears native-timer, nextTickTime, nextTickFunc, timerID, and callCount_thisRun. (but not: startTime, callCount_total) */
     Stop() {
         clearInterval(this.timerID);
+        clearTimeout(this.timerID); // for setTimeout path [clearInterval seems to work for both, but added to be safe, since equivalence not noticed in spec]
         //this.startTime = null;
         this.nextTickTime = undefined;
         this.nextTickFunc = undefined;
