@@ -2,15 +2,11 @@
   "name": "js-vextensions",
   "description": "Extensions for Javascript, by Venryx.",
   "version": "1.0.45",
+  "author": "Venryx (https://venryx.com)",
   "main": "Dist/index.js",
-  "type": "module",
   "typings": "Dist/index.d.ts",
+  "type": "module",
   "license": "MIT",
-  "author": {
-    "name": "Venryx",
-    "email": "venryx@gmail.com",
-    "url": "https://venryx.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Venryx/js-vextensions.git"
@@ -26,8 +22,8 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "style-loader": "^0.13.0",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.7.3"
+    "ts-loader": "^8.0.7",
+    "typescript": "^4.0.5"
   },
   "dependencies": {}
 }

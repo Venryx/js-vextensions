@@ -190,7 +190,7 @@ export function BufferAction(...args) {
         [minInterval, func] = args;
     else /*if (args.length == 3)*/
         [key, minInterval, func] = args;
-    var lastScheduledRunTime = (_a = funcLastScheduledRunTimes[key], (_a !== null && _a !== void 0 ? _a : 0));
+    var lastScheduledRunTime = (_a = funcLastScheduledRunTimes[key]) !== null && _a !== void 0 ? _a : 0;
     var now = new Date().getTime();
     var timeSinceLast = now - lastScheduledRunTime;
     if (timeSinceLast >= minInterval) { // if we've waited enough since last run, run right now

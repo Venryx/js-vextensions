@@ -306,13 +306,12 @@ export const ArrayCE_funcs = {
         return result;
     },
     Except: (function (...args) {
-        var _a;
         let opt, excludeItems;
         if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0])
             [opt, ...excludeItems] = args;
         else
             excludeItems = args;
-        if ((_a = opt) === null || _a === void 0 ? void 0 : _a.excludeEachOnlyOnce) {
+        if (opt === null || opt === void 0 ? void 0 : opt.excludeEachOnlyOnce) {
             const result = this.slice();
             for (const excludeItem of excludeItems) {
                 ArrayCES.Remove(result, excludeItem);

@@ -38,7 +38,7 @@ export declare const ObjectCE_funcs: {
     Extend(x: any, copyNonEnumerable?: boolean): any;
     Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
     VSet: {
-        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options | undefined): TargetTFor<T_3>;
+        <T_3>(this: T_3, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_3>;
         <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
     };
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
@@ -85,7 +85,7 @@ export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_T
     Extend(x: any, copyNonEnumerable?: boolean): any;
     Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
     VSet: {
-        <T_3>(this: T_3, propName: string | symbol, propValue: any, opt?: VSet_Options | undefined): TargetTFor<T_3>;
+        <T_3>(this: T_3, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_3>;
         <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
     };
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;

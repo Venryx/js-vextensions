@@ -85,7 +85,7 @@ function getDaysInMonth(year, month) {
 	return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 }
 export const DateCE_funcs = {
-	get MonthDate(this: Date) {
+	get MonthDate() {
 		return new Date(this.getFullYear(), this.getMonth(), 1);
 	},
 	IsLeapYear(this: Date) { 

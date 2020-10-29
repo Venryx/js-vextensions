@@ -1,6 +1,7 @@
 import {GetStackTraceStr} from "./General";
 import {JSVE} from "../JSVE";
 
+//export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): asserts condition {
 export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
 	if (condition) return undefined as any;
 

@@ -249,7 +249,7 @@ export const ObjectCE_funcs = {
 			let key = keys[i];
 			//if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
 			let entry = {index: i, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key as any]};
-			if (IsNaN(entry.keyNum)) delete entry.keyNum;
+			if (IsNaN(entry.keyNum)) delete entry["keyNum" as any];
 			result.push(entry);
 		}
 		return result;

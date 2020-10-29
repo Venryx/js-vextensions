@@ -1,4 +1,5 @@
 import { GetStackTraceStr } from "./General";
+//export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): asserts condition {
 export function Assert(condition, messageOrMessageFunc, triggerDebugger = true) {
     if (condition)
         return undefined;
