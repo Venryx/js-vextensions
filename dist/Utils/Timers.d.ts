@@ -23,7 +23,8 @@ export declare class Timer {
     ClearContexts(): void;
     startTime: number;
     timerID: number;
-    get IsRunning(): boolean;
+    get Enabled(): boolean;
+    set Enabled(val: boolean);
     nextTickTime: number | undefined;
     nextTickFunc: Function | undefined;
     get NextTickFuncOverdue(): boolean;

@@ -123,13 +123,19 @@ export class Timer {
             this.RemoveFromContext(context);
         }
     }
-    get IsRunning() { return this.timerID != -1; }
+    get Enabled() { return this.timerID != -1; }
+    set Enabled(val) {
+        if (val && !this.Enabled)
+            this.Start();
+        else if (!val && this.Enabled)
+            this.Stop();
+    }
     get NextTickFuncOverdue() {
         return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
     }
     Start(initialDelayOverride) {
         // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
-        if (this.IsRunning)
+        if (this.Enabled)
             this.Stop();
         this.startTime = Date.now();
         const StartRegularInterval = () => {

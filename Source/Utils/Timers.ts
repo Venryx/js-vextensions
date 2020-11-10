@@ -134,7 +134,11 @@ export class Timer {
 
 	startTime: number;
 	timerID = -1;
-	get IsRunning() { return this.timerID != -1; }
+	get Enabled() { return this.timerID != -1; }
+	set Enabled(val: boolean) {
+		if (val && !this.Enabled) this.Start();
+		else if (!val && this.Enabled) this.Stop();
+	}
 
 	nextTickTime: number|undefined;
 	nextTickFunc: Function|undefined; // used by the TimerContext.ManuallyTriggerOverdueTimers() function
@@ -146,7 +150,7 @@ export class Timer {
 	callCount_total = 0;
 	Start(initialDelayOverride?: number) {
 		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
-		if (this.IsRunning) this.Stop();
+		if (this.Enabled) this.Stop();
 		this.startTime = Date.now();
 
 		const StartRegularInterval = ()=> {
