@@ -295,15 +295,17 @@ export const ArrayCE_funcs = {
         return ArrayCES.OrderBy(this, (item, index) => -valFunc(item, index));
     },
     Distinct() {
-        const result = [];
+        /*const result: T[] = [];
         /*for (const i in this) {
-            if (!this.hasOwnProperty(i)) continue;*/
+            if (!this.hasOwnProperty(i)) continue;*#/
         for (let i = 0; i < this.length; i++) {
             if (!ArrayCES.Contains(result, this[i])) {
                 result.push(this[i]);
             }
         }
-        return result;
+        return result;*/
+        const setWithItems = new Set(this);
+        return [...setWithItems];
     },
     Except: (function (...args) {
         let opt, excludeItems;

@@ -314,15 +314,17 @@ export const ArrayCE_funcs = {
 	},
 
 	Distinct<T>(this: T[]): T[] {
-		const result: T[] = [];
+		/*const result: T[] = [];
 		/*for (const i in this) {
-			if (!this.hasOwnProperty(i)) continue;*/
+			if (!this.hasOwnProperty(i)) continue;*#/
 		for (let i = 0; i < this.length; i++) {
 			if (!ArrayCES.Contains(result, this[i])) {
 				result.push(this[i]);
 			}
 		}
-		return result;
+		return result;*/
+		const setWithItems = new Set(this);
+		return [...setWithItems];
 	},
 	Except: <{
 		<T>(this: T[], ...excludeItems: T[]): T[];
