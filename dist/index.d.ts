@@ -10,6 +10,7 @@ export * from "./Utils/Assert";
 export * from "./Utils/Bridge";
 export * from "./Utils/Changes";
 export * from "./Utils/General";
+export * from "./Utils/Numbers";
 export * from "./Utils/Promises";
 export * from "./Utils/Timers";
 export * from "./Utils/Types";

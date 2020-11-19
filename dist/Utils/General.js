@@ -1,5 +1,5 @@
 import { IsPrimitive, IsString, IsObject } from "./Types";
-import { Assert, ArrayCE, NumberCE, ObjectCE, StringCE } from "..";
+import { Assert, ArrayCE, ObjectCE, StringCE } from "..";
 import { g } from "./@Internal";
 if (Number.MIN_SAFE_INTEGER == null) {
     Number.MIN_SAFE_INTEGER = -9007199254740991;
@@ -249,27 +249,6 @@ export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
     }
     return cloneObject;
 }
-/*export function Range(min, max, step = 1, includeMax = true) {
-    var result: number[] = [];
-    for (let i = min; includeMax ? i <= max : i < max; i += step)
-        result.push(i);
-    return result;
-}*/
-/**
- * Gets an array of the numbers between min and max.
- * @param min
- * @param max
- * @param step (default: 1)
- * @param includeMax (default: true)
- * @param roundToStep (default: true)
- */
-export function Range(min, max, step = 1, includeMax = true, roundToStep = true) {
-    var result = [];
-    for (let i = min; includeMax ? i <= max : i < max; i = roundToStep ? NumberCE(i + step).RoundTo(step) : i + step) {
-        result.push(i);
-    }
-    return result;
-}
 export function Global(target) {
     //var name = (target as any).GetName();
     var name = target["name_fake"] || target.name || (target.toString().match(/^function\s*([^\s(]+)/) || [])[1];
@@ -346,34 +325,6 @@ export function Compare(a, b, caseSensitive = true) {
         b = b.toLowerCase();
     }
     return a < b ? -1 : (a > b ? 1 : 0);
-}
-// just use the word 'percent', even though value is represented as fraction (e.g. 0.5, rather than 50[%])
-export function Lerp(from, to, percentFromXToY, keepResultInRange = true) {
-    let result = from + ((to - from) * percentFromXToY);
-    if (keepResultInRange)
-        result = NumberCE(result).KeepBetween(from, to);
-    return result;
-}
-export function GetPercentFromXToY(start, end, val, keepResultInRange = true) {
-    // distance-from-x / distance-from-x-required-for-result-'1'
-    var result = (val - start) / (end - start);
-    if (keepResultInRange)
-        result = NumberCE(result).KeepBetween(0, 1);
-    return result;
-}
-export function GetXToY(minX, maxY, interval = 1) {
-    var result = [];
-    for (var val = minX; val <= maxY; val += interval) {
-        result.push(val);
-    }
-    return result;
-}
-export function GetXToYOut(minX, maxOutY, interval = 1) {
-    var result = [];
-    for (var val = minX; val < maxOutY; val += interval) {
-        result.push(val);
-    }
-    return result;
 }
 export function CloneObject(obj, propMatchFunc, depth = 0) {
     /*var Assert = require("../../Frame/General/Assert").Assert;

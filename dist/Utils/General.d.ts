@@ -41,15 +41,6 @@ export declare function ToJSON_Advanced(obj: any, options?: Partial<ToJSON_Advan
 export declare function Clone(obj: any, keepPrototype?: boolean): any;
 /** Variant of Clone which preserves prototypes, non-enumerable properties, and circular links (if enabled). */
 export declare function CloneWithPrototypes(originalObject: any, keepCircularLinks?: boolean): any;
-/**
- * Gets an array of the numbers between min and max.
- * @param min
- * @param max
- * @param step (default: 1)
- * @param includeMax (default: true)
- * @param roundToStep (default: true)
- */
-export declare function Range(min: number, max: number, step?: number, includeMax?: boolean, roundToStep?: boolean): number[];
 export declare function Global(target: Function): void;
 export declare class IDProvider {
     lastID: number;
@@ -61,11 +52,7 @@ export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
-export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
-export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;
-export declare function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange?: boolean): number;
-export declare function GetXToY(minX: any, maxY: any, interval?: number): number[];
-export declare function GetXToYOut(minX: any, maxOutY: any, interval?: number): number[];
+export declare function Compare(a: any, b: any, caseSensitive?: boolean): 1 | 0 | -1;
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;
 export declare function CloneArray(array: any): any;
 export declare function Bind<T extends Function>(func: T, newThis: any): T;
