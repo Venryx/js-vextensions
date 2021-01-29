@@ -4,7 +4,7 @@ export declare class Storage<T2, T3> {
     lastDebugInfo: any;
     resultUpdateCount: number;
 }
-export declare let storages: {
+export declare const storages: {
     [storageKey: string]: Storage<any, any>;
 };
 export declare function GetStorageForCachedTransform<T2, T3>(transformType: string, staticProps: any[]): Storage<T2, T3>;

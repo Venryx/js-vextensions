@@ -1,6 +1,6 @@
-import { IsPrimitive, IsString, IsObject } from "./Types";
-import { Assert, ArrayCE, ObjectCE, StringCE } from "..";
-import { g } from "./@Internal";
+import { IsPrimitive, IsString, IsObject } from "./Types.js";
+import { Assert, ArrayCE, ObjectCE, StringCE } from "../index.js";
+import { g } from "./@Internal.js";
 if (Number.MIN_SAFE_INTEGER == null) {
     Number.MIN_SAFE_INTEGER = -9007199254740991;
 }
@@ -9,7 +9,7 @@ if (Number.MAX_SAFE_INTEGER == null) {
 }
 g["G"] = G;
 function G(...globalHolders) {
-    for (let globalHolder of globalHolders) {
+    for (const globalHolder of globalHolders) {
         Object.assign(g, globalHolder);
     }
 }
@@ -18,7 +18,7 @@ export function DN(...args) { }
 //var quickIncrementValues = {};
 //export function QuickIncrement(name = new Error().stack.split("\n")[2]) { // this doesn't always work, fsr
 export function QuickIncrement(name = "default") {
-    QuickIncrement["values"][name] = (QuickIncrement["values"][name] | 0) + 1;
+    QuickIncrement["values"][name] = (QuickIncrement["values"][name] | 0) + 1; // eslint-disable-line
     return QuickIncrement["values"][name];
 }
 QuickIncrement["values"] = [];
@@ -44,9 +44,11 @@ export function EmptyArrayFor(base) {
         return emptyArray;
     Assert("Cannot get empty-array for base that is not null or undefined.");
 }
+/* eslint-disable */
 export function E(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20) {
+    /* eslint-enable */
     var result = {};
-    for (let extend of Array.from(arguments)) {
+    for (const extend of Array.from(arguments)) { // eslint-disable-line
         if (!IsObject(extend))
             continue;
         //Object.assign(result, extend);
@@ -75,7 +77,7 @@ var hasOwnProperty = Object.prototype.hasOwnProperty;
 export function ShallowEquals(objA, objB) {
     if (Object.is(objA, objB))
         return true;
-    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null)
+    if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null)
         return false;
     var keysA = Object.keys(objA);
     var keysB = Object.keys(objB);
@@ -155,13 +157,13 @@ export class AddSpacesAt_Options {
 }
 export function ToJSON_Advanced(obj, options) {
     const opt = E(new ToJSON_Advanced_Options(), options);
-    let cache = new Set();
+    const cache = new Set();
     //let foundDuplicates = false;
     try {
         var result = JSON.stringify(obj, (key, value) => {
             if (ArrayCE(opt.keysToIgnore).Contains(key))
                 return;
-            if (opt.trimDuplicates && typeof value == 'object' && value != null) {
+            if (opt.trimDuplicates && typeof value == "object" && value != null) {
                 // if duplicate found, ignore key (for more advanced, see: flatted, json-stringify-safe, etc.)
                 if (cache.has(value)) {
                     //foundDuplicates = true;
@@ -202,7 +204,7 @@ export function ToJSON_Advanced(obj, options) {
 export function Clone(obj, keepPrototype = false) {
     if (obj == null)
         return obj;
-    let result = FromJSON(ToJSON(obj));
+    const result = FromJSON(ToJSON(obj));
     if (keepPrototype == true) {
         Object.setPrototypeOf(result, Object.getPrototypeOf(obj));
     }
@@ -212,28 +214,28 @@ export function Clone(obj, keepPrototype = false) {
 export function CloneWithPrototypes(originalObject, keepCircularLinks = false) {
     if (originalObject == null)
         return originalObject;
-    let copies = [{
+    const copies = [{
             source: originalObject,
             target: Array.isArray(originalObject) ? [] : Object.create(Object.getPrototypeOf(originalObject)),
         }];
-    let cloneObject = copies[0].target;
-    let sourceReferences = [originalObject];
-    let targetReferences = [cloneObject];
+    const cloneObject = copies[0].target;
+    const sourceReferences = [originalObject];
+    const targetReferences = [cloneObject];
     // first in, first out
     let current;
     while (current = copies.shift()) {
-        let keys = Object.getOwnPropertyNames(current.source);
+        const keys = Object.getOwnPropertyNames(current.source);
         for (let propertyIndex = 0; propertyIndex < keys.length; propertyIndex++) {
             // Save the source's descriptor
-            let descriptor = Object.getOwnPropertyDescriptor(current.source, keys[propertyIndex]);
-            if (!descriptor.value || typeof descriptor.value !== 'object') {
+            const descriptor = Object.getOwnPropertyDescriptor(current.source, keys[propertyIndex]);
+            if (!descriptor.value || typeof descriptor.value !== "object") {
                 Object.defineProperty(current.target, keys[propertyIndex], descriptor);
                 continue;
             }
-            let nextSource = descriptor.value;
+            const nextSource = descriptor.value;
             descriptor.value = Array.isArray(nextSource) ? [] : Object.create(Object.getPrototypeOf(nextSource));
             if (keepCircularLinks) {
-                let indexOf = sourceReferences.indexOf(nextSource);
+                const indexOf = sourceReferences.indexOf(nextSource);
                 if (indexOf !== -1) {
                     // The source is already referenced, just assign reference
                     descriptor.value = targetReferences[indexOf];
@@ -270,10 +272,8 @@ export const nl = "\n";
     return {};
 }*/
 export function AsArray(args) { return Slice(args, 0); }
-;
 //s.ToArray = function(args) { return s.Slice(args, 0); };
 export function Slice(args, start, end) { return Array.prototype.slice.call(args, start != null ? start : 0, end); }
-;
 /*static startupInfo = null;
 static startupInfoRequested = false;
 static postStartupInfoReceivedFuncs = [];
@@ -344,10 +344,11 @@ export function CloneObject(obj, propMatchFunc, depth = 0) {
                 result.Add(pair.key, pair.value);
             return result;
         }*/
-    let result = {};
-    for (let pair of ObjectCE(obj).Pairs()) {
-        if (!(pair.value instanceof Function) && (propMatchFunc == null || propMatchFunc.call(obj, pair.key, pair.value)))
+    const result = {};
+    for (const pair of ObjectCE(obj).Pairs()) {
+        if (!(pair.value instanceof Function) && (propMatchFunc == null || propMatchFunc.call(obj, pair.key, pair.value))) {
             result[pair.key] = CloneObject(pair.value, propMatchFunc, depth + 1);
+        }
     }
     return result;
 }
@@ -380,7 +381,7 @@ function GetHiddenHolder() {
     }
     return holder;
 }
-let GetContentSize_cache = {};
+const GetContentSize_cache = {};
 export function GetContentSize(content, includeMargin = false, createClone = false, allowCache = true) {
     /*var holder = $("#jsve_hiddenContainer");
     var contentClone = content.clone();
@@ -388,12 +389,12 @@ export function GetContentSize(content, includeMargin = false, createClone = fal
     var width = contentClone.outerWidth();
     var height = contentClone.outerHeight();
     contentClone.remove();*/
-    let cacheStore = IsString(content) ? GetContentSize_cache : (content["GetContentSize_cache"] = content["GetContentSize_cache"] || {});
-    let currentHTML = IsString(content) ? content : content.outerHTML;
+    const cacheStore = IsString(content) ? GetContentSize_cache : (content["GetContentSize_cache"] = content["GetContentSize_cache"] || {});
+    const currentHTML = IsString(content) ? content : content.outerHTML;
     let result = cacheStore[currentHTML];
     if (result == null) {
-        let holder = GetHiddenHolder();
-        let testElement = IsString(content) ? $(content) : (createClone ? $(content).clone() : $(content));
+        const holder = GetHiddenHolder();
+        const testElement = IsString(content) ? $(content) : (createClone ? $(content).clone() : $(content));
         holder.appendChild(testElement[0]);
         var width = testElement.outerWidth(includeMargin);
         var height = testElement.outerHeight(includeMargin);
@@ -411,11 +412,11 @@ export function GetContentWidth(content, includeMargin = false, createClone = fa
 export function GetContentHeight(content, includeMargin = false, createClone = false, allowCache = true) {
     return GetContentSize(content, includeMargin, createClone, allowCache).height;
 }
-export let autoElements = {};
+export const autoElements = {};
 export function GetAutoElement(startHTML) {
     if (autoElements[startHTML] == null) {
-        let holder = GetHiddenHolder();
-        let element = $(startHTML)[0];
+        const holder = GetHiddenHolder();
+        const element = $(startHTML)[0];
         holder.appendChild(element);
         autoElements[startHTML] = element;
     }
@@ -440,8 +441,9 @@ export class TreeNode {
     }
     //value;
     get Value() {
-        if (this.obj == null)
+        if (this.obj == null) {
             return undefined;
+        }
         return this.obj[this.prop];
     }
     set Value(newVal) {
@@ -450,14 +452,15 @@ export class TreeNode {
 }
 export function GetTreeNodesInObjTree(obj, includeRootNode = false, _ancestorNodes = []) {
     Assert(_ancestorNodes.length <= 300, "Cannot traverse more than 300 levels into object tree. (probably circular)");
-    let result = [];
-    if (includeRootNode)
+    const result = [];
+    if (includeRootNode) {
         result.push(new TreeNode([], { _root: obj }, "_root"));
+    }
     /*for (let key in obj) {
         if (!obj.hasOwnProperty(key)) continue;*/
     for (const key of Object.keys(obj)) {
-        let value = obj[key];
-        let currentNode = new TreeNode(_ancestorNodes, obj, key);
+        const value = obj[key];
+        const currentNode = new TreeNode(_ancestorNodes, obj, key);
         result.push(currentNode);
         if (value != null && IsObject(value)) {
             ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
@@ -474,8 +477,8 @@ export function GetTreeNodesInObjTree(obj, includeRootNode = false, _ancestorNod
     return {...treeRoot, [currentPathNode]: currentPathNode_newValue};
 }*/
 export function GetTreeNodesInPath(treeRoot, pathNodesOrStr, includeRootNode = false, _ancestorNodes = []) {
-    let descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
-    let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
+    const descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
+    const childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
     var result = [];
     if (includeRootNode) {
         result.push(new TreeNode([], { _root: treeRoot }, "_root"));
@@ -493,8 +496,8 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr, visitFunc, visitR
     if (visitRootNode) {
         visitFunc(new TreeNode([], { _root: treeRoot }, "_root"));
     }
-    let descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
-    let childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
+    const descendantPathNodes = pathNodesOrStr instanceof Array ? pathNodesOrStr : pathNodesOrStr.split("/");
+    const childTreeNode = new TreeNode(_ancestorNodes, treeRoot, descendantPathNodes[0]);
     visitFunc(childTreeNode);
     if (descendantPathNodes.length > 1) { // if the path goes deeper than the current child-tree-node
         VisitTreeNodesInPath(childTreeNode.Value, ArrayCE(descendantPathNodes).Skip(1).join("/"), visitFunc, false, _ancestorNodes.concat(childTreeNode));
@@ -507,20 +510,20 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr, visitFunc, visitR
 }*/
 // probably todo: make this either handle, or warn about, path-getter-func's containing method-calls
 export function ConvertPathGetterFuncToPropChain(pathGetterFunc) {
-    let funcStr = pathGetterFunc.toString();
+    const funcStr = pathGetterFunc.toString();
     Assert(!funcStr.includes("["), "Path-getter-func cannot contain bracket-based property-access.");
     /*const pathStr = funcStr.match(/return [^.]+\.(.+?);/)[1] as string;
     //let result = pathStr.replace(/\./g, "/");
     const result = pathStr.split(".");*/
-    let parts = funcStr.split(".").slice(1); // remove first segment, since it's just the "return xxx." part
+    const parts = funcStr.split(".").slice(1); // remove first segment, since it's just the "return xxx." part
     parts[parts.length - 1] = parts[parts.length - 1].match(/^([a-zA-Z0-9_$]+)/)[1]; // remove semicolon (or whatever else) at the end
     return parts;
 }
 /** @param sepChar Default: "/" */
 export function DeepGet(obj, pathOrPathSegments, resultIfNull = null, sepChar = "/") {
-    let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
+    const pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
     let result = obj;
-    for (let pathNode of pathSegments) {
+    for (const pathNode of pathSegments) {
         if (result == null)
             break;
         result = result[pathNode];
@@ -531,7 +534,7 @@ export function DeepGet(obj, pathOrPathSegments, resultIfNull = null, sepChar = 
 }
 /** @param sepChar Default: "/" */
 export function DeepSet(obj, pathOrPathSegments, newValue, sepChar = "/", createPathSegmentsIfMissing = true, deleteUndefined = false) {
-    let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
+    const pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
     let deepObj = obj;
     // tunnel down to the object holding the path-specified prop
     pathSegments.slice(0, -1).forEach(segment => {
@@ -577,7 +580,7 @@ export function DeepSet(obj, pathOrPathSegments, newValue, sepChar = "/", create
     return result;
 }*/
 export function WithDeepSet(baseObj, pathOrPathSegments, newValue, sepChar = "/") {
-    let pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
+    const pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
     return Object.assign(Object.assign({}, baseObj), { [pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue });
 }
 //@((()=> { if (g.onclick == null) g.onclick = ()=>console.log(V.GetStackTraceStr()); }) as any)
@@ -592,9 +595,9 @@ export function GetStackTraceStr(...args) {
     //stackTrace = stackTrace || new Error().stack;
     if (stackTrace == null) {
         //let fakeError = {}.VAct(a=>Error.captureStackTrace(a));
-        let oldStackLimit = Error.stackTraceLimit;
+        const oldStackLimit = Error.stackTraceLimit;
         Error.stackTraceLimit = Infinity;
-        let fakeError = new Error();
+        const fakeError = new Error();
         stackTrace = fakeError.stack;
         Error.stackTraceLimit = oldStackLimit;
     }
@@ -694,8 +697,8 @@ export const stringModifiers = {
 };
 export function ModifyString(text, modifiersGetter) {
     let result = text;
-    let chosenModifiers = modifiersGetter(stringModifiers);
-    for (let mod of chosenModifiers) {
+    const chosenModifiers = modifiersGetter(stringModifiers);
+    for (const mod of chosenModifiers) {
         result = mod(result);
     }
     return result;
@@ -723,7 +726,7 @@ export function StartDownload(content, filename, dataTypeStr = "data:application
 }
 export function StartUpload() {
     return new Promise(resolve => {
-        let fileInput = document.createElement("input");
+        const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.style.display = "none";
         fileInput.onchange = e => {
@@ -744,15 +747,15 @@ export function StartUpload() {
 }
 export function TransferPrototypeProps(target, source, descriptorBase, descriptorOverride) {
     //for (let [name, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(source))) {
-    for (let name of Object.getOwnPropertyNames(source)) {
+    for (const name of Object.getOwnPropertyNames(source)) {
         if (name == "constructor")
             continue;
-        let descriptor = Object.getOwnPropertyDescriptor(source, name);
-        Object.defineProperty(target, name, Object.assign({}, descriptorBase, descriptor, descriptorOverride));
+        const descriptor = Object.getOwnPropertyDescriptor(source, name);
+        Object.defineProperty(target, name, Object.assign(Object.assign(Object.assign({}, descriptorBase), descriptor), descriptorOverride));
     }
 }
 export function WithFuncsStandalone(source) {
-    let result = {};
+    const result = {};
     for (const key of Object.getOwnPropertyNames(source)) {
         if (key == "constructor")
             continue; // no reason to call the wrapper's constructor
@@ -812,7 +815,7 @@ export function CreateProxyForClassExtensions(sourceClass_prototype) {
     //	(Limitation: you can't store the result of "ObjectCE(something)" and call a method attached to it more than once, since each method-call removes the supplied this-arg from the stack.)
     /*let proxy = {} as any;
     const thisArgStack = [];*/
-    let proxy = {};
+    const proxy = {};
     const thisArgStack = [];
     for (const key of Object.getOwnPropertyNames(sourceClass_prototype)) {
         if (key == "constructor")

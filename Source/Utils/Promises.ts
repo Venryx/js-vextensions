@@ -1,10 +1,10 @@
-import {ObjectCE} from "../ClassExtensions/CE_Object";
+import {ObjectCE} from "../ClassExtensions/CE_Object.js";
 
 export function WaitTillDataPathIsSet(rootObj: Object, dataPath: string) {
-	return new Promise(async (resolve, reject)=> {
-		let dataPathParts = dataPath.split(".");
+	return new Promise(async(resolve, reject)=>{
+		const dataPathParts = dataPath.split(".");
 		let currentParent = rootObj;
-		for (let part of dataPathParts) {
+		for (const part of dataPathParts) {
 			while (currentParent[part] == null) {
 				await WaitTillPropertyIsSet(currentParent, part);
 			}
@@ -14,8 +14,8 @@ export function WaitTillDataPathIsSet(rootObj: Object, dataPath: string) {
 	});
 }
 export function WaitTillPropertyIsSet(obj: Object, prop: string) {
-	return new Promise((resolve, reject)=> {
-		ObjectCE(obj)._AddGetterSetter(prop, ()=>{}, value=> {
+	return new Promise((resolve, reject)=>{
+		ObjectCE(obj)._AddGetterSetter(prop, ()=>{}, value=>{
 			delete obj[prop]; // remove this hook
 			obj[prop] = value; // set to provided value
 			resolve();
@@ -39,8 +39,8 @@ Example:
  */
 export async function AwaitTree<T>(obj: T): Promise<WithPromisesUnwrapped<T>> {
 	const pairs = ObjectCE(obj).Pairs();
-	const awaitedResults = await Promise.all(pairs.map((pair) => {
-		let valueAsPromise = pair.value instanceof Promise ? pair.value : Promise.resolve(pair.value);
+	const awaitedResults = await Promise.all(pairs.map(pair=>{
+		const valueAsPromise = pair.value instanceof Promise ? pair.value : Promise.resolve(pair.value);
 		return valueAsPromise;
 	}));
 

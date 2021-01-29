@@ -1,5 +1,5 @@
-import {GetStackTraceStr} from "./General";
-import {JSVE} from "../JSVE";
+import {GetStackTraceStr} from "./General.js";
+import {JSVE} from "../JSVE.js";
 
 //export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): asserts condition {
 export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
@@ -10,11 +10,11 @@ export function Assert(condition, messageOrMessageFunc?: string | Function, trig
 	//JSVE.logFunc(`Assert failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
 	//console.error("Assert failed) " + message);
 
-	let skipError = false; // add flag which you can use to skip the error, when paused in debugger
+	const skipError = false; // add flag which you can use to skip the error, when paused in debugger
 	if (triggerDebugger) {
 		debugger;
 	}
-	if (!skipError) throw new Error("Assert failed) " + message);
+	if (!skipError) throw new Error(`Assert failed) ${message}`);
 	return undefined as any;
 }
 export function AssertWarn(condition, messageOrMessageFunc?: string | Function) {
@@ -55,7 +55,7 @@ export class A {
 	    var type = TT(typeNameOrType);
 	    return new A_OfType_Wrapper(type);
 	}*/
-} 
+}
 export class A_NotEqualTo_Wrapper {
 	constructor(val1) { this.val1 = val1; }
 	val1;

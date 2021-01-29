@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone } from "../Utils/General";
-import { Assert } from "../Utils/Assert";
-import { IsObject } from "../Utils/Types";
+import { StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone } from "../Utils/General.js";
+import { Assert } from "../Utils/Assert.js";
+import { IsObject } from "../Utils/Types.js";
 export const ArrayCE_funcs = {
     ForEach(func) {
         for (let i = 0; i < this.length; i++) {

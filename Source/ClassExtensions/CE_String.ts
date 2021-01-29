@@ -1,5 +1,5 @@
-import {ArrayCE} from "./CE_Array";
-import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
+import {ArrayCE} from "./CE_Array.js";
+import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General.js";
 
 export const StringCE_funcs = {
 	TrimStart(this: String, ...chars: string[]) {

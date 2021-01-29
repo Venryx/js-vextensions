@@ -1,6 +1,6 @@
-import {Assert} from "./Assert";
-import {ShallowEquals} from "./General";
-import {ArrayCE} from "../ClassExtensions/CE_Array";
+import {Assert} from "./Assert.js";
+import {ShallowEquals} from "./General.js";
+import {ArrayCE} from "../ClassExtensions/CE_Array.js";
 
 export class Storage<T2, T3> {
 	lastDynamicProps: T2;
@@ -8,12 +8,12 @@ export class Storage<T2, T3> {
 	lastDebugInfo: any;
 	resultUpdateCount = 0;
 }
-export let storages = {} as {[storageKey: string]: Storage<any, any>};
+export const storages = {} as {[storageKey: string]: Storage<any, any>};
 
 export function GetStorageForCachedTransform<T2, T3>(transformType: string, staticProps: any[]) {
 	//let storageKey = transformType + "|" + JSON.stringify(staticProps);
-	let storageKey = transformType + "|" + staticProps.join("|");
-	let storage = storages[storageKey] as Storage<T2, T3> || (storages[storageKey] = new Storage<T2, T3>());
+	const storageKey = `${transformType}|${staticProps.join("|")}`;
+	const storage = storages[storageKey] as Storage<T2, T3> || (storages[storageKey] = new Storage<T2, T3>());
 	return storage;
 }
 
@@ -29,10 +29,10 @@ export function GetStorageForCachedTransform<T2, T3>(transformType: string, stat
 //export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
 export function CachedTransform<T, T2, T3>(
 	transformType: string, staticProps: any[], dynamicProps: T2,
-	transformFunc: (debugInfo: any, staticProps: any[], dynamicProps: T2)=>T3
+	transformFunc: (debugInfo: any, staticProps: any[], dynamicProps: T2)=>T3,
 ): T3 {
 	//Assert(dynamicProps != null);
-	let storage = GetStorageForCachedTransform<T2, T3>(transformType, staticProps);
+	const storage = GetStorageForCachedTransform<T2, T3>(transformType, staticProps);
 	if (!ShallowEquals(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
 		/*MaybeLog(a=>a.cacheUpdates,
 			()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
@@ -47,10 +47,10 @@ export function CachedTransform<T, T2, T3>(
 
 export function CombineDynamicPropMaps(...maps) {
 	var result = {};
-	ArrayCE(maps).ForEach((map, mapIndex)=> {
+	ArrayCE(maps).ForEach((map, mapIndex)=>{
 		if (map == null) return "continue";
-		Object.keys(map).forEach(key=> {
-			result[mapIndex + "_" + key] = map[key];
+		Object.keys(map).forEach(key=>{
+			result[`${mapIndex}_${key}`] = map[key];
 		});
 	});
 	return result;

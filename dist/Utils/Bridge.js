@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { TryCall } from "./Timers";
-import { Assert, ToJSON, IsObject, IsString, FromJSON, ObjectCE, ArrayCE, IsFunction } from "..";
-import { GetTreeNodesInObjTree } from "./General";
+import { TryCall } from "./Timers.js";
+import { Assert, ToJSON, IsObject, IsString, FromJSON, ObjectCE, ArrayCE, IsFunction } from "../index.js";
+import { GetTreeNodesInObjTree } from "./General.js";
 export class BridgeMessage {
     constructor(initialData) {
         ObjectCE(this).Extend(initialData);
@@ -57,7 +57,7 @@ export class Bridge {
                 channelMessageObj = TryCall(() => FromJSON(channelMessage)) || {};
             if (!this.channel_stringifyChannelMessageObj && IsObject(channelMessage))
                 channelMessageObj = channelMessage;
-            let bridgeMessage = this.channel_wrapBridgeMessage ? channelMessageObj && channelMessageObj["JSVE_Bridge_message"] : channelMessageObj;
+            const bridgeMessage = this.channel_wrapBridgeMessage ? channelMessageObj && channelMessageObj["JSVE_Bridge_message"] : channelMessageObj;
             if (!IsObject(bridgeMessage))
                 return;
             this.DeserializeFuncsIn(bridgeMessage);
@@ -70,8 +70,8 @@ export class Bridge {
     }
     SendBridgeMessage(bridgeMessage) {
         this.SerializeFuncsIn(bridgeMessage);
-        let channelMessageObj = this.channel_wrapBridgeMessage ? { JSVE_Bridge_message: bridgeMessage } : bridgeMessage;
-        let channelMessage = this.channel_stringifyChannelMessageObj ? ToJSON(channelMessageObj) : channelMessageObj;
+        const channelMessageObj = this.channel_wrapBridgeMessage ? { JSVE_Bridge_message: bridgeMessage } : bridgeMessage;
+        const channelMessage = this.channel_stringifyChannelMessageObj ? ToJSON(channelMessageObj) : channelMessageObj;
         this.sendChannelMessageFunc(channelMessage);
     }
     RegisterFunction(name, func, asMain = true) {
@@ -110,14 +110,14 @@ export class Bridge {
     }
     OnReceiveFunctionCall(bridgeMessage) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield this.Local_CallFunc(bridgeMessage.callFunction_name, ...bridgeMessage.callFunction_args);
+            const result = yield this.Local_CallFunc(bridgeMessage.callFunction_name, ...bridgeMessage.callFunction_args);
             this.CallCallback(bridgeMessage.callFunction_callbackID, result);
         });
     }
     // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
     Local_CallFunc(funcName, ...args) {
         return __awaiter(this, void 0, void 0, function* () {
-            let mainFunc = this.functionMains[funcName];
+            const mainFunc = this.functionMains[funcName];
             let result;
             if (mainFunc) {
                 result = yield mainFunc(...args);
@@ -127,7 +127,7 @@ export class Bridge {
                     throw new Error(`Cannot find main-func for function-call with name "${funcName}".`);
                 }
             }
-            for (let extraFunc of this.functionExtras[funcName] || []) {
+            for (const extraFunc of this.functionExtras[funcName] || []) {
                 extraFunc(...args);
             }
             return result;
@@ -137,7 +137,7 @@ export class Bridge {
         this.Local_CallCallback(bridgeMessage.callCallback_id, bridgeMessage.callCallback_args);
     }
     Local_CallCallback(callbackID, callbackArgs) {
-        let callback = this.callbacks[callbackID];
+        const callback = this.callbacks[callbackID];
         if (callback == null) {
             if (this.channel_safeCallbacks)
                 return;
@@ -146,27 +146,27 @@ export class Bridge {
         callback(...callbackArgs);
     }
     RegisterCallback(callback) {
-        let callbackID = this.channel_safeCallbacks ? Math.random() : this.lastCallbackID + 1;
+        const callbackID = this.channel_safeCallbacks ? Math.random() : this.lastCallbackID + 1;
         this.lastCallbackID = callbackID;
         this.callbacks[callbackID] = callback;
         return callbackID;
     }
     // technically, this just prepares the functions in the tree for serialization (by setting a toJSON key, which JSON.stringify uses)
     SerializeFuncsIn(argTree) {
-        let nodes = GetTreeNodesInObjTree(argTree);
-        for (let node of nodes) {
+        const nodes = GetTreeNodesInObjTree(argTree);
+        for (const node of nodes) {
             if (IsFunction(node.Value)) {
-                let callbackID = this.RegisterCallback(node.Value);
+                const callbackID = this.RegisterCallback(node.Value);
                 node.Value.toJSON = () => ({ serializedFunc_callbackID: callbackID });
             }
         }
     }
     DeserializeFuncsIn(argTree) {
-        let nodes = GetTreeNodesInObjTree(argTree);
-        for (let node of nodes) {
+        const nodes = GetTreeNodesInObjTree(argTree);
+        for (const node of nodes) {
             if (node.Value != null && node.Value.serializedFunc_callbackID != null) {
-                let callbackID = node.Value.serializedFunc_callbackID;
-                let proxyFunc = (...args) => {
+                const callbackID = node.Value.serializedFunc_callbackID;
+                const proxyFunc = (...args) => {
                     this.CallCallback(callbackID, ...args);
                 };
                 node.Value = proxyFunc;
@@ -177,13 +177,13 @@ export class Bridge {
     // ==========
     Call(funcName, ...args) {
         return new Promise((resolve, reject) => {
-            let awaitReturn_callbackID = this.RegisterCallback(resolve);
-            let bridgeMessage = new BridgeMessage({ callFunction_callbackID: awaitReturn_callbackID, callFunction_name: funcName, callFunction_args: args });
+            const awaitReturn_callbackID = this.RegisterCallback(resolve);
+            const bridgeMessage = new BridgeMessage({ callFunction_callbackID: awaitReturn_callbackID, callFunction_name: funcName, callFunction_args: args });
             this.SendBridgeMessage(bridgeMessage);
         });
     }
     CallCallback(callbackID, ...args) {
-        let bridgeMessage = new BridgeMessage({ callCallback_id: callbackID, callCallback_args: args });
+        const bridgeMessage = new BridgeMessage({ callCallback_id: callbackID, callCallback_args: args });
         this.SendBridgeMessage(bridgeMessage);
     }
 }

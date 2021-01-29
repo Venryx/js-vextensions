@@ -68,7 +68,7 @@ export interface ObjectCEProxyInterface<T> {
 }
 export declare type ObjectCEProxy<T> = typeof ObjectCE_funcs & ObjectCEProxyInterface<T>;
 export declare const ObjectCE: <T>(nextThis: T) => ObjectCEProxy<T>;
-export declare const ObjectCES: import("../Utils/General").WithFuncsStandalone_Type<{
+export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     /** Helps you do stuff like this:
         Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
     _AddItem(name: any, value: any, forceAdd?: boolean): void;

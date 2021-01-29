@@ -1,4 +1,4 @@
-import {ModifyString} from "./General";
+import {ModifyString} from "./General.js";
 
 // standard types
 // ----------
@@ -15,7 +15,7 @@ export var string = ()=>"string" as any as (new(..._)=>string);
 
 export function IsPrimitive(obj) { return IsBool(obj) || IsNumber(obj) || IsString(obj); }
 export function IsBool(obj) : obj is boolean { return typeof obj == "boolean"; } //|| obj instanceof Boolean
-export function ToBool(boolStr) { return boolStr == "true" ? true : false; }
+export function ToBool(boolStr) { return boolStr == "true"; }
 export function IsNumberString(obj, allowNaN = false) { return IsString(obj) && obj.length && IsNumber(Number(obj), false, allowNaN); }
 export function IsNumber(obj, allowNumberObj = false, allowNaN = false): obj is number {
 	if (!allowNaN && IsNaN(obj)) return false;
@@ -38,7 +38,7 @@ export function ToNumber(stringOrFloatVal: string|number|undefined|null, valIfCo
 }
 export function IsInt(obj): obj is number { return IsNumber(obj) && parseInt(obj as any) == obj; }
 export function ToInt(stringOrFloatVal: string|number|undefined|null, valIfConversionFails = NaN, allowParseNaN = false) {
-	const result = parseInt(ToNumber(stringOrFloatVal, valIfConversionFails)+"");
+	const result = parseInt(`${ToNumber(stringOrFloatVal, valIfConversionFails)}`);
 	if (IsNaN(result) && !allowParseNaN) return valIfConversionFails;
 	return result;
 }
@@ -48,7 +48,7 @@ export function IsNaN(obj) { return typeof obj == "number" && obj != obj; }
 export function IsString(obj, allowStringObj = false): obj is string {
 	return typeof obj == "string" || (allowStringObj && obj instanceof String);
 }
-export function ToString(val) { return "" + val; }
+export function ToString(val) { return `${val}`; }
 export function IsSymbol(obj, allowSymbolObj = false): obj is symbol {
 	return typeof obj == "symbol" || (allowSymbolObj && typeof Symbol != undefined && obj instanceof Symbol);
 }
@@ -116,7 +116,7 @@ export function GetEntries(enumType: Object, nameModifierFunc?: ((name: string)=
 	return nameValuePairs.map(pair=>({name: nameModifierFunc ? nameModifierFunc(pair.key) : pair.key, value: pair.value as number}));*/
 
 	// valid enum values are numbers and null, so any keys other than those are the ones we want (they're the keys for the key->value pairs)
-	let entryNames = Object.keys(enumType).filter(key=>!IsNumberString(key) && key != "null");
+	const entryNames = Object.keys(enumType).filter(key=>!IsNumberString(key) && key != "null");
 	return entryNames.map(name=>({name: nameModifierFunc instanceof Function ? nameModifierFunc(name) : name, value: enumType[name] as number}));
 }
 export function GetValues<T>(enumType): T[] {

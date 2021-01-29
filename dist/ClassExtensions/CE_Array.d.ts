@@ -63,7 +63,7 @@ export interface ArrayCEProxyInterface<T> {
 }
 export declare type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
 export declare const ArrayCE: <T>(nextThis: T[]) => ArrayCEProxy<T>;
-export declare const ArrayCES: import("../Utils/General").WithFuncsStandalone_Type<{
+export declare const ArrayCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result | undefined;
     ForEachAsync<T_1, Result_1 = any>(this: T_1[], func: LoopFunc<T_1, Result_1>): Promise<Result_1 | undefined>;
     Contains<T_2>(this: T_2[], item: T_2): boolean;

@@ -1,7 +1,7 @@
-import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General";
+import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General.js";
 export const ElementCE_funcs = {
     GetParents(topDown = false) {
-        let result = [];
+        const result = [];
         let currentParent = this.parentElement;
         while (currentParent) {
             result.push(currentParent);
@@ -12,7 +12,7 @@ export const ElementCE_funcs = {
         return result;
     },
     GetSelfAndParents(topDown = false) {
-        let result = ElementCE(this).GetParents(topDown);
+        const result = ElementCE(this).GetParents(topDown);
         return topDown ? result.concat([this]) : [this].concat(result);
     },
     /*QuerySelectorAll_BreadthFirst(this: HTMLElement, selector: string) {
@@ -29,7 +29,7 @@ export const ElementCE_funcs = {
     QuerySelector_BreadthFirst(selector) {
         let currentLayerElements = Array.from(this.childNodes);
         while (currentLayerElements.length) {
-            let firstMatchInLayer = currentLayerElements.find(a => a["matches"] && a["matches"](selector));
+            const firstMatchInLayer = currentLayerElements.find(a => a["matches"] && a["matches"](selector));
             if (firstMatchInLayer)
                 return firstMatchInLayer;
             //currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);

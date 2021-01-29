@@ -1,4 +1,4 @@
-import {NumberCE} from "../ClassExtensions/CE_Number";
+import {NumberCE} from "../ClassExtensions/CE_Number.js";
 
 /*export function Range(min, max, step = 1, includeMax = true) {
 	var result: number[] = [];
@@ -66,7 +66,7 @@ export function CreateRandFunc_Mulberry32(seed: number) {
 export function GetRandomNumber(options: {min: number, max: number, mustBeInteger?: boolean, randFunc?: ()=>number}) {
 	const {min, max, mustBeInteger} = options;
 	const randFunc = options.randFunc ?? Math.random;
-	
+
 	/*Assert(IsNumber(min), `Min must be a number. (not: ${min})`);
 	Assert(IsNumber(max), `Max must be a number. (not: ${max})`);*/
 	const range = max - min;

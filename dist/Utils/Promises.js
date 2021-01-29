@@ -7,12 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ObjectCE } from "../ClassExtensions/CE_Object";
+import { ObjectCE } from "../ClassExtensions/CE_Object.js";
 export function WaitTillDataPathIsSet(rootObj, dataPath) {
     return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-        let dataPathParts = dataPath.split(".");
+        const dataPathParts = dataPath.split(".");
         let currentParent = rootObj;
-        for (let part of dataPathParts) {
+        for (const part of dataPathParts) {
             while (currentParent[part] == null) {
                 yield WaitTillPropertyIsSet(currentParent, part);
             }
@@ -41,8 +41,8 @@ Example:
 export function AwaitTree(obj) {
     return __awaiter(this, void 0, void 0, function* () {
         const pairs = ObjectCE(obj).Pairs();
-        const awaitedResults = yield Promise.all(pairs.map((pair) => {
-            let valueAsPromise = pair.value instanceof Promise ? pair.value : Promise.resolve(pair.value);
+        const awaitedResults = yield Promise.all(pairs.map(pair => {
+            const valueAsPromise = pair.value instanceof Promise ? pair.value : Promise.resolve(pair.value);
             return valueAsPromise;
         }));
         const result = {};

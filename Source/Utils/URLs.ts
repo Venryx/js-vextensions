@@ -1,5 +1,5 @@
-import {E, Assert, StringCE, NumberCE} from "..";
-import {AssertWarn} from "./Assert";
+import {E, Assert, StringCE, NumberCE} from "../index.js";
+import {AssertWarn} from "./Assert.js";
 
 // Note: It's fine to use `window` instead of `g` in the below, since it fails outside of browsers anyway.
 

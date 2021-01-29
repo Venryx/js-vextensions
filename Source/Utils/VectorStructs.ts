@@ -1,5 +1,5 @@
-import {Global} from "./General";
-import {IsNaN, Assert, NumberCE, ObjectCE, ArrayCE} from "..";
+import {Global} from "./General.js";
+import {IsNaN, Assert, NumberCE, ObjectCE, ArrayCE} from "../index.js";
 
 function IsNullOrNaN(value: number|null|undefined) {
 	return value === null || IsNaN(value);
@@ -14,7 +14,7 @@ export function IsVector2iShape(obj: any): obj is {x: number, y: number} {
 export class Vector2 {
 	static get zero() { return new Vector2(0, 0); }
 	static get one() { return new Vector2(1, 1); }
-	
+
 	constructor(x?: number, y?: number);
 	constructor(pos: {x: number, y: number});
 	constructor(pos: {left: number, top: number});
@@ -32,14 +32,14 @@ export class Vector2 {
 
 	x: number;
 	y: number;
-    
+
 	/*@_VDFDeserialize() Deserialize(node) {
 		var strParts = node.primitiveValue.split(" ");
 		this.x = parseInt(strParts[0]);
 		this.y = parseInt(strParts[1]);
 	}
 	@_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-	toString() { return this.x + " " + this.y; }
+	toString() { return `${this.x} ${this.y}`; }
 	Equals(other) { return other && this.toString() == other.toString(); }
 
 	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector2(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
@@ -48,13 +48,13 @@ export class Vector2 {
 	Plus(other: Vector2Shape): Vector2;
 	Plus(otherX: number, otherY: number): Vector2;
 	Plus(...args) {
-		let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
+		const [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
 		return new Vector2(this.x + x, this.y + y);
 	}
 	Minus(other: Vector2Shape): Vector2;
 	Minus(otherX: number, otherY: number): Vector2;
 	Minus(...args) {
-		let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
+		const [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
 		return new Vector2(this.x - x, this.y - y);
 	}
 
@@ -94,11 +94,11 @@ export class Vector3 {
 
 	constructor(x?: number, y?: number, z?: number) {
 		Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
-		
+
 		this.x = x != null ? x : 0;
 		this.y = y != null ? y : 0;
 		this.z = z != null ? z : 0;
-    }
+	}
 
 	x: number;
 	y: number;
@@ -112,7 +112,7 @@ export class Vector3 {
 	}
 	//VDFSerialize() { return this.toString(); } //Swapped().toString(); }
 	@_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-	toString() { return this.x + " " + this.y + " " + this.z; }
+	toString() { return `${this.x} ${this.y} ${this.z}`; }
 
 	NewX(xOrFunc: number | ((oldX: number)=>number)) { return new Vector3(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z); }
 	NewY(yOrFunc: number | ((oldY: number)=>number)) { return new Vector3(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
@@ -121,13 +121,13 @@ export class Vector3 {
 	Minus(other: Vector3Shape): Vector3;
 	Minus(otherX: number, otherY: number, otherZ: number): Vector3;
 	Minus(...args) {
-		let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+		const [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
 		return new Vector3(this.x - x, this.y - y, this.z - z);
 	}
 	Plus(other: Vector3Shape): Vector3;
 	Plus(otherX: number, otherY: number): Vector3;
 	Plus(...args) {
-		let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+		const [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
 		return new Vector3(this.x + x, this.y + y, this.z + z);
 	}
 	Times(other: Vector3Shape): Vector3;
@@ -199,7 +199,7 @@ export class VRect {
 		if (this.y0IsBottom) {
 			this.height = val - this.y;
 		} else {
-			let oldBottom = this.Bottom;
+			const oldBottom = this.Bottom;
 			this.y = val;
 			this.Bottom = oldBottom;
 		}
@@ -217,7 +217,7 @@ export class VRect {
 
 	get Center() { return new Vector2(this.x + (this.width / 2), this.y + (this.height / 2)); }
 	set Center(val: Vector2) {
-		let offset = val.Minus(this.Center);
+		const offset = val.Minus(this.Center);
 		this.Position = this.Position.Plus(offset);
 	}
 
@@ -229,7 +229,7 @@ export class VRect {
 		this.height = parseInt(strParts[3]);
 	}
 	@_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-	toString() { return this.x + " " + this.y + " " + this.width + " " + this.height; }
+	toString() { return `${this.x} ${this.y} ${this.width} ${this.height}`; }
 
 	Equals(other) {
 		if (!(other instanceof VRect)) return false;
@@ -292,7 +292,7 @@ export class VRect {
 	/** Returns true if rect would intersect the other, when wrapped to the 2/8 potential "other-sides" of given frame/backdrop. (-x, +x, -y, +y, -x -y, -x +y, +x -y, +x +y)
 	 * (note that it does the checks "stupidly", ie. just checking all possible switch-side variants, without checking if "switched side" version is actually on or even near the actual frame/backdrop) */
 	Intersects_Advanced(other: VRect, options: {xWrappedBy?: number, yWrappedBy?: number}) {
-		let variantsToCompare: VRect[] = [this];
+		const variantsToCompare: VRect[] = [this];
 		if (options.xWrappedBy) {
 			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
 				return [base, base.NewX(x=>x - options.xWrappedBy!), base.NewX(x=>x + options.xWrappedBy!)];
@@ -301,7 +301,7 @@ export class VRect {
 		if (options.yWrappedBy) {
 			variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base=>{
 				return [base, base.NewY(y=>y - options.yWrappedBy!), base.NewY(y=>y + options.yWrappedBy!)];
-			}))
+			}));
 		}
 		return ArrayCE(variantsToCompare).Any(a=>a.Intersects(other));
 	}
@@ -328,5 +328,5 @@ export class VBounds {
 		this.size = new VVector3(parseFloat(sizeParts[0]), parseFloat(sizeParts[1]), parseFloat(sizeParts[2]));
 	}
 	@_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-	toString() { return this.position.x + " " + this.position.y + " " + this.position.z + "|" + this.size.x + " " + this.size.y + " " + this.size.z; }
+	toString() { return `${this.position.x} ${this.position.y} ${this.position.z}|${this.size.x} ${this.size.y} ${this.size.z}`; }
 }

@@ -1,9 +1,9 @@
-import { ArrayCEProxy } from "./CE_Array";
-import { NumberCEProxy } from "./CE_Number";
-import { ObjectCEProxy } from "./CE_Object";
-import { StringCEProxy } from "./CE_String";
-import { ElementCEProxy } from "..";
-import { FunctionCEProxy, DateCEProxy } from "./CE_Others";
+import { ArrayCEProxy } from "./CE_Array.js";
+import { NumberCEProxy } from "./CE_Number.js";
+import { ObjectCEProxy } from "./CE_Object.js";
+import { StringCEProxy } from "./CE_String.js";
+import { ElementCEProxy } from "../index.js";
+import { FunctionCEProxy, DateCEProxy } from "./CE_Others.js";
 export declare function CE(obj: number): NumberCEProxy;
 export declare function CE(obj: string): StringCEProxy;
 export declare function CE(obj: Date): DateCEProxy;

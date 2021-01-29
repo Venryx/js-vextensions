@@ -1,10 +1,10 @@
-import {ArrayCE, ArrayCEProxy} from "./CE_Array";
-import {NumberCE, NumberCEProxy} from "./CE_Number";
-import {ObjectCE, ObjectCEProxy} from "./CE_Object";
-import {StringCE, StringCEProxy} from "./CE_String";
-import {ElementCE, ElementCEProxy} from "..";
-import {IsObject, IsString, IsNumber, IsFunction, IsArray} from "../Utils/Types";
-import {DateCE, FunctionCE, FunctionCEProxy, DateCEProxy} from "./CE_Others";
+import {ArrayCE, ArrayCEProxy} from "./CE_Array.js";
+import {NumberCE, NumberCEProxy} from "./CE_Number.js";
+import {ObjectCE, ObjectCEProxy} from "./CE_Object.js";
+import {StringCE, StringCEProxy} from "./CE_String.js";
+import {ElementCE, ElementCEProxy} from "../index.js";
+import {IsObject, IsString, IsNumber, IsFunction, IsArray} from "../Utils/Types.js";
+import {DateCE, FunctionCE, FunctionCEProxy, DateCEProxy} from "./CE_Others.js";
 
 /*interface CE_Auto_I {
 	(obj: Array<any>): typeof ArrayCE;
@@ -17,7 +17,7 @@ import {DateCE, FunctionCE, FunctionCEProxy, DateCEProxy} from "./CE_Others";
 export const CE_Auto = ((obj)=> {
 }) as CE_Auto_I;*/
 
-let classExtensionMap = {
+const classExtensionMap = {
 	Number: NumberCE,
 	String: StringCE,
 	Date: DateCE,
@@ -25,7 +25,7 @@ let classExtensionMap = {
 	Function: FunctionCE,
 	Array: ArrayCE,
 	Object: ObjectCE,
-}
+};
 // uncommonly derived (simple to complex)
 //export function CE(obj: number): ReturnType<typeof NumberCE>;
 export function CE(obj: number): NumberCEProxy;
@@ -39,11 +39,11 @@ export function CE(obj: Element): ElementCEProxy;
 export function CE<T extends Object>(obj: T): ObjectCEProxy<T>;
 export function CE(obj, checkForUncommonDerived = false) {
 	// first, try to get class-extension func based on direct constructor name (most common case)
-	let typeName = obj.constructor ? obj.constructor.name : null;
+	const typeName = obj.constructor ? obj.constructor.name : null;
 	if (typeName && classExtensionMap[typeName]) {
 		return classExtensionMap[typeName](obj);
 	}
-	
+
 	// else, check each option using "instanceof" and such (needed for derived classes)
 	if (checkForUncommonDerived) {
 		if (IsNumber(obj, true)) return NumberCE(obj);

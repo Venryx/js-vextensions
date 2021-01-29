@@ -1,4 +1,4 @@
-import { NumberCE } from "../ClassExtensions/CE_Number";
+import { NumberCE } from "../ClassExtensions/CE_Number.js";
 /*export function Range(min, max, step = 1, includeMax = true) {
     var result: number[] = [];
     for (let i = min; includeMax ? i <= max : i < max; i += step)

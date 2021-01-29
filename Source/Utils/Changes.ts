@@ -1,15 +1,15 @@
-import {ToJSON} from "./General";
-import {ObjectCE} from "../ClassExtensions/CE_Object";
-import {ArrayCE} from "../ClassExtensions/CE_Array";
+import {ToJSON} from "./General.js";
+import {ObjectCE} from "../ClassExtensions/CE_Object.js";
+import {ArrayCE} from "../ClassExtensions/CE_Array.js";
 
 export type PropChange = {key: string, oldVal: any, newVal: any};
 export function GetPropChanges(oldObj, newObj, returnNullIfSame = false, useJSONCompare = false): PropChange[]|null {
 	oldObj = oldObj || {}, newObj = newObj || {};
-	let keys = ArrayCE(Object.keys(oldObj).concat(Object.keys(newObj))).Distinct();
-	let result: PropChange[] = [];
-	for (let key of keys) {
-		let newVal_forComparison = useJSONCompare ? ToJSON(newObj[key]) : newObj[key];
-		let oldVal_forComparison = useJSONCompare ? ToJSON(oldObj[key]) : oldObj[key];
+	const keys = ArrayCE(Object.keys(oldObj).concat(Object.keys(newObj))).Distinct();
+	const result: PropChange[] = [];
+	for (const key of keys) {
+		const newVal_forComparison = useJSONCompare ? ToJSON(newObj[key]) : newObj[key];
+		const oldVal_forComparison = useJSONCompare ? ToJSON(oldObj[key]) : oldObj[key];
 		if (newVal_forComparison !== oldVal_forComparison) {
 			result.push({key, oldVal: oldObj[key], newVal: newObj[key]});
 		}

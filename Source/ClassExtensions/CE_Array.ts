@@ -1,6 +1,6 @@
-import {StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone} from "../Utils/General";
-import {Assert} from "../Utils/Assert";
-import {IsObject} from "../Utils/Types";
+import {StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone} from "../Utils/General.js";
+import {Assert} from "../Utils/Assert.js";
+import {IsObject} from "../Utils/Types.js";
 
 /*// since JS doesn't have basic "foreach" system
 ForEach(func) {

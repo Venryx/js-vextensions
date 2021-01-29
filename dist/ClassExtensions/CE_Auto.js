@@ -1,10 +1,10 @@
-import { ArrayCE } from "./CE_Array";
-import { NumberCE } from "./CE_Number";
-import { ObjectCE } from "./CE_Object";
-import { StringCE } from "./CE_String";
-import { ElementCE } from "..";
-import { IsString, IsNumber, IsFunction, IsArray } from "../Utils/Types";
-import { DateCE, FunctionCE } from "./CE_Others";
+import { ArrayCE } from "./CE_Array.js";
+import { NumberCE } from "./CE_Number.js";
+import { ObjectCE } from "./CE_Object.js";
+import { StringCE } from "./CE_String.js";
+import { ElementCE } from "../index.js";
+import { IsString, IsNumber, IsFunction, IsArray } from "../Utils/Types.js";
+import { DateCE, FunctionCE } from "./CE_Others.js";
 /*interface CE_Auto_I {
     (obj: Array<any>): typeof ArrayCE;
     (obj: Element): typeof ElementCE;
@@ -15,7 +15,7 @@ import { DateCE, FunctionCE } from "./CE_Others";
 
 export const CE_Auto = ((obj)=> {
 }) as CE_Auto_I;*/
-let classExtensionMap = {
+const classExtensionMap = {
     Number: NumberCE,
     String: StringCE,
     Date: DateCE,
@@ -26,7 +26,7 @@ let classExtensionMap = {
 };
 export function CE(obj, checkForUncommonDerived = false) {
     // first, try to get class-extension func based on direct constructor name (most common case)
-    let typeName = obj.constructor ? obj.constructor.name : null;
+    const typeName = obj.constructor ? obj.constructor.name : null;
     if (typeName && classExtensionMap[typeName]) {
         return classExtensionMap[typeName](obj);
     }

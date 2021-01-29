@@ -1,8 +1,8 @@
-import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT} from "../Utils/General";
-import {ArrayCE, ArrayCE_funcs} from "./CE_Array";
-import {IsNaN, IsObject, IsString, IsSymbol} from "../Utils/Types";
-import {Assert} from "../Utils/Assert";
-import {FunctionCE} from "./CE_Others";
+import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT} from "../Utils/General.js";
+import {ArrayCE, ArrayCE_funcs} from "./CE_Array.js";
+import {IsNaN, IsObject, IsString, IsSymbol} from "../Utils/Types.js";
+import {Assert} from "../Utils/Assert.js";
+import {FunctionCE} from "./CE_Others.js";
 
 export interface VSet_Options {
 	prop?: PropertyDescriptor;
@@ -45,14 +45,13 @@ export const ObjectCE_funcs = {
 	/** Helps you do stuff like this:
 		Array.prototype._AddFunction(function AddX(value) { this.push(value); }); []._AddX("newItem"); */
 	_AddItem(name, value, forceAdd = false) {
-		if (name == null || name.length == 0)
-			throw new Error("No prop-name was specified for _AddItem() call.");
+		if (name == null || name.length == 0) { throw new Error("No prop-name was specified for _AddItem() call."); }
 		if (name in this) delete this[name];
 		if (name in this && !forceAdd) return; // workaround for some properties not being deleted
 
 		Object.defineProperty(this, name, {
 			configurable: true, // for some reason, we get an error otherwise in non-dev mode (same for below)
-			value: value
+			value,
 		});
 		/*if (this[name] == null)
 			throw new Error(`Failed to add property "${name}" to type "${this}".`);*/
@@ -69,8 +68,8 @@ export const ObjectCE_funcs = {
 		//var name = (getter || setter).name || (getter || setter).toString().match(/^function\s*([^\s(]+)/)[1];
 		if (name in this) delete this[name];
 		if (name in this) return; // workaround for some properties not being deleted
-	
-		let info = {configurable: true} as PropertyDescriptor;
+
+		const info = {configurable: true} as PropertyDescriptor;
 		if (getter) info.get = getter;
 		if (setter) info.set = setter;
 		Object.defineProperty(this, name, info);
@@ -99,7 +98,7 @@ export const ObjectCE_funcs = {
 		(path: string, resultIfNull?: any): any;
 		<T, Result>(this: T, pathGetterFunc: (self: TargetTFor<T>)=>Result, resultIfNull?: any): Result;
 	}>(function(pathOrPathGetterFunc: string | Function, resultIfNull?: any) {
-		let pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
+		const pathSegments = typeof pathOrPathGetterFunc == "string" ? pathOrPathGetterFunc : ConvertPathGetterFuncToPropChain(pathOrPathGetterFunc);
 		return DeepGet(this, pathSegments, resultIfNull);
 	}),
 
@@ -114,7 +113,7 @@ export const ObjectCE_funcs = {
 		return this;
 	},
 	Extended<T, T2>(this: T, x: T2, copyNonEnumerable = false): TargetTFor<T> & T2 {
-		let result: any = this instanceof Array ? [] : {};
+		const result: any = this instanceof Array ? [] : {};
 		for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)) {
 			result[key] = this[key];
 		}
@@ -136,9 +135,9 @@ export const ObjectCE_funcs = {
 		let props, propName: string|symbol|undefined, propValue: string|undefined, opt: VSet_Options;
 		if (IsString(args[0]) || IsSymbol(args[0])) [propName, propValue, opt] = args;
 		else [props, opt] = args;
-		opt = Object.assign({}, {copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto"} as VSet_Options, opt);
+		opt = {...{copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto"} as VSet_Options, ...opt};
 
-		const SetProp = (name: string | symbol, descriptor: PropertyDescriptor|undefined, value: any)=> {
+		const SetProp = (name: string | symbol, descriptor: PropertyDescriptor|undefined, value: any)=>{
 			// only process operators if: 1) js-engine supports Symbols (for security), or 2) caller allows string-operators
 			if (IsSymbol(OMIT) || opt.allowStringOperators) {
 				if (value === OMIT || (opt.allowStringOperators && value == OMIT.toString())) return;
@@ -147,17 +146,17 @@ export const ObjectCE_funcs = {
 					return;
 				}
 			}
-			
-			let isGetterSetter = descriptor && (descriptor.get != null || descriptor.set != null);
-			let asGetterSetter = isGetterSetter && opt.copyGetterSettersAs == "getterSetter";
+
+			const isGetterSetter = descriptor && (descriptor.get != null || descriptor.set != null);
+			const asGetterSetter = isGetterSetter && opt.copyGetterSettersAs == "getterSetter";
 			// descriptorCustomized: whether the descriptor has customizations that would be lost by using a simple set-op
-			let descriptorCustomized = descriptor && (descriptor.enumerable == false || descriptor.writable == false || descriptor.configurable == false || asGetterSetter);
-			let useSimpleSet_final = opt.callSetters == "always" || (opt.callSetters == "auto" && !descriptorCustomized);
+			const descriptorCustomized = descriptor && (descriptor.enumerable == false || descriptor.writable == false || descriptor.configurable == false || asGetterSetter);
+			const useSimpleSet_final = opt.callSetters == "always" || (opt.callSetters == "auto" && !descriptorCustomized);
 			if (useSimpleSet_final) {
 				this[name] = value;
 			} else {
 				// we default configurable to true, since it's the better default imo; it's more compatible -- conf:false can break "correct code", whereas conf:true at worst allows mistakes
-				const finalDescriptor = Object.assign({configurable: true}, descriptor);
+				const finalDescriptor = {configurable: true, ...descriptor} as PropertyDescriptor;
 				// if placing a value (rather than copying a getter-setter), clear get/set fields, and set value field 
 				if (!asGetterSetter) {
 					delete finalDescriptor.get;
@@ -175,9 +174,9 @@ export const ObjectCE_funcs = {
 			let keys = Object.getOwnPropertyNames(props) as (string | symbol)[];
 			if (opt.copySymbolKeys) keys = keys.concat(Object.getOwnPropertySymbols(props));
 			for (const key of keys) {
-				let descriptor = Object.getOwnPropertyDescriptor(props, key)!;
+				const descriptor = Object.getOwnPropertyDescriptor(props, key)!;
 				if (!descriptor.enumerable && !opt.copyNonEnumerable) continue;
-				let isGetterSetter = descriptor.get != null || descriptor.set != null;
+				const isGetterSetter = descriptor.get != null || descriptor.set != null;
 				if (isGetterSetter && opt.copyGetterSettersAs == "ignore") continue; // for "ignore" case: short-circuit, so we don't even call getter
 				const value = !isGetterSetter || opt.copyGetterSettersAs == "value" ? props[key as any] : undefined;
 				SetProp(key, descriptor, value);
@@ -200,9 +199,9 @@ export const ObjectCE_funcs = {
 	},
 
 	//Including(...keys: string[]) {
-	Including<T, Keys extends (keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
+	Including<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
 		var result = this instanceof Array ? [] : {};
-		for (let key of keys) {
+		for (const key of keys) {
 			//if (!this.hasOwnProperty(key)) continue;
 			if (!(key in this)) continue; // we include the value, even if from prototype (user wouldn't list in keys array if didn't want it)
 			result[key as any] = this[key as any];
@@ -210,14 +209,14 @@ export const ObjectCE_funcs = {
 		return result as any;
 	},
 	//Excluding(...keys: string[]) {
-	Excluding<T, Keys extends (keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
+	Excluding<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
 		//var result = Clone(this); // doesn't work with funcs
 		/*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
 		for (let key of keys) {
 			delete result[key];
 		}*/
 		var result = this instanceof Array ? [] : {};
-		for (let key of Object.keys(this)) {
+		for (const key of Object.keys(this)) {
 			if (ArrayCE(keys).Contains(key as any)) continue;
 			result[key] = this[key];
 		}
@@ -229,13 +228,13 @@ export const ObjectCE_funcs = {
 			return true;
 		}
 		// if the value-list contains the primitive-version of self, consider it a match -- otherwise calling "test1".IsOneOf("test1", "test2") would fail
-		let isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
+		const isObjectFormOfPrimitive = this instanceof Boolean || this instanceof Number || this instanceof String;
 		if (isObjectFormOfPrimitive && ArrayCE(values).Contains(this.valueOf())) {
 			return true;
 		}
 		return false;
 	},
-	
+
 	Pairs: <{
 		<K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
 		<K = string, V = any>(this: XOrWrapped<MapLike<V>>): Pair<K, V>[];
@@ -244,11 +243,11 @@ export const ObjectCE_funcs = {
 		//(): {index: number, key: string, keyNum?: number, value: any}[]; // generics-less version (needed for some ts edge-cases)
 	}>(function() {
 		var result: Pair<any, any>[] = [];
-		let keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
+		const keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
 		for (let i = 0; i < keys.length; i++) {
-			let key = keys[i];
+			const key = keys[i];
 			//if (excludeSpecialKeys && (key == "_" || key == "_key" || key == "_id")) continue;
-			let entry = {index: i, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key as any]};
+			const entry = {index: i, key, keyNum: Number(key), value: this instanceof Map ? this.get(key) : this[key as any]};
 			if (IsNaN(entry.keyNum)) delete entry["keyNum" as any];
 			result.push(entry);
 		}
@@ -263,7 +262,7 @@ export const ObjectCE_funcs = {
 		//(): string[]; // generics-less version (needed for some ts edge-cases)
 	}>(function() {
 		//if (excludeSpecialKeys) return this.Pairs(true).map(a=>a.key);
-		let keys = this instanceof Map ? Array.from((this as Map<any, any>).keys()) : Object.keys(this);
+		const keys = this instanceof Map ? Array.from((this as Map<any, any>).keys()) : Object.keys(this);
 		//if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
 		return keys;
 	}),
@@ -275,15 +274,15 @@ export const ObjectCE_funcs = {
 		//(): any[]; // generics-less version (needed for some ts edge-cases)
 	}>(function(): any[] { // explicit return type needed here fsr, else breaks type-data output for funcs object
 		//if (excludeSpecialKeys) return this.Props(true).map(a=>a.value);
-		return ObjectCES.VKeys(this).map(key=>this instanceof Map ? this.get(key) : this[key as any]);
+		return ObjectCES.VKeys(this).map(key=>(this instanceof Map ? this.get(key) : this[key as any]));
 	}),
 
 	// for symbols
 	/*Pairs_Sym() {
 	};*/
 	Sym(symbolName: string) {
-		let symbols = Object.getOwnPropertySymbols(this);
-		let symbol = symbols.find(a=>a.toString() == `Symbol(${symbolName})`)!;
+		const symbols = Object.getOwnPropertySymbols(this);
+		const symbol = symbols.find(a=>a.toString() == `Symbol(${symbolName})`)!;
 		return this[symbol];
 	},
 
@@ -322,7 +321,7 @@ export const ObjectCE_funcs = {
 		for (var openIndex = 0; openIndex in this; openIndex++);
 		this[openIndex] = item;
 	};*/
-}
+};
 /*export type ArrayCE_funcs_PlusObject<T> = Array<T> & typeof ArrayCE_funcs;
 export interface ArrayCEProxy<T> extends ArrayCE_funcs_PlusObject<T> {}*/
 export interface ObjectCEProxyInterface<T> {

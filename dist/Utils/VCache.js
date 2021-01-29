@@ -1,15 +1,15 @@
-import { ShallowEquals } from "./General";
-import { ArrayCE } from "../ClassExtensions/CE_Array";
+import { ShallowEquals } from "./General.js";
+import { ArrayCE } from "../ClassExtensions/CE_Array.js";
 export class Storage {
     constructor() {
         this.resultUpdateCount = 0;
     }
 }
-export let storages = {};
+export const storages = {};
 export function GetStorageForCachedTransform(transformType, staticProps) {
     //let storageKey = transformType + "|" + JSON.stringify(staticProps);
-    let storageKey = transformType + "|" + staticProps.join("|");
-    let storage = storages[storageKey] || (storages[storageKey] = new Storage());
+    const storageKey = `${transformType}|${staticProps.join("|")}`;
+    const storage = storages[storageKey] || (storages[storageKey] = new Storage());
     return storage;
 }
 /**
@@ -24,7 +24,7 @@ export function GetStorageForCachedTransform(transformType, staticProps) {
 //export function CachedTransform<T, T2, T3>(transformType: string, staticProps: T, dynamicProps: T2, transformFunc: (staticProps: T, dynamicProps: T2)=>T3): T3 {
 export function CachedTransform(transformType, staticProps, dynamicProps, transformFunc) {
     //Assert(dynamicProps != null);
-    let storage = GetStorageForCachedTransform(transformType, staticProps);
+    const storage = GetStorageForCachedTransform(transformType, staticProps);
     if (!ShallowEquals(dynamicProps, storage.lastDynamicProps) || storage.resultUpdateCount == 0) {
         /*MaybeLog(a=>a.cacheUpdates,
             ()=>`Recalculating cache. @Type:${transformType} @StaticProps:${ToJSON(staticProps)} @DynamicProps:${ToJSON(dynamicProps)} @TransformFunc:${transformFunc}`);*/
@@ -41,7 +41,7 @@ export function CombineDynamicPropMaps(...maps) {
         if (map == null)
             return "continue";
         Object.keys(map).forEach(key => {
-            result[mapIndex + "_" + key] = map[key];
+            result[`${mapIndex}_${key}`] = map[key];
         });
     });
     return result;

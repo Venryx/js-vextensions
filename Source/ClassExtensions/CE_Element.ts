@@ -1,8 +1,8 @@
-import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
+import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General.js";
 
 export const ElementCE_funcs = {
 	GetParents(this: Element, topDown = false) {
-		let result = [] as HTMLElement[];
+		const result = [] as HTMLElement[];
 		let currentParent = this.parentElement;
 		while (currentParent) {
 			result.push(currentParent);
@@ -12,7 +12,7 @@ export const ElementCE_funcs = {
 		return result;
 	},
 	GetSelfAndParents(this: HTMLElement, topDown = false) {
-		let result = ElementCE(this).GetParents(topDown);
+		const result = ElementCE(this).GetParents(topDown);
 		return topDown ? result.concat([this]) : [this].concat(result);
 	},
 
@@ -30,7 +30,7 @@ export const ElementCE_funcs = {
 	QuerySelector_BreadthFirst(this: Element, selector: string) {
 		let currentLayerElements = Array.from(this.childNodes);
 		while (currentLayerElements.length) {
-			let firstMatchInLayer = currentLayerElements.find(a=>a["matches"] && a["matches"](selector));
+			const firstMatchInLayer = currentLayerElements.find(a=>a["matches"] && a["matches"](selector));
 			if (firstMatchInLayer) return firstMatchInLayer as HTMLElement;
 			//currentLayerElements = currentLayerElements.SelectMany(a=>[...a.childNodes]);
 			currentLayerElements = currentLayerElements.reduce((acc, item)=>acc.concat(Array.from(item.childNodes)), [] as ChildNode[]);
@@ -41,7 +41,7 @@ export const ElementCE_funcs = {
 	$(this: Element, queryStr: string): HTMLElement[] {
 		return Array.from(this.querySelectorAll(queryStr)) as HTMLElement[];
 	},
-}
+};
 export type ElementCEProxy = Element & typeof ElementCE_funcs;
 export const ElementCE = CreateProxyForClassExtensions<Element, ElementCEProxy>(ElementCE_funcs);
 // maybe make ElementCE preserve the target-type, like ObjectCE and ArrayCE do (not needed atm, since the CE-methods don't make any/much use of the target's type-data)

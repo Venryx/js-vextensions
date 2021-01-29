@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var Vector2_1, Vector3_1, VRect_1;
-import { Global } from "./General";
-import { IsNaN, Assert, NumberCE, ObjectCE, ArrayCE } from "..";
+import { Global } from "./General.js";
+import { IsNaN, Assert, NumberCE, ObjectCE, ArrayCE } from "../index.js";
 function IsNullOrNaN(value) {
     return value === null || IsNaN(value);
 }
@@ -34,16 +34,16 @@ let Vector2 = Vector2_1 = class Vector2 {
         this.y = parseInt(strParts[1]);
     }
     @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-    toString() { return this.x + " " + this.y; }
+    toString() { return `${this.x} ${this.y}`; }
     Equals(other) { return other && this.toString() == other.toString(); }
     NewX(xOrFunc) { return new Vector2_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y); }
     NewY(yOrFunc) { return new Vector2_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc); }
     Plus(...args) {
-        let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
+        const [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
         return new Vector2_1(this.x + x, this.y + y);
     }
     Minus(...args) {
-        let [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
+        const [x, y] = IsVector2iShape(args[0]) ? [args[0].x, args[0].y] : args;
         return new Vector2_1(this.x - x, this.y - y);
     }
     Times(...args) {
@@ -86,16 +86,16 @@ let Vector3 = Vector3_1 = class Vector3 {
     }
     //VDFSerialize() { return this.toString(); } //Swapped().toString(); }
     @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-    toString() { return this.x + " " + this.y + " " + this.z; }
+    toString() { return `${this.x} ${this.y} ${this.z}`; }
     NewX(xOrFunc) { return new Vector3_1(xOrFunc instanceof Function ? xOrFunc(this.x) : xOrFunc, this.y, this.z); }
     NewY(yOrFunc) { return new Vector3_1(this.x, yOrFunc instanceof Function ? yOrFunc(this.y) : yOrFunc, this.z); }
     NewZ(zOrFunc) { return new Vector3_1(this.x, this.y, zOrFunc instanceof Function ? zOrFunc(this.z) : zOrFunc); }
     Minus(...args) {
-        let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+        const [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
         return new Vector3_1(this.x - x, this.y - y, this.z - z);
     }
     Plus(...args) {
-        let [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
+        const [x, y, z] = IsVector3Shape(args[0]) ? [args[0].x, args[0].y, args[0].z] : args;
         return new Vector3_1(this.x + x, this.y + y, this.z + z);
     }
     Times(...args) {
@@ -156,7 +156,7 @@ let VRect = VRect_1 = class VRect {
             this.height = val - this.y;
         }
         else {
-            let oldBottom = this.Bottom;
+            const oldBottom = this.Bottom;
             this.y = val;
             this.Bottom = oldBottom;
         }
@@ -173,7 +173,7 @@ let VRect = VRect_1 = class VRect {
     }
     get Center() { return new Vector2(this.x + (this.width / 2), this.y + (this.height / 2)); }
     set Center(val) {
-        let offset = val.Minus(this.Center);
+        const offset = val.Minus(this.Center);
         this.Position = this.Position.Plus(offset);
     }
     /*@_VDFDeserialize() Deserialize(node) {
@@ -184,7 +184,7 @@ let VRect = VRect_1 = class VRect {
         this.height = parseInt(strParts[3]);
     }
     @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-    toString() { return this.x + " " + this.y + " " + this.width + " " + this.height; }
+    toString() { return `${this.x} ${this.y} ${this.width} ${this.height}`; }
     Equals(other) {
         if (!(other instanceof VRect_1))
             return false;
@@ -245,7 +245,7 @@ let VRect = VRect_1 = class VRect {
     /** Returns true if rect would intersect the other, when wrapped to the 2/8 potential "other-sides" of given frame/backdrop. (-x, +x, -y, +y, -x -y, -x +y, +x -y, +x +y)
      * (note that it does the checks "stupidly", ie. just checking all possible switch-side variants, without checking if "switched side" version is actually on or even near the actual frame/backdrop) */
     Intersects_Advanced(other, options) {
-        let variantsToCompare = [this];
+        const variantsToCompare = [this];
         if (options.xWrappedBy) {
             variantsToCompare.push(...ArrayCE(variantsToCompare).SelectMany(base => {
                 return [base, base.NewX(x => x - options.xWrappedBy), base.NewX(x => x + options.xWrappedBy)];
@@ -279,7 +279,7 @@ let VBounds = class VBounds {
         this.size = new VVector3(parseFloat(sizeParts[0]), parseFloat(sizeParts[1]), parseFloat(sizeParts[2]));
     }
     @_VDFSerialize() Serialize() { return new VDFNode(this.toString()); }*/
-    toString() { return this.position.x + " " + this.position.y + " " + this.position.z + "|" + this.size.x + " " + this.size.y + " " + this.size.z; }
+    toString() { return `${this.position.x} ${this.position.y} ${this.position.z}|${this.size.x} ${this.size.y} ${this.size.z}`; }
 };
 VBounds = __decorate([
     Global

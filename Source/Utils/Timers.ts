@@ -1,5 +1,5 @@
-import {Assert, IsNumber, NumberCE, ArrayCE} from "..";
-import {g} from "./@Internal";
+import {Assert, IsNumber, NumberCE, ArrayCE} from "../index.js";
+import {g} from "./@Internal.js";
 
 export class TimerContext {
 	static default = new TimerContext();
@@ -7,7 +7,7 @@ export class TimerContext {
 
 	timers = [] as Timer[];
 	Reset() {
-		for (let timer of this.timers) {
+		for (const timer of this.timers) {
 			timer.Stop();
 		}
 		this.timers = [];
@@ -16,7 +16,7 @@ export class TimerContext {
 	// Can be useful on platforms (eg. Android) where setInterval() and setTimeout() stop working when the screen is off.
 	// Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
 	ManuallyTriggerOverdueTimers() {
-		for (let timer of this.timers) {
+		for (const timer of this.timers) {
 			if (timer.NextTickFuncOverdue) {
 				timer.nextTickFunc!();
 			}
@@ -77,12 +77,12 @@ export function WaitUntilXThenRun(targetDateTimeInMS: number, func: (...args: an
 }
 
 export function SleepAsync(timeMS): Promise<void> {
-	return new Promise((resolve, reject)=> {
+	return new Promise((resolve, reject)=>{
 		WaitXThenRun(timeMS, resolve);
 	});
 }
 export function SleepAsyncUntil(targetDateTimeInMS: number): Promise<void> {
-	return new Promise((resolve, reject)=> {
+	return new Promise((resolve, reject)=>{
 		WaitUntilXThenRun(targetDateTimeInMS, resolve);
 	});
 }
@@ -92,7 +92,7 @@ export function DoNothingXTimesThenDoY(doNothingCount: number, func: Function, k
 	if (DoNothingXTimesThenDoY_counters[key] == null) {
 		DoNothingXTimesThenDoY_counters[key] = 0;
 	}
-		
+
 	if (DoNothingXTimesThenDoY_counters[key] >= doNothingCount) {
 		func();
 	}
@@ -127,7 +127,7 @@ export class Timer {
 		ArrayCE(timerContext.timers).Remove(this);
 	}
 	ClearContexts() {
-		for (let context of this.timerContexts) {
+		for (const context of this.timerContexts) {
 			this.RemoveFromContext(context);
 		}
 	}
@@ -145,7 +145,7 @@ export class Timer {
 	get NextTickFuncOverdue() {
 		return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
 	}
-	
+
 	callCount_thisRun = 0;
 	callCount_total = 0;
 	Start(initialDelayOverride?: number) {
@@ -153,9 +153,9 @@ export class Timer {
 		if (this.Enabled) this.Stop();
 		this.startTime = Date.now();
 
-		const StartRegularInterval = ()=> {
+		const StartRegularInterval = ()=>{
 			this.nextTickTime = this.startTime + this.intervalInMS;
-			this.timerID = setInterval(this.nextTickFunc = ()=> {
+			this.timerID = setInterval(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
 				this.func();
@@ -170,7 +170,7 @@ export class Timer {
 
 		if (initialDelayOverride != null) {
 			this.nextTickTime = this.startTime + initialDelayOverride;
-			this.timerID = setTimeout(this.nextTickFunc = ()=> {
+			this.timerID = setTimeout(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
 				this.func();
@@ -212,18 +212,18 @@ export function BufferAction(minInterval: number, func: Function);
  * Else, schedule next-run to occur as soon as the minInterval is passed. */
 export function BufferAction(key: string, minInterval: number, func: Function);
 export function BufferAction(...args) {
-	var key: string = "[default]", minInterval: number, func: Function; 
+	var key: string = "[default]", minInterval: number, func: Function;
 	if (args.length == 2) [minInterval, func] = args;
 	else /*if (args.length == 3)*/ [key, minInterval, func] = args;
 
-    var lastScheduledRunTime = funcLastScheduledRunTimes[key] ?? 0;
-    var now = new Date().getTime();
-    var timeSinceLast = now - lastScheduledRunTime;
-    if (timeSinceLast >= minInterval) { // if we've waited enough since last run, run right now
-        func();
-        funcLastScheduledRunTimes[key] = now;
-    } else {
-		let waitingForNextRunAlready = lastScheduledRunTime > now;
+	var lastScheduledRunTime = funcLastScheduledRunTimes[key] ?? 0;
+	var now = new Date().getTime();
+	var timeSinceLast = now - lastScheduledRunTime;
+	if (timeSinceLast >= minInterval) { // if we've waited enough since last run, run right now
+		func();
+		funcLastScheduledRunTimes[key] = now;
+	} else {
+		const waitingForNextRunAlready = lastScheduledRunTime > now;
 		if (!waitingForNextRunAlready) { // else, if we're not already waiting for next-run, schedule next-run
 			var nextRunTime = lastScheduledRunTime + minInterval;
 			var timeTillNextRun = nextRunTime - now;

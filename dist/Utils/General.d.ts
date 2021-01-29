@@ -52,14 +52,14 @@ export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
 export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
-export declare function Compare(a: any, b: any, caseSensitive?: boolean): 1 | 0 | -1;
+export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;
 export declare function CloneArray(array: any): any;
 export declare function Bind<T extends Function>(func: T, newThis: any): T;
 export declare function GetContentSize(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
 export declare function GetContentWidth(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
 export declare function GetContentHeight(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
-export declare let autoElements: {
+export declare const autoElements: {
     [key: string]: Element;
 };
 export declare function GetAutoElement(startHTML: string): Element;

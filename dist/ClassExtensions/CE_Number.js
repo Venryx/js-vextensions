@@ -1,6 +1,6 @@
-import { StringCE } from "./CE_String";
-import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General";
-import { IsNaN } from "../Utils/Types";
+import { StringCE } from "./CE_String.js";
+import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General.js";
+import { IsNaN } from "../Utils/Types.js";
 // Note: Since JS coerces number primitives to the Number class when a property-access is attempted (https://javascriptrefined.io/the-wrapper-object-400311b29151)...
 // ...calling the functions below using, eg. "(3).WrapToRange" *should* make the "this" variable be a Number class within the WrapToRange function.
 // However, this is not the case! -- at least when I try it in the Chrome console, with the actual Webpack-added function. (if I add a function with the exact same source using the console, it is coerced to Number as expected)
@@ -21,14 +21,15 @@ export const NumberCE_funcs = {
         return this / 100;
     },
     ToPercentStr(/** The number of digits after the decimal point. Example: (.12345).ToPercentStr(1) == "12.3%" */ precision) {
-        let number = this * 100;
-        if (precision != null)
-            return number.toFixed(precision) + "%";
-        return number.toString() + "%";
+        const number = this * 100;
+        if (precision != null) {
+            return `${number.toFixed(precision)}%`;
+        }
+        return `${number.toString()}%`;
     },
     IsMultipleOf(multipleOf, maxDistToBeMultiple) {
-        let valRoundedToMultiple = NumberCE(this).RoundTo(multipleOf);
-        let distance = NumberCE(valRoundedToMultiple).Distance(this);
+        const valRoundedToMultiple = NumberCE(this).RoundTo(multipleOf);
+        const distance = NumberCE(valRoundedToMultiple).Distance(this);
         return distance <= maxDistToBeMultiple;
     },
     RoundTo(multiple) {
@@ -38,7 +39,7 @@ export const NumberCE_funcs = {
         return (this + half) - ((this + half) % multiple);*/
         // Realign/scale the possible values/multiples, so that each value is given an integer slot. Place the actual value (this) within the appropriate slot using Math.round() int-rounding, then reverse the scaling to get the true rounded value.
         // (This version handles fractions better. Ex: (.2 + .1).RoundTo(.1) == .3 [NOT 0.3000000000000004, as the simpler approach gives])
-        let multiple_inverted = 1 / multiple;
+        const multiple_inverted = 1 / multiple;
         return Math.round(this * multiple_inverted) / multiple_inverted;
     },
     RoundTo_Str(multipleOf, fractionDigits, removeEmptyFraction = true) {
@@ -53,16 +54,18 @@ export const NumberCE_funcs = {
     FloorTo_Str(multipleOf) {
         var resultValue = NumberCE(this).FloorTo(multipleOf);
         var result = resultValue.toFixed(StringCE(multipleOf.toString()).TrimStart("0").length); // - 1);
-        if (StringCE(result).Contains("."))
+        if (StringCE(result).Contains(".")) {
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+        }
         return result;
     },
     CeilingTo(multipleOf) { return Math.ceil(new Number(this) / multipleOf) * multipleOf; },
     CeilingTo_Str(multipleOf) {
         var resultValue = NumberCE(this).CeilingTo(multipleOf);
         var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-        if (StringCE(result).Contains("."))
+        if (StringCE(result).Contains(".")) {
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+        }
         //result = TrimEnd(TrimEnd(result, "0"), ".");
         return result;
     },
@@ -90,7 +93,7 @@ export const NumberCE_funcs = {
     },
     WrapToRange(min, max, maxOut = true) {
         let val = this;
-        let size = max - min;
+        const size = max - min;
         while (val < min)
             val += size;
         while (maxOut ? val >= max : val > max)

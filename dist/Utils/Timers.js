@@ -1,11 +1,11 @@
-import { Assert, IsNumber, NumberCE, ArrayCE } from "..";
-import { g } from "./@Internal";
+import { Assert, IsNumber, NumberCE, ArrayCE } from "../index.js";
+import { g } from "./@Internal.js";
 export class TimerContext {
     constructor() {
         this.timers = [];
     }
     Reset() {
-        for (let timer of this.timers) {
+        for (const timer of this.timers) {
             timer.Stop();
         }
         this.timers = [];
@@ -13,7 +13,7 @@ export class TimerContext {
     // Can be useful on platforms (eg. Android) where setInterval() and setTimeout() stop working when the screen is off.
     // Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
     ManuallyTriggerOverdueTimers() {
-        for (let timer of this.timers) {
+        for (const timer of this.timers) {
             if (timer.NextTickFuncOverdue) {
                 timer.nextTickFunc();
             }
@@ -119,7 +119,7 @@ export class Timer {
         ArrayCE(timerContext.timers).Remove(this);
     }
     ClearContexts() {
-        for (let context of this.timerContexts) {
+        for (const context of this.timerContexts) {
             this.RemoveFromContext(context);
         }
     }
@@ -204,7 +204,7 @@ export function BufferAction(...args) {
         funcLastScheduledRunTimes[key] = now;
     }
     else {
-        let waitingForNextRunAlready = lastScheduledRunTime > now;
+        const waitingForNextRunAlready = lastScheduledRunTime > now;
         if (!waitingForNextRunAlready) { // else, if we're not already waiting for next-run, schedule next-run
             var nextRunTime = lastScheduledRunTime + minInterval;
             var timeTillNextRun = nextRunTime - now;

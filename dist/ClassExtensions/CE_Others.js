@@ -1,4 +1,4 @@
-import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General";
+import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General.js";
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
 1) Define the functions as class methods, and create a typescript extractor that creates versions of those methods, with an added first parameter that is used as the this-arg.

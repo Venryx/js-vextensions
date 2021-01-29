@@ -1,4 +1,4 @@
-import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General";
+import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General.js";
 
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
@@ -79,7 +79,7 @@ export const FunctionCE = CreateProxyForClassExtensions<Function, FunctionCEProx
 export const FunctionCES = WithFuncsStandalone(FunctionCE_funcs);
 
 function isLeapYear(year) {
-	return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+	return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
 function getDaysInMonth(year, month) {
 	return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
@@ -88,12 +88,12 @@ export const DateCE_funcs = {
 	get MonthDate() {
 		return new Date(this.getFullYear(), this.getMonth(), 1);
 	},
-	IsLeapYear(this: Date) { 
-		return isLeapYear(this.getFullYear()); 
+	IsLeapYear(this: Date) {
+		return isLeapYear(this.getFullYear());
 	},
-  	GetDaysInMonth(this: Date) { 
-		return getDaysInMonth(this.getFullYear(), this.getMonth());
-	},
+  	GetDaysInMonth(this: Date) {
+  		return getDaysInMonth(this.getFullYear(), this.getMonth());
+  	},
 
 	AddMonths(this: Date, value: number) {
 		var n = this.getDate();
