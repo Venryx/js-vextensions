@@ -254,15 +254,15 @@ export const ArrayCE_funcs = {
 		return oldIndex;
 	},
 
-	//ToList<T>(this: T[], itemType = null) { return [].concat(this); }
-	/*ToDictionary(keyFunc, valFunc) {
-		var result = new Dictionary();
-		for (var i in this)
-			result.Add(keyFunc(this[i]), valFunc(this[i]));
+	ToMap<T, Key, Value>(this: T[], keyFunc: (item: T, index: number)=>Key, valFunc: (item: T, index: number)=>Value) {
+		const result = new Map<Key, Value>();
+		for (let [index, item] of this.entries()) {
+			result.set(keyFunc(item, index), valFunc(item, index));
+		}
 		return result;
-	}*/
-	ToMap<T, Value>(this: T[], keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>Value): {[key: string]: Value} {
-		var result = {};
+	},
+	ToMapObj<T, Value>(this: T[], keyFunc: (item: T, index: number)=>string, valFunc: (item: T, index: number)=>Value): {[key: string]: Value} {
+		const result = {};
 		for (let [index, item] of this.entries()) {
 			result[keyFunc(item, index)] = valFunc(item, index);
 		}
