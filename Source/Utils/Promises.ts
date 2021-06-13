@@ -1,7 +1,7 @@
 import {ObjectCE} from "../ClassExtensions/CE_Object.js";
 
 export function WaitTillDataPathIsSet(rootObj: Object, dataPath: string) {
-	return new Promise(async(resolve, reject)=>{
+	return new Promise<void>(async(resolve, reject)=>{
 		const dataPathParts = dataPath.split(".");
 		let currentParent = rootObj;
 		for (const part of dataPathParts) {
@@ -14,7 +14,7 @@ export function WaitTillDataPathIsSet(rootObj: Object, dataPath: string) {
 	});
 }
 export function WaitTillPropertyIsSet(obj: Object, prop: string) {
-	return new Promise((resolve, reject)=>{
+	return new Promise<void>((resolve, reject)=>{
 		ObjectCE(obj)._AddGetterSetter(prop, ()=>{}, value=>{
 			delete obj[prop]; // remove this hook
 			obj[prop] = value; // set to provided value
