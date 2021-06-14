@@ -1,12 +1,12 @@
 // Use this variant if you're importing the library from its Source folder, rather than its root/Dist.
 
-import {TransferPrototypeProps} from "../Source";
-import {ArrayCE_funcs} from "../Source/ClassExtensions/CE_Array";
-import {ElementCE_funcs} from "../Source/ClassExtensions/CE_Element";
-import {NumberCE_funcs} from "../Source/ClassExtensions/CE_Number";
-import {ObjectCE_funcs} from "../Source/ClassExtensions/CE_Object";
-import {DateCE_funcs, FunctionCE_funcs} from "../Source/ClassExtensions/CE_Others";
-import {StringCE_funcs} from "../Source/ClassExtensions/CE_String";
+import {TransferPrototypeProps} from "../Source/index.js";
+import {ArrayCE_funcs} from "../Source/ClassExtensions/CE_Array.js";
+import {ElementCE_funcs} from "../Source/ClassExtensions/CE_Element.js";
+import {NumberCE_funcs} from "../Source/ClassExtensions/CE_Number.js";
+import {ObjectCE_funcs} from "../Source/ClassExtensions/CE_Object.js";
+import {DateCE_funcs, FunctionCE_funcs} from "../Source/ClassExtensions/CE_Others.js";
+import {StringCE_funcs} from "../Source/ClassExtensions/CE_String.js";
 
 function ClassExtensions_ApplyCode() {
 	TransferPrototypeProps(Array.prototype, ArrayCE_funcs, {}, {configurable: true, enumerable: false});
