@@ -185,11 +185,13 @@ export const StringCE_funcs = {
 	AsMultiline(this: String, desiredIndent?: number, removeLineStr = "@RL") {
 		let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
 		if (desiredIndent != null) {
-			let firstLineIndent = (result.match(/^\t+/) || [""])[0].length;
-			if (firstLineIndent) {
-				let lines = result.split("\n");
-				// remove X tabs from start of each line (where X is firstLineIndent)
-				lines = lines.map(line=>line.replace(new RegExp(`^\t{0,${firstLineIndent}}`), ""));
+			let lines = result.split("\n");
+			//let firstLineIndent = (result.match(/^\t+/) || [""])[0].length;
+			const firstNonEmptyLine = lines.find(a=>a.trim().length > 0);
+			if (firstNonEmptyLine) {
+				const firstNonEmptyLineIndent = firstNonEmptyLine.match(/^(\t*)/)?.[1].length;
+				// remove X tabs from start of each line (where X is firstNonEmptyLineIndent)
+				lines = lines.map(line=>line.replace(new RegExp(`^\t{0,${firstNonEmptyLineIndent}}`), ""));
 				// add the desired indent
 				lines = lines.map(line=>"\t".repeat(desiredIndent) + line);
 				// filter out lines with the special remove-line string
