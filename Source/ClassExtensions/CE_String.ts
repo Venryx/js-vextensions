@@ -188,7 +188,7 @@ export const StringCE_funcs = {
 			let lines = result.split("\n");
 			let firstLineIndent = result.match(/^(\t+)/)?.[1].length ?? 0;
 			if (firstLineIndent) {
-				// remove X tabs from start of each line (where X is firstNonEmptyLineIndent)
+				// remove X tabs from start of each line (where X is firstLineIndent)
 				lines = lines.map(line=>line.replace(new RegExp(`^\t{0,${firstLineIndent}}`), ""));
 			}
 			// add the desired indent
