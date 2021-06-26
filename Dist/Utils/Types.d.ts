@@ -40,4 +40,4 @@ export declare function GetValues_ForSchema<T>(enumType: any): {
 }[];
 export declare function CreateStringEnum<T extends {
     [key: string]: 1;
-}>(keysObj: T): readonly [{ [K in keyof T]: K; }, (keyof T)[]];
+}>(keysObj: T): readonly [{ [K in keyof T]: keyof T; }, (keyof T)[]];
