@@ -118,4 +118,13 @@ export function GetValues(enumType) {
 export function GetValues_ForSchema(enumType) {
     return GetValues(enumType).map(value => ({ const: value }));
 }
+export function CreateStringEnum(keysObj) {
+    const optionsObj = {};
+    const values = [];
+    for (const key of Object.keys(keysObj)) {
+        optionsObj[key] = key;
+        values.push(key);
+    }
+    return [optionsObj, values];
+}
 //# sourceMappingURL=Types.js.map

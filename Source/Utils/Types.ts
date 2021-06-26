@@ -125,3 +125,13 @@ export function GetValues<T>(enumType): T[] {
 export function GetValues_ForSchema<T>(enumType) {
 	return GetValues(enumType).map(value=>({const: value}));
 }
+
+export function CreateStringEnum<T extends {[key: string]: 1}>(keysObj: T) {
+	const optionsObj = {} as {[K in keyof T]: K};
+	const values: Array<keyof T> = [];
+	for (const key of Object.keys(keysObj) as Array<keyof T>) {
+		optionsObj[key] = key;
+		values.push(key);
+	}
+	return [optionsObj, values] as const;
+}
