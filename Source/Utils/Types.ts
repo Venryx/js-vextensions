@@ -132,10 +132,10 @@ export function CreateStringEnum<T extends {[key: string]: 1}>(keysObj: T) {
 		// alternative; gives narrower type for MyEnum_.XXX
 		//[K in keyof T]: K
 	};
-	const values: Array<keyof T> = [];
-	for (const key of Object.keys(keysObj) as Array<keyof T>) {
+	const keys = Object.keys(keysObj) as Array<keyof T>;
+	const values = keys; // could also check for string value-overrides on keysObj
+	for (const key of keys) {
 		optionsObj[key] = key;
-		values.push(key);
 	}
 	return [optionsObj, values] as const;
 }
