@@ -129,7 +129,7 @@ export function GetValues_ForSchema<T>(enumType) {
 export function CreateStringEnum<T extends {[key: string]: 1}>(keysObj: T) {
 	const optionsObj = {} as {
 		[K in keyof T]: keyof T
-		// alternative; gives narrower type for MyEnum_.XXX
+		// alternative; gives narrower type for MyEnum.XXX
 		//[K in keyof T]: K
 	};
 	const keys = Object.keys(keysObj) as Array<keyof T>;
