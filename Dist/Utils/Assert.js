@@ -32,6 +32,7 @@ export function AssertSimple(condition, messageOrMessageFunc?: string | Function
     debugger;
     throw new Error(message);
 }*/
+/** Helper class for making in-line assertions. */
 export class A {
     static get NonNull_() {
         return function (value) {

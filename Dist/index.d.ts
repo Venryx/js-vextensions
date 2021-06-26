@@ -9,6 +9,7 @@ export * from "./JSVE.js";
 export * from "./Utils/Assert.js";
 export * from "./Utils/Bridge.js";
 export * from "./Utils/Changes.js";
+export * from "./Utils/Collections.js";
 export * from "./Utils/General.js";
 export * from "./Utils/Numbers.js";
 export * from "./Utils/Promises.js";

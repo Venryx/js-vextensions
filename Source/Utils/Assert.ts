@@ -1,5 +1,6 @@
 import {GetStackTraceStr} from "./General.js";
 import {JSVE} from "../JSVE.js";
+import {emptyArray_forLoading} from "./Collections.js";
 
 //export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): asserts condition {
 export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
@@ -38,6 +39,7 @@ export function AssertSimple(condition, messageOrMessageFunc?: string | Function
 	throw new Error(message);
 }*/
 
+/** Helper class for making in-line assertions. */
 export class A {
 	static get NonNull_() {
 		return function<T>(value: T) {
@@ -49,11 +51,21 @@ export class A {
 		A.NonNull_(value);
 	}
 	static NotEqualTo(val1) {
-	    return new A_NotEqualTo_Wrapper(val1);
+		return new A_NotEqualTo_Wrapper(val1);
 	}
 	/*static OfType(typeNameOrType) {
 	    var type = TT(typeNameOrType);
 	    return new A_OfType_Wrapper(type);
+	}*/
+
+	/*static get NotLoading_() {
+		return function<T>(value: T) {
+			Assert(value !== emptyArray_forLoading as any, ()=>`Value is still being loaded. (ie. equal to emptyArray_forLoading)`);
+			return value;
+		};
+	}
+	static set NotLoading(value) {
+		A.NotLoading_(value);
 	}*/
 }
 export class A_NotEqualTo_Wrapper {

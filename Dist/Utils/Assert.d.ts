@@ -1,5 +1,6 @@
 export declare function Assert(condition: any, messageOrMessageFunc?: string | Function, triggerDebugger?: boolean): condition is true;
 export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
+/** Helper class for making in-line assertions. */
 export declare class A {
     static get NonNull_(): <T>(value: T) => T;
     static set NonNull(value: any);

@@ -1,6 +1,7 @@
 import {IsPrimitive, IsString, IsObject} from "./Types.js";
 import {Assert, ArrayCE, NumberCE, ObjectCE, StringCE} from "../index.js";
 import {g} from "./@Internal.js";
+import {emptyObj} from "./Collections.js";
 
 if (Number.MIN_SAFE_INTEGER == null) {
 	(Number as any).MIN_SAFE_INTEGER = -9007199254740991;
@@ -26,28 +27,6 @@ export function QuickIncrement(name = "default") {
 	return QuickIncrement["values"][name];
 }
 QuickIncrement["values"] = [];
-
-// use singletons for empty-obj and empty-array (that way shallow-compare systems in react, redux, etc. work with them)
-export const emptyObj = {};
-//export const eo = emptyObj as any; // used for (maybeNullVar || eo).prop;
-export const emptyArray = [];
-export const emptyArray_forLoading = []; // like emptyArray, except signifies that the cause of the emptiness is that data is still loading
-
-export function IsSpecialEmptyObjOrArray(val: any) {
-	return IsSpecialEmptyObj(val) || IsSpecialEmptyArray(val);
-}
-export function IsSpecialEmptyObj<T>(obj: Array<T>) {
-	return obj == emptyObj;
-}
-export function IsSpecialEmptyArray<T>(array: Array<T>) {
-	return array == emptyArray || array == emptyArray_forLoading;
-}
-/** To be used with mobx-firelink (in "if null" block): undefined means still-loading, so return emptyArray_forLoading; null means data doesn't exist, so return emptyArray. */
-export function EmptyArrayFor(base: any) {
-	if (base === undefined) return emptyArray_forLoading;
-	if (base === null) return emptyArray;
-	Assert("Cannot get empty-array for base that is not null or undefined.");
-}
 
 /* eslint-disable */
 export function E<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18,E19,E20>(
