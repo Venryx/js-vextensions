@@ -100,6 +100,10 @@ export declare const stringModifiers: {
     hyphenLower_to_hyphenUpper: (str: any) => any;
     /** Some-Prop-Name -> Some-prop-name */
     hyphenUpper_to_hyphenLower: (str: any) => any;
+    /** some_prop_name -> some_Prop_Name */
+    underscoreLower_to_underscoreUpper: (str: any) => any;
+    /** Some_Prop_Name -> Some_prop_name */
+    underscoreUpper_to_underscoreLower: (str: any) => any;
     /** somePropName -> some prop name */
     lowerUpper_to_lowerSpaceLower: (str: any) => any;
     /** some prop Name -> somepropName */

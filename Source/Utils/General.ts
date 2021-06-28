@@ -736,6 +736,12 @@ export const stringModifiers = {
 	/** Some-Prop-Name -> Some-prop-name */
 	hyphenUpper_to_hyphenLower: str=>str.replace(/-([A-Z])/g, (m, sub1)=>`-${sub1.toLowerCase()}`),
 
+	// underscore letter, change case
+	/** some_prop_name -> some_Prop_Name */
+	underscoreLower_to_underscoreUpper: str=>str.replace(/_([a-z])/g, (m, sub1)=>`_${sub1.toUpperCase()}`),
+	/** Some_Prop_Name -> Some_prop_name */
+	underscoreUpper_to_underscoreLower: str=>str.replace(/_([A-Z])/g, (m, sub1)=>`_${sub1.toLowerCase()}`),
+
 	// one-directional
 	// ==========
 
