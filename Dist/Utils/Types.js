@@ -118,12 +118,17 @@ export function GetValues(enumType) {
 export function GetValues_ForSchema(enumType) {
     return GetValues(enumType).map(value => ({ const: value }));
 }
+/**
+ * This isn't really recommended anymore. Instead, I suggest using "real enums", but with string values rather than auto/number values.
+ * If you want to rename something quickly, and not change value for entry yet (eg. because you don't want to have to change cell values in db's and such yet):
+ * 	Rename the key, but then add an underscore at the end to mark it as such. (until the value is changed too -- probably in a batch with other such "buffered renames")
+*/
 export function CreateStringEnum(keysObj) {
     const optionsObj = {};
-    const values = [];
-    for (const key of Object.keys(keysObj)) {
+    const keys = Object.keys(keysObj);
+    const values = keys; // could also check for string value-overrides on keysObj
+    for (const key of keys) {
         optionsObj[key] = key;
-        values.push(key);
     }
     return [optionsObj, values];
 }

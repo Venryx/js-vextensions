@@ -94,8 +94,12 @@ export declare const stringModifiers: {
     startUpper_to_lower: (str: any) => any;
     /** some prop name -> some Prop Name */
     spaceLower_to_spaceUpper: (str: any) => any;
+    /** Some Prop Name -> Some prop name */
+    spaceUpper_to_spaceLower: (str: any) => any;
     /** some-prop-name -> some-Prop-Name */
     hyphenLower_to_hyphenUpper: (str: any) => any;
+    /** Some-Prop-Name -> Some-prop-name */
+    hyphenUpper_to_hyphenLower: (str: any) => any;
     /** somePropName -> some prop name */
     lowerUpper_to_lowerSpaceLower: (str: any) => any;
     /** some prop Name -> somepropName */

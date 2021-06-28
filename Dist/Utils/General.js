@@ -657,16 +657,25 @@ function ConvertFromStandardSchemeToSchemeX(text: string, toScheme: CapScheme) {
 }*/
 // roughly ordered by average position in string at which mod would be applied
 export const stringModifiers = {
+    // bi-directional
+    // ==========
+    // start letter, change case
     /** some prop name -> Some prop name */
     startLower_to_upper: str => str.replace(/^./, a => a.toUpperCase()),
     /** Some prop name -> some prop name */
     startUpper_to_lower: str => str.replace(/^./, a => a.toLowerCase()),
-    // lower to upper
+    // space letter, change case
     /** some prop name -> some Prop Name */
     spaceLower_to_spaceUpper: str => str.replace(/ ([a-z])/g, (m, sub1) => ` ${sub1.toUpperCase()}`),
+    /** Some Prop Name -> Some prop name */
+    spaceUpper_to_spaceLower: str => str.replace(/ ([A-Z])/g, (m, sub1) => ` ${sub1.toLowerCase()}`),
+    // hyphen letter, change case
     /** some-prop-name -> some-Prop-Name */
     hyphenLower_to_hyphenUpper: str => str.replace(/-([a-z])/g, (m, sub1) => `-${sub1.toUpperCase()}`),
-    // upper to lower
+    /** Some-Prop-Name -> Some-prop-name */
+    hyphenUpper_to_hyphenLower: str => str.replace(/-([A-Z])/g, (m, sub1) => `-${sub1.toLowerCase()}`),
+    // one-directional
+    // ==========
     /** somePropName -> some prop name */
     lowerUpper_to_lowerSpaceLower: str => str.replace(/([a-z])([A-Z])/g, (m, sub1, sub2) => `${sub1} ${sub2.toLowerCase()}`),
     /** some prop Name -> somepropName */
