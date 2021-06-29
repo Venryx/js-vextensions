@@ -3,12 +3,7 @@ export declare const StringCE_funcs: {
     TrimEnd(this: String, ...chars: string[]): string;
     Contains(this: String, str: string, startIndex?: number | undefined): boolean;
     hashCode(this: String): number;
-    Matches: {
-        (str: string): {
-            index: number;
-        }[];
-        (regex: RegExp): RegExpMatchArray[];
-    };
+    Matches(this: String, strOrRegex: string | RegExp): RegExpMatchArray[];
     /** indexX is 0-based */
     IndexOf_X(this: String, str: string, indexX: number): number;
     /** indexFromLastX is 0-based */
@@ -43,12 +38,7 @@ export declare const StringCES: import("../Utils/General.js").WithFuncsStandalon
     TrimEnd(this: String, ...chars: string[]): string;
     Contains(this: String, str: string, startIndex?: number | undefined): boolean;
     hashCode(this: String): number;
-    Matches: {
-        (str: string): {
-            index: number;
-        }[];
-        (regex: RegExp): RegExpMatchArray[];
-    };
+    Matches(this: String, strOrRegex: string | RegExp): RegExpMatchArray[];
     /** indexX is 0-based */
     IndexOf_X(this: String, str: string, indexX: number): number;
     /** indexFromLastX is 0-based */

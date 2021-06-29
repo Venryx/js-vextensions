@@ -25,32 +25,38 @@ export const StringCE_funcs = {
         }
         return hash;
     },
-    Matches: (function (strOrRegex) {
+    Matches(strOrRegex) {
+        let result = [];
         if (typeof strOrRegex == "string") {
             let str = strOrRegex;
-            let result = [];
             let lastMatchIndex = -1;
             while (true) {
                 let matchIndex = this.indexOf(str, lastMatchIndex + 1);
                 if (matchIndex == -1)
                     break; // if another match was not found
-                result.push({ index: matchIndex });
+                const entry = [this.slice(matchIndex, matchIndex + str.length)];
+                // use defineProperties, so they're non-enumerable (and so don't show if the match is passed to console.log)
+                Object.defineProperties(entry, {
+                    index: { value: matchIndex },
+                    input: { value: self.toString() },
+                });
+                result.push(entry);
                 lastMatchIndex = matchIndex;
             }
-            return result;
         }
-        let regex = strOrRegex;
-        if (!regex.global) {
-            //throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
-            regex = new RegExp(regex.source, regex.flags + "g");
-        }
-        let result = [];
-        let match;
-        while (match = regex.exec(this)) {
-            result.push(match);
+        else {
+            let regex = strOrRegex;
+            if (!regex.global) {
+                //throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
+                regex = new RegExp(regex.source, regex.flags + "g");
+            }
+            let match;
+            while (match = regex.exec(this)) {
+                result.push(match);
+            }
         }
         return result;
-    }),
+    },
     /*matches_group(regex, /*o:*#/ groupIndex) {
         if (!regex.global)
             throw new Error("Regex must have the 'g' flag added. (otherwise an infinite loop occurs)");
