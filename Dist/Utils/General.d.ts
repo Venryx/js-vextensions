@@ -48,13 +48,6 @@ export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;
 export declare function CloneArray(array: any): any;
 export declare function Bind<T extends Function>(func: T, newThis: any): T;
-export declare function GetContentSize(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
-export declare function GetContentWidth(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
-export declare function GetContentHeight(content: string | Element, includeMargin?: boolean, createClone?: boolean, allowCache?: boolean): any;
-export declare const autoElements: {
-    [key: string]: Element;
-};
-export declare function GetAutoElement(startHTML: string): Element;
 export declare class TreeNode {
     constructor(ancestorNodes: TreeNode[], obj: any, prop: any);
     ancestorNodes: TreeNode[];
