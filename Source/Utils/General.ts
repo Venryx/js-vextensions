@@ -388,65 +388,6 @@ export function Bind<T extends Function>(func: T, newThis: any): T {
 	}
 }*/
 
-function GetHiddenHolder() {
-	let holder = document.querySelector("#jsve_hiddenContainer") as HTMLDivElement;
-	if (holder == null) {
-		holder = document.createElement("div");
-		holder.id = "jsve_hiddenContainer";
-		ObjectCE(holder.style).Extend({position: "absolute", left: `-1000px`, top: `-1000px`, width: `1000px`, height: `1000px`, overflow: "hidden"});
-		document.body.appendChild(holder);
-	}
-	return holder;
-}
-
-declare var $;
-const GetContentSize_cache = {};
-export function GetContentSize(content: string | Element, includeMargin = false, createClone = false, allowCache = true) {
-	/*var holder = $("#jsve_hiddenContainer");
-	var contentClone = content.clone();
-	holder.append(contentClone);
-	var width = contentClone.outerWidth();
-	var height = contentClone.outerHeight();
-	contentClone.remove();*/
-
-	const cacheStore = IsString(content) ? GetContentSize_cache : (content["GetContentSize_cache"] = content["GetContentSize_cache"] || {});
-	const currentHTML = IsString(content) ? content : content.outerHTML;
-
-	let result = cacheStore[currentHTML];
-	if (result == null) {
-		const holder = GetHiddenHolder();
-
-		const testElement = IsString(content) ? $(content) : (createClone ? $(content).clone() : $(content));
-		holder.appendChild(testElement[0]);
-		var width = testElement.outerWidth(includeMargin) as number;
-		var height = testElement.outerHeight(includeMargin) as number;
-		testElement.remove();
-
-		result = {width, height};
-		if (allowCache) {
-			cacheStore[currentHTML] = result;
-		}
-	}
-	return result;
-}
-export function GetContentWidth(content: string | Element, includeMargin = false, createClone = false, allowCache = true) {
-	return GetContentSize(content, includeMargin, createClone, allowCache).width;
-}
-export function GetContentHeight(content: string | Element, includeMargin = false, createClone = false, allowCache = true) {
-	return GetContentSize(content, includeMargin, createClone, allowCache).height;
-}
-
-export const autoElements = {} as {[key: string]: Element};
-export function GetAutoElement(startHTML: string) {
-	if (autoElements[startHTML] == null) {
-		const holder = GetHiddenHolder();
-		const element = $(startHTML)[0];
-		holder.appendChild(element);
-		autoElements[startHTML] = element;
-	}
-	return autoElements[startHTML];
-}
-
 export class TreeNode {
 	constructor(ancestorNodes: TreeNode[], obj, prop) {
 		this.ancestorNodes = ancestorNodes;
