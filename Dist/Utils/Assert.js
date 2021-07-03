@@ -1,5 +1,5 @@
 import { GetStackTraceStr } from "./General.js";
-//export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): asserts condition {
+//export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
 export function Assert(condition, messageOrMessageFunc, triggerDebugger = true) {
     if (condition)
         return undefined;
@@ -54,5 +54,13 @@ export class A_NotEqualTo_Wrapper {
 export class A_OfType_Wrapper {
     constructor(type) { this.type = type; }
     set a(val) { Assert(val != null && val.GetType().IsDerivedFrom(this.type)); }
+}
+/*export function NN(val: any): asserts val {
+    Assert(val != null, ()=>`Value cannot be null. (provided value: ${val})`);
+    return val;
+}*/
+export function NN(val) {
+    Assert(val != null, () => `Value cannot be null. (provided value: ${val})`);
+    return val;
 }
 //# sourceMappingURL=Assert.js.map

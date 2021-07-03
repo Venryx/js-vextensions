@@ -69,7 +69,10 @@ export declare function DeepGet<T>(obj: any, pathOrPathSegments: string | (strin
 export declare function DeepSet(obj: any, pathOrPathSegments: string | (string | number)[], newValue: any, sepChar?: string, createPathSegmentsIfMissing?: boolean, deleteUndefined?: boolean): void;
 /** @param sepChar Default: "/" */
 export declare function WithDeepSet(baseObj: any, pathOrPathSegments: string | (string | number)[], newValue: any, sepChar?: string): any;
-export declare function GetStackTraceStr(sourceStackTrace?: boolean): any;
+export declare function GetStackTraceStr(opt?: {
+    stackTrace?: string;
+    sourceStackTrace?: boolean;
+}): string;
 export declare function GetErrorMessagesUnderElement(element: any): any[];
 export declare function CreateSymbol(name: string): string | symbol;
 export declare const OMIT: string | symbol;

@@ -1,6 +1,9 @@
 export declare const emptyObj: {};
 export declare const emptyArray: any[];
 export declare const emptyArray_forLoading: any[];
+export declare const eo: {};
+export declare const ea: any[];
+export declare const eal: any[];
 export declare function IsSpecialEmptyObjOrArray(val: any): boolean;
 export declare function IsSpecialEmptyObj<T>(obj: Array<T>): boolean;
 export declare function IsSpecialEmptyArray<T>(array: Array<T>): boolean;

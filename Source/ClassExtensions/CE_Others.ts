@@ -1,4 +1,6 @@
+import {Assert} from "../Utils/Assert.js";
 import {WithFuncsStandalone, CreateProxyForClassExtensions} from "../Utils/General.js";
+import {CE} from "./CE_Auto.js";
 
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
@@ -73,10 +75,29 @@ export const FunctionCE_funcs = {
 		this.apply(null, args);
 		return this;
 	},
+
+	NN<Func extends (..._: any[])=>any>(this: Func, ...args: ArgumentsType<Func>): NonNullable<ReturnType<Func>> {
+		const result = this.apply(this, ...args);
+		const triggerDebugger = false; // in case called within Validate function
+		Assert(result != null, `Function "${this.name}" returned ${result}. Since this violates a non-null type-guard, an error has been thrown; the caller will try again once the underlying data changes.`, triggerDebugger);
+		return result;
+	},
+	/*NN<Args extends any[], ReturnType, Func extends (..._: Args)=>ReturnType>(this: Func, ...args: Args) {
+		const result = this.apply(this, ...args);
+		Assert(result != null, `Function "${this.name}" returned ${result}. Since this violates a non-null type-guard, an error has been thrown; the caller will try again once the underlying data changes.`, false);
+		return result as NonNullable<ReturnType>;
+	},*/
 };
 export type FunctionCEProxy = Function & typeof FunctionCE_funcs;
 export const FunctionCE = CreateProxyForClassExtensions<Function, FunctionCEProxy>(FunctionCE_funcs);
 export const FunctionCES = WithFuncsStandalone(FunctionCE_funcs);
+
+type ArgumentsType<F extends (...args: any[]) => any> = F extends (...args: infer A) => any ? A : never;
+type WithNonNullableReturnType<Func> =
+	Func extends ((..._: infer Args)=>infer ReturnType)
+		? (..._: Args)=>NonNullable<ReturnType>
+		: Func;
+type FuncExtensions<Func> = {Wait: Func, NN: WithNonNullableReturnType<Func>};
 
 function isLeapYear(year) {
 	return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));

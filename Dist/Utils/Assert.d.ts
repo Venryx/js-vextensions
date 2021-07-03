@@ -1,4 +1,4 @@
-export declare function Assert(condition: any, messageOrMessageFunc?: string | Function, triggerDebugger?: boolean): condition is true;
+export declare function Assert(condition: any, messageOrMessageFunc?: string | Function | null, triggerDebugger?: boolean): asserts condition;
 export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
 /** Helper class for making in-line assertions. */
 export declare class A {
@@ -16,3 +16,4 @@ export declare class A_OfType_Wrapper {
     type: any;
     set a(val: any);
 }
+export declare function NN<T>(val: T): NonNullable<T>;

@@ -2,8 +2,8 @@ import {GetStackTraceStr} from "./General.js";
 import {JSVE} from "../JSVE.js";
 import {emptyArray_forLoading} from "./Collections.js";
 
-//export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): asserts condition {
-export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
+//export function Assert(condition, messageOrMessageFunc?: string | Function, triggerDebugger = true): condition is true {
+export function Assert(condition, messageOrMessageFunc?: string | Function | null, triggerDebugger = true): asserts condition {
 	if (condition) return undefined as any;
 
 	var message = (messageOrMessageFunc as any) instanceof Function ? (messageOrMessageFunc as any)() : messageOrMessageFunc;
@@ -77,4 +77,13 @@ export class A_OfType_Wrapper {
 	constructor(type) { this.type = type; }
 	type;
    set a(val) { Assert(val != null && val.GetType().IsDerivedFrom(this.type)); }
+}
+
+/*export function NN(val: any): asserts val {
+	Assert(val != null, ()=>`Value cannot be null. (provided value: ${val})`);
+	return val;
+}*/
+export function NN<T>(val: T): NonNullable<T> {
+	Assert(val != null, ()=>`Value cannot be null. (provided value: ${val})`);
+	return val as any;
 }

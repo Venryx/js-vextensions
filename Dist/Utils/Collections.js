@@ -4,6 +4,10 @@ export const emptyObj = {};
 //export const eo = emptyObj as any; // used for (maybeNullVar || eo).prop;
 export const emptyArray = [];
 export const emptyArray_forLoading = []; // like emptyArray, except signifies that the cause of the emptiness is that data is still loading
+// aliases
+export const eo = emptyObj;
+export const ea = emptyArray;
+export const eal = emptyArray_forLoading;
 export function IsSpecialEmptyObjOrArray(val) {
     return IsSpecialEmptyObj(val) || IsSpecialEmptyArray(val);
 }

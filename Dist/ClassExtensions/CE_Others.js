@@ -1,3 +1,4 @@
+import { Assert } from "../Utils/Assert.js";
 import { WithFuncsStandalone, CreateProxyForClassExtensions } from "../Utils/General.js";
 /*
 There are two ways to make a class-extension<or>standalone-functions system:
@@ -67,6 +68,17 @@ export const FunctionCE_funcs = {
         this.apply(null, args);
         return this;
     },
+    NN(...args) {
+        const result = this.apply(this, ...args);
+        const triggerDebugger = false; // in case called within Validate function
+        Assert(result != null, `Function "${this.name}" returned ${result}. Since this violates a non-null type-guard, an error has been thrown; the caller will try again once the underlying data changes.`, triggerDebugger);
+        return result;
+    },
+    /*NN<Args extends any[], ReturnType, Func extends (..._: Args)=>ReturnType>(this: Func, ...args: Args) {
+        const result = this.apply(this, ...args);
+        Assert(result != null, `Function "${this.name}" returned ${result}. Since this violates a non-null type-guard, an error has been thrown; the caller will try again once the underlying data changes.`, false);
+        return result as NonNullable<ReturnType>;
+    },*/
 };
 export const FunctionCE = CreateProxyForClassExtensions(FunctionCE_funcs);
 export const FunctionCES = WithFuncsStandalone(FunctionCE_funcs);

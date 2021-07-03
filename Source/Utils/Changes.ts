@@ -3,6 +3,11 @@ import {ObjectCE} from "../ClassExtensions/CE_Object.js";
 import {ArrayCE} from "../ClassExtensions/CE_Array.js";
 
 export type PropChange = {key: string, oldVal: any, newVal: any};
+// START: type-helper variants
+export function GetPropChanges(oldObj, newObj): PropChange[];
+export function GetPropChanges(oldObj, newObj, returnNullIfSame: false, useJSONCompare?: boolean): PropChange[];
+// END
+export function GetPropChanges(oldObj, newObj, returnNullIfSame?: boolean, useJSONCompare?: boolean): PropChange[]|null;
 export function GetPropChanges(oldObj, newObj, returnNullIfSame = false, useJSONCompare = false): PropChange[]|null {
 	oldObj = oldObj || {}, newObj = newObj || {};
 	const keys = ArrayCE(Object.keys(oldObj).concat(Object.keys(newObj))).Distinct();

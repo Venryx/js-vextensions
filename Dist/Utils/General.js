@@ -1,4 +1,4 @@
-import { IsPrimitive, IsString, IsObject } from "./Types.js";
+import { IsPrimitive, IsObject } from "./Types.js";
 import { Assert, ArrayCE, ObjectCE, StringCE } from "../index.js";
 import { g } from "./@Internal.js";
 import { emptyObj } from "./Collections.js";
@@ -511,25 +511,21 @@ export function WithDeepSet(baseObj, pathOrPathSegments, newValue, sepChar = "/"
     const pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
     return Object.assign(Object.assign({}, baseObj), { [pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue });
 }
-//@((()=> { if (g.onclick == null) g.onclick = ()=>console.log(V.GetStackTraceStr()); }) as any)
-export function GetStackTraceStr(...args) {
-    var stackTrace = null, sourceStackTrace = true;
-    if (IsString(args[0]))
-        [stackTrace, sourceStackTrace] = args;
-    else
-        [sourceStackTrace] = args;
+export function GetStackTraceStr(opt) {
+    opt = E({ sourceStackTrace: true }, opt);
     //stackTrace = stackTrace || new Error()[sourceStackTrace ? "Stack" : "stack"];
     //stackTrace = stackTrace || (sourceStackTrace ? StackTrace.get().then(stack=>stackTrace = stack.map(a=>a.toString()).join("\n")) : new Error().stack);
     //stackTrace = stackTrace || new Error().stack;
-    if (stackTrace == null) {
+    let stackTrace_final = opt.stackTrace;
+    if (stackTrace_final == null) {
         //let fakeError = {}.VAct(a=>Error.captureStackTrace(a));
-        const oldStackLimit = Error.stackTraceLimit;
+        let oldStackLimit = Error.stackTraceLimit;
         Error.stackTraceLimit = Infinity;
-        const fakeError = new Error();
-        stackTrace = fakeError.stack;
+        let fakeError = new Error();
+        stackTrace_final = fakeError.stack;
         Error.stackTraceLimit = oldStackLimit;
     }
-    return stackTrace.substr(StringCE(stackTrace).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+    return stackTrace_final.substr(StringCE(stackTrace_final).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 export function GetErrorMessagesUnderElement(element) {
     //return element.querySelectorAll(":invalid").ToList().map(node=>node.validationMessage || `Invalid value.`);
