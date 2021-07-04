@@ -164,6 +164,7 @@ export const ArrayCE_funcs = {
         this.splice(0, this.length);
     },
     First(matchFunc) {
+        // todo: maybe change this to check matchFunc for each index, rather than checking "=== undefined"
         var result = ArrayCES.FirstOrX(this, matchFunc);
         if (result == null) {
             throw new Error("Matching item not found.");

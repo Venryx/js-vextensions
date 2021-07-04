@@ -180,6 +180,7 @@ export const ArrayCE_funcs = {
 	},
 
 	First<T>(this: T[], matchFunc?: (item: T)=>boolean): T {
+		// todo: maybe change this to check matchFunc for each index, rather than checking "=== undefined"
 		var result = ArrayCES.FirstOrX(this, matchFunc) as T;
 		if (result == null) {
 			throw new Error("Matching item not found.");

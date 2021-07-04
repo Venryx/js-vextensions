@@ -1,9 +1,10 @@
 export declare function Assert(condition: any, messageOrMessageFunc?: string | Function | null, triggerDebugger?: boolean): asserts condition;
 export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
+/** Helper for TypeScript. Lets TS know a condition is always true, without actually checking at runtime. */
+export declare function ATS(condition: any): asserts condition;
 /** Helper class for making in-line assertions. */
 export declare class A {
-    static get NonNull_(): <T>(value: T) => T;
-    static set NonNull(value: any);
+    static set NN(value: any);
     static NotEqualTo(val1: any): A_NotEqualTo_Wrapper;
 }
 export declare class A_NotEqualTo_Wrapper {

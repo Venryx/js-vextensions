@@ -5,9 +5,18 @@ export const emptyObj = {};
 export const emptyArray = [];
 export const emptyArray_forLoading = []; // like emptyArray, except signifies that the cause of the emptiness is that data is still loading
 // aliases
+/** Alias for emptyObj. */
 export const eo = emptyObj;
+/** Alias for emptyObj. */
+export const EO = () => eo;
+/** Alias for emptyArray. */
 export const ea = emptyArray;
+/** Alias for emptyArray. */
+export const EA = () => ea;
+/** Alias for emptyArray_forLoading. */
 export const eal = emptyArray_forLoading;
+/** Alias for emptyArray_forLoading. */
+export const EAL = () => eal;
 export function IsSpecialEmptyObjOrArray(val) {
     return IsSpecialEmptyObj(val) || IsSpecialEmptyArray(val);
 }

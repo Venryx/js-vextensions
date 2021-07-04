@@ -26,6 +26,9 @@ export function AssertWarn(condition, messageOrMessageFunc?: string | Function) 
 	console.warn(`Assert-warn failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
 }
 
+/** Helper for TypeScript. Lets TS know a condition is always true, without actually checking at runtime. */
+export function ATS(condition): asserts condition {}
+
 // this version throws an error with only the provided message -- for ones the user may well see, and which don't need the stack (or "Assert failed) " text)
 /*g.Extend({AssertSimple});
 export function AssertSimple(condition, messageOrMessageFunc?: string | Function) {
@@ -41,14 +44,15 @@ export function AssertSimple(condition, messageOrMessageFunc?: string | Function
 
 /** Helper class for making in-line assertions. */
 export class A {
-	static get NonNull_() {
-		return function<T>(value: T) {
+	/*static get NN() {
+		return function<T>(value: T): NonNullable<T> {
 			Assert(value != null, ()=>`Value cannot be null. (provided value: ${value})`);
-			return value;
+			return value as any;
 		};
-	}
-	static set NonNull(value) {
-		A.NonNull_(value);
+	}*/
+	static set NN(value) {
+		//A.NN(value);
+		NN(value);
 	}
 	static NotEqualTo(val1) {
 		return new A_NotEqualTo_Wrapper(val1);
