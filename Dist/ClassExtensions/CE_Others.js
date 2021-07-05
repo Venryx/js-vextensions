@@ -69,7 +69,7 @@ export const FunctionCE_funcs = {
         return this;
     },
     NN(...args) {
-        const result = this.apply(this, ...args);
+        const result = this.apply(this, args);
         const triggerDebugger = false; // in case called within Validate function
         Assert(result != null, `Function "${this.name}" returned ${result}. Since this violates a non-null type-guard, an error has been thrown; the caller will try again once the underlying data changes.`, triggerDebugger);
         return result;
