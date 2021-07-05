@@ -71,7 +71,7 @@ export const FunctionCE_funcs = {
     NN(...args) {
         const result = this.apply(this, args);
         const triggerDebugger = false; // in case called within Validate function
-        Assert(result != null, `Function "${this.name}" returned ${result}. Since this violates a non-null type-guard, an error has been thrown; the caller will try again once the underlying data changes.`, triggerDebugger);
+        Assert(result != null, `Function "${this.name}" returned ${result}, which violates a non-null type-guard.`, triggerDebugger);
         return result;
     },
     /*NN<Args extends any[], ReturnType, Func extends (..._: Args)=>ReturnType>(this: Func, ...args: Args) {
