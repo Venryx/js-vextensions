@@ -39,7 +39,7 @@ export const StringCE_funcs = {
 				// use defineProperties, so they're non-enumerable (and so don't show if the match is passed to console.log)
 				Object.defineProperties(entry, {
 					index: {value: matchIndex},
-					input: {value: self.toString()},
+					input: {value: this.toString()},
 				});
 				result.push(entry);
 				lastMatchIndex = matchIndex;
