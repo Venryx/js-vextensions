@@ -30,13 +30,25 @@ export declare function IsConstructor(obj: any): obj is new (..._: any[]) => any
  * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key
  * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
  */
-export declare function GetEntries(enumType: Object, nameModifierFunc?: ((name: string) => string) | "ui"): {
+export declare function GetEntries<T extends {
+    [k: string]: any;
+}>(enumType: T, nameModifierFunc?: ((name: string) => string) | "ui"): {
     name: string;
-    value: number;
+    value: T extends {
+        [k: string]: infer X;
+    } ? X : any;
 }[];
-export declare function GetValues<T>(enumType: any): T[];
-export declare function GetValues_ForSchema<T>(enumType: any): {
-    const: unknown;
+export declare function GetValues<T extends {
+    [k: string]: any;
+}>(enumType: T): (T extends {
+    [k: string]: infer X;
+} ? X : any)[];
+export declare function GetValues_ForSchema<T extends {
+    [k: string]: any;
+}>(enumType: T): {
+    const: T extends {
+        [k: string]: infer X;
+    } ? X : any;
 }[];
 /**
  * This isn't really recommended anymore. Instead, I suggest using "real enums", but with string values rather than auto/number values.

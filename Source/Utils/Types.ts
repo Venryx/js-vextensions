@@ -107,7 +107,9 @@ export function CreateClass(baseClass, classMembers) {
  * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key
  * This function returns just the key->value pairs. (with each entry having the form {name: string, value: number | null})
  */
-export function GetEntries(enumType: Object, nameModifierFunc?: ((name: string)=>string) | "ui") {
+export function GetEntries<T extends {[k: string]: any}>(enumType: T, nameModifierFunc?: ((name: string)=>string) | "ui") {
+	type ValType = T extends {[k: string]: infer X} ? X : any;
+	
 	if (nameModifierFunc == "ui") nameModifierFunc = name=>ModifyString(name, m=>[m.lowerUpper_to_lowerSpaceLower]);
 	//let entryNames = Object.keys(enumType).filter(a=>a.match(/^\D/) != null);
 
@@ -117,13 +119,14 @@ export function GetEntries(enumType: Object, nameModifierFunc?: ((name: string)=
 
 	// valid enum values are numbers and null, so any keys other than those are the ones we want (they're the keys for the key->value pairs)
 	const entryNames = Object.keys(enumType).filter(key=>!IsNumberString(key) && key != "null");
-	return entryNames.map(name=>({name: nameModifierFunc instanceof Function ? nameModifierFunc(name) : name, value: enumType[name] as number}));
+	return entryNames.map(name=>({name: nameModifierFunc instanceof Function ? nameModifierFunc(name) : name, value: enumType[name] as ValType}));
 }
-export function GetValues<T>(enumType): T[] {
-	return GetEntries(enumType).map(a=>a.value as any as T);
+export function GetValues<T extends {[k: string]: any}>(enumType: T) {
+	return GetEntries(enumType).map(a=>a.value);
 }
-export function GetValues_ForSchema<T>(enumType) {
-	return GetValues(enumType).map(value=>({const: value}));
+export function GetValues_ForSchema<T extends {[k: string]: any}>(enumType: T) {
+	type ValType = T extends {[k: string]: infer X} ? X : any;
+	return GetValues(enumType).map(value=>({const: value as ValType}));
 }
 
 /**
