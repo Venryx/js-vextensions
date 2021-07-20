@@ -1,6 +1,6 @@
-import { DeepGet, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT } from "../Utils/General.js";
-import { ArrayCE } from "./CE_Array.js";
+import { ConvertPathGetterFuncToPropChain, CreateProxyForClassExtensions, DeepGet, DEL, OMIT, WithFuncsStandalone } from "../Utils/General.js";
 import { IsNaN, IsString, IsSymbol } from "../Utils/Types.js";
+import { ArrayCE } from "./CE_Array.js";
 import { FunctionCE } from "./CE_Others.js";
 /*export type WithFuncThisArgsAsXOrWrapped_Type<Source> = {
     [P in keyof Source]:

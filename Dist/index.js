@@ -16,6 +16,7 @@ export * from "./Utils/Collections.js";
 export * from "./Utils/General.js";
 export * from "./Utils/Numbers.js";
 export * from "./Utils/Promises.js";
+export * from "./Utils/Serialization.js";
 export * from "./Utils/Timers.js";
 export * from "./Utils/Types.js";
 export * from "./Utils/URLs.js";

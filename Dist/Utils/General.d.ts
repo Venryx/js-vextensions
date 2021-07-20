@@ -12,27 +12,6 @@ export declare function WrapWithGo<Func extends (val: any) => any>(func: Func): 
 export declare function ShallowEquals(objA: any, objB: any): boolean;
 export declare function ShallowChanged(objA: any, objB: any): boolean;
 export declare function CopyText(text: any): void;
-export declare function FromJSON(json: string): any;
-export declare function ToJSON(obj: any, replacerFunc?: (this: any, key: string, value: any) => any, spacing?: number): string;
-export declare class ToJSON_Advanced_Options {
-    keysToIgnore: string[];
-    stringifyUndefinedAs: null;
-    trimDuplicates: boolean;
-    trimDuplicates_replaceStr: string;
-    catchErrors: boolean;
-    catchErrors_replaceStr: string;
-    addSpacesAt: AddSpacesAt_Options;
-}
-export declare class AddSpacesAt_Options {
-    insideObjectBraces: boolean;
-    insideArrayBrackets: boolean;
-    betweenPropsOrItems: boolean;
-    betweenPropNameAndValue: boolean;
-}
-export declare function ToJSON_Advanced(obj: any, options?: Partial<ToJSON_Advanced_Options>): string;
-export declare function Clone(obj: any, keepPrototype?: boolean): any;
-/** Variant of Clone which preserves prototypes, non-enumerable properties, and circular links (if enabled). */
-export declare function CloneWithPrototypes(originalObject: any, keepCircularLinks?: boolean): any;
 export declare function Global(target: Function): void;
 export declare class IDProvider {
     lastID: number;

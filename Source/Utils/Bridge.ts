@@ -1,5 +1,5 @@
 import {TryCall} from "./Timers.js";
-import {Assert, ToJSON, IsObject, IsString, FromJSON, E, ObjectCE, ArrayCE, IsFunction} from "../index.js";
+import {Assert, IsObject, IsString, E, ObjectCE, ArrayCE, IsFunction} from "../index.js";
 import {GetTreeNodesInObjTree} from "./General.js";
 
 export class BridgeMessage {
@@ -58,7 +58,7 @@ export class Bridge {
 		// add our own receive-text-func right now
 		this.receiveChannelMessageFunc = channelMessage=>{
 			let channelMessageObj;
-			if (this.channel_stringifyChannelMessageObj && IsString(channelMessage)) channelMessageObj = TryCall(()=>FromJSON(channelMessage)) || {};
+			if (this.channel_stringifyChannelMessageObj && IsString(channelMessage)) channelMessageObj = TryCall(()=>JSON.parse(channelMessage)) || {};
 			if (!this.channel_stringifyChannelMessageObj && IsObject(channelMessage)) channelMessageObj = channelMessage;
 			const bridgeMessage: BridgeMessage = this.channel_wrapBridgeMessage ? channelMessageObj && channelMessageObj["JSVE_Bridge_message"] : channelMessageObj;
 			if (!IsObject(bridgeMessage)) return;
@@ -72,7 +72,7 @@ export class Bridge {
 	SendBridgeMessage(bridgeMessage: BridgeMessage) {
 		this.SerializeFuncsIn(bridgeMessage);
 		const channelMessageObj = this.channel_wrapBridgeMessage ? {JSVE_Bridge_message: bridgeMessage} : bridgeMessage;
-		const channelMessage = this.channel_stringifyChannelMessageObj ? ToJSON(channelMessageObj) : channelMessageObj;
+		const channelMessage = this.channel_stringifyChannelMessageObj ? JSON.stringify(channelMessageObj) : channelMessageObj;
 		this.sendChannelMessageFunc(channelMessage);
 	}
 

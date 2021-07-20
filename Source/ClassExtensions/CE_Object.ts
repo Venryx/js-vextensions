@@ -1,7 +1,6 @@
-import {DeepGet, Clone, WithFuncsStandalone, CreateProxyForClassExtensions, ConvertPathGetterFuncToPropChain, DEL, OMIT} from "../Utils/General.js";
-import {ArrayCE, ArrayCE_funcs} from "./CE_Array.js";
-import {IsNaN, IsObject, IsString, IsSymbol} from "../Utils/Types.js";
-import {Assert} from "../Utils/Assert.js";
+import {ConvertPathGetterFuncToPropChain, CreateProxyForClassExtensions, DeepGet, DEL, OMIT, WithFuncsStandalone} from "../Utils/General.js";
+import {IsNaN, IsString, IsSymbol} from "../Utils/Types.js";
+import {ArrayCE} from "./CE_Array.js";
 import {FunctionCE} from "./CE_Others.js";
 
 export interface VSet_Options {
