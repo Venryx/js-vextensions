@@ -1,5 +1,7 @@
 export declare class FancyFormatOptions {
-    toJSONOptions?: Partial<ToJSON_Advanced_Options>;
+    toJSON_opts?: Partial<ToJSON_Advanced_Options>;
+    toJSON_autoIndent_minLength: number | null;
+    toJSON_autoIndent_indent: number;
 }
 /** For converting log-strings and objects into a single string. (like node-js console.log, except usable anywhere, eg. as Assert message) */
 export declare function FancyFormat(options: Partial<FancyFormatOptions>, ...parts: any[]): string;

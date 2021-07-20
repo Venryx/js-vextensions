@@ -3,18 +3,25 @@ import {Assert} from "./Assert.js";
 import {E} from "./General.js";
 
 export class FancyFormatOptions {
-	toJSONOptions?: Partial<ToJSON_Advanced_Options>;
+	toJSON_opts?: Partial<ToJSON_Advanced_Options>;
+	toJSON_autoIndent_minLength: number|null = 70; // NodeJS's console.log appears to use ~70 as the cutoff
+	toJSON_autoIndent_indent = 2;
 }
 /** For converting log-strings and objects into a single string. (like node-js console.log, except usable anywhere, eg. as Assert message) */
 export function FancyFormat(options: Partial<FancyFormatOptions>, ...parts: any[]) {
 	const opts = E(new FancyFormatOptions(), options);
+	
 	let result = "";
 	for (const [i, part] of parts.entries()) {
 		if (i > 0) result += " ";
 		if (typeof part == "string") {
 			result += part;
 		} else {
-			result += ToJSON_Advanced(part, opts.toJSONOptions);
+			let json = ToJSON_Advanced(part, opts.toJSON_opts);
+			if (opts.toJSON_autoIndent_minLength != null && json.length >= opts.toJSON_autoIndent_minLength) {
+				json = ToJSON_Advanced(part, E(opts.toJSON_opts, {indent: opts.toJSON_autoIndent_indent}));
+			}
+			result += json;
 		}
 	}
 	return result;
