@@ -43,7 +43,7 @@ export class Bridge {
         // ==========
         this.lastCallbackID = -1;
         this.callbacks = {};
-        ObjectCE(this).Extend(ObjectCE(options).Excluding("receiveChannelMessageFunc_addImmediately"));
+        ObjectCE(this).Extend(ObjectCE(options).ExcludeKeys("receiveChannelMessageFunc_addImmediately"));
         if (options.receiveChannelMessageFunc_addImmediately != false)
             this.SetUpReceiver();
     }

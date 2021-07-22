@@ -327,7 +327,10 @@ export const ArrayCE_funcs = {
 		const setWithItems = new Set(this);
 		return [...setWithItems];
 	},
-	Except: <{
+	Include<T>(this: T[], ...includeItems: T[]): T[] {
+		return this.filter(a=>includeItems.indexOf(a) != -1);
+	},
+	Exclude: <{
 		<T>(this: T[], ...excludeItems: T[]): T[];
 		<T>(this: T[], options: {excludeEachOnlyOnce: boolean}, ...excludeItems: T[]): T[];
 	}>(function(...args: any[]) {
@@ -342,7 +345,7 @@ export const ArrayCE_funcs = {
 			}
 			return result;
 		}
-		return this.filter(a=>!ArrayCES.Contains(excludeItems, a));
+		return this.filter(a=>excludeItems.indexOf(a) == -1);
 	}),
 
 	IfEmptyThen<T, T2>(this: T[], valIfSelfIsEmpty: T2): T[] | T2 {

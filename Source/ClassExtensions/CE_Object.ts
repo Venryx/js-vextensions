@@ -197,8 +197,8 @@ export const ObjectCE_funcs = {
 		return this;
 	},
 
-	//Including(...keys: string[]) {
-	Including<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
+	//IncludeKeys(...keys: string[]) {
+	IncludeKeys<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
 		var result = this instanceof Array ? [] : {};
 		for (const key of keys) {
 			//if (!this.hasOwnProperty(key)) continue;
@@ -207,8 +207,8 @@ export const ObjectCE_funcs = {
 		}
 		return result as any;
 	},
-	//Excluding(...keys: string[]) {
-	Excluding<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
+	//ExcludeKeys(...keys: string[]) {
+	ExcludeKeys<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
 		//var result = Clone(this); // doesn't work with funcs
 		/*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
 		for (let key of keys) {
@@ -262,7 +262,7 @@ export const ObjectCE_funcs = {
 	}>(function() {
 		//if (excludeSpecialKeys) return this.Pairs(true).map(a=>a.key);
 		const keys = this instanceof Map ? Array.from((this as Map<any, any>).keys()) : Object.keys(this);
-		//if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
+		//if (excludeSpecialKeys) keys = ArrayCE(keys).Exclude(specialKeys);
 		return keys;
 	}),
 

@@ -308,7 +308,10 @@ export const ArrayCE_funcs = {
         const setWithItems = new Set(this);
         return [...setWithItems];
     },
-    Except: (function (...args) {
+    Include(...includeItems) {
+        return this.filter(a => includeItems.indexOf(a) != -1);
+    },
+    Exclude: (function (...args) {
         let opt, excludeItems;
         if (IsObject(args[0]) && "excludeEachOnlyOnce" in args[0])
             [opt, ...excludeItems] = args;
@@ -321,7 +324,7 @@ export const ArrayCE_funcs = {
             }
             return result;
         }
-        return this.filter(a => !ArrayCES.Contains(excludeItems, a));
+        return this.filter(a => excludeItems.indexOf(a) == -1);
     }),
     IfEmptyThen(valIfSelfIsEmpty) {
         return this.length == 0 ? valIfSelfIsEmpty : this;

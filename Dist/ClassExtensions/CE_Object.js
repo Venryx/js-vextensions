@@ -165,8 +165,8 @@ export const ObjectCE_funcs = {
         Object.setPrototypeOf(this, Object.getPrototypeOf({}));
         return this;
     },
-    //Including(...keys: string[]) {
-    Including(...keys) {
+    //IncludeKeys(...keys: string[]) {
+    IncludeKeys(...keys) {
         var result = this instanceof Array ? [] : {};
         for (const key of keys) {
             //if (!this.hasOwnProperty(key)) continue;
@@ -176,8 +176,8 @@ export const ObjectCE_funcs = {
         }
         return result;
     },
-    //Excluding(...keys: string[]) {
-    Excluding(...keys) {
+    //ExcludeKeys(...keys: string[]) {
+    ExcludeKeys(...keys) {
         //var result = Clone(this); // doesn't work with funcs
         /*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
         for (let key of keys) {
@@ -218,7 +218,7 @@ export const ObjectCE_funcs = {
     VKeys: (function () {
         //if (excludeSpecialKeys) return this.Pairs(true).map(a=>a.key);
         const keys = this instanceof Map ? Array.from(this.keys()) : Object.keys(this);
-        //if (excludeSpecialKeys) keys = ArrayCE(keys).Except(specialKeys);
+        //if (excludeSpecialKeys) keys = ArrayCE(keys).Exclude(specialKeys);
         return keys;
     }),
     VValues: (function () {

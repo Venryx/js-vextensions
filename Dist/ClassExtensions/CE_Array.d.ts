@@ -44,20 +44,21 @@ export declare const ArrayCE_funcs: {
     OrderBy<T_36>(this: T_36[], valFunc?: (item: T_36, index: number) => any): T_36[];
     OrderByDescending<T_37>(this: T_37[], valFunc?: (item: T_37, index: number) => any): T_37[];
     Distinct<T_38>(this: T_38[]): T_38[];
-    Except: {
-        <T_39>(this: T_39[], ...excludeItems: T_39[]): T_39[];
-        <T_40>(this: T_40[], options: {
+    Include<T_39>(this: T_39[], ...includeItems: T_39[]): T_39[];
+    Exclude: {
+        <T_40>(this: T_40[], ...excludeItems: T_40[]): T_40[];
+        <T_41>(this: T_41[], options: {
             excludeEachOnlyOnce: boolean;
-        }, ...excludeItems: T_40[]): T_40[];
+        }, ...excludeItems: T_41[]): T_41[];
     };
-    IfEmptyThen<T_41, T2_2>(this: T_41[], valIfSelfIsEmpty: T2_2): T2_2 | T_41[];
-    Min<T_42>(this: T_42[], valFunc?: ((item: T_42) => number) | undefined, asNumbers?: boolean): T_42;
-    Max<T_43>(this: T_43[], valFunc?: ((item: T_43) => number) | undefined, asNumbers?: boolean): T_43;
-    Sum<T_44 extends number>(this: T_44[]): number;
-    Average<T_45 extends number>(this: T_45[]): number;
-    Median<T_46 extends number>(this: T_46[]): number;
-    Random<T_47>(this: T_47[]): T_47;
-    Join<T_48>(this: T_48[], separator?: string): string;
+    IfEmptyThen<T_42, T2_2>(this: T_42[], valIfSelfIsEmpty: T2_2): T2_2 | T_42[];
+    Min<T_43>(this: T_43[], valFunc?: ((item: T_43) => number) | undefined, asNumbers?: boolean): T_43;
+    Max<T_44>(this: T_44[], valFunc?: ((item: T_44) => number) | undefined, asNumbers?: boolean): T_44;
+    Sum<T_45 extends number>(this: T_45[]): number;
+    Average<T_46 extends number>(this: T_46[]): number;
+    Median<T_47 extends number>(this: T_47[]): number;
+    Random<T_48>(this: T_48[]): T_48;
+    Join<T_49>(this: T_49[], separator?: string): string;
 };
 export interface ArrayCEProxyInterface<T> {
     _magicTypeMarker: T;
@@ -106,18 +107,19 @@ export declare const ArrayCES: import("../Utils/General.js").WithFuncsStandalone
     OrderBy<T_36>(this: T_36[], valFunc?: (item: T_36, index: number) => any): T_36[];
     OrderByDescending<T_37>(this: T_37[], valFunc?: (item: T_37, index: number) => any): T_37[];
     Distinct<T_38>(this: T_38[]): T_38[];
-    Except: {
-        <T_39>(this: T_39[], ...excludeItems: T_39[]): T_39[];
-        <T_40>(this: T_40[], options: {
+    Include<T_39>(this: T_39[], ...includeItems: T_39[]): T_39[];
+    Exclude: {
+        <T_40>(this: T_40[], ...excludeItems: T_40[]): T_40[];
+        <T_41>(this: T_41[], options: {
             excludeEachOnlyOnce: boolean;
-        }, ...excludeItems: T_40[]): T_40[];
+        }, ...excludeItems: T_41[]): T_41[];
     };
-    IfEmptyThen<T_41, T2_2>(this: T_41[], valIfSelfIsEmpty: T2_2): T2_2 | T_41[];
-    Min<T_42>(this: T_42[], valFunc?: ((item: T_42) => number) | undefined, asNumbers?: boolean): T_42;
-    Max<T_43>(this: T_43[], valFunc?: ((item: T_43) => number) | undefined, asNumbers?: boolean): T_43;
-    Sum<T_44 extends number>(this: T_44[]): number;
-    Average<T_45 extends number>(this: T_45[]): number;
-    Median<T_46 extends number>(this: T_46[]): number;
-    Random<T_47>(this: T_47[]): T_47;
-    Join<T_48>(this: T_48[], separator?: string): string;
+    IfEmptyThen<T_42, T2_2>(this: T_42[], valIfSelfIsEmpty: T2_2): T2_2 | T_42[];
+    Min<T_43>(this: T_43[], valFunc?: ((item: T_43) => number) | undefined, asNumbers?: boolean): T_43;
+    Max<T_44>(this: T_44[], valFunc?: ((item: T_44) => number) | undefined, asNumbers?: boolean): T_44;
+    Sum<T_45 extends number>(this: T_45[]): number;
+    Average<T_46 extends number>(this: T_46[]): number;
+    Median<T_47 extends number>(this: T_47[]): number;
+    Random<T_48>(this: T_48[]): T_48;
+    Join<T_49>(this: T_49[], separator?: string): string;
 }>;

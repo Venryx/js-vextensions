@@ -44,8 +44,8 @@ export declare const ObjectCE_funcs: {
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
     As<T_6>(type: new (..._: any[]) => T_6): T_6;
     Strip(): any;
-    Including<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
-    Excluding<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
+    IncludeKeys<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
+    ExcludeKeys<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
@@ -91,8 +91,8 @@ export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalon
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
     As<T_6>(type: new (..._: any[]) => T_6): T_6;
     Strip(): any;
-    Including<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
-    Excluding<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
+    IncludeKeys<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
+    ExcludeKeys<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
