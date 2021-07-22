@@ -691,11 +691,13 @@ export function CreateProxyForClassExtensions<TargetType, ProxyType>(sourceClass
 			const oldFunc = descriptor.value as Function;
 			newDescriptor.value = (...callArgs)=>{
 				const thisArg = thisArgStack[thisArgStack.length - 1];
-				// remove stack-entry before calling func, so that if error occurs, the stack is not left with the "dangling stack-entry"
-				//thisArgStack.length--;
-				thisArgStack.splice(thisArgStack.length - 1, 1);
-
-				const result = oldFunc.apply(thisArg, callArgs);
+				try {
+					var result = oldFunc.apply(thisArg, callArgs);
+				} finally {
+					// ensure that stack-entry is removed at end; else error in func would make the stack invalid (ie. left with a "dangling stack-entry")
+					//thisArgStack.length--;
+					thisArgStack.splice(thisArgStack.length - 1, 1);
+				}
 				return result;
 			};
 		}
