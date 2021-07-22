@@ -15,7 +15,7 @@ export declare class ToJSON_Advanced_Options {
     catchErrors: boolean;
     catchErrors_replaceStr: string;
     indent?: number;
-    addSpacesAt?: AddSpacesAt_Options;
+    addSpacesAt?: Partial<AddSpacesAt_Options>;
 }
 export declare class AddSpacesAt_Options {
     insideObjectBraces: boolean;

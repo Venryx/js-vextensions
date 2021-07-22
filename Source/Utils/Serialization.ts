@@ -53,7 +53,7 @@ export class ToJSON_Advanced_Options {
 	catchErrors = false;
 	catchErrors_replaceStr = "[converting to JSON failed]";
 	indent?: number;
-	addSpacesAt?: AddSpacesAt_Options;
+	addSpacesAt?: Partial<AddSpacesAt_Options>;
 	//maxDepth = 4;
 }
 export class AddSpacesAt_Options {
