@@ -633,9 +633,10 @@ export function CreateProxyForClassExtensions(sourceClass_prototype) {
             const oldFunc = descriptor.value;
             newDescriptor.value = (...callArgs) => {
                 const thisArg = thisArgStack[thisArgStack.length - 1];
-                const result = oldFunc.apply(thisArg, callArgs);
+                // remove stack-entry before calling func, so that if error occurs, the stack is not left with the "dangling stack-entry"
                 //thisArgStack.length--;
                 thisArgStack.splice(thisArgStack.length - 1, 1);
+                const result = oldFunc.apply(thisArg, callArgs);
                 return result;
             };
         }
