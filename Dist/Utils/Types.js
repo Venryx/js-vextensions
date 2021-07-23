@@ -103,7 +103,10 @@ export function CreateClass(baseClass, classMembers) {
  */
 export function GetEntries(enumType, nameModifierFunc) {
     if (nameModifierFunc == "ui")
-        nameModifierFunc = name => ModifyString(name, m => [m.lowerUpper_to_lowerSpaceLower]);
+        nameModifierFunc = name => ModifyString(name, m => [
+            m.startLower_to_upper,
+            m.lowerUpper_to_lowerSpaceLower,
+        ]);
     //let entryNames = Object.keys(enumType).filter(a=>a.match(/^\D/) != null);
     // valid enum values are numbers and null, so any props other than those are the name->value props we want
     /*let nameValuePairs = enumType.Pairs().filter(pair=>!IsNumberString(pair.key) && pair.key != "null");
