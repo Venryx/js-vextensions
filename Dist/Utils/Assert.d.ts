@@ -1,5 +1,7 @@
 export declare function Assert(condition: any, messageOrMessageFunc?: string | Function | null, triggerDebugger?: boolean): asserts condition;
-export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function): void;
+export declare function AssertWarn(condition: any, messageOrMessageFunc?: string | Function, opts?: {
+    addStackTrace?: boolean;
+}): void;
 /** Helper for TypeScript. Lets TS know a condition is always true, without actually checking at runtime. */
 export declare function ATS(condition: any): asserts condition;
 /** Helper class for making in-line assertions. */

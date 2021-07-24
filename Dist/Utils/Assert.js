@@ -14,11 +14,15 @@ export function Assert(condition, messageOrMessageFunc, triggerDebugger = true) 
         throw new Error(`Assert failed) ${message}`);
     return undefined;
 }
-export function AssertWarn(condition, messageOrMessageFunc) {
+export function AssertWarn(condition, messageOrMessageFunc, opts) {
     if (condition)
         return;
     var message = messageOrMessageFunc instanceof Function ? messageOrMessageFunc() : messageOrMessageFunc;
-    console.warn(`Assert-warn failed) ${message}\n\nStackTrace) ${GetStackTraceStr()}`);
+    let message_final = `Assert-warn failed) ${message}`;
+    if (opts === null || opts === void 0 ? void 0 : opts.addStackTrace) {
+        message_final += `\n\nStackTrace) ${GetStackTraceStr()}`;
+    }
+    console.warn(message_final);
 }
 /** Helper for TypeScript. Lets TS know a condition is always true, without actually checking at runtime. */
 export function ATS(condition) { }
