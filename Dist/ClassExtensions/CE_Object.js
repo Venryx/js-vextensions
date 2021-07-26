@@ -191,6 +191,17 @@ export const ObjectCE_funcs = {
         }
         return result;
     },
+    OmitUndefined(alsoOmitNulls = false) {
+        var result = this instanceof Array ? [] : {};
+        for (const key of Object.keys(this)) {
+            if (this[key] === undefined)
+                continue;
+            if (alsoOmitNulls && this[key] === null)
+                continue;
+            result[key] = this[key];
+        }
+        return result;
+    },
     IsOneOf(...values) {
         if (ArrayCE(values).Contains(this)) {
             return true;

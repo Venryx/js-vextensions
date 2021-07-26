@@ -46,6 +46,7 @@ export declare const ObjectCE_funcs: {
     Strip(): any;
     IncludeKeys<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
     ExcludeKeys<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
+    OmitUndefined<T_9>(this: T_9, alsoOmitNulls?: boolean): TargetTFor<T_9>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
@@ -93,6 +94,7 @@ export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalon
     Strip(): any;
     IncludeKeys<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
     ExcludeKeys<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
+    OmitUndefined<T_9>(this: T_9, alsoOmitNulls?: boolean): TargetTFor<T_9>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];

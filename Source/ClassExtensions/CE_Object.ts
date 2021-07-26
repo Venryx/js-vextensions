@@ -221,6 +221,15 @@ export const ObjectCE_funcs = {
 		}
 		return result as any;
 	},
+	OmitUndefined<T>(this: T, alsoOmitNulls = false): TargetTFor<T> {
+		var result = this instanceof Array ? [] : {};
+		for (const key of Object.keys(this)) {
+			if (this[key] === undefined) continue;
+			if (alsoOmitNulls && this[key] === null) continue;
+			result[key] = this[key];
+		}
+		return result as TargetTFor<T>;
+	},
 
 	IsOneOf(...values: any[]): boolean {
 		if (ArrayCE(values).Contains(this)) {
