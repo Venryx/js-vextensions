@@ -105,7 +105,7 @@ export const ObjectCE_funcs = {
 	Extend(x: any, copyNonEnumerable = false) {
 		if (x != null) {
 			for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](x)) {
-				var value = x[key];
+				const value = x[key];
 				this[key] = value;
 			}
 		}
