@@ -199,7 +199,7 @@ export const ObjectCE_funcs = {
 
 	//IncludeKeys(...keys: string[]) {
 	IncludeKeys<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
-		var result = this instanceof Array ? [] : {};
+		let result = this instanceof Array ? [] : {};
 		for (const key of keys) {
 			//if (!this.hasOwnProperty(key)) continue;
 			if (!(key in this)) continue; // we include the value, even if from prototype (user wouldn't list in keys array if didn't want it)
@@ -214,20 +214,31 @@ export const ObjectCE_funcs = {
 		for (let key of keys) {
 			delete result[key];
 		}*/
-		var result = this instanceof Array ? [] : {};
+		let result = this instanceof Array ? [] : {};
 		for (const key of Object.keys(this)) {
 			if (ArrayCE(keys).Contains(key as any)) continue;
 			result[key] = this[key];
 		}
 		return result as any;
 	},
-	OmitUndefined<T>(this: T, alsoOmitNulls = false): TargetTFor<T> {
-		var result = this instanceof Array ? [] : {};
+	OmitUndefined<T>(this: T, alsoOmitNulls = false, keepPrototype = true): TargetTFor<T> {
+		let result = this instanceof Array ? [] : {};
 		for (const key of Object.keys(this)) {
 			if (this[key] === undefined) continue;
 			if (alsoOmitNulls && this[key] === null) continue;
 			result[key] = this[key];
 		}
+		if (keepPrototype) Object.setPrototypeOf(result, Object.getPrototypeOf(this));
+		return result as TargetTFor<T>;
+	},
+	OmitNull<T>(this: T, alsoOmitUndefined = true, keepPrototype = true): TargetTFor<T> {
+		let result = this instanceof Array ? [] : {};
+		for (const key of Object.keys(this)) {
+			if (this[key] === null) continue;
+			if (alsoOmitUndefined && this[key] === undefined) continue;
+			result[key] = this[key];
+		}
+		if (keepPrototype) Object.setPrototypeOf(result, Object.getPrototypeOf(this));
 		return result as TargetTFor<T>;
 	},
 

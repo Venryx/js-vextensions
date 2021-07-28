@@ -167,7 +167,7 @@ export const ObjectCE_funcs = {
     },
     //IncludeKeys(...keys: string[]) {
     IncludeKeys(...keys) {
-        var result = this instanceof Array ? [] : {};
+        let result = this instanceof Array ? [] : {};
         for (const key of keys) {
             //if (!this.hasOwnProperty(key)) continue;
             if (!(key in this))
@@ -183,7 +183,7 @@ export const ObjectCE_funcs = {
         for (let key of keys) {
             delete result[key];
         }*/
-        var result = this instanceof Array ? [] : {};
+        let result = this instanceof Array ? [] : {};
         for (const key of Object.keys(this)) {
             if (ArrayCE(keys).Contains(key))
                 continue;
@@ -191,8 +191,8 @@ export const ObjectCE_funcs = {
         }
         return result;
     },
-    OmitUndefined(alsoOmitNulls = false) {
-        var result = this instanceof Array ? [] : {};
+    OmitUndefined(alsoOmitNulls = false, keepPrototype = true) {
+        let result = this instanceof Array ? [] : {};
         for (const key of Object.keys(this)) {
             if (this[key] === undefined)
                 continue;
@@ -200,6 +200,21 @@ export const ObjectCE_funcs = {
                 continue;
             result[key] = this[key];
         }
+        if (keepPrototype)
+            Object.setPrototypeOf(result, Object.getPrototypeOf(this));
+        return result;
+    },
+    OmitNull(alsoOmitUndefined = true, keepPrototype = true) {
+        let result = this instanceof Array ? [] : {};
+        for (const key of Object.keys(this)) {
+            if (this[key] === null)
+                continue;
+            if (alsoOmitUndefined && this[key] === undefined)
+                continue;
+            result[key] = this[key];
+        }
+        if (keepPrototype)
+            Object.setPrototypeOf(result, Object.getPrototypeOf(this));
         return result;
     },
     IsOneOf(...values) {
