@@ -44,12 +44,19 @@ export function ToJSON(obj, replacerFunc?: (this: any, key: string, value: any)=
 	return JSON.stringify(obj, replacerFunc, spacing);
 }
 
+export type ReplacerFunc = (key: string, value: any)=>any;
 // option defaults set to match the regular JSON.stringify (so can be swapped in without issue)
 export class ToJSON_Advanced_Options {
+	// entry-serialization settings
+	/** Called before other replacement options checked. Return undefined to make no change; return {$omit: true} to skip serialization of the current key. */
+	entryReplacer_pre?: ReplacerFunc;
+	/** Called after other replacement options checked. Return undefined to make no change; return {$omit: true} to skip serialization of the current key. */
+	entryReplacer_post?: ReplacerFunc;
 	keysToIgnore = [] as string[];
 	stringifyUndefinedAs = null;
 	trimDuplicates = false;
 	trimDuplicates_replaceStr = "[circular/duplicate] ";
+	
 	catchErrors = false;
 	catchErrors_replaceStr = "[converting to JSON failed]";
 	indent?: number;
@@ -63,42 +70,57 @@ export class AddSpacesAt_Options {
 	betweenPropNameAndValue = true;
 }
 export function ToJSON_Advanced(obj, options?: Partial<ToJSON_Advanced_Options>) {
-	const opt = E(new ToJSON_Advanced_Options(), options);
-	Assert(!(opt.indent != null && opt.addSpacesAt), "Cannot enable indent and addSpaceAt simultaneously.");
-	const indent = opt.indent ?? (opt.addSpacesAt ? 1 : undefined);
+	const opts = E(new ToJSON_Advanced_Options(), options);
+	Assert(!(opts.indent != null && opts.addSpacesAt), "Cannot enable indent and addSpaceAt simultaneously.");
+	const indent = opts.indent ?? (opts.addSpacesAt ? 1 : undefined);
 
 	const cache = new Set();
 	//let foundDuplicates = false;
 	try {
 		var result = JSON.stringify(obj, (key, value)=>{
-			if (ArrayCE(opt.keysToIgnore).Contains(key)) return;
-			if (opt.trimDuplicates && typeof value == "object" && value != null) {
+			let replacer_lastResult: any;
+			const callReplacer = (replacerFunc: ReplacerFunc)=>{
+				replacer_lastResult = replacerFunc(key, value);
+				// as per func's description, "undefined" being returned means "make no change"
+				if (replacer_lastResult === undefined) return false;
+
+				if (replacer_lastResult != null && replacer_lastResult.$omit === true && Object.keys(replacer_lastResult).length == 1) {
+					replacer_lastResult = undefined;
+				}
+				return true;
+			};
+			
+			if (opts.entryReplacer_pre && callReplacer(opts.entryReplacer_pre)) return replacer_lastResult;
+			if (ArrayCE(opts.keysToIgnore).Contains(key)) return;
+			if (opts.trimDuplicates && typeof value == "object" && value != null) {
 				// if duplicate found, ignore key (for more advanced, see: flatted, json-stringify-safe, etc.)
 				if (cache.has(value)) {
 					//foundDuplicates = true;
-					return opt.trimDuplicates_replaceStr;
+					return opts.trimDuplicates_replaceStr;
 				}
 				cache.add(value);
 			}
-			if (value === undefined && opt.stringifyUndefinedAs !== undefined) {
-				return opt.stringifyUndefinedAs;
+			if (value === undefined && opts.stringifyUndefinedAs !== undefined) {
+				return opts.stringifyUndefinedAs;
 			}
+			if (opts.entryReplacer_post && callReplacer(opts.entryReplacer_post)) return replacer_lastResult;
+
 			return value;
 		}, indent);
 	} catch (ex) {
-		if (opt.catchErrors) {
-			return opt.catchErrors_replaceStr;
+		if (opts.catchErrors) {
+			return opts.catchErrors_replaceStr;
 		}
 		throw ex;
 	}
 
-	if (opt.addSpacesAt) {
+	if (opts.addSpacesAt) {
 		result = result.replace(/^ +/gm, " "); // remove all but the first space for each line
 		result = result.replace(/\n/g, ""); // remove line-breaks
-		if (!opt.addSpacesAt.insideObjectBraces) result = result.replace(/{ /g, "{").replace(/ }/g, "}");
-		if (!opt.addSpacesAt.insideArrayBrackets) result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
-		if (!opt.addSpacesAt.betweenPropsOrItems) result = result.replace(/, /g, ",");
-		if (!opt.addSpacesAt.betweenPropNameAndValue) result = result.replace(/": /g, `":`);
+		if (!opts.addSpacesAt.insideObjectBraces) result = result.replace(/{ /g, "{").replace(/ }/g, "}");
+		if (!opts.addSpacesAt.insideArrayBrackets) result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
+		if (!opts.addSpacesAt.betweenPropsOrItems) result = result.replace(/, /g, ",");
+		if (!opts.addSpacesAt.betweenPropNameAndValue) result = result.replace(/": /g, `":`);
 	}
 	//cache = null; // enable garbage collection
 	/*if (opt.trimCircular && foundDuplicates) {

@@ -7,7 +7,12 @@ export declare class FancyFormatOptions {
 export declare function FancyFormat(options: Partial<FancyFormatOptions>, ...parts: any[]): string;
 export declare function FromJSON(json: string): any;
 export declare function ToJSON(obj: any, replacerFunc?: (this: any, key: string, value: any) => any, spacing?: number): string;
+export declare type ReplacerFunc = (key: string, value: any) => any;
 export declare class ToJSON_Advanced_Options {
+    /** Called before other replacement options checked. Return undefined to make no change; return {$omit: true} to skip serialization of the current key. */
+    entryReplacer_pre?: ReplacerFunc;
+    /** Called after other replacement options checked. Return undefined to make no change; return {$omit: true} to skip serialization of the current key. */
+    entryReplacer_post?: ReplacerFunc;
     keysToIgnore: string[];
     stringifyUndefinedAs: null;
     trimDuplicates: boolean;

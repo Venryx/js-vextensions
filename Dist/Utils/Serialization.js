@@ -64,45 +64,60 @@ export class AddSpacesAt_Options {
 }
 export function ToJSON_Advanced(obj, options) {
     var _a;
-    const opt = E(new ToJSON_Advanced_Options(), options);
-    Assert(!(opt.indent != null && opt.addSpacesAt), "Cannot enable indent and addSpaceAt simultaneously.");
-    const indent = (_a = opt.indent) !== null && _a !== void 0 ? _a : (opt.addSpacesAt ? 1 : undefined);
+    const opts = E(new ToJSON_Advanced_Options(), options);
+    Assert(!(opts.indent != null && opts.addSpacesAt), "Cannot enable indent and addSpaceAt simultaneously.");
+    const indent = (_a = opts.indent) !== null && _a !== void 0 ? _a : (opts.addSpacesAt ? 1 : undefined);
     const cache = new Set();
     //let foundDuplicates = false;
     try {
         var result = JSON.stringify(obj, (key, value) => {
-            if (ArrayCE(opt.keysToIgnore).Contains(key))
+            let replacer_lastResult;
+            const callReplacer = (replacerFunc) => {
+                replacer_lastResult = replacerFunc(key, value);
+                // as per func's description, "undefined" being returned means "make no change"
+                if (replacer_lastResult === undefined)
+                    return false;
+                if (replacer_lastResult != null && replacer_lastResult.$omit === true && Object.keys(replacer_lastResult).length == 1) {
+                    replacer_lastResult = undefined;
+                }
+                return true;
+            };
+            if (opts.entryReplacer_pre && callReplacer(opts.entryReplacer_pre))
+                return replacer_lastResult;
+            if (ArrayCE(opts.keysToIgnore).Contains(key))
                 return;
-            if (opt.trimDuplicates && typeof value == "object" && value != null) {
+            if (opts.trimDuplicates && typeof value == "object" && value != null) {
                 // if duplicate found, ignore key (for more advanced, see: flatted, json-stringify-safe, etc.)
                 if (cache.has(value)) {
                     //foundDuplicates = true;
-                    return opt.trimDuplicates_replaceStr;
+                    return opts.trimDuplicates_replaceStr;
                 }
                 cache.add(value);
             }
-            if (value === undefined && opt.stringifyUndefinedAs !== undefined) {
-                return opt.stringifyUndefinedAs;
+            if (value === undefined && opts.stringifyUndefinedAs !== undefined) {
+                return opts.stringifyUndefinedAs;
             }
+            if (opts.entryReplacer_post && callReplacer(opts.entryReplacer_post))
+                return replacer_lastResult;
             return value;
         }, indent);
     }
     catch (ex) {
-        if (opt.catchErrors) {
-            return opt.catchErrors_replaceStr;
+        if (opts.catchErrors) {
+            return opts.catchErrors_replaceStr;
         }
         throw ex;
     }
-    if (opt.addSpacesAt) {
+    if (opts.addSpacesAt) {
         result = result.replace(/^ +/gm, " "); // remove all but the first space for each line
         result = result.replace(/\n/g, ""); // remove line-breaks
-        if (!opt.addSpacesAt.insideObjectBraces)
+        if (!opts.addSpacesAt.insideObjectBraces)
             result = result.replace(/{ /g, "{").replace(/ }/g, "}");
-        if (!opt.addSpacesAt.insideArrayBrackets)
+        if (!opts.addSpacesAt.insideArrayBrackets)
             result = result.replace(/\[ /g, "[").replace(/ \]/g, "]");
-        if (!opt.addSpacesAt.betweenPropsOrItems)
+        if (!opts.addSpacesAt.betweenPropsOrItems)
             result = result.replace(/, /g, ",");
-        if (!opt.addSpacesAt.betweenPropNameAndValue)
+        if (!opts.addSpacesAt.betweenPropNameAndValue)
             result = result.replace(/": /g, `":`);
     }
     //cache = null; // enable garbage collection
