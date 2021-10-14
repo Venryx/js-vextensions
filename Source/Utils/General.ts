@@ -185,6 +185,7 @@ export function Multiline_NotCommented(functionWithCode) {
 	return result;
 }
 
+/** ES2019+ defines Array.sort as stable, so this isn't really necessary anymore. (although it does augment the comparator with each entry's original-index) */
 export function StableSort<T>(array: T[], compare: (aItem, bItem, aIndex: number, bIndex: number)=>number): T[] { // needed for Chrome
 	var array2 = array.map((item, index)=>({index, item}));
 	array2.sort((a, b)=>{
