@@ -30,25 +30,28 @@ export declare const ObjectCE_funcs: {
     _AddFunction_Inline: any;
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
-    VGet<T, T2>(this: T, func: (self: TargetTFor<T>) => T2): T2;
+    As<T>(type: new (..._: any[]) => T): T | null;
+    Cast<T_1>(type: new (..._: any[]) => T_1): T_1;
+    Strip(): any;
+    /** Executes the given function (passing "this" as the func's "this", and only argument), then returns "this". */
+    VAct<T_2>(this: T_2, func: (self: TargetTFor<T_2>) => any): TargetTFor<T_2>;
+    /** Executes the given function (passing "this" as the func's "this", and only argument). If the func's result is truthy, returns "this"; else, returns null. */
+    Check<T_3>(this: T_3, func: (self: TargetTFor<T_3>) => any): TargetTFor<T_3> | null;
+    VGet<T_4, T2>(this: T_4, func: (self: TargetTFor<T_4>) => T2): T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
-        <T_1, Result>(this: T_1, pathGetterFunc: (self: TargetTFor<T_1>) => Result, resultIfNull?: any): Result;
+        <T_5, Result>(this: T_5, pathGetterFunc: (self: TargetTFor<T_5>) => Result, resultIfNull?: any): Result;
     };
     Extend(x: any, copyNonEnumerable?: boolean): any;
-    Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
+    Extended<T_6, T2_1>(this: T_6, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_6> & T2_1;
     VSet: {
-        <T_3>(this: T_3, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_3>;
-        <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
+        <T_7>(this: T_7, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_7>;
+        <T_8>(this: T_8, props: any, opt?: VSet_Options | undefined): TargetTFor<T_8>;
     };
-    VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
-    As<T_6>(type: new (..._: any[]) => T_6): T_6 | null;
-    Cast<T_7>(type: new (..._: any[]) => T_7): T_7;
-    Strip(): any;
-    IncludeKeys<T_8, Keys extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys): Pick<T_8, Keys[number]>;
-    ExcludeKeys<T_9, Keys_1 extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys_1): Omit<T_9, Keys_1[number]>;
-    OmitUndefined<T_10>(this: T_10, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_10>;
-    OmitNull<T_11>(this: T_11, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
+    IncludeKeys<T_9, Keys extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys): Pick<T_9, Keys[number]>;
+    ExcludeKeys<T_10, Keys_1 extends (keyof T_10)[] = any>(this: XOrWrapped<T_10>, ...keys: Keys_1): Omit<T_10, Keys_1[number]>;
+    OmitUndefined<T_11>(this: T_11, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
+    OmitNull<T_12>(this: T_12, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_12>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
@@ -80,25 +83,28 @@ export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalon
     _AddFunction_Inline: any;
     _AddGetter_Inline: any;
     _AddSetter_Inline: any;
-    VGet<T, T2>(this: T, func: (self: TargetTFor<T>) => T2): T2;
+    As<T>(type: new (..._: any[]) => T): T | null;
+    Cast<T_1>(type: new (..._: any[]) => T_1): T_1;
+    Strip(): any;
+    /** Executes the given function (passing "this" as the func's "this", and only argument), then returns "this". */
+    VAct<T_2>(this: T_2, func: (self: TargetTFor<T_2>) => any): TargetTFor<T_2>;
+    /** Executes the given function (passing "this" as the func's "this", and only argument). If the func's result is truthy, returns "this"; else, returns null. */
+    Check<T_3>(this: T_3, func: (self: TargetTFor<T_3>) => any): TargetTFor<T_3> | null;
+    VGet<T_4, T2>(this: T_4, func: (self: TargetTFor<T_4>) => T2): T2;
     SafeGet: {
         (path: string, resultIfNull?: any): any;
-        <T_1, Result>(this: T_1, pathGetterFunc: (self: TargetTFor<T_1>) => Result, resultIfNull?: any): Result;
+        <T_5, Result>(this: T_5, pathGetterFunc: (self: TargetTFor<T_5>) => Result, resultIfNull?: any): Result;
     };
     Extend(x: any, copyNonEnumerable?: boolean): any;
-    Extended<T_2, T2_1>(this: T_2, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_2> & T2_1;
+    Extended<T_6, T2_1>(this: T_6, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_6> & T2_1;
     VSet: {
-        <T_3>(this: T_3, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_3>;
-        <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
+        <T_7>(this: T_7, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_7>;
+        <T_8>(this: T_8, props: any, opt?: VSet_Options | undefined): TargetTFor<T_8>;
     };
-    VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
-    As<T_6>(type: new (..._: any[]) => T_6): T_6 | null;
-    Cast<T_7>(type: new (..._: any[]) => T_7): T_7;
-    Strip(): any;
-    IncludeKeys<T_8, Keys extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys): Pick<T_8, Keys[number]>;
-    ExcludeKeys<T_9, Keys_1 extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys_1): Omit<T_9, Keys_1[number]>;
-    OmitUndefined<T_10>(this: T_10, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_10>;
-    OmitNull<T_11>(this: T_11, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
+    IncludeKeys<T_9, Keys extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys): Pick<T_9, Keys[number]>;
+    ExcludeKeys<T_10, Keys_1 extends (keyof T_10)[] = any>(this: XOrWrapped<T_10>, ...keys: Keys_1): Omit<T_10, Keys_1[number]>;
+    OmitUndefined<T_11>(this: T_11, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
+    OmitNull<T_12>(this: T_12, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_12>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];

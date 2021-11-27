@@ -89,7 +89,33 @@ export const ObjectCE_funcs = {
 	// normal
 	// ==========
 
-	/* Helper for if you want the result of calling x.SomeMethod(), but you also need access to the x-var for one of its arguments. */
+	As<T>(type: new(..._)=>T): T | null {
+		if (this instanceof type) {
+			return this as T;
+		}
+		return null;
+	},
+	Cast<T>(type: new(..._)=>T) {
+		Object.setPrototypeOf(this, type.prototype);
+		return this as any as T;
+	},
+	Strip() {
+		Object.setPrototypeOf(this, Object.getPrototypeOf({}));
+		return this;
+	},
+
+	/** Executes the given function (passing "this" as the func's "this", and only argument), then returns "this". */
+	VAct<T>(this: T, func: (self: TargetTFor<T>)=>any): TargetTFor<T> {
+		func.call(this, this);
+		return this as any;
+	},
+	/** Executes the given function (passing "this" as the func's "this", and only argument). If the func's result is truthy, returns "this"; else, returns null. */
+	Check<T>(this: T, func: (self: TargetTFor<T>)=>any): TargetTFor<T> | null {
+		const result = func.call(this, this);
+		if (result) return this as any;
+		return null;
+	},
+	/* Executes the given function (passing "this" as the func's "this", and only argument), then returns the func's result. */
 	VGet<T, T2>(this: T, func: (self: TargetTFor<T>)=>T2): T2 {
 		return func.call(this, this);
 	},
@@ -183,25 +209,6 @@ export const ObjectCE_funcs = {
 		}
 		return this as any;
 	}),
-	VAct<T>(this: T, func: (self: TargetTFor<T>)=>any): TargetTFor<T> {
-		func.call(this, this);
-		return this as any;
-	},
-
-	As<T>(type: new(..._)=>T): T | null {
-		if (this instanceof type) {
-			return this as T;
-		}
-		return null;
-	},
-	Cast<T>(type: new(..._)=>T) {
-		Object.setPrototypeOf(this, type.prototype);
-		return this as any as T;
-	},
-	Strip() {
-		Object.setPrototypeOf(this, Object.getPrototypeOf({}));
-		return this;
-	},
 
 	//IncludeKeys(...keys: string[]) {
 	IncludeKeys<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {

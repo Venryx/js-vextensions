@@ -63,7 +63,33 @@ export const ObjectCE_funcs = {
     },
     // normal
     // ==========
-    /* Helper for if you want the result of calling x.SomeMethod(), but you also need access to the x-var for one of its arguments. */
+    As(type) {
+        if (this instanceof type) {
+            return this;
+        }
+        return null;
+    },
+    Cast(type) {
+        Object.setPrototypeOf(this, type.prototype);
+        return this;
+    },
+    Strip() {
+        Object.setPrototypeOf(this, Object.getPrototypeOf({}));
+        return this;
+    },
+    /** Executes the given function (passing "this" as the func's "this", and only argument), then returns "this". */
+    VAct(func) {
+        func.call(this, this);
+        return this;
+    },
+    /** Executes the given function (passing "this" as the func's "this", and only argument). If the func's result is truthy, returns "this"; else, returns null. */
+    Check(func) {
+        const result = func.call(this, this);
+        if (result)
+            return this;
+        return null;
+    },
+    /* Executes the given function (passing "this" as the func's "this", and only argument), then returns the func's result. */
     VGet(func) {
         return func.call(this, this);
     },
@@ -153,24 +179,6 @@ export const ObjectCE_funcs = {
         }
         return this;
     }),
-    VAct(func) {
-        func.call(this, this);
-        return this;
-    },
-    As(type) {
-        if (this instanceof type) {
-            return this;
-        }
-        return null;
-    },
-    Cast(type) {
-        Object.setPrototypeOf(this, type.prototype);
-        return this;
-    },
-    Strip() {
-        Object.setPrototypeOf(this, Object.getPrototypeOf({}));
-        return this;
-    },
     //IncludeKeys(...keys: string[]) {
     IncludeKeys(...keys) {
         let result = this instanceof Array ? [] : {};
