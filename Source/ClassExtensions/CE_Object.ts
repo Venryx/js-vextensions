@@ -188,7 +188,13 @@ export const ObjectCE_funcs = {
 		return this as any;
 	},
 
-	As<T>(type: new(..._)=>T) {
+	As<T>(type: new(..._)=>T): T | null {
+		if (this instanceof type) {
+			return this as T;
+		}
+		return null;
+	},
+	Cast<T>(type: new(..._)=>T) {
 		Object.setPrototypeOf(this, type.prototype);
 		return this as any as T;
 	},

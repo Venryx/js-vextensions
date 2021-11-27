@@ -158,6 +158,12 @@ export const ObjectCE_funcs = {
         return this;
     },
     As(type) {
+        if (this instanceof type) {
+            return this;
+        }
+        return null;
+    },
+    Cast(type) {
         Object.setPrototypeOf(this, type.prototype);
         return this;
     },

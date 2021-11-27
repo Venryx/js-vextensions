@@ -42,12 +42,13 @@ export declare const ObjectCE_funcs: {
         <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
     };
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
-    As<T_6>(type: new (..._: any[]) => T_6): T_6;
+    As<T_6>(type: new (..._: any[]) => T_6): T_6 | null;
+    Cast<T_7>(type: new (..._: any[]) => T_7): T_7;
     Strip(): any;
-    IncludeKeys<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
-    ExcludeKeys<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
-    OmitUndefined<T_9>(this: T_9, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_9>;
-    OmitNull<T_10>(this: T_10, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_10>;
+    IncludeKeys<T_8, Keys extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys): Pick<T_8, Keys[number]>;
+    ExcludeKeys<T_9, Keys_1 extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys_1): Omit<T_9, Keys_1[number]>;
+    OmitUndefined<T_10>(this: T_10, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_10>;
+    OmitNull<T_11>(this: T_11, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
@@ -91,12 +92,13 @@ export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalon
         <T_4>(this: T_4, props: any, opt?: VSet_Options | undefined): TargetTFor<T_4>;
     };
     VAct<T_5>(this: T_5, func: (self: TargetTFor<T_5>) => any): TargetTFor<T_5>;
-    As<T_6>(type: new (..._: any[]) => T_6): T_6;
+    As<T_6>(type: new (..._: any[]) => T_6): T_6 | null;
+    Cast<T_7>(type: new (..._: any[]) => T_7): T_7;
     Strip(): any;
-    IncludeKeys<T_7, Keys extends (keyof T_7)[] = any>(this: XOrWrapped<T_7>, ...keys: Keys): Pick<T_7, Keys[number]>;
-    ExcludeKeys<T_8, Keys_1 extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys_1): Omit<T_8, Keys_1[number]>;
-    OmitUndefined<T_9>(this: T_9, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_9>;
-    OmitNull<T_10>(this: T_10, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_10>;
+    IncludeKeys<T_8, Keys extends (keyof T_8)[] = any>(this: XOrWrapped<T_8>, ...keys: Keys): Pick<T_8, Keys[number]>;
+    ExcludeKeys<T_9, Keys_1 extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys_1): Omit<T_9, Keys_1[number]>;
+    OmitUndefined<T_10>(this: T_10, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_10>;
+    OmitNull<T_11>(this: T_11, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];

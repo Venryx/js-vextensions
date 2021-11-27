@@ -159,6 +159,7 @@ export function Multiline_NotCommented(functionWithCode) {
     result = result.replace(/['"]@((?:.|\n)+)@['"];(\n(?=\n))?/g, (match, sub1) => sub1.replace(/\\n/, "\n"));
     return result;
 }
+/** ES2019+ defines Array.sort as stable, so this isn't really necessary anymore. (although it does augment the comparator with each entry's original-index) */
 export function StableSort(array, compare) {
     var array2 = array.map((item, index) => ({ index, item }));
     array2.sort((a, b) => {

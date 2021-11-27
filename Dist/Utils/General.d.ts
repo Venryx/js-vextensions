@@ -22,6 +22,7 @@ export declare function AsArray(args: any): any;
 export declare function Slice(args: any, start: any, end?: any): any;
 export declare function Multiline(functionWithInCommentMultiline: any, useExtraPreprocessing: any): any;
 export declare function Multiline_NotCommented(functionWithCode: any): any;
+/** ES2019+ defines Array.sort as stable, so this isn't really necessary anymore. (although it does augment the comparator with each entry's original-index) */
 export declare function StableSort<T>(array: T[], compare: (aItem: any, bItem: any, aIndex: number, bIndex: number) => number): T[];
 export declare function Compare(a: any, b: any, caseSensitive?: boolean): 0 | 1 | -1;
 export declare function CloneObject(obj: any, propMatchFunc?: Function, depth?: number): any;
