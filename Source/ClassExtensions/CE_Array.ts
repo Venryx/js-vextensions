@@ -311,7 +311,8 @@ export const ArrayCE_funcs = {
 		return StableSort(this, (a, b, aIndex, bIndex)=>Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 	},
 	OrderByDescending<T>(this: T[], valFunc = (item: T, index: number)=>item as any): T[] {
-		return ArrayCES.OrderBy(this, (item: T, index)=>-valFunc(item, index)) as T[];
+		//return ArrayCES.OrderBy(this, (item: T, index)=>-valFunc(item, index)) as T[];
+		return StableSort(this, (a, b, aIndex, bIndex)=>-Compare(valFunc(a, aIndex), valFunc(b, bIndex)));
 	},
 
 	Distinct<T>(this: T[]): T[] {
