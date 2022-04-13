@@ -29,7 +29,18 @@ export function QuickIncrement(name = "default") {
 QuickIncrement["values"] = [];
 
 /* eslint-disable */
+/** Alias for `Object.assign({}, ...)`. */
 export function E<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18,E19,E20>(
+	e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8,e9?:E9,e10?:E10,
+	e11?:E11,e12?:E12,e13?:E13,e14?:E14,e15?:E15,e16?:E16,e17?:E17,e18?:E18,e19?:E19,e20?:E20,
+):E1&E2&E3&E4&E5&E6&E7&E8&E9&E10&E11&E12&E13&E14&E15&E16&E17&E18&E19&E20 {
+/* eslint-enable */
+	return Object.assign({}, ...arguments);
+}
+
+/** Variant of `E()` that uses `VSet()` to apply each extend object (for extra options), rather than calling `Object.assign({}, ...)`. */
+/* eslint-disable */
+export function EV<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18,E19,E20>(
 	e1?:E1,e2?:E2,e3?:E3,e4?:E4,e5?:E5,e6?:E6,e7?:E7,e8?:E8,e9?:E9,e10?:E10,
 	e11?:E11,e12?:E12,e13?:E13,e14?:E14,e15?:E15,e16?:E16,e17?:E17,e18?:E18,e19?:E19,e20?:E20,
 ):E1&E2&E3&E4&E5&E6&E7&E8&E9&E10&E11&E12&E13&E14&E15&E16&E17&E18&E19&E20 {
@@ -38,7 +49,7 @@ export function E<E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,E13,E14,E15,E16,E17,E18
 	for (const extend of Array.from(arguments)) { // eslint-disable-line
 		if (!IsObject(extend)) continue;
 		//Object.assign(result, extend);
-		// use VSet, for its extra options (eg. using E({someKey: false ? "someValue" : OMIT}) to omit "someKey" entirely)
+		// use VSet, for its extra options (eg. using EF({someKey: false ? "someValue" : OMIT}) to omit "someKey" entirely)
 		ObjectCE(result).VSet(extend);
 	}
 
@@ -340,6 +351,7 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr: string[] | string
 }*/
 
 // probably todo: make this either handle, or warn about, path-getter-func's containing method-calls
+// probably todo: make this include the first variable-name (or at least have an option to do so -- the first var is not always "this"/"a")
 export function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function) {
 	const funcStr = pathGetterFunc.toString();
 	Assert(!funcStr.includes("["), "Path-getter-func cannot contain bracket-based property-access.");

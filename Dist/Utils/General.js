@@ -24,14 +24,21 @@ export function QuickIncrement(name = "default") {
 }
 QuickIncrement["values"] = [];
 /* eslint-disable */
+/** Alias for `Object.assign({}, ...)`. */
 export function E(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20) {
+    /* eslint-enable */
+    return Object.assign({}, ...arguments);
+}
+/** Variant of `E()` that uses `VSet()` to apply each extend object (for extra options), rather than calling `Object.assign({}, ...)`. */
+/* eslint-disable */
+export function EV(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20) {
     /* eslint-enable */
     var result = {};
     for (const extend of Array.from(arguments)) { // eslint-disable-line
         if (!IsObject(extend))
             continue;
         //Object.assign(result, extend);
-        // use VSet, for its extra options (eg. using E({someKey: false ? "someValue" : OMIT}) to omit "someKey" entirely)
+        // use VSet, for its extra options (eg. using EF({someKey: false ? "someValue" : OMIT}) to omit "someKey" entirely)
         ObjectCE(result).VSet(extend);
     }
     // if result is empty, return the same empty-obj each time so it doesn't trigger react-js rerenders
@@ -306,6 +313,7 @@ export function VisitTreeNodesInPath(treeRoot, pathNodesOrStr, visitFunc, visitR
     return treeRoot;
 }*/
 // probably todo: make this either handle, or warn about, path-getter-func's containing method-calls
+// probably todo: make this include the first variable-name (or at least have an option to do so -- the first var is not always "this"/"a")
 export function ConvertPathGetterFuncToPropChain(pathGetterFunc) {
     const funcStr = pathGetterFunc.toString();
     Assert(!funcStr.includes("["), "Path-getter-func cannot contain bracket-based property-access.");
