@@ -364,10 +364,11 @@ export const ArrayCE_funcs = {
     },
     Median() {
         const ordered = ArrayCES.OrderBy(this, a => a);
+        const midIndex_floored = Math.floor(this.length / 2);
         if (this.length % 2 == 0) { // if even number of elements, average two middlest ones
-            return ordered[(this.length / 2) - 1] + ordered[this.length / 2];
+            return (ordered[midIndex_floored - 1] + ordered[midIndex_floored]) / 2;
         }
-        return ordered[this.length / 2]; // otherwise, return the exactly-middle one
+        return ordered[midIndex_floored]; // otherwise, return the exactly-middle one
     },
     Random() {
         let index = Math.floor(Math.random() * this.length);
