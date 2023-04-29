@@ -226,7 +226,14 @@ export const ArrayCE_funcs = {
 		return this[(this.length - 1) - x];
 	},
 
-	Move<T>(this: T[], item: T, newIndex: number, /** Makes-so newIndex is the final index, even if after original/removal index. Default: true */ removeBeforeInsert = true): number {
+	/**
+	 * @param meaningOfNewIndex Options:  
+	 * * final-index: Removes the target entry *prior* to inserting it at `newIndex`; this ensures that target entry ends up at specified index.  
+	 * * relative-slot: Remove the target entry *after* inserting it at `newIndex`; this arguably makes destination-specifying easier,
+	 * since to calculate the `newIndex` you can simply scan for the index in old-list where the desired before-entry is at X-1 and desired after-entry is at X.  
+	 * Default: final-index
+	 * */
+	Move<T>(this: T[], item: T, newIndex: number, meaningOfNewIndex = "final-index" as "final-index" | "relative-slot"): number {
 		var oldIndex = this.indexOf(item);
 
 		/*if (oldIndex != -1) {
@@ -239,7 +246,7 @@ export const ArrayCE_funcs = {
 		}
 		this.Insert(newIndex, item);*/
 
-		if (removeBeforeInsert) {
+		if (meaningOfNewIndex == "final-index") {
 			if (oldIndex != -1) {
 				ArrayCES.RemoveAt(this, oldIndex);
 			}

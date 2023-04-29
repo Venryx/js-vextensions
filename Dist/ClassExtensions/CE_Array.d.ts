@@ -32,7 +32,14 @@ export declare const ArrayCE_funcs: {
     Last<T_26>(this: T_26[], matchFunc?: ((item: T_26) => boolean) | undefined): T_26;
     LastOrX<T_27, X_1 = T_27>(this: T_27[], matchFunc?: ((item: T_27) => boolean) | undefined, x?: X_1 | undefined): T_27 | X_1 | undefined;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
-    Move<T_29>(this: T_29[], item: T_29, newIndex: number, removeBeforeInsert?: boolean): number;
+    /**
+     * @param meaningOfNewIndex Options:
+     * * final-index: Removes the target entry *prior* to inserting it at `newIndex`; this ensures that target entry ends up at specified index.
+     * * relative-slot: Remove the target entry *after* inserting it at `newIndex`; this arguably makes destination-specifying easier,
+     * since to calculate the `newIndex` you can simply scan for the index in old-list where the desired before-entry is at X-1 and desired after-entry is at X.
+     * Default: final-index
+     * */
+    Move<T_29>(this: T_29[], item: T_29, newIndex: number, meaningOfNewIndex?: "final-index" | "relative-slot"): number;
     ToMap<T_30, Key, Value>(this: T_30[], keyFunc: (item: T_30, index: number) => Key, valFunc: (item: T_30, index: number) => Value): Map<Key, Value>;
     ToMapObj<T_31, Value_1>(this: T_31[], keyFunc: (item: T_31, index: number) => string, valFunc: (item: T_31, index: number) => Value_1): {
         [key: string]: Value_1;
@@ -95,7 +102,14 @@ export declare const ArrayCES: import("../Utils/General.js").WithFuncsStandalone
     Last<T_26>(this: T_26[], matchFunc?: ((item: T_26) => boolean) | undefined): T_26;
     LastOrX<T_27, X_1 = T_27>(this: T_27[], matchFunc?: ((item: T_27) => boolean) | undefined, x?: X_1 | undefined): T_27 | X_1 | undefined;
     XFromLast<T_28>(this: T_28[], x: number): T_28;
-    Move<T_29>(this: T_29[], item: T_29, newIndex: number, removeBeforeInsert?: boolean): number;
+    /**
+     * @param meaningOfNewIndex Options:
+     * * final-index: Removes the target entry *prior* to inserting it at `newIndex`; this ensures that target entry ends up at specified index.
+     * * relative-slot: Remove the target entry *after* inserting it at `newIndex`; this arguably makes destination-specifying easier,
+     * since to calculate the `newIndex` you can simply scan for the index in old-list where the desired before-entry is at X-1 and desired after-entry is at X.
+     * Default: final-index
+     * */
+    Move<T_29>(this: T_29[], item: T_29, newIndex: number, meaningOfNewIndex?: "final-index" | "relative-slot"): number;
     ToMap<T_30, Key, Value>(this: T_30[], keyFunc: (item: T_30, index: number) => Key, valFunc: (item: T_30, index: number) => Value): Map<Key, Value>;
     ToMapObj<T_31, Value_1>(this: T_31[], keyFunc: (item: T_31, index: number) => string, valFunc: (item: T_31, index: number) => Value_1): {
         [key: string]: Value_1;

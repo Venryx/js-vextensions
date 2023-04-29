@@ -48,8 +48,13 @@ export function Lerp(from: number, to: number, percentFromXToY: number, keepResu
 	return result;
 }
 export function GetPercentFromXToY(start: number, end: number, val: number, keepResultInRange = true) {
-	// distance-from-x / distance-from-x-required-for-result-'1'
-	var result = (val - start) / (end - start);
+	const startToEnd_distance = end - start;
+	const startToEnd_distanceTraveled = val - start;
+	
+	// handle divide-by-zero case 
+	if (startToEnd_distance == 0) return val >= end ? 1 : 0;
+	
+	var result = startToEnd_distanceTraveled / startToEnd_distance;
 	if (keepResultInRange) result = NumberCE(result).KeepBetween(0, 1) as number;
 	return result;
 }
