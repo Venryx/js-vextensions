@@ -22,7 +22,8 @@ export declare class Timer {
     RemoveFromContext(timerContext: TimerContext): void;
     ClearContexts(): void;
     startTime: number;
-    timerID: number;
+    intervalID: number;
+    timeoutID: number;
     get Enabled(): boolean;
     set Enabled(val: boolean);
     nextTickTime: number | undefined;

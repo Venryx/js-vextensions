@@ -133,8 +133,10 @@ export class Timer {
 	}
 
 	startTime: number;
-	timerID = -1;
-	get Enabled() { return this.timerID != -1; }
+	// we technically could use a shared timerID (since clearInterval currently works for both intervals and timeouts), but equivalence isn't noted in spec, so safer to treat separately
+	intervalID = -1;
+	timeoutID = -1;
+	get Enabled() { return this.intervalID != -1 || this.timeoutID != -1; }
 	set Enabled(val: boolean) {
 		if (val && !this.Enabled) this.Start();
 		else if (!val && this.Enabled) this.Stop();
@@ -155,7 +157,7 @@ export class Timer {
 
 		const StartRegularInterval = ()=>{
 			this.nextTickTime = this.startTime + this.intervalInMS;
-			this.timerID = setInterval(this.nextTickFunc = ()=>{
+			this.intervalID = setInterval(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
 				this.func();
@@ -170,13 +172,14 @@ export class Timer {
 
 		if (initialDelayOverride != null) {
 			this.nextTickTime = this.startTime + initialDelayOverride;
-			this.timerID = setTimeout(this.nextTickFunc = ()=>{
+			this.timeoutID = setTimeout(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
 				this.func();
 				if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
 					this.Stop();
 				} else {
+					this.timeoutID = -1;
 					StartRegularInterval();
 				}
 			}, initialDelayOverride) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
@@ -188,13 +191,18 @@ export class Timer {
 	}
 	/** Clears native-timer, nextTickTime, nextTickFunc, timerID, and callCount_thisRun. (but not: startTime, callCount_total) */
 	Stop() {
-		clearInterval(this.timerID);
-		clearTimeout(this.timerID); // for setTimeout path [clearInterval seems to work for both, but added to be safe, since equivalence not noticed in spec]
+		if (this.intervalID != -1) {
+			clearInterval(this.intervalID);
+			this.intervalID = -1;
+		}
+		if (this.timeoutID != -1) {
+			clearTimeout(this.timeoutID);
+			this.timeoutID = -1;
+		}
 
 		//this.startTime = null;
 		this.nextTickTime = undefined;
 		this.nextTickFunc = undefined;
-		this.timerID = -1;
 		this.callCount_thisRun = 0;
 	}
 }
