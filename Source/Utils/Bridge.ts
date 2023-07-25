@@ -116,7 +116,9 @@ export class Bridge {
 
 	async OnReceiveFunctionCall(bridgeMessage: BridgeMessage) {
 		const result = await this.Local_CallFunc(bridgeMessage.callFunction_name!, ...bridgeMessage.callFunction_args!);
-		this.CallCallback(bridgeMessage.callFunction_callbackID!, result);
+		if (bridgeMessage.callFunction_callbackID != null) {
+			this.CallCallback(bridgeMessage.callFunction_callbackID, result);
+		}
 	}
 	// we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
 	async Local_CallFunc(funcName: string, ...args: any[]) {
@@ -185,6 +187,12 @@ export class Bridge {
 
 	// for sending function-calls to external bridge
 	// ==========
+
+	/** Variant of Call that does not set up a callback, meaning any return value from the remote call will be lost. (however, it also means this function returns synchronously) */
+	Call_NoReturn(funcName: string, ...args: any[]) {
+		const bridgeMessage = new BridgeMessage({callFunction_callbackID: undefined, callFunction_name: funcName, callFunction_args: args});
+		this.SendBridgeMessage(bridgeMessage);
+	}
 
 	Call(funcName: string, ...args: any[]) {
 		return new Promise((resolve, reject)=>{
