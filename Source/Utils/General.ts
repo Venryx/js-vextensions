@@ -74,15 +74,18 @@ export function WrapWithGo<Func extends(val)=>any>(func: Func): Func & {Go: GetF
 }
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
-export function DeepEquals(x: any, y: any, objCheckLayersLeft = -1) {
+export function DeepEquals(x: any, y: any, keyCheckLayersLeft = -1) {
 	// fast route: if values are identical, return true
 	if (Object.is(x, y)) return true;
 
 	// values are non-identical; so if one is a primitive or null/undefined, they can't be equal, thus return false
 	if (typeof x !== "object" || x == null || typeof y !== "object" || y == null) return false;
+	
+	// special case (since it's the one "json relevant" object-type): if only one value is an array, consider them non-equal, thus return false
+	if (Array.isArray(x) != Array.isArray(y)) return false;
 
-	// values are non-identical objects; so if we've reached the object-check layer-limit, return false
-	if (objCheckLayersLeft == 0) return false;
+	// values are non-identical objects; so if we've reached the key-check layer-limit, return false
+	if (keyCheckLayersLeft == 0) return false;
 
 	// check for differences in the objects' field-names and field-values; if any such difference is found, return false
 	// NOTE: Objects.keys() excludes non-enumerable properties; to include them, use Object.getOwnPropertyNames() instead
@@ -92,7 +95,7 @@ export function DeepEquals(x: any, y: any, objCheckLayersLeft = -1) {
 		//if (!(key in y)) return false;
 		//if (!y.hasOwnProperty(key)) return false;
 		if (!hasOwnProperty.call(y, key)) return false;
-		if (!DeepEquals(x[key], y[key], objCheckLayersLeft - 1)) return false;
+		if (!DeepEquals(x[key], y[key], keyCheckLayersLeft - 1)) return false;
 	}
 
 	// none of the checks found a difference, so the objects must be equal
