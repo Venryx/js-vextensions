@@ -73,10 +73,35 @@ export function WrapWithGo<Func extends(val)=>any>(func: Func): Func & {Go: GetF
 	return func as any;
 }
 
-var hasOwnProperty = Object.prototype.hasOwnProperty;
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+export function DeepEquals(x: any, y: any, objCheckLayersLeft = -1) {
+	// fast route: if values are identical, return true
+	if (Object.is(x, y)) return true;
+
+	// values are non-identical; so if one is a primitive or null/undefined, they can't be equal, thus return false
+	if (typeof x !== "object" || x == null || typeof y !== "object" || y == null) return false;
+
+	// values are non-identical objects; so if we've reached the object-check layer-limit, return false
+	if (objCheckLayersLeft == 0) return false;
+
+	// check for differences in the objects' field-names and field-values; if any such difference is found, return false
+	// NOTE: Objects.keys() excludes non-enumerable properties; to include them, use Object.getOwnPropertyNames() instead
+	const xKeys = Object.keys(x), yKeys = Object.keys(y);
+	if (xKeys.length != yKeys.length) return false;
+	for (const key of xKeys) {
+		//if (!(key in y)) return false;
+		//if (!y.hasOwnProperty(key)) return false;
+		if (!hasOwnProperty.call(y, key)) return false;
+		if (!DeepEquals(x[key], y[key], objCheckLayersLeft - 1)) return false;
+	}
+
+	// none of the checks found a difference, so the objects must be equal
+	return true;
+}
+
 // Performs equality by iterating through keys on an object and returning false when any key has values which are not strictly equal between the arguments.
 // Returns true when the values of all keys are strictly equal.
-export function ShallowEquals(objA, objB) {
+/*export function ShallowEquals(objA, objB) {
 	if (Object.is(objA, objB)) return true;
 	if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null) return false;
 
@@ -92,6 +117,9 @@ export function ShallowEquals(objA, objB) {
 	}
 
 	return true;
+}*/
+export function ShallowEquals(objA, objB) {
+	return DeepEquals(objA, objB, 1);
 }
 export function ShallowChanged(objA, objB) {
 	return !ShallowEquals(objA, objB);
