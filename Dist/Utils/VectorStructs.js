@@ -14,6 +14,8 @@ export function IsVector2iShape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y");
 }
 let Vector2 = Vector2_1 = class Vector2 {
+    static get zero() { return new Vector2_1(0, 0); }
+    static get one() { return new Vector2_1(1, 1); }
     constructor(...args) {
         var x = 0, y = 0;
         if (typeof args[0] == "number")
@@ -26,8 +28,6 @@ let Vector2 = Vector2_1 = class Vector2 {
         this.x = x;
         this.y = y;
     }
-    static get zero() { return new Vector2_1(0, 0); }
-    static get one() { return new Vector2_1(1, 1); }
     /*@_VDFDeserialize() Deserialize(node) {
         var strParts = node.primitiveValue.split(" ");
         this.x = parseInt(strParts[0]);
@@ -70,14 +70,14 @@ export function IsVector3Shape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("z");
 }
 let Vector3 = Vector3_1 = class Vector3 {
+    static get zero() { return new Vector3_1(0, 0, 0); }
+    static get one() { return new Vector3_1(1, 1, 1); }
     constructor(x, y, z) {
         Assert(!IsNullOrNaN(x) && !IsNullOrNaN(y) && !IsNullOrNaN(z), "Cannot initialize Vector3i's x/y/z to null/NaN. (if needed, initialize to undefined)");
         this.x = x != null ? x : 0;
         this.y = y != null ? y : 0;
         this.z = z != null ? z : 0;
     }
-    static get zero() { return new Vector3_1(0, 0, 0); }
-    static get one() { return new Vector3_1(1, 1, 1); }
     /*@_VDFDeserialize() Deserialize(node) {
         var strParts = node.primitiveValue.split(" ");
         this.x = parseInt(strParts[0]);
@@ -113,6 +113,9 @@ export function IsVRectShape(obj) {
     return obj.hasOwnProperty("x") && obj.hasOwnProperty("y") && obj.hasOwnProperty("width") && obj.hasOwnProperty("height");
 }
 let VRect = VRect_1 = class VRect {
+    static FromLTWH(rect, y0IsBottom = false) {
+        return new VRect_1(rect.left, rect.top, rect.width, rect.height, y0IsBottom);
+    }
     constructor(...args) {
         let x, y, width, height, y0IsBottom;
         if (args.length == 2 || args.length == 3)
@@ -127,9 +130,6 @@ let VRect = VRect_1 = class VRect {
         //this.y0IsBottom = y0IsBottom != null ? y0IsBottom : false;
         if (y0IsBottom)
             this.y0IsBottom = y0IsBottom;
-    }
-    static FromLTWH(rect, y0IsBottom = false) {
-        return new VRect_1(rect.left, rect.top, rect.width, rect.height, y0IsBottom);
     }
     get Left() { return this.x; }
     set Left(val) {

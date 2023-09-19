@@ -61,7 +61,7 @@ export function IsArray(obj) : obj is Array<any> { return Array.isArray(obj); } 
 export function IsObject(obj) : obj is Object { return typeof obj == "object"; }
 //export function IsObjectOf<T>(obj) : obj is T { return typeof obj == "object"; }
 //export function IsOfType<T>(obj, typeConstructor: new()=>T) : obj is T { return obj.constructor.name == typeConstructor.name; }
-export function IsTypeX<T>(obj: Object, typeConstructor: new(...args: any[])=>T) : obj is T { return obj instanceof typeConstructor; }
+export function IsTypeX<T extends Object>(obj: Object, typeConstructor: new(...args: any[])=>T) : obj is T { return obj instanceof typeConstructor; }
 
 export function IsConstructor(obj) : obj is new(..._)=>any {
 	//return obj instanceof Function && obj.name;

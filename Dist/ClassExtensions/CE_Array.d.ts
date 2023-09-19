@@ -1,7 +1,7 @@
-export declare type ItemTFor<T> = T extends Array<infer ItemT> ? ItemT : T extends ArrayCEProxyInterface<infer ItemT> ? ItemT : T;
-export declare type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
-export declare type LoopControlOp<Result> = "break" | "continue" | ["return", Result];
-export declare type LoopFunc<T, Result> = (value: T, index: number, array: T[]) => LoopControlOp<Result> | undefined;
+export type ItemTFor<T> = T extends Array<infer ItemT> ? ItemT : T extends ArrayCEProxyInterface<infer ItemT> ? ItemT : T;
+export type ArrayLike<T> = Array<T> | ArrayCEProxyInterface<T>;
+export type LoopControlOp<Result> = "break" | "continue" | ["return", Result];
+export type LoopFunc<T, Result> = (value: T, index: number, array: T[]) => LoopControlOp<Result> | undefined;
 export declare const ArrayCE_funcs: {
     ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result | undefined;
     ForEachAsync<T_1, Result_1 = any>(this: T_1[], func: LoopFunc<T_1, Result_1>): Promise<Result_1 | undefined>;
@@ -70,7 +70,7 @@ export declare const ArrayCE_funcs: {
 export interface ArrayCEProxyInterface<T> {
     _magicTypeMarker: T;
 }
-export declare type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
+export type ArrayCEProxy<T> = Array<T> & typeof ArrayCE_funcs & ArrayCEProxyInterface<T>;
 export declare const ArrayCE: <T>(nextThis: T[]) => ArrayCEProxy<T>;
 export declare const ArrayCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     ForEach<T, Result = any>(this: T[], func: LoopFunc<T, Result>): Result | undefined;

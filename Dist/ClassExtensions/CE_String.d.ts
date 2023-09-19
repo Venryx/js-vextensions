@@ -1,7 +1,7 @@
 export declare const StringCE_funcs: {
     TrimStart(this: String, ...chars: string[]): string;
     TrimEnd(this: String, ...chars: string[]): string;
-    Contains(this: String, str: string, startIndex?: number | undefined): boolean;
+    Contains(this: String, str: string, startIndex?: number): boolean;
     hashCode(this: String): number;
     Matches(this: String, strOrRegex: string | RegExp): RegExpMatchArray[];
     /** indexX is 0-based */
@@ -26,17 +26,17 @@ export declare const StringCE_funcs: {
      * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
      * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
      */
-    AsMultiline(this: String, desiredIndent?: number | undefined, removeLineStr?: string): string;
+    AsMultiline(this: String, desiredIndent?: number, removeLineStr?: string): string;
     Substring(this: String, start: number, end: number): string;
     ToInt(): number;
     ToFloat(): number;
 };
-export declare type StringCEProxy = String & typeof StringCE_funcs;
+export type StringCEProxy = String & typeof StringCE_funcs;
 export declare const StringCE: (nextThis: String) => StringCEProxy;
 export declare const StringCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     TrimStart(this: String, ...chars: string[]): string;
     TrimEnd(this: String, ...chars: string[]): string;
-    Contains(this: String, str: string, startIndex?: number | undefined): boolean;
+    Contains(this: String, str: string, startIndex?: number): boolean;
     hashCode(this: String): number;
     Matches(this: String, strOrRegex: string | RegExp): RegExpMatchArray[];
     /** indexX is 0-based */
@@ -61,7 +61,7 @@ export declare const StringCES: import("../Utils/General.js").WithFuncsStandalon
      * @param desiredIndent How much to indent each line. (after removal of the first-non-empty-line indent-length from each of them)
      * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
      */
-    AsMultiline(this: String, desiredIndent?: number | undefined, removeLineStr?: string): string;
+    AsMultiline(this: String, desiredIndent?: number, removeLineStr?: string): string;
     Substring(this: String, start: number, end: number): string;
     ToInt(): number;
     ToFloat(): number;

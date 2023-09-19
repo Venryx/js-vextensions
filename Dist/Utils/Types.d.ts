@@ -24,7 +24,7 @@ export declare function IsSymbol(obj: any, allowSymbolObj?: boolean): obj is sym
 export declare function IsFunction(obj: any): obj is Function;
 export declare function IsArray(obj: any): obj is Array<any>;
 export declare function IsObject(obj: any): obj is Object;
-export declare function IsTypeX<T>(obj: Object, typeConstructor: new (...args: any[]) => T): obj is T;
+export declare function IsTypeX<T extends Object>(obj: Object, typeConstructor: new (...args: any[]) => T): obj is T;
 export declare function IsConstructor(obj: any): obj is new (..._: any[]) => any;
 /**
  * Typescript enums compile to an object with each `key = value` pair converted into two props: key->value, value->key

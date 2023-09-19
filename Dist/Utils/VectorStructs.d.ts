@@ -1,4 +1,4 @@
-export declare type Vector2Shape = {
+export type Vector2Shape = {
     x: number;
     y: number;
 };
@@ -36,7 +36,7 @@ export declare class Vector2 {
     DividedBy(otherX: number, otherY: number): Vector2;
     DistanceTo(other: Vector2): number;
 }
-export declare type Vector3Shape = {
+export type Vector3Shape = {
     x: number;
     y: number;
     z: number;
@@ -65,7 +65,7 @@ export declare class Vector3 {
     Times(other: number): Vector3;
     Times(otherX: number, otherY: number): Vector3;
 }
-export declare type VRectShape = {
+export type VRectShape = {
     x: number;
     y: number;
     width: number;

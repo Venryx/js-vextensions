@@ -1,7 +1,7 @@
 {
   "name": "js-vextensions",
   "description": "Extensions for Javascript, by Venryx.",
-  "version": "1.0.72",
+  "version": "1.0.73",
   "author": "Venryx (https://venryx.com)",
   "main": "Dist/index.js",
   "typings": "Dist/index.d.ts",
@@ -25,7 +25,7 @@
     "react-dom": "^15.3.0",
     "style-loader": "^0.13.0",
     "ts-loader": "^9.2.3",
-    "typescript": "^4.3.2"
+    "typescript": "^5.0.0"
   },
   "dependencies": {}
 }

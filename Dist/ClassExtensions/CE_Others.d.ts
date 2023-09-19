@@ -6,7 +6,7 @@ export declare const FunctionCE_funcs: {
     RunThenReturn(this: Function, ...args: any[]): Function;
     NN<Func extends (..._: any[]) => any>(this: Func, ...args: ArgumentsType<Func>): NonNullable<ReturnType<Func>>;
 };
-export declare type FunctionCEProxy = Function & typeof FunctionCE_funcs;
+export type FunctionCEProxy = Function & typeof FunctionCE_funcs;
 export declare const FunctionCE: (nextThis: Function) => FunctionCEProxy;
 export declare const FunctionCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     GetName(this: Function): string;
@@ -16,7 +16,7 @@ export declare const FunctionCES: import("../Utils/General.js").WithFuncsStandal
     RunThenReturn(this: Function, ...args: any[]): Function;
     NN<Func extends (..._: any[]) => any>(this: Func, ...args: ArgumentsType<Func>): NonNullable<ReturnType<Func>>;
 }>;
-declare type ArgumentsType<F extends (...args: any[]) => any> = F extends (...args: infer A) => any ? A : never;
+type ArgumentsType<F extends (...args: any[]) => any> = F extends (...args: infer A) => any ? A : never;
 export declare const DateCE_funcs: {
     readonly MonthDate: Date;
     IsLeapYear(this: Date): boolean;
@@ -24,7 +24,7 @@ export declare const DateCE_funcs: {
     AddMonths(this: Date, value: number): Date;
     Clone(this: Date): Date;
 };
-export declare type DateCEProxy = Date & typeof DateCE_funcs;
+export type DateCEProxy = Date & typeof DateCE_funcs;
 export declare const DateCE: (nextThis: Date) => DateCEProxy;
 export declare const DateCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     readonly MonthDate: Date;

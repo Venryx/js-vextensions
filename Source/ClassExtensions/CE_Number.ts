@@ -80,14 +80,14 @@ export const NumberCE_funcs = {
 		if (min > max && allowFixMinMax) {
 			[min, max] = [max, min];
 		}
-		return this >= min && this <= max;
+		return this as number >= min && this as number <= max;
 	},
 	KeepBetween(this: Number, min: number, max: number, allowFixMinMax = true) {
 		if (min > max && allowFixMinMax) {
 			[min, max] = [max, min];
 		}
-		if (this < min) return min;
-		if (this > max) return max;
+		if (this as number < min) return min;
+		if (this as number > max) return max;
 		return this as number;
 	},
 	WrapToRange(this: Number, min: number, max: number, maxOut = true) {

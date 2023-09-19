@@ -72,16 +72,6 @@ function GetUrlVars(url, allowQuestionMarkAsVarSep = true) {
     return fromAddressBar ? URL.Parse(GetCurrentURLString()) : URL.FromState(State("router"));
 }*/
 export class VURL {
-    constructor(domain = "", pathNodes = [], queryVars = [], hash = "") {
-        //AssertWarn(domain.match(/^[A-Za-z-:./]+$/) != null, "Domain seems to contain")
-        if (domain.includes("?") || domain.includes("#")) {
-            Assert(false, "Domain contains invalid characters. Did you mean to call VURL.Parse?");
-        }
-        this.domain = domain;
-        this.pathNodes = pathNodes;
-        this.queryVars = queryVars;
-        this.hash = hash;
-    }
     /** Note that this url-parser is not quite as robust as the native URL class, so some edge-cases may be misparsed. (using "VURL.Parse(new URL(urlStr).toString())" may improve reliability) */
     static Parse(urlStr, useCurrentDomainIfMissing = true, allowQuestionMarkAsVarSep = true) {
         if (useCurrentDomainIfMissing && !urlStr.startsWith("http")) {
@@ -112,6 +102,16 @@ export class VURL {
             hash: this.toString({ domain: false, pathStartSlash: false, path: false, queryVars: false, hash: true }),
             key: "URLKey_" + Date.now(),
         };
+    }
+    constructor(domain = "", pathNodes = [], queryVars = [], hash = "") {
+        //AssertWarn(domain.match(/^[A-Za-z-:./]+$/) != null, "Domain seems to contain")
+        if (domain.includes("?") || domain.includes("#")) {
+            Assert(false, "Domain contains invalid characters. Did you mean to call VURL.Parse?");
+        }
+        this.domain = domain;
+        this.pathNodes = pathNodes;
+        this.queryVars = queryVars;
+        this.hash = hash;
     }
     DomainStr(withProtocol = true) {
         return withProtocol ? this.domain : this.DomainWithoutProtocol;

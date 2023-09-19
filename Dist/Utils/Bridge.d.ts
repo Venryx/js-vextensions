@@ -6,7 +6,7 @@ export declare class BridgeMessage {
     callCallback_id?: number;
     callCallback_args?: any[];
 }
-export declare type Bridge_Options = {
+export type Bridge_Options = {
     receiveChannelMessageFunc_addImmediately?: boolean;
 } & Pick<Bridge, "receiveChannelMessageFunc_adder" | "sendChannelMessageFunc"> & Partial<Pick<Bridge, "channel_wrapBridgeMessage" | "channel_stringifyChannelMessageObj" | "channel_safeCallbacks" | "requireMainFuncForCalls">>;
 export declare class Bridge {
@@ -42,6 +42,8 @@ export declare class Bridge {
     RegisterCallback(callback: Function): number;
     SerializeFuncsIn(argTree: Object): void;
     DeserializeFuncsIn(argTree: Object): void;
+    /** Variant of Call that does not set up a callback, meaning any return value from the remote call will be lost. (however, it also means this function returns synchronously) */
+    Call_NoReturn(funcName: string, ...args: any[]): void;
     Call(funcName: string, ...args: any[]): Promise<unknown>;
     CallCallback(callbackID: number, ...args: any[]): void;
 }

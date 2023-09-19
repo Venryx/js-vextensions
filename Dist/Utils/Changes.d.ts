@@ -1,4 +1,4 @@
-export declare type PropChange = {
+export type PropChange = {
     key: string;
     oldVal: any;
     newVal: any;

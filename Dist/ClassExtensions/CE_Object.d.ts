@@ -7,15 +7,15 @@ export interface VSet_Options {
     /** Whether to process the string versions of OMIT and DEL as operators. (don't enable for over-network pathways that are really important, or untrusted) */
     allowStringOperators?: boolean;
 }
-export declare type MapLike<V> = {
+export type MapLike<V> = {
     [key: number]: V;
 } | {
     [key: string]: V;
 };
-export declare type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
-export declare type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
-export declare type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
-export declare type Pair<K, V> = {
+export type MapOrMapLike<V> = Map<any, V> | MapLike<V>;
+export type TargetTFor<T> = T extends ObjectCEProxyInterface<infer TargetT> ? TargetT : T;
+export type XOrWrapped<T> = T | ObjectCEProxyInterface<T>;
+export type Pair<K, V> = {
     index: number;
     key: K;
     keyNum?: number;
@@ -43,15 +43,15 @@ export declare const ObjectCE_funcs: {
         <T_5, Result>(this: T_5, pathGetterFunc: (self: TargetTFor<T_5>) => Result, resultIfNull?: any): Result;
     };
     Extend(x: any, copyNonEnumerable?: boolean): any;
-    Extended<T_6, T2_1>(this: T_6, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_6> & T2_1;
+    Extended<T_6 extends Object, T2_1>(this: T_6, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_6> & T2_1;
     VSet: {
-        <T_7>(this: T_7, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_7>;
-        <T_8>(this: T_8, props: any, opt?: VSet_Options | undefined): TargetTFor<T_8>;
+        <T_7>(this: T_7, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options): TargetTFor<T_7>;
+        <T_8>(this: T_8, props: any, opt?: VSet_Options): TargetTFor<T_8>;
     };
-    IncludeKeys<T_9, Keys extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys): Pick<T_9, Keys[number]>;
-    ExcludeKeys<T_10, Keys_1 extends (keyof T_10)[] = any>(this: XOrWrapped<T_10>, ...keys: Keys_1): Omit<T_10, Keys_1[number]>;
-    OmitUndefined<T_11>(this: T_11, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
-    OmitNull<T_12>(this: T_12, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_12>;
+    IncludeKeys<T_9 extends Object, Keys extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys): Pick<T_9, Keys[number]>;
+    ExcludeKeys<T_10 extends Object, Keys_1 extends (keyof T_10)[] = any>(this: XOrWrapped<T_10>, ...keys: Keys_1): Omit<T_10, Keys_1[number]>;
+    OmitUndefined<T_11 extends Object>(this: T_11, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
+    OmitNull<T_12 extends Object>(this: T_12, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_12>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];
@@ -72,7 +72,7 @@ export declare const ObjectCE_funcs: {
 export interface ObjectCEProxyInterface<T> {
     _magicTypeMarker: T;
 }
-export declare type ObjectCEProxy<T> = typeof ObjectCE_funcs & ObjectCEProxyInterface<T>;
+export type ObjectCEProxy<T> = typeof ObjectCE_funcs & ObjectCEProxyInterface<T>;
 export declare const ObjectCE: <T>(nextThis: T) => ObjectCEProxy<T>;
 export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     /** Helps you do stuff like this:
@@ -96,15 +96,15 @@ export declare const ObjectCES: import("../Utils/General.js").WithFuncsStandalon
         <T_5, Result>(this: T_5, pathGetterFunc: (self: TargetTFor<T_5>) => Result, resultIfNull?: any): Result;
     };
     Extend(x: any, copyNonEnumerable?: boolean): any;
-    Extended<T_6, T2_1>(this: T_6, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_6> & T2_1;
+    Extended<T_6 extends Object, T2_1>(this: T_6, x: T2_1, copyNonEnumerable?: boolean): TargetTFor<T_6> & T2_1;
     VSet: {
-        <T_7>(this: T_7, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options | undefined): TargetTFor<T_7>;
-        <T_8>(this: T_8, props: any, opt?: VSet_Options | undefined): TargetTFor<T_8>;
+        <T_7>(this: T_7, propName: string | symbol, propValue: any | undefined, opt?: VSet_Options): TargetTFor<T_7>;
+        <T_8>(this: T_8, props: any, opt?: VSet_Options): TargetTFor<T_8>;
     };
-    IncludeKeys<T_9, Keys extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys): Pick<T_9, Keys[number]>;
-    ExcludeKeys<T_10, Keys_1 extends (keyof T_10)[] = any>(this: XOrWrapped<T_10>, ...keys: Keys_1): Omit<T_10, Keys_1[number]>;
-    OmitUndefined<T_11>(this: T_11, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
-    OmitNull<T_12>(this: T_12, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_12>;
+    IncludeKeys<T_9 extends Object, Keys extends (keyof T_9)[] = any>(this: XOrWrapped<T_9>, ...keys: Keys): Pick<T_9, Keys[number]>;
+    ExcludeKeys<T_10 extends Object, Keys_1 extends (keyof T_10)[] = any>(this: XOrWrapped<T_10>, ...keys: Keys_1): Omit<T_10, Keys_1[number]>;
+    OmitUndefined<T_11 extends Object>(this: T_11, alsoOmitNulls?: boolean, keepPrototype?: boolean): TargetTFor<T_11>;
+    OmitNull<T_12 extends Object>(this: T_12, alsoOmitUndefined?: boolean, keepPrototype?: boolean): TargetTFor<T_12>;
     IsOneOf(...values: any[]): boolean;
     Pairs: {
         <K = string, V = any>(this: XOrWrapped<Map<K, V>>): Pair<K, V>[];

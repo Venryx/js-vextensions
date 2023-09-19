@@ -137,7 +137,7 @@ export const ObjectCE_funcs = {
 		}
 		return this;
 	},
-	Extended<T, T2>(this: T, x: T2, copyNonEnumerable = false): TargetTFor<T> & T2 {
+	Extended<T extends Object, T2>(this: T, x: T2, copyNonEnumerable = false): TargetTFor<T> & T2 {
 		const result: any = this instanceof Array ? [] : {};
 		for (const key of Object[copyNonEnumerable ? "getOwnPropertyNames" : "keys"](this)) {
 			result[key] = this[key];
@@ -211,7 +211,7 @@ export const ObjectCE_funcs = {
 	}),
 
 	//IncludeKeys(...keys: string[]) {
-	IncludeKeys<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
+	IncludeKeys<T extends Object, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Pick<T, Keys[number]> {
 		let result = this instanceof Array ? [] : {};
 		for (const key of keys) {
 			//if (!this.hasOwnProperty(key)) continue;
@@ -221,7 +221,7 @@ export const ObjectCE_funcs = {
 		return result as any;
 	},
 	//ExcludeKeys(...keys: string[]) {
-	ExcludeKeys<T, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
+	ExcludeKeys<T extends Object, Keys extends(keyof T)[] = any>(this: XOrWrapped<T>, ...keys: Keys): Omit<T, Keys[number]> {
 		//var result = Clone(this); // doesn't work with funcs
 		/*var result = Object.assign(this instanceof Array ? [] : {}, this as any);
 		for (let key of keys) {
@@ -234,7 +234,7 @@ export const ObjectCE_funcs = {
 		}
 		return result as any;
 	},
-	OmitUndefined<T>(this: T, alsoOmitNulls = false, keepPrototype = true): TargetTFor<T> {
+	OmitUndefined<T extends Object>(this: T, alsoOmitNulls = false, keepPrototype = true): TargetTFor<T> {
 		let result = this instanceof Array ? [] : {};
 		for (const key of Object.keys(this)) {
 			if (this[key] === undefined) continue;
@@ -244,7 +244,7 @@ export const ObjectCE_funcs = {
 		if (keepPrototype) Object.setPrototypeOf(result, Object.getPrototypeOf(this));
 		return result as TargetTFor<T>;
 	},
-	OmitNull<T>(this: T, alsoOmitUndefined = true, keepPrototype = true): TargetTFor<T> {
+	OmitNull<T extends Object>(this: T, alsoOmitUndefined = true, keepPrototype = true): TargetTFor<T> {
 		let result = this instanceof Array ? [] : {};
 		for (const key of Object.keys(this)) {
 			if (this[key] === null) continue;
