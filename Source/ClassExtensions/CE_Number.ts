@@ -47,26 +47,47 @@ export const NumberCE_funcs = {
 		return Math.round(this as number * multiple_inverted) / multiple_inverted;
 	},
 	RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction = true) {
+		if (fractionDigits == null) {
+			// if multipleOf is fractional, have the result-string keep that many digits after the decimal point
+			if (multipleOf.toString().includes(".")) fractionDigits = multipleOf.toString().split(".")[1].length;
+			else fractionDigits = 0;
+		}
+		
 		var resultValue = NumberCE(this).RoundTo(multipleOf);
-		var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : StringCE(multipleOf.toString()).TrimStart("0").length - 1); // - 0);
+		var result = resultValue.toFixed(fractionDigits);
 		if (removeEmptyFraction && StringCE(result).Contains(".")) {
 			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
 		}
 		return result;
 	},
 	FloorTo(this: Number, multipleOf: number) { return Math.floor((new Number(this) as any) / multipleOf) * multipleOf; },
-	FloorTo_Str(this: Number, multipleOf: number) {
+	FloorTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction = true) {
+		if (fractionDigits == null) {
+			// if multipleOf is fractional, have the result-string keep that many digits after the decimal point
+			if (multipleOf.toString().includes(".")) fractionDigits = multipleOf.toString().split(".")[1].length;
+			else fractionDigits = 0;
+		}
+		
 		var resultValue = NumberCE(this).FloorTo(multipleOf);
-		var result = resultValue.toFixed(StringCE(multipleOf.toString()).TrimStart("0").length); // - 1);
-		if (StringCE(result).Contains(".")) { result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd("."); }
+		var result = resultValue.toFixed(fractionDigits);
+		if (removeEmptyFraction && StringCE(result).Contains(".")) {
+			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+		}
 		return result;
 	},
-	CeilingTo(this: Number, multipleOf) { return Math.ceil((new Number(this) as any) / multipleOf) * multipleOf; },
-	CeilingTo_Str(this: Number, multipleOf) {
+	CeilingTo(this: Number, multipleOf: number) { return Math.ceil((new Number(this) as any) / multipleOf) * multipleOf; },
+	CeilingTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction = true) {
+		if (fractionDigits == null) {
+			// if multipleOf is fractional, have the result-string keep that many digits after the decimal point
+			if (multipleOf.toString().includes(".")) fractionDigits = multipleOf.toString().split(".")[1].length;
+			else fractionDigits = 0;
+		}
+		
 		var resultValue = NumberCE(this).CeilingTo(multipleOf);
-		var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-		if (StringCE(result).Contains(".")) { result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd("."); }
-		//result = TrimEnd(TrimEnd(result, "0"), ".");
+		var result = resultValue.toFixed(fractionDigits);
+		if (removeEmptyFraction && StringCE(result).Contains(".")) {
+			result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
+		}
 		return result;
 	},
 
