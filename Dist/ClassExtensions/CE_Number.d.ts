@@ -8,9 +8,9 @@ export declare const NumberCE_funcs: {
     RoundTo(this: Number, multiple: number): number;
     RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: number): number;
-    FloorTo_Str(this: Number, multipleOf: number): string;
-    CeilingTo(this: Number, multipleOf: any): number;
-    CeilingTo_Str(this: Number, multipleOf: any): string;
+    FloorTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
+    CeilingTo(this: Number, multipleOf: number): number;
+    CeilingTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
     KeepAtLeast(this: Number, min: number): number;
     KeepAtMost(this: Number, max: number): number;
     IsBetween(this: Number, min: number, max: number, allowFixMinMax?: boolean): boolean;
@@ -31,9 +31,9 @@ export declare const NumberCES: import("../Utils/General.js").WithFuncsStandalon
     RoundTo(this: Number, multiple: number): number;
     RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: number): number;
-    FloorTo_Str(this: Number, multipleOf: number): string;
-    CeilingTo(this: Number, multipleOf: any): number;
-    CeilingTo_Str(this: Number, multipleOf: any): string;
+    FloorTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
+    CeilingTo(this: Number, multipleOf: number): number;
+    CeilingTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
     KeepAtLeast(this: Number, min: number): number;
     KeepAtMost(this: Number, max: number): number;
     IsBetween(this: Number, min: number, max: number, allowFixMinMax?: boolean): boolean;

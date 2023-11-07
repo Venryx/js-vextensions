@@ -43,30 +43,50 @@ export const NumberCE_funcs = {
         return Math.round(this * multiple_inverted) / multiple_inverted;
     },
     RoundTo_Str(multipleOf, fractionDigits, removeEmptyFraction = true) {
+        if (fractionDigits == null) {
+            // if multipleOf is fractional, have the result-string keep that many digits after the decimal point
+            if (multipleOf.toString().includes("."))
+                fractionDigits = multipleOf.toString().split(".")[1].length;
+            else
+                fractionDigits = 0;
+        }
         var resultValue = NumberCE(this).RoundTo(multipleOf);
-        var result = resultValue.toFixed(fractionDigits != null ? fractionDigits : StringCE(multipleOf.toString()).TrimStart("0").length - 1); // - 0);
+        var result = resultValue.toFixed(fractionDigits);
         if (removeEmptyFraction && StringCE(result).Contains(".")) {
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
         }
         return result;
     },
     FloorTo(multipleOf) { return Math.floor(new Number(this) / multipleOf) * multipleOf; },
-    FloorTo_Str(multipleOf) {
+    FloorTo_Str(multipleOf, fractionDigits, removeEmptyFraction = true) {
+        if (fractionDigits == null) {
+            // if multipleOf is fractional, have the result-string keep that many digits after the decimal point
+            if (multipleOf.toString().includes("."))
+                fractionDigits = multipleOf.toString().split(".")[1].length;
+            else
+                fractionDigits = 0;
+        }
         var resultValue = NumberCE(this).FloorTo(multipleOf);
-        var result = resultValue.toFixed(StringCE(multipleOf.toString()).TrimStart("0").length); // - 1);
-        if (StringCE(result).Contains(".")) {
+        var result = resultValue.toFixed(fractionDigits);
+        if (removeEmptyFraction && StringCE(result).Contains(".")) {
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
         }
         return result;
     },
     CeilingTo(multipleOf) { return Math.ceil(new Number(this) / multipleOf) * multipleOf; },
-    CeilingTo_Str(multipleOf) {
+    CeilingTo_Str(multipleOf, fractionDigits, removeEmptyFraction = true) {
+        if (fractionDigits == null) {
+            // if multipleOf is fractional, have the result-string keep that many digits after the decimal point
+            if (multipleOf.toString().includes("."))
+                fractionDigits = multipleOf.toString().split(".")[1].length;
+            else
+                fractionDigits = 0;
+        }
         var resultValue = NumberCE(this).CeilingTo(multipleOf);
-        var result = resultValue.toFixed(multipleOf.toString().TrimStart("0").length); // - 1);
-        if (StringCE(result).Contains(".")) {
+        var result = resultValue.toFixed(fractionDigits);
+        if (removeEmptyFraction && StringCE(result).Contains(".")) {
             result = StringCE(StringCE(result).TrimEnd("0")).TrimEnd(".");
         }
-        //result = TrimEnd(TrimEnd(result, "0"), ".");
         return result;
     },
     KeepAtLeast(min) {

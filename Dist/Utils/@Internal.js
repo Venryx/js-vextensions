@@ -1,2 +1,5 @@
-export const g = typeof window == "object" ? window : global;
+export const g = typeof globalThis == "object" ? globalThis :
+    typeof window == "object" ? window :
+        typeof global == "object" ? global :
+            {};
 //# sourceMappingURL=@Internal.js.map
