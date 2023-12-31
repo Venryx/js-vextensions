@@ -640,22 +640,6 @@ export function StartUpload(): Promise<File> {
 		fileInput.click();
 	});
 }
-/*#* If the dialog is closed/canceled, the promise will just never resolve. */
-/*export async function StartUpload_ReadAsText(): Promise<string | ArrayBuffer> {
-	const file = await StartUpload();
-	/*return new Promise((resolve, reject)=>{
-		//if (file == null) reject("No file selected.");
-
-		var reader = new FileReader();
-		reader.onload = e=>{
-			var contents = e.target!["result"];
-			//Assert(typeof contents == "string")
-			resolve(contents!);
-		};
-		reader.readAsText(file);
-	});*#/
-	return await file.text();
-}*/
 
 export function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor) {
 	//for (let [name, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(source))) {

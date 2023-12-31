@@ -571,22 +571,19 @@ export function StartDownload(content, filename, dataTypeStr = "data:application
     link.click();
     link.remove();
 }
+/** If the dialog is closed/canceled, the promise will just never resolve. */
 export function StartUpload() {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.style.display = "none";
         fileInput.onchange = e => {
-            var file = e.target["files"][0];
-            if (!file)
-                return;
-            var reader = new FileReader();
-            reader.onload = e => {
-                var contents = e.target["result"];
-                //Assert(typeof contents == "string")
-                resolve(contents);
-            };
-            reader.readAsText(file);
+            //var file = e.target!["files"][0];
+            var file = fileInput.files[0];
+            if (file)
+                resolve(file);
+            //else reject("No file selected.");
+            //else resolve(null);
         };
         document.body.appendChild(fileInput);
         fileInput.click();
