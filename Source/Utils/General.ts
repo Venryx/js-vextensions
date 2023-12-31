@@ -623,27 +623,39 @@ export function StartDownload(content: string | Blob, filename: string, dataType
 	link.remove();
 }
 
-export function StartUpload(): Promise<string | ArrayBuffer> {
-	return new Promise(resolve=>{
+/** If the dialog is closed/canceled, the promise will just never resolve. */
+export function StartUpload(): Promise<File> {
+	return new Promise((resolve, reject)=>{
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
 		fileInput.style.display = "none";
 		fileInput.onchange = e=>{
-			var file = e.target!["files"][0];
-			if (!file) return;
-
-			var reader = new FileReader();
-			reader.onload = e=>{
-				var contents = e.target!["result"];
-				//Assert(typeof contents == "string")
-				resolve(contents!);
-			};
-			reader.readAsText(file);
+			//var file = e.target!["files"][0];
+			var file = fileInput.files![0];
+			if (file) resolve(file);
+			//else reject("No file selected.");
+			//else resolve(null);
 		};
 		document.body.appendChild(fileInput);
 		fileInput.click();
 	});
 }
+/*#* If the dialog is closed/canceled, the promise will just never resolve. */
+/*export async function StartUpload_ReadAsText(): Promise<string | ArrayBuffer> {
+	const file = await StartUpload();
+	/*return new Promise((resolve, reject)=>{
+		//if (file == null) reject("No file selected.");
+
+		var reader = new FileReader();
+		reader.onload = e=>{
+			var contents = e.target!["result"];
+			//Assert(typeof contents == "string")
+			resolve(contents!);
+		};
+		reader.readAsText(file);
+	});*#/
+	return await file.text();
+}*/
 
 export function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor) {
 	//for (let [name, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(source))) {
