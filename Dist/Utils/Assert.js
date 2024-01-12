@@ -19,7 +19,7 @@ export function AssertWarn(condition, messageOrMessageFunc, opts) {
         return;
     var message = messageOrMessageFunc instanceof Function ? messageOrMessageFunc() : messageOrMessageFunc;
     let message_final = `Assert-warn failed) ${message}`;
-    if (opts === null || opts === void 0 ? void 0 : opts.addStackTrace) {
+    if (opts?.addStackTrace) {
         message_final += `\n\nStackTrace) ${GetStackTraceStr()}`;
     }
     console.warn(message_final);

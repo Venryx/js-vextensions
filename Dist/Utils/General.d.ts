@@ -99,7 +99,7 @@ StartDownload(new Blob(["someVeryLongString"]), "Backup.txt");
 */
 export declare function StartDownload(content: string | Blob, filename: string, dataTypeStr?: string, encodeContentAsURIComp?: boolean): void;
 /** If the dialog is closed/canceled, the promise will just never resolve. */
-export declare function StartUpload(): Promise<File>;
+export declare function StartUpload(allowMultipleFiles?: boolean, elementModifier?: (el: HTMLInputElement) => any): Promise<File[]>;
 export declare function TransferPrototypeProps(target: Object, source: Object, descriptorBase: PropertyDescriptor, descriptorOverride: PropertyDescriptor): void;
 export type WithFuncsStandalone_Type<T> = {
     [P in keyof T]: T[P] extends (...args: any[]) => any ? (thisArg: Object, ...args: Parameters<T[P]>) => ReturnType<T[P]> : T[P];

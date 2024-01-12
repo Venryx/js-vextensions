@@ -418,7 +418,10 @@ export function DeepSet(obj, pathOrPathSegments, newValue, sepChar = "/", create
 }*/
 export function WithDeepSet(baseObj, pathOrPathSegments, newValue, sepChar = "/") {
     const pathSegments = pathOrPathSegments instanceof Array ? pathOrPathSegments : pathOrPathSegments.split(sepChar);
-    return Object.assign(Object.assign({}, baseObj), { [pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue });
+    return {
+        ...baseObj,
+        [pathSegments[0]]: pathSegments.length > 1 ? WithDeepSet(baseObj[pathSegments[0]], pathSegments.slice(1), newValue) : newValue,
+    };
 }
 export function GetStackTraceStr(opt) {
     opt = E({ sourceStackTrace: true }, opt);
@@ -572,19 +575,23 @@ export function StartDownload(content, filename, dataTypeStr = "data:application
     link.remove();
 }
 /** If the dialog is closed/canceled, the promise will just never resolve. */
-export function StartUpload() {
+export function StartUpload(allowMultipleFiles = false, elementModifier) {
     return new Promise((resolve, reject) => {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
+        fileInput.multiple = allowMultipleFiles;
         fileInput.style.display = "none";
         fileInput.onchange = e => {
-            //var file = e.target!["files"][0];
-            var file = fileInput.files[0];
-            if (file)
-                resolve(file);
-            //else reject("No file selected.");
-            //else resolve(null);
+            //if ((fileInput.files?.length ?? 0) == 0 && !allowMultipleFiles) return void reject("No file selected.");
+            let files = [];
+            if (fileInput.files != null) {
+                for (let i = 0; i < fileInput.files?.length; i++) {
+                    files.push(fileInput.files[i]);
+                }
+            }
+            resolve(files);
         };
+        elementModifier?.(fileInput); // for setting other customizations, eg. the "accept" property
         document.body.appendChild(fileInput);
         fileInput.click();
     });
@@ -595,7 +602,7 @@ export function TransferPrototypeProps(target, source, descriptorBase, descripto
         if (name == "constructor")
             continue;
         const descriptor = Object.getOwnPropertyDescriptor(source, name);
-        Object.defineProperty(target, name, Object.assign(Object.assign(Object.assign({}, descriptorBase), descriptor), descriptorOverride));
+        Object.defineProperty(target, name, { ...descriptorBase, ...descriptor, ...descriptorOverride });
     }
 }
 export function WithFuncsStandalone(source) {
@@ -604,7 +611,7 @@ export function WithFuncsStandalone(source) {
         if (key == "constructor")
             continue; // no reason to call the wrapper's constructor
         const descriptor = Object.getOwnPropertyDescriptor(source, key);
-        const newDescriptor = Object.assign({}, descriptor);
+        const newDescriptor = { ...descriptor };
         if (descriptor.value instanceof Function) {
             const oldFunc = descriptor.value;
             newDescriptor.value = (thisArg, ...callArgs) => {
@@ -665,7 +672,7 @@ export function CreateProxyForClassExtensions(sourceClass_prototype) {
         if (key == "constructor")
             continue; // no reason to call the wrapper's constructor
         const descriptor = Object.getOwnPropertyDescriptor(sourceClass_prototype, key);
-        const newDescriptor = Object.assign({}, descriptor);
+        const newDescriptor = { ...descriptor };
         if (descriptor.value instanceof Function) {
             const oldFunc = descriptor.value;
             newDescriptor.value = (...callArgs) => {

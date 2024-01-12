@@ -624,18 +624,25 @@ export function StartDownload(content: string | Blob, filename: string, dataType
 }
 
 /** If the dialog is closed/canceled, the promise will just never resolve. */
-export function StartUpload(): Promise<File> {
+export function StartUpload(allowMultipleFiles = false, elementModifier?: (el: HTMLInputElement)=>any): Promise<File[]> {
 	return new Promise((resolve, reject)=>{
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
+		fileInput.multiple = allowMultipleFiles;
 		fileInput.style.display = "none";
 		fileInput.onchange = e=>{
-			//var file = e.target!["files"][0];
-			var file = fileInput.files![0];
-			if (file) resolve(file);
-			//else reject("No file selected.");
-			//else resolve(null);
+			//if ((fileInput.files?.length ?? 0) == 0 && !allowMultipleFiles) return void reject("No file selected.");
+
+			let files = [] as File[];
+			if (fileInput.files != null) {
+				for (let i = 0; i < fileInput.files?.length; i++) {
+					files.push(fileInput.files[i]);
+				}
+			}
+			resolve(files);
 		};
+		elementModifier?.(fileInput); // for setting other customizations, eg. the "accept" property
+
 		document.body.appendChild(fileInput);
 		fileInput.click();
 	});

@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone } from "../Utils/General.js";
 import { Assert } from "../Utils/Assert.js";
 import { IsObject } from "../Utils/Types.js";
@@ -22,18 +13,16 @@ export const ArrayCE_funcs = {
                 return controlOp[1];
         }
     },
-    ForEachAsync(func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (let i = 0; i < this.length; i++) {
-                const controlOp = yield func(this[i], i, this);
-                if (controlOp == "break")
-                    break;
-                if (controlOp == "continue")
-                    continue;
-                if (controlOp instanceof Array)
-                    return controlOp[1];
-            }
-        });
+    async ForEachAsync(func) {
+        for (let i = 0; i < this.length; i++) {
+            const controlOp = await func(this[i], i, this);
+            if (controlOp == "break")
+                break;
+            if (controlOp == "continue")
+                continue;
+            if (controlOp instanceof Array)
+                return controlOp[1];
+        }
     },
     /*declare global { interface Array<T> { ForEachAsyncParallel(func: (value: T, index: number, array: T[])): Promise<void>; } }
     Array.prototype.ForEachAsync_Parallel = async function (this: Array<any>, fn) {
@@ -325,7 +314,7 @@ export const ArrayCE_funcs = {
             [opt, ...excludeItems] = args;
         else
             excludeItems = args;
-        if (opt === null || opt === void 0 ? void 0 : opt.excludeEachOnlyOnce) {
+        if (opt?.excludeEachOnlyOnce) {
             const result = this.slice();
             for (const excludeItem of excludeItems) {
                 ArrayCES.Remove(result, excludeItem);

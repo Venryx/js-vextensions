@@ -181,11 +181,10 @@ export const StringCE_funcs = {
      * @param removeLineStr A special string which, if found in a line, will cause that line to be removed from the result.
      */
     AsMultiline(desiredIndent, removeLineStr = "@RL") {
-        var _a, _b;
         let result = this.substring(this.indexOf("\n") + 1, this.lastIndexOf("\n"));
         if (desiredIndent != null) {
             let lines = result.split("\n");
-            let firstLineIndent = (_b = (_a = result.match(/^(\t+)/)) === null || _a === void 0 ? void 0 : _a[1].length) !== null && _b !== void 0 ? _b : 0;
+            let firstLineIndent = result.match(/^(\t+)/)?.[1].length ?? 0;
             if (firstLineIndent) {
                 // remove X tabs from start of each line (where X is firstLineIndent)
                 lines = lines.map(line => line.replace(new RegExp(`^\t{0,${firstLineIndent}}`), ""));

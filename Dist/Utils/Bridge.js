@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { TryCall } from "./Timers.js";
 import { Assert, IsObject, IsString, ObjectCE, ArrayCE, IsFunction } from "../index.js";
 import { GetTreeNodesInObjTree } from "./General.js";
@@ -108,32 +99,28 @@ export class Bridge {
         }
         return funcRemoved;
     }
-    OnReceiveFunctionCall(bridgeMessage) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this.Local_CallFunc(bridgeMessage.callFunction_name, ...bridgeMessage.callFunction_args);
-            if (bridgeMessage.callFunction_callbackID != null) {
-                this.CallCallback(bridgeMessage.callFunction_callbackID, result);
-            }
-        });
+    async OnReceiveFunctionCall(bridgeMessage) {
+        const result = await this.Local_CallFunc(bridgeMessage.callFunction_name, ...bridgeMessage.callFunction_args);
+        if (bridgeMessage.callFunction_callbackID != null) {
+            this.CallCallback(bridgeMessage.callFunction_callbackID, result);
+        }
     }
     // we use async/await here, to support waiting for the registered function if it happens to be async (if it isn't, that's fine -- the async/await doesn't hurt anything)
-    Local_CallFunc(funcName, ...args) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const mainFunc = this.functionMains[funcName];
-            let result;
-            if (mainFunc) {
-                result = yield mainFunc(...args);
+    async Local_CallFunc(funcName, ...args) {
+        const mainFunc = this.functionMains[funcName];
+        let result;
+        if (mainFunc) {
+            result = await mainFunc(...args);
+        }
+        else {
+            if (this.requireMainFuncForCalls) {
+                throw new Error(`Cannot find main-func for function-call with name "${funcName}".`);
             }
-            else {
-                if (this.requireMainFuncForCalls) {
-                    throw new Error(`Cannot find main-func for function-call with name "${funcName}".`);
-                }
-            }
-            for (const extraFunc of this.functionExtras[funcName] || []) {
-                extraFunc(...args);
-            }
-            return result;
-        });
+        }
+        for (const extraFunc of this.functionExtras[funcName] || []) {
+            extraFunc(...args);
+        }
+        return result;
     }
     OnReceiveCallback(bridgeMessage) {
         this.Local_CallCallback(bridgeMessage.callCallback_id, bridgeMessage.callCallback_args);

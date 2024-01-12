@@ -126,7 +126,7 @@ export const ObjectCE_funcs = {
             [propName, propValue, opt] = args;
         else
             [props, opt] = args;
-        opt = Object.assign(Object.assign({}, { copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto" }), opt);
+        opt = { ...{ copyNonEnumerable: true, copySymbolKeys: true, copyGetterSettersAs: "value", callSetters: "auto" }, ...opt };
         const SetProp = (name, descriptor, value) => {
             // only process operators if: 1) js-engine supports Symbols (for security), or 2) caller allows string-operators
             if (IsSymbol(OMIT) || opt.allowStringOperators) {
@@ -147,7 +147,7 @@ export const ObjectCE_funcs = {
             }
             else {
                 // we default configurable to true, since it's the better default imo; it's more compatible -- conf:false can break "correct code", whereas conf:true at worst allows mistakes
-                const finalDescriptor = Object.assign({ configurable: true }, descriptor);
+                const finalDescriptor = { configurable: true, ...descriptor };
                 // if placing a value (rather than copying a getter-setter), clear get/set fields, and set value field 
                 if (!asGetterSetter) {
                     delete finalDescriptor.get;

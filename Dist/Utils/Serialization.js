@@ -63,10 +63,9 @@ export class AddSpacesAt_Options {
     }
 }
 export function ToJSON_Advanced(obj, options) {
-    var _a;
     const opts = E(new ToJSON_Advanced_Options(), options);
     Assert(!(opts.indent != null && opts.addSpacesAt), "Cannot enable indent and addSpaceAt simultaneously.");
-    const indent = (_a = opts.indent) !== null && _a !== void 0 ? _a : (opts.addSpacesAt ? 1 : undefined);
+    const indent = opts.indent ?? (opts.addSpacesAt ? 1 : undefined);
     const cache = new Set();
     //let foundDuplicates = false;
     try {

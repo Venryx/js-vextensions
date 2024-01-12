@@ -198,13 +198,12 @@ export class TimerS extends Timer {
 }
 var funcLastScheduledRunTimes = {};
 export function BufferAction(...args) {
-    var _a;
     var key = "[default]", minInterval, func;
     if (args.length == 2)
         [minInterval, func] = args;
     else /*if (args.length == 3)*/
         [key, minInterval, func] = args;
-    var lastScheduledRunTime = (_a = funcLastScheduledRunTimes[key]) !== null && _a !== void 0 ? _a : 0;
+    var lastScheduledRunTime = funcLastScheduledRunTimes[key] ?? 0;
     var now = new Date().getTime();
     var timeSinceLast = now - lastScheduledRunTime;
     if (timeSinceLast >= minInterval) { // if we've waited enough since last run, run right now

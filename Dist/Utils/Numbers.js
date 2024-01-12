@@ -62,9 +62,8 @@ export function CreateRandFunc_Mulberry32(seed) {
     };
 }
 export function GetRandomNumber(options) {
-    var _a;
     const { min, max, mustBeInteger } = options;
-    const randFunc = (_a = options.randFunc) !== null && _a !== void 0 ? _a : Math.random;
+    const randFunc = options.randFunc ?? Math.random;
     /*Assert(IsNumber(min), `Min must be a number. (not: ${min})`);
     Assert(IsNumber(max), `Max must be a number. (not: ${max})`);*/
     const range = max - min;
