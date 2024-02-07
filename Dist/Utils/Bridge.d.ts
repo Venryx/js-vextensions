@@ -47,3 +47,4 @@ export declare class Bridge {
     Call(funcName: string, ...args: any[]): Promise<unknown>;
     CallCallback(callbackID: number, ...args: any[]): void;
 }
+export declare const IsTypedNumericalArray: (obj: any) => boolean;

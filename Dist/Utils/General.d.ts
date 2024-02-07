@@ -12,7 +12,11 @@ export type GetFirstParamType<T> = T extends (val: infer Arg1Type) => any ? Arg1
 export declare function WrapWithGo<Func extends (val: any) => any>(func: Func): Func & {
     Go: GetFirstParamType<Func>;
 };
-export declare function DeepEquals(x: any, y: any, keyCheckLayersLeft?: number): boolean;
+/** Note: When comparing object fields, only enumerable fields are checked by default; to include non-enumerable fields as well, pass `Object.getOwnPropertyNames` as `objKeyGetterFunc`. */
+export declare function DeepEquals(x: any, y: any, keyCheckLayersLeft?: number, objKeyGetterFunc?: {
+    (o: object): string[];
+    (o: {}): string[];
+}): boolean;
 export declare function ShallowEquals(objA: any, objB: any): boolean;
 export declare function ShallowChanged(objA: any, objB: any): boolean;
 export declare function CopyText(text: any): void;
@@ -43,7 +47,7 @@ export declare class TreeNode {
     get Value(): any;
     set Value(newVal: any);
 }
-export declare function GetTreeNodesInObjTree(obj: Object, includeRootNode?: boolean, _ancestorNodes?: TreeNode[]): TreeNode[];
+export declare function GetTreeNodesInObjTree(obj: Object, includeRootNode?: boolean, _ancestorNodes?: TreeNode[], stopRecurseAtObjMatching?: (obj: Object) => boolean): TreeNode[];
 export declare function GetTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, includeRootNode?: boolean, _ancestorNodes?: TreeNode[]): TreeNode[];
 export declare function VisitTreeNodesInPath(treeRoot: any, pathNodesOrStr: string[] | string, visitFunc: (node: TreeNode) => any, visitRootNode?: boolean, _ancestorNodes?: TreeNode[]): any;
 export declare function ConvertPathGetterFuncToPropChain(pathGetterFunc: Function): string[];

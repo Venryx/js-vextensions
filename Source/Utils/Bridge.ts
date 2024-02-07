@@ -164,7 +164,8 @@ export class Bridge {
 	}
 	// technically, this just prepares the functions in the tree for serialization (by setting a toJSON key, which JSON.stringify uses)
 	SerializeFuncsIn(argTree: Object) {
-		const nodes = GetTreeNodesInObjTree(argTree);
+		// don't recurse into numerical-arrays, as they can't contain functions (and it otherwise causes huge pauses for binary-data arrays)
+		const nodes = GetTreeNodesInObjTree(argTree, undefined, undefined, IsTypedNumericalArray);
 		for (const node of nodes) {
 			if (IsFunction(node.Value)) {
 				const callbackID = this.RegisterCallback(node.Value);
@@ -173,7 +174,8 @@ export class Bridge {
 		}
 	}
 	DeserializeFuncsIn(argTree: Object) {
-		const nodes = GetTreeNodesInObjTree(argTree);
+		// don't recurse into numerical-arrays, as they can't contain functions (and it otherwise causes huge pauses for binary-data arrays)
+		const nodes = GetTreeNodesInObjTree(argTree, undefined, undefined, IsTypedNumericalArray);
 		for (const node of nodes) {
 			if (node.Value != null && node.Value.serializedFunc_callbackID != null) {
 				const callbackID = node.Value.serializedFunc_callbackID;
@@ -206,3 +208,19 @@ export class Bridge {
 		this.SendBridgeMessage(bridgeMessage);
 	}
 }
+
+export const IsTypedNumericalArray = (obj: any): boolean=>{
+	return (
+		obj instanceof Int8Array ||
+		obj instanceof Uint8Array ||
+		obj instanceof Uint8ClampedArray ||
+		obj instanceof Int16Array ||
+		obj instanceof Uint16Array ||
+		obj instanceof Int32Array ||
+		obj instanceof Uint32Array ||
+		obj instanceof Float32Array ||
+		obj instanceof Float64Array ||
+		obj instanceof BigInt64Array ||
+		obj instanceof BigUint64Array
+	);
+};

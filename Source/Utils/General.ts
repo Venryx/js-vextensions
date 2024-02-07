@@ -74,7 +74,8 @@ export function WrapWithGo<Func extends(val)=>any>(func: Func): Func & {Go: GetF
 }
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
-export function DeepEquals(x: any, y: any, keyCheckLayersLeft = -1) {
+/** Note: When comparing object fields, only enumerable fields are checked by default; to include non-enumerable fields as well, pass `Object.getOwnPropertyNames` as `objKeyGetterFunc`. */
+export function DeepEquals(x: any, y: any, keyCheckLayersLeft = -1, objKeyGetterFunc = Object.keys) {
 	// fast route: if values are identical, return true
 	if (Object.is(x, y)) return true;
 
@@ -88,8 +89,7 @@ export function DeepEquals(x: any, y: any, keyCheckLayersLeft = -1) {
 	if (keyCheckLayersLeft == 0) return false;
 
 	// check for differences in the objects' field-names and field-values; if any such difference is found, return false
-	// NOTE: Objects.keys() excludes non-enumerable properties; to include them, use Object.getOwnPropertyNames() instead
-	const xKeys = Object.keys(x), yKeys = Object.keys(y);
+	const xKeys = objKeyGetterFunc(x), yKeys = objKeyGetterFunc(y);
 	if (xKeys.length != yKeys.length) return false;
 	for (const key of xKeys) {
 		//if (!(key in y)) return false;
@@ -321,7 +321,7 @@ export class TreeNode {
 		this.obj[this.prop] = newVal;
 	}
 }
-export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _ancestorNodes: TreeNode[] = []) {
+export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _ancestorNodes: TreeNode[] = [], stopRecurseAtObjMatching?: (obj: Object)=>boolean) {
 	Assert(_ancestorNodes.length <= 300, "Cannot traverse more than 300 levels into object tree. (probably circular)");
 
 	const result = [] as TreeNode[];
@@ -332,7 +332,8 @@ export function GetTreeNodesInObjTree(obj: Object, includeRootNode = false, _anc
 		const currentNode = new TreeNode(_ancestorNodes, obj, key);
 		result.push(currentNode);
 		if (value != null && IsObject(value)) {
-			ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode)));
+			if (stopRecurseAtObjMatching?.(value)) continue;
+			ArrayCE(result).AddRange(GetTreeNodesInObjTree(value, false, _ancestorNodes.concat(currentNode), stopRecurseAtObjMatching));
 		}
 	}
 	return result;
