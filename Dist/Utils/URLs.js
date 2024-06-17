@@ -1,4 +1,7 @@
-import { E, Assert, StringCE, NumberCE } from "../index.js";
+import { NumberCE } from "../ClassExtensions/CE_Number.js";
+import { StringCE } from "../ClassExtensions/CE_String.js";
+import { Assert } from "./Assert.js";
+import { E } from "./General.js";
 // Note: It's fine to use `window` instead of `g` in the below, since it fails outside of browsers anyway.
 export function ToAbsoluteUrl(url) {
     // Handle absolute URLs (with protocol-relative prefix)

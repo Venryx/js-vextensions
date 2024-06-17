@@ -2,9 +2,9 @@ import { ArrayCE } from "./CE_Array.js";
 import { NumberCE } from "./CE_Number.js";
 import { ObjectCE } from "./CE_Object.js";
 import { StringCE } from "./CE_String.js";
-import { ElementCE } from "../index.js";
 import { IsString, IsNumber, IsFunction, IsArray } from "../Utils/Types.js";
 import { DateCE, FunctionCE } from "./CE_Others.js";
+import { ElementCE } from "./CE_Element.js";
 /*interface CE_Auto_I {
     (obj: Array<any>): typeof ArrayCE;
     (obj: Element): typeof ElementCE;

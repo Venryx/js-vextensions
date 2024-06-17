@@ -1,7 +1,10 @@
 import {IsPrimitive, IsString, IsObject} from "./Types.js";
-import {Assert, ArrayCE, NumberCE, ObjectCE, StringCE} from "../index.js";
 import {g} from "./@Internal.js";
 import {emptyObj} from "./Collections.js";
+import {ObjectCE} from "../ClassExtensions/CE_Object.js";
+import {ArrayCE} from "../ClassExtensions/CE_Array.js";
+import {Assert} from "./Assert.js";
+import {StringCE} from "../ClassExtensions/CE_String.js";
 
 if (Number.MIN_SAFE_INTEGER == null) {
 	(Number as any).MIN_SAFE_INTEGER = -9007199254740991;
@@ -479,7 +482,7 @@ export function GetStackTraceStr(opt?: {stackTrace?: string, sourceStackTrace?: 
 		(Error as any).stackTraceLimit = oldStackLimit;
 	}
 
-	return stackTrace_final.substr(StringCE(stackTrace_final).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
+	return stackTrace_final.slice(StringCE(stackTrace_final).IndexOf_X("\n", 1)); // remove "Error" line and first stack-frame (that of this method)
 }
 
 export function GetErrorMessagesUnderElement(element) {

@@ -1,6 +1,9 @@
 import { TryCall } from "./Timers.js";
-import { Assert, IsObject, IsString, ObjectCE, ArrayCE, IsFunction } from "../index.js";
 import { GetTreeNodesInObjTree } from "./General.js";
+import { ObjectCE } from "../ClassExtensions/CE_Object.js";
+import { IsFunction, IsObject, IsString } from "./Types.js";
+import { ArrayCE } from "../ClassExtensions/CE_Array.js";
+import { Assert } from "./Assert.js";
 export class BridgeMessage {
     constructor(initialData) {
         ObjectCE(this).Extend(initialData);

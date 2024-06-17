@@ -1,5 +1,8 @@
-import {Assert, IsNumber, NumberCE, ArrayCE} from "../index.js";
+import {ArrayCE} from "../ClassExtensions/CE_Array.js";
+import {NumberCE} from "../ClassExtensions/CE_Number.js";
 import {g} from "./@Internal.js";
+import {Assert} from "./Assert.js";
+import {IsNumber} from "./Types.js";
 
 export class TimerContext {
 	static default = new TimerContext();

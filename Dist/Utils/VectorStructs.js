@@ -5,8 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var Vector2_1, Vector3_1, VRect_1;
+import { ArrayCE } from "../ClassExtensions/CE_Array.js";
+import { NumberCE } from "../ClassExtensions/CE_Number.js";
+import { ObjectCE } from "../ClassExtensions/CE_Object.js";
+import { Assert } from "./Assert.js";
 import { Global } from "./General.js";
-import { IsNaN, Assert, NumberCE, ObjectCE, ArrayCE } from "../index.js";
+import { IsNaN } from "./Types.js";
 function IsNullOrNaN(value) {
     return value === null || IsNaN(value);
 }

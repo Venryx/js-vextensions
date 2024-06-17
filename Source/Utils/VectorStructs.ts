@@ -1,5 +1,9 @@
+import {ArrayCE} from "../ClassExtensions/CE_Array.js";
+import {NumberCE} from "../ClassExtensions/CE_Number.js";
+import {ObjectCE} from "../ClassExtensions/CE_Object.js";
+import {Assert} from "./Assert.js";
 import {Global} from "./General.js";
-import {IsNaN, Assert, NumberCE, ObjectCE, ArrayCE} from "../index.js";
+import {IsNaN} from "./Types.js";
 
 function IsNullOrNaN(value: number|null|undefined) {
 	return value === null || IsNaN(value);

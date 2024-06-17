@@ -52,7 +52,7 @@ export function GetPercentFromXToY(start, end, val, keepResultInRange = true) {
         result = NumberCE(result).KeepBetween(0, 1);
     return result;
 }
-// from: https://stackoverflow.com/a/47593316/2441655
+// from: https://stackoverflow.com/a/47593316
 export function CreateRandFunc_Mulberry32(seed) {
     return function () {
         var t = seed += 0x6D2B79F5;

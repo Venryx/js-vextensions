@@ -59,7 +59,7 @@ export function GetPercentFromXToY(start: number, end: number, val: number, keep
 	return result;
 }
 
-// from: https://stackoverflow.com/a/47593316/2441655
+// from: https://stackoverflow.com/a/47593316
 export function CreateRandFunc_Mulberry32(seed: number) {
 	return function() {
 		var t = seed += 0x6D2B79F5;

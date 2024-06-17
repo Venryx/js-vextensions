@@ -1,6 +1,7 @@
 import { StableSort, Compare, CreateProxyForClassExtensions, WithFuncsStandalone } from "../Utils/General.js";
 import { Assert } from "../Utils/Assert.js";
 import { IsObject } from "../Utils/Types.js";
+import { NumberCES } from "./CE_Number.js";
 export const ArrayCE_funcs = {
     ForEach(func) {
         for (let i = 0; i < this.length; i++) {
@@ -263,8 +264,8 @@ export const ArrayCE_funcs = {
     },
     TakeLast(count) {
         var result = [];
-        for (var i = 0; i < count && (this.length - 1) - i >= 0; i++) {
-            result.push(this[(this.length - 1) - i]);
+        for (var i = NumberCES.KeepAtLeast(this.length - count, 0); i < this.length; i++) {
+            result.push(this[i]);
         }
         return result;
     },
