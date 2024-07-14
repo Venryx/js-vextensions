@@ -5,6 +5,7 @@ export declare const NumberCE_funcs: {
     FromPercent(this: Number): number;
     ToPercentStr(this: Number, precision?: number): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
+    FixDecimalError(this: Number, precision?: number): number;
     RoundTo(this: Number, multiple: number): number;
     RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: number): number;
@@ -28,6 +29,7 @@ export declare const NumberCES: import("../Utils/General.js").WithFuncsStandalon
     FromPercent(this: Number): number;
     ToPercentStr(this: Number, precision?: number): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
+    FixDecimalError(this: Number, precision?: number): number;
     RoundTo(this: Number, multiple: number): number;
     RoundTo_Str(this: Number, multipleOf: number, fractionDigits?: number, removeEmptyFraction?: boolean): string;
     FloorTo(this: Number, multipleOf: number): number;

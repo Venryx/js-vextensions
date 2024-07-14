@@ -32,6 +32,13 @@ export const NumberCE_funcs = {
         const distance = NumberCE(valRoundedToMultiple).Distance(this);
         return distance <= maxDistToBeMultiple;
     },
+    FixDecimalError(precision = 12) {
+        // Drawback of toFixed: it has inconsistent rounding in some cases, eg. (0.345).toFixed(2) incorrectly returning 0.34
+        // Drawback of toLocaleString: it's slower than toFixed (8000 calls takes ~270ms rather than ~2ms)
+        // So my default (for now at least), is to use toFixed, but set its precision high enough that any potential rounding inconsistency in its final digit will almost never come up.
+        return parseFloat(this.toFixed(precision));
+        //return parseFloat(this.toLocaleString("en-US", {minimumFractionDigits: precision, maximumFractionDigits: precision}));
+    },
     RoundTo(multiple) {
         //return Math.round(this / multiple) * multiple;
         // Don't ask me why this works, but it does, and is faster. From: http://phrogz.net/round-to-nearest-via-modulus-division

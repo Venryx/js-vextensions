@@ -4,9 +4,9 @@
  * @param max
  * @param step (default: 1)
  * @param includeMax (default: true)
- * @param roundToStep (default: true)
+ * @param fixDecimalError_precision (opts: <number> [does fixing], null [no fixing]; default: 12)
  */
-export declare function Range(min: number, max: number, step?: number, includeMax?: boolean, roundToStep?: boolean): number[];
+export declare function Range(min: number, max: number, step?: number, includeMax?: boolean, fixDecimalError_precision?: number): number[];
 export declare function GetXToY(minX: any, maxY: any, interval?: number): number[];
 export declare function GetXToYOut(minX: any, maxOutY: any, interval?: number): number[];
 export declare function Lerp(from: number, to: number, percentFromXToY: number, keepResultInRange?: boolean): number;

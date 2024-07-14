@@ -148,13 +148,18 @@ export class Timer {
             this.intervalID = setInterval(this.nextTickFunc = () => {
                 this.callCount_thisRun++;
                 this.callCount_total++;
-                this.func();
-                if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
-                    this.Stop();
+                try {
+                    this.func();
                 }
-                else {
-                    //this.nextTickTime += this.intervalInMS;
-                    this.nextTickTime = Date.now() + this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
+                // if an error occurs in timer's provided func, we still want, eg. the max-call-count to be respected
+                finally {
+                    if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
+                        this.Stop();
+                    }
+                    else {
+                        //this.nextTickTime += this.intervalInMS;
+                        this.nextTickTime = Date.now() + this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
+                    }
                 }
             }, this.intervalInMS); // "as any": maybe temp; used to allow source-importing from NodeJS
         };
@@ -163,13 +168,18 @@ export class Timer {
             this.timeoutID = setTimeout(this.nextTickFunc = () => {
                 this.callCount_thisRun++;
                 this.callCount_total++;
-                this.func();
-                if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
-                    this.Stop();
+                try {
+                    this.func();
                 }
-                else {
-                    this.timeoutID = -1;
-                    StartRegularInterval();
+                // if an error occurs in timer's provided func, we still want, eg. the max-call-count to be respected
+                finally {
+                    if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
+                        this.Stop();
+                    }
+                    else {
+                        this.timeoutID = -1;
+                        StartRegularInterval();
+                    }
                 }
             }, initialDelayOverride); // "as any": maybe temp; used to allow source-importing from NodeJS
         }
