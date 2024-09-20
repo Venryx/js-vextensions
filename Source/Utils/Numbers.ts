@@ -14,7 +14,7 @@ import {NumberCE} from "../ClassExtensions/CE_Number.js";
  * @param includeMax (default: true)
  * @param fixDecimalError_precision (opts: <number> [does fixing], null [no fixing]; default: 12)
  */
-export function Range(min: number, max: number, step = 1, includeMax = true, fixDecimalError_precision = 12) {
+export function Range(min: number, max: number, step = 1, includeMax = true, fixDecimalError_precision: number|null = 12) {
 	var result: number[] = [];
 	for (
 		let i = min;

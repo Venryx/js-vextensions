@@ -17,15 +17,17 @@ export const NumberCE_funcs = {
 	},
 
 	//RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
-	ToPercent(this: Number, roundTo_multiple = 1) {
-		return NumberCES.RoundTo(this as number * 100, roundTo_multiple);
+	ToPercent(this: Number, roundToMultipleOf?: number) {
+		const number = this as number * 100;
+		if (roundToMultipleOf != null) NumberCES.RoundTo(number, roundToMultipleOf);
+		return number;
 	},
 	FromPercent(this: Number) {
 		return this as number / 100;
 	},
 	ToPercentStr(this: Number, /** The number of digits after the decimal point. Example: (.12345).ToPercentStr(1) == "12.3%" */ precision?: number) {
 		const number = this as number * 100;
-		if (precision != null) { return `${number.toFixed(precision)}%`; }
+		if (precision != null) return `${number.toFixed(precision)}%`;
 		return `${number.toString()}%`;
 	},
 
