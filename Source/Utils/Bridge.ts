@@ -152,6 +152,8 @@ export class Bridge {
 			Assert(false, `Cannot find callback with id ${callbackID}!`);
 		}
 		callback(...callbackArgs);
+		// IMPORTANT: Now that the callback has been called, remove it from the list, to prevent memory-leaks. (callback-funcs can hold onto closures and async-continuations, which can block GC for data that isn't actually needed anymore)
+		delete this.callbacks[callbackID];
 	}
 
 	// callback system (for when passing a function as an argument, or awaiting the result of a remote call)
