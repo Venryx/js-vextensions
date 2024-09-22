@@ -136,6 +136,8 @@ export class Bridge {
             Assert(false, `Cannot find callback with id ${callbackID}!`);
         }
         callback(...callbackArgs);
+        // IMPORTANT: Now that the callback has been called, remove it from the list, to prevent memory-leaks. (callback-funcs can hold onto closures and async-continuations, which can block GC for data that isn't actually needed anymore)
+        delete this.callbacks[callbackID];
     }
     RegisterCallback(callback) {
         const callbackID = this.channel_safeCallbacks ? Math.random() : this.lastCallbackID + 1;

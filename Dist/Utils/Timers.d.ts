@@ -32,8 +32,9 @@ export declare class Timer {
     callCount_thisRun: number;
     callCount_total: number;
     Start(initialDelayOverride?: number): this;
-    /** Clears native-timer, nextTickTime, nextTickFunc, timerID, and callCount_thisRun. (but not: startTime, callCount_total) */
+    /** Clears native-timer, intervalID, timeoutID, nextTickTime, and nextTickFunc. (but not: startTime, callCount_total, or callCount_thisRun) */
     Stop(): void;
+    private ClearIntervalOrTimeout;
 }
 export declare class TimerS extends Timer {
     constructor(interval_decimal: any, func: any, maxCallCount?: number);

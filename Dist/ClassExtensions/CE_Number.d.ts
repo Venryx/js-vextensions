@@ -1,7 +1,7 @@
 export declare const NumberCE_funcs: {
     IfN1Then(this: Number, valIfSelfIsNeg1: any): any;
     NaNTo(this: Number, valIfSelfIsNaN: any): any;
-    ToPercent(this: Number, roundTo_multiple?: number): number;
+    ToPercent(this: Number, roundToMultipleOf?: number): number;
     FromPercent(this: Number): number;
     ToPercentStr(this: Number, precision?: number): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;
@@ -25,7 +25,7 @@ export declare const NumberCE: (nextThis: Number) => NumberCEProxy;
 export declare const NumberCES: import("../Utils/General.js").WithFuncsStandalone_Type<{
     IfN1Then(this: Number, valIfSelfIsNeg1: any): any;
     NaNTo(this: Number, valIfSelfIsNaN: any): any;
-    ToPercent(this: Number, roundTo_multiple?: number): number;
+    ToPercent(this: Number, roundToMultipleOf?: number): number;
     FromPercent(this: Number): number;
     ToPercentStr(this: Number, precision?: number): string;
     IsMultipleOf(this: Number, multipleOf: number, maxDistToBeMultiple: number): boolean;

@@ -157,46 +157,41 @@ export class Timer {
 		// if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
 		if (this.Enabled) this.Stop();
 		this.startTime = Date.now();
+		this.callCount_thisRun = 0;
 
 		const StartRegularInterval = ()=>{
 			this.nextTickTime = this.startTime + this.intervalInMS;
-			this.ClearIntervalOrTimeout(); // defensive; ensure no prior interval/timeout overlaps the one we're about to start (2024-09-21: seemingly confirmed needed)
+			this.ClearIntervalOrTimeout(); // defensive; ensure no prior interval/timeout overlaps the one we're about to start
 			this.intervalID = setInterval(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
-				try {
-					this.func();
+				const isLastCall = this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount;
+				if (isLastCall) {
+					this.Stop();
+				} else {
+					//this.nextTickTime += this.intervalInMS;
+					this.nextTickTime = Date.now() + this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
 				}
-				// if an error occurs in timer's provided func, we still want, eg. the max-call-count to be respected
-				finally {
-					if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
-						this.Stop();
-					} else {
-						//this.nextTickTime += this.intervalInMS;
-						this.nextTickTime = Date.now() + this.intervalInMS; // using Date.now() prevents the prop from getting out-of-sync (from sleep-mode)
-					}
-				}
+
+				this.func();
 			}, this.intervalInMS) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 		};
 
 		if (initialDelayOverride != null) {
 			this.nextTickTime = this.startTime + initialDelayOverride;
-			this.ClearIntervalOrTimeout(); // defensive; ensure no prior interval/timeout overlaps the one we're about to start (2024-09-21: seemingly confirmed needed)
+			this.ClearIntervalOrTimeout(); // defensive; ensure no prior interval/timeout overlaps the one we're about to start
 			this.timeoutID = setTimeout(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
-				try {
-					this.func();
+				const isLastCall = this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount;
+				if (isLastCall) {
+					this.Stop();
+				} else {
+					this.timeoutID = -1; // we could clear at top of func, but this way more clearly shows we leave no "gap" where timer.Enabled might return false
+					StartRegularInterval();
 				}
-				// if an error occurs in timer's provided func, we still want, eg. the max-call-count to be respected
-				finally {
-					if (this.maxCallCount != -1 && this.callCount_thisRun >= this.maxCallCount) {
-						this.Stop();
-					} else {
-						this.timeoutID = -1;
-						StartRegularInterval();
-					}
-				}
+
+				this.func();
 			}, initialDelayOverride) as any; // "as any": maybe temp; used to allow source-importing from NodeJS
 		} else {
 			StartRegularInterval();
@@ -204,14 +199,11 @@ export class Timer {
 
 		return this; // enable chaining, for SetContext() call
 	}
-	/** Clears native-timer, nextTickTime, nextTickFunc, timerID, and callCount_thisRun. (but not: startTime, callCount_total) */
+	/** Clears native-timer, intervalID, timeoutID, nextTickTime, and nextTickFunc. (but not: startTime, callCount_total, or callCount_thisRun) */
 	Stop() {
 		this.ClearIntervalOrTimeout();
-
-		//this.startTime = null;
 		this.nextTickTime = undefined;
 		this.nextTickFunc = undefined;
-		this.callCount_thisRun = 0;
 	}
 	private ClearIntervalOrTimeout() {
 		if (this.intervalID != -1) {

@@ -14,17 +14,19 @@ export const NumberCE_funcs = {
         return IsNaN(this) ? valIfSelfIsNaN : this;
     },
     //RoundToMultipleOf(step) { return Math.round(new Number(this) / step) * step; }; //return this.lastIndexOf(str, 0) === 0; };
-    ToPercent(roundTo_multiple = 1) {
-        return NumberCES.RoundTo(this * 100, roundTo_multiple);
+    ToPercent(roundToMultipleOf) {
+        const number = this * 100;
+        if (roundToMultipleOf != null)
+            NumberCES.RoundTo(number, roundToMultipleOf);
+        return number;
     },
     FromPercent() {
         return this / 100;
     },
     ToPercentStr(/** The number of digits after the decimal point. Example: (.12345).ToPercentStr(1) == "12.3%" */ precision) {
         const number = this * 100;
-        if (precision != null) {
+        if (precision != null)
             return `${number.toFixed(precision)}%`;
-        }
         return `${number.toString()}%`;
     },
     IsMultipleOf(multipleOf, maxDistToBeMultiple) {
