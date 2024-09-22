@@ -160,6 +160,7 @@ export class Timer {
 
 		const StartRegularInterval = ()=>{
 			this.nextTickTime = this.startTime + this.intervalInMS;
+			this.ClearIntervalOrTimeout(); // defensive; ensure no prior interval/timeout overlaps the one we're about to start (2024-09-21: seemingly confirmed needed)
 			this.intervalID = setInterval(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
@@ -180,6 +181,7 @@ export class Timer {
 
 		if (initialDelayOverride != null) {
 			this.nextTickTime = this.startTime + initialDelayOverride;
+			this.ClearIntervalOrTimeout(); // defensive; ensure no prior interval/timeout overlaps the one we're about to start (2024-09-21: seemingly confirmed needed)
 			this.timeoutID = setTimeout(this.nextTickFunc = ()=>{
 				this.callCount_thisRun++;
 				this.callCount_total++;
@@ -204,6 +206,14 @@ export class Timer {
 	}
 	/** Clears native-timer, nextTickTime, nextTickFunc, timerID, and callCount_thisRun. (but not: startTime, callCount_total) */
 	Stop() {
+		this.ClearIntervalOrTimeout();
+
+		//this.startTime = null;
+		this.nextTickTime = undefined;
+		this.nextTickFunc = undefined;
+		this.callCount_thisRun = 0;
+	}
+	private ClearIntervalOrTimeout() {
 		if (this.intervalID != -1) {
 			clearInterval(this.intervalID);
 			this.intervalID = -1;
@@ -212,11 +222,6 @@ export class Timer {
 			clearTimeout(this.timeoutID);
 			this.timeoutID = -1;
 		}
-
-		//this.startTime = null;
-		this.nextTickTime = undefined;
-		this.nextTickFunc = undefined;
-		this.callCount_thisRun = 0;
 	}
 }
 export class TimerS extends Timer {
