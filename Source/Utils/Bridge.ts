@@ -162,7 +162,7 @@ export class Bridge {
 	lastCallbackID = -1;
 	callbacks = {};
 	RegisterCallback(callback: Function) {
-		const callbackID = this.channel_safeCallbacks ? Math.random() : this.lastCallbackID + 1;
+		const callbackID = this.channel_safeCallbacks ? RandomInt() : this.lastCallbackID + 1;
 		this.lastCallbackID = callbackID;
 		this.callbacks[callbackID] = callback;
 		return callbackID;
@@ -229,3 +229,11 @@ export const IsTypedNumericalArray = (obj: any): boolean=>{
 		obj instanceof BigUint64Array
 	);
 };
+
+// Why get a random int (within max_safe_integer range), rather than just use Math.random() directly?
+// Because *apparently*, not all browsers preserve the full precision of the floating-point number when converting to/from string.
+// (Switching from Math.random() to the below fixed that call from VR, to phone, back to VR, would sometimes...
+// ..."miss" the callback, due to precision-loss somewhere in the message-passing/json-serializing-and-deserializing process.)
+function RandomInt(): number {
+	return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+}

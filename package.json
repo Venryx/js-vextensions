@@ -1,7 +1,7 @@
 {
   "name": "js-vextensions",
   "description": "Extensions for Javascript, by Venryx.",
-  "version": "1.0.80",
+  "version": "1.0.81",
   "author": "Venryx (https://venryx.com)",
   "main": "Dist/index.js",
   "typings": "Dist/index.d.ts",
@@ -19,8 +19,8 @@
     "dist": "tsc"
   },
   "devDependencies": {
-    "eslint": "^7.18.0",
-    "eslint-config-vbase": "^1.0.6",
+    "eslint": "^9.11.1",
+    "eslint-config-vbase": "^1.0.15",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "style-loader": "^0.13.0",

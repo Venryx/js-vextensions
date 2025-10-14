@@ -15,9 +15,9 @@ export class TimerContext {
     }
     // Can be useful on platforms (eg. Android) where setInterval() and setTimeout() stop working when the screen is off.
     // Just have the Android code call the js every second or so, running this method; this will force the timer-functions to be manually triggered once they've passed the expected tick-time.
-    ManuallyTriggerOverdueTimers() {
+    ManuallyTriggerOverdueTimers(minMSPastForOverdue) {
         for (const timer of this.timers) {
-            if (timer.NextTickFuncOverdue) {
+            if (timer.IsNextTickFuncOverdue(minMSPastForOverdue)) {
                 timer.nextTickFunc();
             }
         }
@@ -135,8 +135,8 @@ export class Timer {
         else if (!val && this.Enabled)
             this.Stop();
     }
-    get NextTickFuncOverdue() {
-        return this.nextTickTime != null && Date.now() > this.nextTickTime && this.nextTickFunc != null;
+    IsNextTickFuncOverdue(minMSPastForOverdue) {
+        return this.nextTickTime != null && Date.now() >= this.nextTickTime + minMSPastForOverdue && this.nextTickFunc != null;
     }
     Start(initialDelayOverride) {
         // if start is called when it's already running, stop the timer first (thus we restart the timer instead of causing overlapping setIntervals/delayed-func-calls)
@@ -172,7 +172,7 @@ export class Timer {
                     this.Stop();
                 }
                 else {
-                    this.timeoutID = -1; // we could clear at top of func, but this way more clearly shows we leave no "gap" where timer.Enabled might return false
+                    this.ClearIntervalOrTimeout(); // this timeout-clearing is needed, for if this.nextTickFunc() gets called from outside the Timer class (eg. by TimerContext.ManuallyTriggerOverdueTimers())
                     StartRegularInterval();
                 }
                 this.func();

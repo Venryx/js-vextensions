@@ -3,7 +3,7 @@ export declare class TimerContext {
     static default_autoAddAll: boolean;
     timers: Timer[];
     Reset(): void;
-    ManuallyTriggerOverdueTimers(): void;
+    ManuallyTriggerOverdueTimers(minMSPastForOverdue: number): void;
 }
 export declare function TryCall<T>(func: (..._: any[]) => T, ...args: any[]): T;
 export declare function TryCall_OnX(obj: any, func: any, ...args: any[]): any;
@@ -28,7 +28,7 @@ export declare class Timer {
     set Enabled(val: boolean);
     nextTickTime: number | undefined;
     nextTickFunc: Function | undefined;
-    get NextTickFuncOverdue(): boolean;
+    IsNextTickFuncOverdue(minMSPastForOverdue: number): boolean;
     callCount_thisRun: number;
     callCount_total: number;
     Start(initialDelayOverride?: number): this;
